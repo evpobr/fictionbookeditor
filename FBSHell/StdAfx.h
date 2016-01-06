@@ -15,8 +15,8 @@
 #error This program requires unicode support to run
 #endif
 
-#define WINVER       0x0410     // W2K/98
-#define _WIN32_WINNT 0x0500     // W2K
+#define WINVER       0x0501     // WinXP
+#define _WIN32_WINNT 0x0501     // WinXP
 #define _WIN32_IE    0x0600     // IE 6+
 
 // we are MT by default
