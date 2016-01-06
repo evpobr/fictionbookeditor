@@ -664,7 +664,7 @@ void CSpeller::CheckScroll()
 	}
 }
 
-inline void CSpeller::HighlightMisspells()
+void CSpeller::HighlightMisspells()
 {
 	if (m_HighlightMisspells && m_Enabled)
 		CheckCurrentPage();
