@@ -1840,7 +1840,9 @@ LRESULT CFBEView::OnPaste(WORD, WORD, HWND, BOOL&)
 							encoderParameters[0].Parameter[0].NumberOfValues = 1;
 							encoderParameters[0].Parameter[0].Type = Gdiplus::EncoderParameterValueTypeLong;
 							encoderParameters[0].Parameter[0].Value = &quality;
-							image.Save(fileName, Gdiplus::ImageFormatJPEG, &encoderParameters[0]);
+							//TODO: rewrite using Gdiplus (No third parameter in standard ATL::CImage.Save)
+							//image.Save(fileName, Gdiplus::ImageFormatJPEG, &encoderParameters[0]);
+							image.Save(fileName, Gdiplus::ImageFormatJPEG);
 						}
 
 						AddImage(fileName, true);
