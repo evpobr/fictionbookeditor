@@ -9,10 +9,6 @@
       <UniqueIdentifier>{dd80cc0d-c2aa-4363-8853-0be60a1f6747}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
-    <Filter Include="Header Files\WTL">
-      <UniqueIdentifier>{b1ca92e5-588b-4574-bb31-44c2f60a6c7b}</UniqueIdentifier>
-      <Extensions>cpp;h</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{0bbc609e-4d9f-4d7f-81d8-e1fbece798f6}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
@@ -233,54 +229,6 @@
     </ClInclude>
     <ClInclude Include="XMLSerializer\XMLSerializer.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlapp.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlcrack.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlctrls.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlctrlw.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlctrlx.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlddx.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atldlgs.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlframe.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlgdi.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlmisc.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlprint.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlres.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlscrl.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atlsplit.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atltheme.h">
-      <Filter>Header Files\WTL</Filter>
-    </ClInclude>
-    <ClInclude Include="wtl\atluser.h">
-      <Filter>Header Files\WTL</Filter>
     </ClInclude>
     <ClInclude Include="extras\atlctrlsext.h">
       <Filter>extras</Filter>
