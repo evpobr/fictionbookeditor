@@ -111,7 +111,7 @@ xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
       <AdditionalIncludeDirectories>wtl;extras;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PreLinkEvent>
-      <Command>cl /nologo /c /Fo"$(IntDir)buildstamp.obj" buildstamp.c</Command>
+      <Command>cl /nologo /c /Fo"$(IntDir)buildstamp.obj" buildstamp.c /MT</Command>
     </PreLinkEvent>
     <Link>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
@@ -178,7 +178,7 @@ xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
       <AdditionalIncludeDirectories>wtl;extras;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PreLinkEvent>
-      <Command>cl /nologo /c /Fo"$(IntDir)buildstamp.obj" buildstamp.c</Command>
+      <Command>cl /nologo /c /Fo"$(IntDir)buildstamp.obj" buildstamp.c /MTd</Command>
     </PreLinkEvent>
     <Link>
       <RegisterOutput>false</RegisterOutput>
