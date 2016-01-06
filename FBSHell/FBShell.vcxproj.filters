@@ -194,6 +194,7 @@
     <None Include="IconExtractor.rgs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zlib\deflate.h">
