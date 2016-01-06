@@ -428,6 +428,7 @@
     <None Include="res\FBE.ico">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">
