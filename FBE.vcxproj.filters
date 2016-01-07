@@ -38,6 +38,18 @@
     <Filter Include="Dependance Files\Script Files">
       <UniqueIdentifier>{6e8566fd-3860-480a-9dbc-4c090f1f8515}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dict">
+      <UniqueIdentifier>{b7eda8cb-b83c-4580-acea-3fca0254a4c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Help">
+      <UniqueIdentifier>{e531b23e-0b73-472a-b54e-72cefc4f8528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{61b56ed4-8013-4acf-a2ef-40330b586928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts\01_Регистр">
+      <UniqueIdentifier>{b6a5243b-a2da-466a-8424-e7d54b8e4ee8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutBox.cpp">
@@ -429,6 +441,144 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="files\dict\en_US.aff">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="files\dict\ru_RU.aff">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="files\dict\uk_UA.aff">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="files\dict\en_US.dic">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="files\dict\ru_RU.dic">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="files\dict\uk_UA.dic">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="files\Help\Help_FBE.chm">
+      <Filter>Help</Filter>
+    </None>
+    <None Include="files\Scripts\29_Режим чтения.js">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\CE.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\debug.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\links.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\spez.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\арабский.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\валюты.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\греческий.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\древнерусский.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\иврит.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\таблица символов.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\удаление разрывов.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\02_Добавление примечания.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\03_Добавление комментария.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\04_Примечания и комментарии из скобок.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\05_Иллюстрации.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\06_Чистка.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\07_Символы.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\08_Структура.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\09_Стихи.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\10_Статистика.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\11_Заголовки картинок в подписи.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\12_Обработка кавычек.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\13_Подзаголовки, пустые строки.ico">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\01_Верхний регистр.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\02_Нижний регистр.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\03_Предложение_alxs.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\04_Предложение.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\05_Капитализация выделения.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\06_Капитализация первого слова.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\07_Циклическое изменение регистра.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\08_Регистр заголовков и подзаголовков....js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\01_Верхний регистр.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\02_Нижний регистр.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\03_Предложение_alxs.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\04_Предложение.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\05_Капитализация выделения.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="files\Scripts\01_Регистр\07_Циклическое изменение регистра.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">
