@@ -447,123 +447,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="packages.config" />
-    <None Include="files\Scripts\29_Режим чтения.js">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\CE.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\debug.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\links.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\spez.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\арабский.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\валюты.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\греческий.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\древнерусский.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\иврит.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\таблица символов.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\удаление разрывов.htm">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\02_Добавление примечания.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\03_Добавление комментария.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\04_Примечания и комментарии из скобок.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\05_Иллюстрации.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\06_Чистка.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\07_Символы.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\08_Структура.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\09_Стихи.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\10_Статистика.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\11_Заголовки картинок в подписи.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\12_Обработка кавычек.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\13_Подзаголовки, пустые строки.ico">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\01_Верхний регистр.js">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\02_Нижний регистр.js">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\03_Предложение_alxs.js">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\04_Предложение.js">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\05_Капитализация выделения.js">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\06_Капитализация первого слова.js">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\07_Циклическое изменение регистра.js">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\08_Регистр заголовков и подзаголовков....js">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\01_Верхний регистр.ico">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\02_Нижний регистр.ico">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\03_Предложение_alxs.ico">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\04_Предложение.ico">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\05_Капитализация выделения.ico">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
-    <None Include="files\Scripts\01_Регистр\07_Циклическое изменение регистра.ico">
-      <Filter>Scripts\01_Регистр</Filter>
-    </None>
     <None Include="Dict\en_US.aff">
       <Filter>Dict</Filter>
     </None>
@@ -584,6 +467,84 @@
     </None>
     <None Include="Help\Help_FBE.chm">
       <Filter>Help</Filter>
+    </None>
+    <None Include="Scripts\CE.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\debug.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\links.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\spez.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\арабский.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\валюты.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\греческий.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\древнерусский.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\иврит.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\таблица символов.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\удаление разрывов.htm">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\01_Верхний регистр.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\02_Нижний регистр.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\03_Предложение_alxs.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\04_Предложение.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\05_Капитализация выделения.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\06_Капитализация первого слова.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\07_Циклическое изменение регистра.js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\08_Регистр заголовков и подзаголовков....js">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\02_Нижний регистр.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\03_Предложение_alxs.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\04_Предложение.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\05_Капитализация выделения.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\07_Циклическое изменение регистра.ico">
+      <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Scripts\29_Режим чтения.js">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Scripts\01_Регистр\01_Верхний регистр.ico">
+      <Filter>Scripts\01_Регистр</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

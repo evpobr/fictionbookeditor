@@ -432,163 +432,85 @@ gdiplus.lib;pcre.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</Additiona
     </None>
   </ItemGroup>
   <ItemGroup Label="Scripts">
-    <None Include="files\Scripts\01_Регистр.ico">
+    <None Include="Scripts\29_Режим чтения.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр.ico</Link>
     </None>
-    <None Include="files\Scripts\02_Добавление примечания.ico">
+    <None Include="Scripts\CE.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\02_Добавление примечания.ico</Link>
     </None>
-    <None Include="files\Scripts\03_Добавление комментария.ico">
+    <None Include="Scripts\debug.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\03_Добавление комментария.ico</Link>
     </None>
-    <None Include="files\Scripts\04_Примечания и комментарии из скобок.ico">
+    <None Include="Scripts\links.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\04_Примечания и комментарии из скобок.ico</Link>
     </None>
-    <None Include="files\Scripts\05_Иллюстрации.ico">
+    <None Include="Scripts\spez.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\05_Иллюстрации.ico</Link>
     </None>
-    <None Include="files\Scripts\06_Чистка.ico">
+    <None Include="Scripts\арабский.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\06_Чистка.ico</Link>
     </None>
-    <None Include="files\Scripts\07_Символы.ico">
+    <None Include="Scripts\валюты.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\07_Символы.ico</Link>
     </None>
-    <None Include="files\Scripts\08_Структура.ico">
+    <None Include="Scripts\греческий.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\08_Структура.ico</Link>
     </None>
-    <None Include="files\Scripts\09_Стихи.ico">
+    <None Include="Scripts\древнерусский.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\09_Стихи.ico</Link>
     </None>
-    <None Include="files\Scripts\10_Статистика.ico">
+    <None Include="Scripts\иврит.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\10_Статистика.ico</Link>
     </None>
-    <None Include="files\Scripts\11_Заголовки картинок в подписи.ico">
+    <None Include="Scripts\таблица символов.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\11_Заголовки картинок в подписи.ico</Link>
     </None>
-    <None Include="files\Scripts\12_Обработка кавычек.ico">
+    <None Include="Scripts\удаление разрывов.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\12_Обработка кавычек.ico</Link>
-    </None>
-    <None Include="files\Scripts\13_Подзаголовки, пустые строки.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\13_Подзаголовки, пустые строки.ico</Link>
-    </None>
-    <None Include="files\Scripts\29_Режим чтения.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\29_Режим чтения.js</Link>
-    </None>
-    <None Include="files\Scripts\CE.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\CE.htm</Link>
-    </None>
-    <None Include="files\Scripts\debug.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\debug.htm</Link>
-    </None>
-    <None Include="files\Scripts\links.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\links.htm</Link>
-    </None>
-    <None Include="files\Scripts\spez.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\spez.htm</Link>
-    </None>
-    <None Include="files\Scripts\арабский.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\арабский.htm</Link>
-    </None>
-    <None Include="files\Scripts\валюты.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\валюты.htm</Link>
-    </None>
-    <None Include="files\Scripts\греческий.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\греческий.htm</Link>
-    </None>
-    <None Include="files\Scripts\древнерусский.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\древнерусский.htm</Link>
-    </None>
-    <None Include="files\Scripts\иврит.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\иврит.htm</Link>
-    </None>
-    <None Include="files\Scripts\таблица символов.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\таблица символов.htm</Link>
-    </None>
-    <None Include="files\Scripts\удаление разрывов.htm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\удаление разрывов.htm</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="files\Scripts\01_Регистр\01_Верхний регистр.js">
+    <None Include="Scripts\01_Регистр\01_Верхний регистр.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\01_Верхний регистр.js</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\02_Нижний регистр.js">
+    <None Include="Scripts\01_Регистр\02_Нижний регистр.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\02_Нижний регистр.js</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\03_Предложение_alxs.js">
+    <None Include="Scripts\01_Регистр\03_Предложение_alxs.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\03_Предложение_alxs.js</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\04_Предложение.js">
+    <None Include="Scripts\01_Регистр\04_Предложение.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\04_Предложение.js</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\05_Капитализация выделения.js">
+    <None Include="Scripts\01_Регистр\05_Капитализация выделения.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\05_Капитализация выделения.js</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\06_Капитализация первого слова.js">
+    <None Include="Scripts\01_Регистр\06_Капитализация первого слова.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\06_Капитализация первого слова.js</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\07_Циклическое изменение регистра.js">
+    <None Include="Scripts\01_Регистр\07_Циклическое изменение регистра.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\07_Циклическое изменение регистра.js</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\08_Регистр заголовков и подзаголовков....js">
+    <None Include="Scripts\01_Регистр\08_Регистр заголовков и подзаголовков....js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\08_Регистр заголовков и подзаголовков....js</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\01_Верхний регистр.ico">
+    <None Include="Scripts\01_Регистр\01_Верхний регистр.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\01_Верхний регистр.ico</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\02_Нижний регистр.ico">
+    <None Include="Scripts\01_Регистр\02_Нижний регистр.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\02_Нижний регистр.ico</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\03_Предложение_alxs.ico">
+    <None Include="Scripts\01_Регистр\03_Предложение_alxs.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\03_Предложение_alxs.ico</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\04_Предложение.ico">
+    <None Include="Scripts\01_Регистр\04_Предложение.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\04_Предложение.ico</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\05_Капитализация выделения.ico">
+    <None Include="Scripts\01_Регистр\05_Капитализация выделения.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\05_Капитализация выделения.ico</Link>
     </None>
-    <None Include="files\Scripts\01_Регистр\07_Циклическое изменение регистра.ico">
+    <None Include="Scripts\01_Регистр\07_Циклическое изменение регистра.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Scripts\01_Регистр\07_Циклическое изменение регистра.ico</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
