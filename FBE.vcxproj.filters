@@ -50,6 +50,9 @@
     <Filter Include="Scripts\01_Регистр">
       <UniqueIdentifier>{b6a5243b-a2da-466a-8424-e7d54b8e4ee8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts\02_Добавление примечания">
+      <UniqueIdentifier>{b51badfa-50fd-450f-948e-d18f20d86ce2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutBox.cpp">
