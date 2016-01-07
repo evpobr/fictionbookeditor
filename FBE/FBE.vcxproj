@@ -427,9 +427,8 @@ gdiplus.lib;pcre.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</Additiona
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="files\Help\Help_FBE.chm">
+    <None Include="Help\Help_FBE.chm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Help\Help_FBE.chm</Link>
     </None>
   </ItemGroup>
   <ItemGroup Label="Scripts">

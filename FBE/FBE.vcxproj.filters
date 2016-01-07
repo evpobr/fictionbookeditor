@@ -447,9 +447,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="packages.config" />
-    <None Include="files\Help\Help_FBE.chm">
-      <Filter>Help</Filter>
-    </None>
     <None Include="files\Scripts\29_Режим чтения.js">
       <Filter>Scripts</Filter>
     </None>
@@ -584,6 +581,9 @@
     </None>
     <None Include="Dict\uk_UA.dic">
       <Filter>Dict</Filter>
+    </None>
+    <None Include="Help\Help_FBE.chm">
+      <Filter>Help</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
