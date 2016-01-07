@@ -407,29 +407,23 @@ gdiplus.lib;pcre.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</Additiona
     <ClInclude Include="extras\Scintilla.h" />
   </ItemGroup>
   <ItemGroup Label="Dictionaries">
-    <None Include="files\dict\en_US.aff">
+    <None Include="Dict\en_US.aff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Dict\en_US.aff</Link>
     </None>
-    <None Include="files\dict\en_US.dic">
+    <None Include="Dict\en_US.dic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Dict\en_US.dic</Link>
     </None>
-    <None Include="files\dict\ru_RU.aff">
+    <None Include="Dict\ru_RU.aff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Dict\ru_RU.aff</Link>
     </None>
-    <None Include="files\dict\ru_RU.dic">
+    <None Include="Dict\ru_RU.dic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Dict\ru_RU.dic</Link>
     </None>
-    <None Include="files\dict\uk_UA.aff">
+    <None Include="Dict\uk_UA.aff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Dict\uk_UA.aff</Link>
     </None>
-    <None Include="files\dict\uk_UA.dic">
+    <None Include="Dict\uk_UA.dic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>Dict\uk_UA.dic</Link>
     </None>
   </ItemGroup>
   <ItemGroup>

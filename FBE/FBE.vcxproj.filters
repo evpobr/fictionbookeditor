@@ -447,24 +447,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="packages.config" />
-    <None Include="files\dict\en_US.aff">
-      <Filter>Dict</Filter>
-    </None>
-    <None Include="files\dict\ru_RU.aff">
-      <Filter>Dict</Filter>
-    </None>
-    <None Include="files\dict\uk_UA.aff">
-      <Filter>Dict</Filter>
-    </None>
-    <None Include="files\dict\en_US.dic">
-      <Filter>Dict</Filter>
-    </None>
-    <None Include="files\dict\ru_RU.dic">
-      <Filter>Dict</Filter>
-    </None>
-    <None Include="files\dict\uk_UA.dic">
-      <Filter>Dict</Filter>
-    </None>
     <None Include="files\Help\Help_FBE.chm">
       <Filter>Help</Filter>
     </None>
@@ -584,6 +566,24 @@
     </None>
     <None Include="files\Scripts\01_Регистр\07_Циклическое изменение регистра.ico">
       <Filter>Scripts\01_Регистр</Filter>
+    </None>
+    <None Include="Dict\en_US.aff">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="Dict\en_US.dic">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="Dict\ru_RU.aff">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="Dict\ru_RU.dic">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="Dict\uk_UA.aff">
+      <Filter>Dict</Filter>
+    </None>
+    <None Include="Dict\uk_UA.dic">
+      <Filter>Dict</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
