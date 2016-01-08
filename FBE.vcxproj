@@ -486,6 +486,11 @@ gdiplus.lib;pcre.lib;opengl32.lib;glu32.lib;$(IntDir)buildstamp.obj;%(Additional
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Xsd>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="hunspell\src\win_api\libhunspell.vcxproj">
+      <Project>{53609bb3-d874-465c-af7b-df626db0d89b}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\wtl.9.1\build\native\wtl.targets" Condition="Exists('packages\wtl.9.1\build\native\wtl.targets')" />
