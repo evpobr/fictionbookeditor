@@ -173,6 +173,7 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\imgph.png" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FBE.rc">
