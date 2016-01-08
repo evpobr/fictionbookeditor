@@ -121,6 +121,9 @@
     <ClCompile Include="extras\ColorButton.cpp">
       <Filter>extras</Filter>
     </ClCompile>
+    <ClCompile Include="buildstamp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="fbe.idl">
