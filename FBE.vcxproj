@@ -156,7 +156,7 @@ xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>extras;utils;wtl;./hunspell/src/hunspell;pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>HUNSPELL_STATIC;_DEBUG;WIN32;_WINDOWS;UNICODE;STRICT;USE_PCRE;_ATL_TRACE_LEVEL=4;_CRT_SECURE_NO_WARNINGS;_ITERATOR_DEBUG_LEVEL=0;_WTL_CMDBAR_VISTA_MENUS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HUNSPELL_STATIC;_DEBUG;WIN32;_WINDOWS;UNICODE;STRICT;USE_PCRE;_ATL_TRACE_LEVEL=4;_CRT_SECURE_NO_WARNINGS;_WTL_CMDBAR_VISTA_MENUS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
