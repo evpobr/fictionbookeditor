@@ -38,7 +38,8 @@
 #include <atlcoll.h>
 #include <atlfile.h>
 #include <atlcomtime.h>
-#include "atlimage.h"
+#include <atlimage.h>
+#include "atlimageex.h"
 
 #include <shellapi.h>
 

@@ -364,7 +364,7 @@ gdiplus.lib;pcre.lib;opengl32.lib;glu32.lib;$(IntDir)buildstamp.obj;%(Additional
   <ItemGroup>
     <ClInclude Include="AboutBox.h" />
     <ClInclude Include="apputils.h" />
-    <ClInclude Include="atlimage.h" />
+    <ClInclude Include="atlimageex.h" />
     <ClInclude Include="extras\atlcrypt.h" />
     <ClInclude Include="utils\CFileDialogEx.h" />
     <ClInclude Include="ContainerWnd.h" />

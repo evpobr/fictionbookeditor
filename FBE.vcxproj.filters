@@ -137,9 +137,6 @@
     <ClInclude Include="apputils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="atlimage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utils\CFileDialogEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -256,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="extras\atlcrypt.h">
       <Filter>extras</Filter>
+    </ClInclude>
+    <ClInclude Include="atlimageex.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

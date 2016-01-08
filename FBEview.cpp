@@ -12,6 +12,7 @@
 #include "SearchReplace.h"
 #include "Scintilla.h"
 #include "ElementDescMnr.h"
+#include "atlimageex.h"
 
 extern CElementDescMnr _EDMnr;
 
@@ -1822,7 +1823,7 @@ LRESULT CFBEView::OnPaste(WORD, WORD, HWND, BOOL&)
 						int quality = _Settings.GetJpegQuality();
 
 						CString fileName(szFileName);
-						CImage image; 
+						FBE::CImageEx image; 
 						image.Attach(hBitmap); 
 
 						if (_Settings.GetImageType() == 0)
