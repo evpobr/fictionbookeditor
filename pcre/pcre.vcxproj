@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -23,6 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>pcre</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -56,33 +57,21 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-    <PropertyGroup>
-      <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\Debug\</OutDir>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pcre.dir\Debug\</IntDir>
-      <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pcred</TargetName>
-      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.dll</TargetExt>
-      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\Release\</OutDir>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pcre.dir\Release\</IntDir>
-      <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pcre</TargetName>
-      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.dll</TargetExt>
-      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\MinSizeRel\</OutDir>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">pcre.dir\MinSizeRel\</IntDir>
-      <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">pcre</TargetName>
-      <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.dll</TargetExt>
-      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkIncremental>
-      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">true</GenerateManifest>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\RelWithDebInfo\</OutDir>
-      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">pcre.dir\RelWithDebInfo\</IntDir>
-      <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">pcre</TargetName>
-      <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.dll</TargetExt>
-      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</LinkIncremental>
-      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</GenerateManifest>
-    </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">true</GenerateManifest>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</GenerateManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>D:\Users\evpobr\Documents\GitHubVisualStudio\pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -95,7 +84,7 @@
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;HAVE_CONFIG_H;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";pcre_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -121,7 +110,8 @@
       <ImportLibrary>D:/Users/evpobr/Documents/GitHubVisualStudio/pcre/Debug/pcred.lib</ImportLibrary>
       <ProgramDataBaseFile>D:/Users/evpobr/Documents/GitHubVisualStudio/pcre/Debug/pcred.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
-      <Version></Version>
+      <Version>
+      </Version>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -137,11 +127,12 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;HAVE_CONFIG_H;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release";pcre_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <DebugInformationFormat></DebugInformationFormat>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;HAVE_CONFIG_H;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\";pcre_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -164,7 +155,8 @@
       <ImportLibrary>D:/Users/evpobr/Documents/GitHubVisualStudio/pcre/Release/pcre.lib</ImportLibrary>
       <ProgramDataBaseFile>D:/Users/evpobr/Documents/GitHubVisualStudio/pcre/Release/pcre.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
-      <Version></Version>
+      <Version>
+      </Version>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -184,7 +176,8 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;HAVE_CONFIG_H;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="MinSizeRel";pcre_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <DebugInformationFormat></DebugInformationFormat>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;HAVE_CONFIG_H;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"MinSizeRel\";pcre_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -207,7 +200,8 @@
       <ImportLibrary>D:/Users/evpobr/Documents/GitHubVisualStudio/pcre/MinSizeRel/pcre.lib</ImportLibrary>
       <ProgramDataBaseFile>D:/Users/evpobr/Documents/GitHubVisualStudio/pcre/MinSizeRel/pcre.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
-      <Version></Version>
+      <Version>
+      </Version>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -250,7 +244,8 @@
       <ImportLibrary>D:/Users/evpobr/Documents/GitHubVisualStudio/pcre/RelWithDebInfo/pcre.lib</ImportLibrary>
       <ProgramDataBaseFile>D:/Users/evpobr/Documents/GitHubVisualStudio/pcre/RelWithDebInfo/pcre.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
-      <Version></Version>
+      <Version>
+      </Version>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -315,32 +310,27 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClInclude Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre.h" />
     <ClInclude Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\config.h" />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_byte_order.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_chartables.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_compile.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_config.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_dfa_exec.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_exec.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_fullinfo.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_get.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_globals.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_jit_compile.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_maketables.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_newline.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_ord2utf8.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_refcount.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_string_utils.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_study.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_tables.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_ucd.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_valid_utf8.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_version.c"  />
-    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_xclass.c"  />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="D:/Users/evpobr/Documents/GitHubVisualStudio/pcre/ZERO_CHECK.vcxproj">
-      <Project>9C5AFEC5-6843-4C9E-B0BF-66DE0577F1B9</Project>
-    </ProjectReference>
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_byte_order.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_chartables.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_compile.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_config.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_dfa_exec.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_exec.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_fullinfo.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_get.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_globals.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_jit_compile.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_maketables.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_newline.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_ord2utf8.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_refcount.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_string_utils.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_study.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_tables.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_ucd.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_valid_utf8.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_version.c" />
+    <ClCompile Include="D:\Users\evpobr\Documents\GitHubVisualStudio\pcre\pcre_xclass.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
