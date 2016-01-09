@@ -113,7 +113,7 @@ xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
     <Link>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>rpcrt4.lib;
-gdiplus.lib;pcre.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\hunspell\src\win_api\Release\libhunspell;.\pcre;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
@@ -172,7 +172,7 @@ xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
     <Link>
       <RegisterOutput>false</RegisterOutput>
       <AdditionalDependencies>rpcrt4.lib;
-gdiplus.lib;pcre.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\hunspell\src\win_api\Release\libhunspell;.\pcre;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -484,6 +484,9 @@ gdiplus.lib;pcre.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</Additiona
   <ItemGroup>
     <ProjectReference Include="hunspell\src\win_api\libhunspell.vcxproj">
       <Project>{53609bb3-d874-465c-af7b-df626db0d89b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="pcre\pcre.vcxproj">
+      <Project>{bfbfbf2d-52fb-44a0-9d44-b3d842a9e057}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
