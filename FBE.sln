@@ -9,6 +9,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Russian", "locales\res_rus\res_rus.vcxproj", "{1BC3F431-9672-4191-9FC5-A8B1C9C08E36}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBShell", "FBSHell\FBShell.vcxproj", "{856C10BA-254C-4FA0-B45B-00F4B5A6DEB2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{700EF473-7FF9-4CD4-93FB-9C3ABF5D5C4A} = {700EF473-7FF9-4CD4-93FB-9C3ABF5D5C4A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ukrainian", "locales\res_ukr\res_ukr.vcxproj", "{B0D6E5EB-56C0-4DC2-A98F-98EFE5158B8B}"
 EndProject
