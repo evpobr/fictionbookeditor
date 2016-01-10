@@ -498,10 +498,5 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
       <UserProperties RESOURCE_FILE="FBE.rc" WTLHELPER.Menu.IDR_MAINFRAME="CFBEView" />
     </VisualStudio>
   </ProjectExtensions>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\wtl.9.1\build\native\wtl.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\wtl.9.1\build\native\wtl.targets'))" />
-  </Target>
 </Project>
+
