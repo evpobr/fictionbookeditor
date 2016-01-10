@@ -10,3 +10,4 @@
 * Upgrade [Hunspell](http://hunspell.sourceforge.net/) to v1.3.3, Hunspell is now build from sources;
 * Fix installer to propertly work under Windows Vista and higher (set `RequestExecutionLevel` to `admin`);
 * Remove references to [UAC plugin](http://nsis.sourceforge.net/UAC_plug-in) from installer, it's needed for Windows 2000 only, but we don't support it;
+* Add version info to all exe's and dll's.
