@@ -7,6 +7,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBE", "FBE.vcxproj", "{E1B04471-3393-4970-93ED-FB6A57BCDA8B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Russian", "locales\res_rus\res_rus.vcxproj", "{1BC3F431-9672-4191-9FC5-A8B1C9C08E36}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E1B04471-3393-4970-93ED-FB6A57BCDA8B} = {E1B04471-3393-4970-93ED-FB6A57BCDA8B}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBShell", "FBSHell\FBShell.vcxproj", "{856C10BA-254C-4FA0-B45B-00F4B5A6DEB2}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -14,12 +17,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBShell", "FBSHell\FBShell.
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ukrainian", "locales\res_ukr\res_ukr.vcxproj", "{B0D6E5EB-56C0-4DC2-A98F-98EFE5158B8B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E1B04471-3393-4970-93ED-FB6A57BCDA8B} = {E1B04471-3393-4970-93ED-FB6A57BCDA8B}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhunspell", "hunspell\src\win_api\libhunspell.vcxproj", "{53609BB3-D874-465C-AF7B-DF626DB0D89B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBV", "FBV\FBV.vcxproj", "{700EF473-7FF9-4CD4-93FB-9C3ABF5D5C4A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExportHTML", "ExportHTML\ExportHTML.vcxproj", "{F15BE191-947B-40DB-934C-507D5011441C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E1B04471-3393-4970-93ED-FB6A57BCDA8B} = {E1B04471-3393-4970-93ED-FB6A57BCDA8B}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pcre", "pcre\pcre.vcxproj", "{BFBFBF2D-52FB-44A0-9D44-B3D842A9E057}"
 EndProject
