@@ -195,7 +195,7 @@ HRESULT	ExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc) {
       strftime(date,sizeof(date),"%a, %d %b %Y %H:%M:%S +0000",gmtime(&tt));
 
       // construct some random mime boundary
-      _snprintf(boundary,sizeof(boundary),"------NextPart---%08X.%08X",tt,rand());
+      _snprintf_s(boundary,sizeof(boundary),"------NextPart---%08X.%08X",tt,rand());
 
       // construct mime header
       char  mime_hdr[2048];
