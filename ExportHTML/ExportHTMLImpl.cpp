@@ -338,7 +338,7 @@ HRESULT	ExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc) {
     // * write a final mime boundary
     if (fMIME) {
       char    mime_tmp[256];
-      _snprintf(mime_tmp,sizeof(mime_tmp),"\r\n%s\r\n",boundary);
+      _snprintf_s(mime_tmp,sizeof(mime_tmp),"\r\n%s\r\n",boundary);
       DWORD   len=strlen(mime_tmp);
       DWORD   nw;
       BOOL    fWr=WriteFile(hOut,mime_tmp,len,&nw,NULL);
