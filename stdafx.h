@@ -78,7 +78,7 @@ extern CAppModule _Module;
 #include <mshtmdid.h>
 #include <mshtmcid.h>
 #import <shdocvw.dll> no_auto_exclude rename_namespace("SHD") rename("FindText","FindTextX")
-#import <mshtml.tlb> no_auto_exclude rename("TranslateAccelerator","TranslateAcceleratorX")
+#import <mshtml.tlb> no_auto_exclude rename("TranslateAccelerator","TranslateAcceleratorX") rename("min", "minX") rename("max", "maxX")
 
 // use com utils
 using namespace _com_util;
