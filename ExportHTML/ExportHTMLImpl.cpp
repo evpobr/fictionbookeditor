@@ -199,7 +199,7 @@ HRESULT	ExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc) {
 
       // construct mime header
       char  mime_hdr[2048];
-      _snprintf(mime_hdr,sizeof(mime_hdr),
+      _snprintf_s(mime_hdr,sizeof(mime_hdr),
 	"From: <Saved by Haali ExportHTML Plugin>\r\n"
 	"Date: %s\r\n" // Thu, 17 Apr 2003 07:34:30 +0400
 	"MIME-Version: 1.0\r\n"
