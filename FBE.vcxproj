@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,6 +21,7 @@
     <SccAuxPath>Svn</SccAuxPath>
     <SccLocalPath>Svn</SccLocalPath>
     <SccProvider>SubversionScc</SccProvider>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -28,12 +29,18 @@
     <UseOfMfc>false</UseOfMfc>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -53,8 +60,6 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</EmbedManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
@@ -65,10 +70,13 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <PreBuildEvent>
       <Message>Copying requisite resources...</Message>
-      <Command>rd "$(TargetDir)"\cmd /S /Q
+      <Command>rd "$(TargetDir)"cmd /S /Q
 xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
 </Command>
     </PreBuildEvent>
@@ -76,28 +84,22 @@ xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Release/FBE.tlb</TypeLibraryName>
       <HeaderFileName>
       </HeaderFileName>
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>extras;utils;wtl;../hunspell/src/hunspell;pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;UNICODE;STRICT;USE_PCRE;_CRT_SECURE_NO_WARNINGS;_WTL_CMDBAR_VISTA_MENUS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>extras;utils;wtl;./hunspell/src/hunspell;pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>HUNSPELL_STATIC;NDEBUG;WIN32;_WINDOWS;UNICODE;STRICT;USE_PCRE;_CRT_SECURE_NO_WARNINGS;_WTL_CMDBAR_VISTA_MENUS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\Release/FBE.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
-      <ObjectFileName>.\Release/</ObjectFileName>
-      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -105,36 +107,31 @@ xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
       <AdditionalIncludeDirectories>wtl;extras;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PreLinkEvent>
-      <Command>cl /nologo /c /Fo"$(IntDir)buildstamp.obj" buildstamp.c</Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
     <Link>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>rpcrt4.lib;
-gdiplus.lib;libhunspell.lib;pcre.lib;opengl32.lib;glu32.lib;$(IntDir)buildstamp.obj;%(AdditionalDependencies)</AdditionalDependencies>
+gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\hunspell\src\win_api\Release\libhunspell;.\pcre;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
-      <ProgramDatabaseFile>.\Release/FBE.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <LinkTimeCodeGeneration>
-      </LinkTimeCodeGeneration>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>upx.exe $(OutDir)$(ProjectName).exe</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>
       <Message>Copying requisite resources...</Message>
-      <Command>rd "$(TargetDir)"\cmd /S /Q
+      <Command>rd "$(TargetDir)" cmd /S /Q
 xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
 </Command>
     </PreBuildEvent>
@@ -149,22 +146,19 @@ xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>extras;utils;wtl;../hunspell/src/hunspell;pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;UNICODE;STRICT;USE_PCRE;_ATL_TRACE_LEVEL=4;_CRT_SECURE_NO_WARNINGS;_ITERATOR_DEBUG_LEVEL=0;_WTL_CMDBAR_VISTA_MENUS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>extras;utils;wtl;./hunspell/src/hunspell;pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>HUNSPELL_STATIC;_DEBUG;WIN32;_WINDOWS;UNICODE;STRICT;USE_PCRE;_ATL_TRACE_LEVEL=4;_CRT_SECURE_NO_WARNINGS;_WTL_CMDBAR_VISTA_MENUS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\Debug/FBE.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
-      <ObjectFileName>.\Debug/</ObjectFileName>
-      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
-      <WarningLevel>Level2</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -172,25 +166,23 @@ xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
       <AdditionalIncludeDirectories>wtl;extras;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PreLinkEvent>
-      <Command>cl /nologo /c /Fo"$(IntDir)buildstamp.obj" buildstamp.c</Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
     <Link>
       <RegisterOutput>false</RegisterOutput>
       <AdditionalDependencies>rpcrt4.lib;
-gdiplus.lib;libhunspell.lib;pcre.lib;opengl32.lib;glu32.lib;$(IntDir)buildstamp.obj;%(AdditionalDependencies)</AdditionalDependencies>
+gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\hunspell\src\win_api\Release\libhunspell;.\pcre;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\Debug/FBE.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
       <Profile>false</Profile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -200,6 +192,11 @@ gdiplus.lib;libhunspell.lib;pcre.lib;opengl32.lib;glu32.lib;$(IntDir)buildstamp.
       <TypeLibraryFile>
       </TypeLibraryFile>
     </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>HUNSPELL_STATIC;_USING_V110_SDK71_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutBox.cpp" />
@@ -211,6 +208,10 @@ gdiplus.lib;libhunspell.lib;pcre.lib;opengl32.lib;glu32.lib;$(IntDir)buildstamp.
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Full</Optimization>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="buildstamp.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="DocumentTree.cpp" />
     <ClCompile Include="ElementDescMnr.cpp" />
@@ -347,7 +348,7 @@ gdiplus.lib;libhunspell.lib;pcre.lib;opengl32.lib;glu32.lib;$(IntDir)buildstamp.
   <ItemGroup>
     <ClInclude Include="AboutBox.h" />
     <ClInclude Include="apputils.h" />
-    <ClInclude Include="atlimage.h" />
+    <ClInclude Include="atlimageex.h" />
     <ClInclude Include="extras\atlcrypt.h" />
     <ClInclude Include="utils\CFileDialogEx.h" />
     <ClInclude Include="ContainerWnd.h" />
@@ -380,22 +381,6 @@ gdiplus.lib;libhunspell.lib;pcre.lib;opengl32.lib;glu32.lib;$(IntDir)buildstamp.
     <ClInclude Include="Words.h" />
     <ClInclude Include="xmlMatchedTagsHighlighter.h" />
     <ClInclude Include="XMLSerializer\XMLSerializer.h" />
-    <ClInclude Include="wtl\atlapp.h" />
-    <ClInclude Include="wtl\atlcrack.h" />
-    <ClInclude Include="wtl\atlctrls.h" />
-    <ClInclude Include="wtl\atlctrlw.h" />
-    <ClInclude Include="wtl\atlctrlx.h" />
-    <ClInclude Include="wtl\atlddx.h" />
-    <ClInclude Include="wtl\atldlgs.h" />
-    <ClInclude Include="wtl\atlframe.h" />
-    <ClInclude Include="wtl\atlgdi.h" />
-    <ClInclude Include="wtl\atlmisc.h" />
-    <ClInclude Include="wtl\atlprint.h" />
-    <ClInclude Include="wtl\atlres.h" />
-    <ClInclude Include="wtl\atlscrl.h" />
-    <ClInclude Include="wtl\atlsplit.h" />
-    <ClInclude Include="wtl\atltheme.h" />
-    <ClInclude Include="wtl\atluser.h" />
     <ClInclude Include="extras\atlctrlsext.h" />
     <ClInclude Include="extras\atlgdix.h" />
     <ClInclude Include="extras\ColorButton.h" />
@@ -406,6 +391,7 @@ gdiplus.lib;libhunspell.lib;pcre.lib;opengl32.lib;glu32.lib;$(IntDir)buildstamp.
   </ItemGroup>
   <ItemGroup>
     <None Include="extras\atlcrypt.inl" />
+    <None Include="packages.config" />
     <None Include="res\center.bmp" />
     <None Include="res\doc.bmp" />
     <None Include="res\document.bmp" />
@@ -495,8 +481,17 @@ gdiplus.lib;libhunspell.lib;pcre.lib;opengl32.lib;glu32.lib;$(IntDir)buildstamp.
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Xsd>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="hunspell\src\win_api\libhunspell.vcxproj">
+      <Project>{53609bb3-d874-465c-af7b-df626db0d89b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="pcre\pcre.vcxproj">
+      <Project>{bfbfbf2d-52fb-44a0-9d44-b3d842a9e057}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\wtl.9.1\build\native\wtl.targets" Condition="Exists('packages\wtl.9.1\build\native\wtl.targets')" />
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>

@@ -179,7 +179,9 @@ Hunhandle* CSpeller::LoadDictionary(CString dictPath, CString dictName)
 	if ( ATLPath::FileExists(dictPath+dictName+L".aff") && ATLPath::FileExists(dictPath+dictName+L".dic"))
 	{
 		// create dictionary from file
-		dict = Hunspell_create(T2A(dictPath+dictName+".aff"), T2A(dictPath+dictName+".dic"));
+		CW2A affpath(dictPath + dictName + L".aff", CP_UTF8);
+		CW2A dpath(dictPath + dictName + L".dic", CP_UTF8);
+		dict = Hunspell_create(affpath, dpath);
 	}
 	return dict;
 }
@@ -401,7 +403,7 @@ void CSpeller::AddToDictionary()
 	{
 		Hunhandle* currDict = GetDictionary(word);
 		// add to Hunspell's runtime dictionary
-		CT2A str (word, m_codePage);
+		CW2A str (word, CP_UTF8);
 		Hunspell_add(currDict, str);
 		// add to custom dictionary
 		m_CustomDict.Add(word);
@@ -416,7 +418,7 @@ void CSpeller::AddToDictionary(CString word)
 {
 	Hunhandle* currDict = GetDictionary(word);
 	// add to Hunspell's runtime dictionary
-	CT2A str (word, m_codePage);
+	CT2A str (word, CP_UTF8);
 	Hunspell_add(currDict, str);
 	// add to custom dictionary
 	m_CustomDict.Add(word);
@@ -461,7 +463,7 @@ CStrings* CSpeller::GetSuggestions(CString word)
 
 	Hunhandle* currDict = GetDictionary(word);
 	// encode string to the dictionary encoding 
-	CT2A str (word, m_codePage);
+	CW2A str (word, CP_UTF8);
 	char **list;
 	int listLength = Hunspell_suggest(currDict, &list, str);
 	CStrings* suggestions;
@@ -470,7 +472,7 @@ CStrings* CSpeller::GetSuggestions(CString word)
 	char** p = list;
 	for (int i=0; i<listLength; i++)
 	{
-		CString s( CA2CT (*p, m_codePage));
+		CString s( CA2CT (*p, CP_UTF8));
 		suggestions->Add(s);
 		p++;
 	}
@@ -508,7 +510,7 @@ SPELL_RESULT CSpeller::SpellCheck(CString word)
 		if (currDict == m_Dictionaries[LANG_RU].handle) checkWord.Replace(L"¸", L"å");
 
 		// encode string to the dictionary encoding 
-		CT2A str (checkWord, m_codePage);
+		CW2A str (checkWord, CP_UTF8);
 
 		try { spellResult = (SPELL_RESULT) Hunspell_spell(currDict, str);  }
 		catch(...) { spellResult = SPELL_OK; }
@@ -664,7 +666,7 @@ void CSpeller::CheckScroll()
 	}
 }
 
-inline void CSpeller::HighlightMisspells()
+void CSpeller::HighlightMisspells()
 {
 	if (m_HighlightMisspells && m_Enabled)
 		CheckCurrentPage();

@@ -1,0 +1,264 @@
+﻿
+Фантастика	 … SF, Fantasy
+ sf_history Альтернативная история	 … Alternative history
+ sf_action Боевая фантастика	 … Action SF
+ sf_epic Эпическая фантастика	 … Epic SF
+ sf_heroic Героическая фантастика	 … Heroic SF
+ sf_detective Детективная фантастика	 … Detective SF
+ sf_cyberpunk Киберпанк	 … Cyberpunk
+ sf_space Космическая фантастика	 … Space SF
+ sf_social Социально-психологическая фантастика	 … Social SF
+ sf_horror Ужасы	 … Horror
+ sf_humor Юмористическая фантастика	 … Humor SF
+ sf_fantasy Фэнтези	 … Fantasy
+ sf Научная фантастика	 … Science Fiction
+ child_sf Детская фантастика	 … Science Fiction for Kids
+ sf_fantasy_city Городское фэнтези	 … Fantasy city
+ sf_postapocalyptic Постапокалипсис	 … Postapocalyptic
+ love_sf Любовно-фантастические романы	 … Love SF
+ gothic_novel Готический роман	 … Gothic novel
+ nsf Ненаучная фантастика	 … Non Science Fiction
+ fairy_fantasy Сказочная фантастика	 … Fairy SF
+ sf_etc Фантастика: прочее	 … Other SF
+ sf_irony Ироническая фантастика	 … Ironical SF
+ sf_fantasy_irony Ироническое фэнтези	 … Ironyc female fantasy
+ sf_mystic Мистика	 … Mystic
+ sf_space_opera Космоопера	 … Space Opera
+ sf_stimpank Стимпанк	 … Stimpank
+ sf_technofantasy Технофэнтези	 … Technofantasy
+Детективы и Триллеры	 … Detectives, Thrillers
+ sf_detective Детективная фантастика	 … Detective SF
+ det_classic Классический детектив	 … Classical Detective
+ det_police Полицейский детектив	 … Police Stories
+ det_action Боевик	 … Action
+ det_irony Иронический детектив	 … Ironical Detective
+ det_history Исторический детектив	 … Historical Detective
+ det_espionage Шпионский детектив	 … Espionage Detective
+ det_crime Криминальный детектив	 … Crime Detective
+ det_political Политический детектив	 … Political Detective
+ det_maniac Маньяки	 … Maniacs
+ det_hard Крутой детектив	 … Hard-boiled Detective
+ thriller Триллер	 … Thrillers
+ detective Детективы: прочее	 … Detective
+ love_detective Остросюжетные любовные романы	 … Detective Romance
+ child_det Детские остросюжетные	 … Detective for Kids
+ thriller_legal Юридический триллер	 … Legal thriller
+ thriller_medical Медицинский триллер	 … Medical thriller
+ thriller_techno Техно триллер	 … Techno Thriller
+ det_cozy Дамский детективный роман	 … Cozy Mysteries
+Проза	 … Prose
+ prose Проза	 … Prose
+ prose_classic Классическая проза	 … Classical Prose
+ prose_history Историческая проза	 … Historical Prose
+ prose_contemporary Современная проза	 … Contemporary Prose
+ prose_counter Контркультура	 … Counterculture
+ prose_rus_classic Русская классическая проза	 … Russian Classics
+ prose_su_classics Советская классическая проза	 … Soviet Classics
+ prose_military О войне	 … Military
+ aphorisms Афоризмы	 … Aphorisms
+ essay Эссе	 … Essay
+ story Новелла	 … Story
+ great_story Повесть	 … Great story
+ short_story Рассказ	 … Short story
+ roman Роман	 … Roman
+ extravaganza Феерия	 … Extravaganza
+ epistolary_fiction Эпистолярная проза	 … Epistolary
+ prose_epic Эпопея	 … Epic
+ prose_magic Магический реализм	 … Magic realism
+Любовные романы	 … Love
+ love_contemporary Современные любовные романы	 … Contemporary Romance
+ love_history Исторические любовные романы	 … Historical Romance
+ love_detective Остросюжетные любовные романы	 … Detective Romance
+ love_short Короткие любовные романы	 … Short Romance
+ love_erotica Эротика	 … Erotica
+ love О любви	 … About love
+ love_sf Любовно-фантастические романы	 … Love SF
+ love_hard Порно	 … Porno
+ det_cozy Дамский детективный роман	 … Cozy Mysteries
+Приключения	 … Adventures
+ adv_western Вестерн	 … Western
+ adv_history Исторические приключения	 … History
+ adv_indian Приключения про индейцев	 … Indians
+ adv_maritime Морские приключения	 … Maritime Fiction
+ adv_geo Путешествия и география	 … Travel & Geography
+ adv_animal Природа и животные	 … Nature & Animals
+ adventure Приключения: прочее	 … Misk Adventures
+ child_adv Детские приключения	 … Adventures for Kids
+Детское	 … Children's
+ child_tale Сказка	 … Fairy Tales
+ child_verse Детские стихи	 … Verses for Kids
+ child_prose Детская проза	 … Prose for Kids
+ child_sf Детская фантастика	 … Science Fiction for Kids
+ child_det Детские остросюжетные	 … Detective for Kids
+ child_adv Детские приключения	 … Adventures for Kids
+ child_education Детская образовательная литература	 … Education for Kids
+ children Детская литература: прочее	 … For Kids: Misk
+ child_folklore Детский фольклор	 … Child Folklore
+Поэзия	 … Poetry, Dramaturgy
+ child_verse Детские стихи	 … Verses for Kids
+ poetry Поэзия: прочее	 … Poetry
+ humor_verse Юмористические стихи	 … Humor Verses
+ fable Басни	 … Fable
+ vers_libre Верлибры	 … Vers libre
+ visual_poetry Визуальная поэзия	 … Visual Poetry
+ lyrics Лирика	 … Lyrics
+ palindromes Палиндромы	 … Palindromes
+ song_poetry Песенная поэзия	 … Song Poetry
+ experimental_poetry Экспериментальная поэзия	 … Experimental Poetry
+ epic_poetry Эпическая поэзия	 … Epic Poetry
+ in_verse в стихах	 … In verse
+Старинное	 … Antique
+ antique_ant Античная литература	 … Antique Literature
+ antique_european Европейская старинная литература	 … Antique European Literature
+ antique_russian Древнерусская литература	 … Antique Russian Literature
+ antique_east Древневосточная литература	 … Antique East Literature
+ antique_myths Мифы. Легенды. Эпос	 … Myths. Legends. Epos
+ antique Старинная литература: прочее	 … Other Antique
+Наука, Образование	 … Science, Education
+ sci_history История	 … History
+ sci_psychology Психология	 … Psychology
+ sci_culture Культурология	 … Cultural Science
+ sci_religion Религиоведение	 … Religious Studies
+ sci_philosophy Философия	 … Philosophy
+ sci_politics Политика	 … Politics
+ sci_business Деловая литература	 … Business
+ sci_juris Юриспруденция	 … Jurisprudence
+ sci_linguistic Языкознание	 … Linguistics
+ sci_medicine Медицина	 … Medicine
+ sci_phys Физика	 … Physics
+ sci_math Математика	 … Mathematics
+ sci_chem Химия	 … Chemistry
+ sci_biology Биология	 … Biology
+ sci_tech Технические науки	 … Technical
+ science Научная литература: прочее	 … Misk Science, Education
+ sci_biochem Биохимия	 … Biochemistry
+ sci_physchem Физическая химия	 … Physical chemistry
+ sci_anachem Аналитическая химия	 … Analitic Chemistry
+ sci_orgchem Органическая химия	 … Organic Chemistry
+ sci_economy Экономика	 … Economy
+ sci_state Государство и право	 … State science
+ sci_biophys Биофизика	 … Biophysics
+ sci_geo Геология и география	 … Geology
+ sci_cosmos Астрономия и Космос	 … Cosmos
+ sci_medicine_alternative Альтернативная медицина	 … Alternative medicine
+ sci_philology Литературоведение	 … Philology
+ sci_pedagogy Педагогика	 … Pedagogy
+ sci_social_studies Обществознание	 … Social studies
+ sci_ecology Экология	 … Ecology
+ military_history Военная история	 … Military History
+ sci_veterinary Ветеринария	 … Veterinary
+ sci_zoo Зоология	 … Zoology
+ sci_botany Ботаника	 … Botany
+ sci_textbook Учебники	 … Учебники
+ sci_crib Шпаргалки	 … Шпаргалки
+Компьютеры и Интернет	 … Computers
+ comp_www Интернет	 … Internet
+ comp_programming Программирование	 … Programming
+ comp_hard Компьютерное 'железо' (аппаратное обеспечение)	 … Hardware
+ comp_soft Программы	 … Software
+ comp_db Базы данных	 … Databases
+ comp_osnet ОС и Сети	 … OS & Networking
+ computers Околокомпьютерная литература	 … Computers: Misk
+ comp_dsp Цифровая обработка сигналов	 … DSP
+Справочная литература	 … Reference
+ ref_encyc Энциклопедии	 … Encyclopedias
+ ref_guide Руководства	 … Guidebooks
+ ref_ref Справочники	 … Reference
+ ref_dict Словари	 … Dictionaries
+ geo_guides Путеводители	 … Guides
+ reference Справочная литература	 … Misk References
+Религия и духовность	 … Religion
+ religion_rel Религия	 … Religion
+ religion_esoterics Эзотерика	 … Esoterics
+ religion_self Самосовершенствование	 … Self-perfection
+ religion Религиозная литература: прочее	 … Religion: Other
+ religion_budda Буддизм	 … Buddha
+ religion_christianity Христианство	 … Christianity
+ religion_orthodoxy Православие	 … Orthodoxy
+ religion_catholicism Католицизм	 … Catholicism
+ religion_protestantism Протестантизм 	 … Protestantism
+ religion_hinduism Индуизм	 … Hinduism
+ religion_islam Ислам	 … Islam
+ religion_judaism Иудаизм	 … Judaism
+ astrology Астрология	 … Astrology
+ palmistry Хиромантия	 … Palmistry
+ religion_paganism Язычество	 … Paganism
+Юмор	 … Humor
+ sf_humor Юмористическая фантастика	 … Humor SF
+ humor_anecdote Анекдоты	 … Anecdote
+ humor_prose Юмористическая проза	 … Humor Prose
+ humor_verse Юмористические стихи	 … Humor Verses
+ humor Юмор: прочее	 … Misk Humor
+ comedy Комедия	 … Comedy
+ humor_satire Сатира	 … Satire
+Домоводство (Дом и семья)	 … Home, Family
+ home_cooking Кулинария	 … Cooking
+ home_pets Домашние животные	 … Pets
+ home_crafts Хобби и ремесла	 … Hobbies & Crafts
+ home_entertain Развлечения	 … Entertaining
+ home_health Здоровье	 … Health
+ home_garden Сад и огород	 … Garden
+ home_diy Сделай сам	 … Do it yourself
+ home_sport Спорт	 … Sports
+ home_sex Эротика, Секс	 … Erotica, Sex
+ home Домоводство	 … Home: Other
+ home_collecting Коллекционирование	 … Collecting
+Техника	 … Technics
+ sci_transport Транспорт и авиация	 … Transport
+ sci_metal Металлургия	 … Metallurgy
+ sci_radio Радиоэлектроника	 … Radio
+ sci_build Строительство и сопромат	 … Building
+Прочее	 … Other
+ notes Партитуры	 … Notes
+ periodic Журналы	 … Periodic
+ fanfiction Фанфик	 … Fan fiction
+ unfinished Недописанное	 … Unfinished
+ design Искусство и Дизайн	 … Art, Design
+ music Музыка	 … Music
+ cine Кино	 … Cine
+ theatre Театр	 … Theatre
+ adv_animal Природа и животные	 … Nature & Animals
+ other Неотсортированное	 … Other
+Деловая литература	 … Economy, Business
+ banking Банковское дело	 … Banking
+ accounting Бухучет, налогообложение, аудит	 … Accounting
+ global_economy Внешнеэкономическая деятельность	 … Global Economy
+ paper_work Делопроизводство	 … Paper Work
+ org_behavior Корпоративная культура	 … Corporate Culture
+ personal_finance Личные финансы	 … Personal Finance
+ small_business Малый бизнес	 … Small Business
+ marketing Маркетинг, PR, реклама	 … Marketing, PR, Adv
+ real_estate Недвижимость	 … Real Estate
+ popular_business О бизнесе популярно	 … Popular Business
+ industries Отраслевые издания	 … Industries
+ job_hunting Поиск работы, карьера	 … Job Hunting
+ economics_ref Справочники	 … Economics Reference Book
+ management Управление, подбор персонала	 … Management
+ stock Ценные бумаги, инвестиции	 … Stock
+ economics Экономика	 … Economics
+Документальная литература	 … Nonfiction
+ sci_popular Науч.поп.	 … Science popular
+ nonf_military Военная документалистика и аналитика	 … Military docs
+ nonf_biography Биографии и Мемуары	 … Biography & Memoirs
+ nonf_publicism Публицистика	 … Publicism
+ nonf_criticism Критика	 … Criticism
+ nonfiction Документальная литература	 … Misk Nonfiction
+Драматургия	 … Dramaturgy
+ dramaturgy Драматургия: прочее	 … Dramaturgy
+ drama Драма	 … Drama
+ screenplays Киносценарии	 … Screenplays
+ comedy Комедия	 … Comedy
+ mystery Мистерия	 … Mystery
+ scenarios Сценарии	 … Scenarios
+ tragedy Трагедия	 … Tragedy
+ vaudeville Водевиль	 … Vaudeville
+Фольклор	 … Folklore
+ humor_anecdote Анекдоты	 … Anecdote
+ epic Былины	 … Epic
+ child_folklore Детский фольклор	 … Child Folklore
+ riddles Загадки	 … Riddles
+ folk_songs Народные песни	 … Folk Songs
+ folk_tale Народные сказки	 … Folk tales
+ proverbs Пословицы, поговорки	 … Proverbs
+ folklore Фольклор: прочее	 … Folklore
+ limerick Частушки, прибаутки, потешки	 … Limerick
