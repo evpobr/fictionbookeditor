@@ -1139,61 +1139,62 @@ void CMainFrame::AddStaticText(CCustomStatic &st, HWND toolbarHwnd, int id, cons
 void CMainFrame::InitPluginsType(HMENU hMenu, const TCHAR* type, UINT cmdbase, CSimpleArray<CLSID>& plist)
 {
 	CRegKey rk;
-
-	if(rk.Open(HKEY_CURRENT_USER, _Settings.GetKeyPath() + L"\\Plugins") != ERROR_SUCCESS)
-		return;
 	int ncmd = 0;
-	for(int i = 0; ncmd < 20; ++i)
+
+	if (rk.Open(HKEY_CURRENT_USER, _Settings.GetKeyPath() + L"\\Plugins") != ERROR_SUCCESS)
 	{
-		CString name;
-		DWORD size = 128; // enough for GUIDs
-		TCHAR* cp = name.GetBuffer(size);
-		FILETIME ft;
-		if(::RegEnumKeyEx(rk, i, cp, &size, 0, 0, 0, &ft) != ERROR_SUCCESS)
-			break;
-		name.ReleaseBuffer(size);
-		CRegKey pk;
-		if(pk.Open(rk, name) != ERROR_SUCCESS)
-			continue;
-		CString pt(U::QuerySV(pk, L"Type"));
-		CString ms(U::QuerySV(pk, L"Menu"));
-		if(pt.IsEmpty() || ms.IsEmpty() || pt != type)
-			continue;
-		CLSID clsid;
-		if(::CLSIDFromString((TCHAR*)(const TCHAR *)name, &clsid) != NOERROR)
-			continue;
-
-		// all checks pass, add to menu and remember clsid
-		plist.Add(clsid);
-		::AppendMenu(hMenu, MF_STRING, cmdbase + ncmd, ms);
-		CString hs = ms;
-		hs.Remove(L'&');
-		InitPluginHotkey(name, cmdbase + ncmd, pt + CString(L" | ") + hs);
-		// check if an icon is available
-		CString icon(U::QuerySV(pk, L"Icon"));
-		if(!icon.IsEmpty())
+		for (int i = 0; ncmd < 20; ++i)
 		{
-			int cp = icon.ReverseFind(L',');
-			int iconID;
-			if(cp > 0 && _stscanf((const TCHAR *)icon + cp, L",%d", &iconID) == 1)
-				icon.Delete(cp, icon.GetLength() - cp);
-			else
-				iconID = 0;
+			CString name;
+			DWORD size = 128; // enough for GUIDs
+			TCHAR* cp = name.GetBuffer(size);
+			FILETIME ft;
+			if (::RegEnumKeyEx(rk, i, cp, &size, 0, 0, 0, &ft) != ERROR_SUCCESS)
+				break;
+			name.ReleaseBuffer(size);
+			CRegKey pk;
+			if (pk.Open(rk, name) != ERROR_SUCCESS)
+				continue;
+			CString pt(U::QuerySV(pk, L"Type"));
+			CString ms(U::QuerySV(pk, L"Menu"));
+			if (pt.IsEmpty() || ms.IsEmpty() || pt != type)
+				continue;
+			CLSID clsid;
+			if (::CLSIDFromString((TCHAR*)(const TCHAR *)name, &clsid) != NOERROR)
+				continue;
 
-			// try load from file first
-			HICON hIcon;
-			if(::ExtractIconEx(icon, iconID, NULL, &hIcon, 1) > 0 && hIcon)
+			// all checks pass, add to menu and remember clsid
+			plist.Add(clsid);
+			::AppendMenu(hMenu, MF_STRING, cmdbase + ncmd, ms);
+			CString hs = ms;
+			hs.Remove(L'&');
+			InitPluginHotkey(name, cmdbase + ncmd, pt + CString(L" | ") + hs);
+			// check if an icon is available
+			CString icon(U::QuerySV(pk, L"Icon"));
+			if (!icon.IsEmpty())
 			{
-				m_MenuBar.AddIcon(hIcon, cmdbase + ncmd);
-				::DestroyIcon(hIcon);
+				int cp = icon.ReverseFind(L',');
+				int iconID;
+				if (cp > 0 && _stscanf((const TCHAR *)icon + cp, L",%d", &iconID) == 1)
+					icon.Delete(cp, icon.GetLength() - cp);
+				else
+					iconID = 0;
+
+				// try load from file first
+				HICON hIcon;
+				if (::ExtractIconEx(icon, iconID, NULL, &hIcon, 1) > 0 && hIcon)
+				{
+					m_MenuBar.AddIcon(hIcon, cmdbase + ncmd);
+					::DestroyIcon(hIcon);
+				}
 			}
+			++ncmd;
 		}
-		++ncmd;
 	}
 
 	// Old path to provide searching of old plugins
 	CRegKey oldRk;
-	if(oldRk.Open(HKEY_LOCAL_MACHINE, L"Software\\Haali\\FBE\\Plugins") != ERROR_SUCCESS)
+	if(oldRk.Open(HKEY_LOCAL_MACHINE, L"Software\\Haali\\FBE\\Plugins", KEY_READ) != ERROR_SUCCESS)
 		goto skip;
 	else
 	{
@@ -1207,7 +1208,7 @@ void CMainFrame::InitPluginsType(HMENU hMenu, const TCHAR* type, UINT cmdbase, C
 				break;
 			name.ReleaseBuffer(size);
 			CRegKey pk;
-			if(pk.Open(oldRk, name) != ERROR_SUCCESS)
+			if(pk.Open(oldRk, name, KEY_READ) != ERROR_SUCCESS)
 				continue;
 			CString pt(U::QuerySV(pk, L"Type"));
 			CString ms(U::QuerySV(pk, L"Menu"));
