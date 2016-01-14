@@ -149,9 +149,11 @@
   <ItemGroup>
     <ResourceCompile Include="ExportHTML.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\ExportHTML.ico" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\wtl.9.1\build\native\wtl.targets" Condition="Exists('..\packages\wtl.9.1\build\native\wtl.targets')" />
   </ImportGroup>
 </Project>
-

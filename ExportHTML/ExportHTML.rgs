@@ -12,13 +12,13 @@ HKCR
 	}
 }
 
-HKLM
+HKCU
 {
 	NoRemove Software
 	{
-		NoRemove Haali
+		NoRemove FBETeam
 		{
-			NoRemove FBE
+			NoRemove 'FictionBook Editor'
 			{
 				NoRemove Plugins
 				{
