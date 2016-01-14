@@ -1,5 +1,9 @@
 # FictionBook Editor Changelog
 
+## v2.6.9
+
+* Fixed bug, introduced in 2.6.9 - FBE cannot find plugins
+
 ## v2.6.8
 
 * Upgade Visual Studio solution and projects to VS2015 version;

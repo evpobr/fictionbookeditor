@@ -670,7 +670,7 @@ IDB_TEXT                BITMAP                  "res\\text.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,0,0
+ FILEVERSION 2,6,9,0
  PRODUCTVERSION 2,6,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -689,7 +689,7 @@ BEGIN
             VALUE "Comments", "Release"
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook Editor"
-            VALUE "FileVersion", "2.6"
+            VALUE "FileVersion", "2.6.9.0"
             VALUE "InternalName", "FBE"
             VALUE "LegalCopyright", "Copyright 2010 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBE.exe"
