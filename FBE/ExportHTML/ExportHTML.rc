@@ -24,7 +24,7 @@ LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
 // REGISTRY
 //
 
-IDR_EXPORTHTML          REGISTRY                "ExportHTML.rgs"
+IDR_EXPORTHTML          REGISTRY                "ExportHTMLPlugin.rgs"
 
 
 #ifdef APSTUDIO_INVOKED

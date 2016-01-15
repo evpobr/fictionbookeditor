@@ -1,10 +1,8 @@
 #include "stdafx.h"
-#include "resource.h"
+#include "ExportHTMLPlugin.h"
 
 #include "utils.h"
 #include "FBE.h"
-
-#include "ExportHTML.h"
 
 class CCustomSaveDialog : public CFileDialogImpl<CCustomSaveDialog>
 {
@@ -100,7 +98,8 @@ public:
   }
 };
 
-HRESULT	ExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc) {
+HRESULT	CExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc)
+{
   HANDLE  hOut=INVALID_HANDLE_VALUE;
 
   try {
