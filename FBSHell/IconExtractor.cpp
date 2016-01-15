@@ -154,7 +154,7 @@ bool    IconExtractor::LoadObject(const wchar_t *filename,CString& type,void *&d
     return IStreamPtr();
 
   MSXML2::ISAXXMLReaderPtr    rdr;
-  if (FAILED(rdr.CreateInstance(L"MSXML2.SAXXMLReader.4.0")))
+  if (FAILED(rdr.CreateInstance(L"MSXML2.SAXXMLReader.6.0")))
     return IStreamPtr();
 
   rdr->putContentHandler(ch);

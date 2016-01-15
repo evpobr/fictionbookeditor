@@ -1,5 +1,5 @@
 ﻿; license 
-LicenseLangString License ${LANG_RUSSIAN} "Input\gpl-3.0.ru.txt"
+LicenseLangString License ${LANG_RUSSIAN} "..\Release\gpl-3.0.ru.txt"
 
 ; components section strings
 LangString Main ${LANG_RUSSIAN} "Файлы программы"

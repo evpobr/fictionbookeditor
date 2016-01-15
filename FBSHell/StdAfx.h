@@ -25,7 +25,7 @@ extern CComModule _Module;
 #include <comutil.h>
 #include <comdef.h>
 
-#import <msxml4.dll>
+#import <msxml6.dll>
 
 #include <shellapi.h>
 #include <shlobj.h>

@@ -1,5 +1,5 @@
 ﻿; license 
-LicenseLangString License ${LANG_UKRAINIAN} "Input\gpl-3.0.ua.txt"
+LicenseLangString License ${LANG_UKRAINIAN} "..\Release\gpl-3.0.ua.txt"
 
 ; components section strings
 LangString Main ${LANG_UKRAINIAN} "Файли програми"

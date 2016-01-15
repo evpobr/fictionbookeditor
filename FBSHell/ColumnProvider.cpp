@@ -158,7 +158,7 @@ HRESULT	ColumnProvider::FBInfo::Init(const wchar_t *fn) {
     CheckError(CreateObject(ch));
 
     MSXML2::ISAXXMLReaderPtr  rdr;
-    CheckError(rdr.CreateInstance(L"MSXML2.SAXXMLReader.4.0"));
+    CheckError(rdr.CreateInstance(L"MSXML2.SAXXMLReader.6.0"));
 
     rdr->putContentHandler(ch);
 
