@@ -1,7 +1,5 @@
 @ECHO OFF
 
-rd .\Input /S /Q
-
 devenv ..\FBE.sln /clean Release
 devenv ..\FBE.sln /build Release
 
