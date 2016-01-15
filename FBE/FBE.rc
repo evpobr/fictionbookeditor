@@ -845,7 +845,7 @@ END
 // ABOUT_FILE
 //
 
-ABOUT_FILE              ABOUT_FILE              "files\\contributors.txt"
+ABOUT_FILE              ABOUT_FILE              "contributors.txt"
 
 
 /////////////////////////////////////////////////////////////////////////////
