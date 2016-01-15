@@ -439,11 +439,6 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <None Include="res\wordstat.bmp" />
     <None Include="res\wsoverlays.bmp" />
     <None Include="res\xml.bmp" />
-    <None Include="files\main.css" />
-    <None Include="files\main_fast.css" />
-    <None Include="files\imgprev.html" />
-    <None Include="files\main.html" />
-    <None Include="files\main.js" />
     <None Include="files\contributors.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -488,7 +483,7 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <None Include="FictionBookLinks.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Include="genres.rus.txt">
+    <None Include="genres.rus.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="genres.txt">
@@ -497,10 +492,22 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <None Include="genres.ukr.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Include="genres.rus.txt_L">
+    <None Include="genres.rus.txt_L">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="genres.txt_L">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="main.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="main.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="main.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="main_fast.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

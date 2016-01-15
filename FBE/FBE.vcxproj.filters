@@ -17,18 +17,6 @@
       <UniqueIdentifier>{f4ba7b2e-b161-4bea-8393-950f5ce075c1}</UniqueIdentifier>
       <Extensions>cpp;h</Extensions>
     </Filter>
-    <Filter Include="Dependance Files">
-      <UniqueIdentifier>{ec6d40b1-6c46-4771-8c2d-e3968dadb91c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependance Files\Style Sheets">
-      <UniqueIdentifier>{4824b569-5baa-4847-b66b-a21ffbcc5b93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependance Files\Hypertext Files">
-      <UniqueIdentifier>{739cf53b-fcad-4838-b088-5b22085673ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependance Files\Script Files">
-      <UniqueIdentifier>{6e8566fd-3860-480a-9dbc-4c090f1f8515}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutBox.cpp">
@@ -388,21 +376,6 @@
     <None Include="res\xml.bmp">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="files\main.css">
-      <Filter>Dependance Files\Style Sheets</Filter>
-    </None>
-    <None Include="files\main_fast.css">
-      <Filter>Dependance Files\Style Sheets</Filter>
-    </None>
-    <None Include="files\imgprev.html">
-      <Filter>Dependance Files\Hypertext Files</Filter>
-    </None>
-    <None Include="files\main.html">
-      <Filter>Dependance Files\Hypertext Files</Filter>
-    </None>
-    <None Include="files\main.js">
-      <Filter>Dependance Files\Script Files</Filter>
-    </None>
     <None Include="files\contributors.txt" />
     <None Include="extras\atlcrypt.inl">
       <Filter>extras</Filter>
@@ -423,6 +396,13 @@
     <None Include="symbols.ini" />
     <None Include="genres.rus.txt_L" />
     <None Include="genres.txt_L" />
+    <None Include="genres.rus.txt" />
+    <None Include="genres.txt" />
+    <None Include="genres.ukr.txt" />
+    <None Include="main.css" />
+    <None Include="main_fast.css" />
+    <None Include="main.js" />
+    <None Include="main.html" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">
@@ -433,10 +413,5 @@
     <ResourceCompile Include="FBE.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="genres.rus.txt" />
-    <Text Include="genres.txt" />
-    <Text Include="genres.ukr.txt" />
   </ItemGroup>
 </Project>
