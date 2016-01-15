@@ -416,6 +416,11 @@
     <None Include="FictionBookLang.xsd" />
     <None Include="FictionBookLinks.xsd" />
     <None Include="blank.fb2" />
+    <None Include="eng.xsl" />
+    <None Include="fb2.xsl" />
+    <None Include="rus.xsl" />
+    <None Include="ukr.xsl" />
+    <None Include="symbols.ini" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">
@@ -426,11 +431,5 @@
     <ResourceCompile Include="FBE.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="eng.xsl" />
-    <Xml Include="fb2.xsl" />
-    <Xml Include="rus.xsl" />
-    <Xml Include="ukr.xsl" />
   </ItemGroup>
 </Project>

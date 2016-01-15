@@ -467,6 +467,9 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <None Include="rus.xsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="symbols.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="ukr.xsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
