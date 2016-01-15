@@ -11,6 +11,7 @@ copy ..\Release\res_rus.dll .\Input\
 copy ..\Release\res_ukr.dll .\Input\
 copy ..\Release\FBSHell.dll .\Input\
 copy ..\Release\ExportHTML.dll .\Input\
+copy ..\Release\FBV.exe .\Input\
 
 xcopy ..\FBE\files\*.* .\Input\ /E /Y /D
 
