@@ -91,7 +91,7 @@ extern CAppModule _Module;
 #endif
 
 // MSXML
-#import <msxml4.dll>
+#import <msxml6.dll>
 
 // vb regexps
 #ifndef USE_PCRE

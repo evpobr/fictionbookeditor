@@ -377,8 +377,8 @@ function SaveImage(source)
 
 function LoadXSL(path, lang)
 {
-	var xslt = new ActiveXObject("Msxml2.XSLTemplate.4.0");
-	var xsl = new ActiveXObject("Msxml2.FreeThreadedDOMDocument.4.0");
+	var xslt = new ActiveXObject("Msxml2.XSLTemplate.6.0");
+	var xsl = new ActiveXObject("Msxml2.FreeThreadedDOMDocument.6.0");
 	xsl.async = false;
 	var proc;
 
@@ -483,7 +483,7 @@ function LoadFromDOM(dom, lang)
 
 function XmlFromText(text)
 {
-	var xml = new ActiveXObject("Msxml2.DOMDocument.4.0");
+	var xml = new ActiveXObject("Msxml2.DOMDocument.6.0");
 	xml.async=false;
 	xml.preserveWhiteSpace = true;
 	xml.loadXML(text);

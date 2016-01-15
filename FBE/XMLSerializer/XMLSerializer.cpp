@@ -7,7 +7,7 @@ CXMLSerializer::CXMLSerializer(const CString& sFile, const CString& sAppName, bo
 {
 	try
 	{
-		m_doc.CreateInstance(__uuidof(MSXML2::DOMDocument40));
+		m_doc.CreateInstance(__uuidof(MSXML2::DOMDocument60));
 
 		SetFile(sFile);
 		SetApplicationName(sAppName);
@@ -87,9 +87,9 @@ int CXMLSerializer::InitializeWriters(const CString& encoding, const bool& xmlDe
 {
 	try
 	{
-		if(!SUCCEEDED(m_rdr.CreateInstance(__uuidof(MSXML2::SAXXMLReader40))))
+		if(!SUCCEEDED(m_rdr.CreateInstance(__uuidof(MSXML2::SAXXMLReader60))))
 			return E_FAIL;
-		if(!SUCCEEDED(m_wrt.CreateInstance(__uuidof(MSXML2::MXXMLWriter40))))
+		if(!SUCCEEDED(m_wrt.CreateInstance(__uuidof(MSXML2::MXXMLWriter60))))
 			return E_FAIL;
 
 		m_wrt->byteOrderMark = bom;
