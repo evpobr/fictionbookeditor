@@ -403,6 +403,7 @@
     <None Include="main_fast.css" />
     <None Include="main.js" />
     <None Include="main.html" />
+    <None Include="SciLexer.dll" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">

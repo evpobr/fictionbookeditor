@@ -510,6 +510,9 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <None Include="main_fast.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="SciLexer.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="hunspell\src\win_api\libhunspell.vcxproj">
