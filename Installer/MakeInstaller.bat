@@ -14,5 +14,5 @@ copy ..\Release\ExportHTML.dll .\Input\
 
 xcopy ..\files\*.* .\Input\ /E /Y /D
 
-"C:\Program Files\NSIS\Unicode\makensis" MakeInstaller.nsi
+makensis.exe MakeInstaller.nsi
 pause
