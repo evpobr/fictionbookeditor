@@ -379,6 +379,7 @@ function LoadXSL(path, lang)
 {
 	var xslt = new ActiveXObject("Msxml2.XSLTemplate.6.0");
 	var xsl = new ActiveXObject("Msxml2.FreeThreadedDOMDocument.6.0");
+	xsl.setProperty("ResolveExternals", true);	
 	xsl.async = false;
 	var proc;
 
