@@ -12,6 +12,7 @@ copy ..\Release\res_ukr.dll .\Input\
 copy ..\Release\FBSHell.dll .\Input\
 copy ..\Release\ExportHTML.dll .\Input\
 
-xcopy ..\files\*.* .\Input\ /E /Y
+xcopy ..\files\*.* .\Input\ /E /Y /D
 
 "C:\Program Files\NSIS\Unicode\makensis" MakeInstaller.nsi
+pause
