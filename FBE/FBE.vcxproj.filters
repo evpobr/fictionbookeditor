@@ -23,9 +23,6 @@
     <Filter Include="Dependance Files\XML Stylesheets">
       <UniqueIdentifier>{b00b3d8d-440c-4ff4-9fd4-7290f74f57ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dependance Files\XML Schemas">
-      <UniqueIdentifier>{23f8d9b2-47ae-4034-bb33-c3ea42d51d4e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Dependance Files\Style Sheets">
       <UniqueIdentifier>{4824b569-5baa-4847-b66b-a21ffbcc5b93}</UniqueIdentifier>
     </Filter>
@@ -447,17 +444,9 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Xsd Include="files\FictionBook.xsd">
-      <Filter>Dependance Files\XML Schemas</Filter>
-    </Xsd>
-    <Xsd Include="files\FictionBookGenres.xsd">
-      <Filter>Dependance Files\XML Schemas</Filter>
-    </Xsd>
-    <Xsd Include="files\FictionBookLang.xsd">
-      <Filter>Dependance Files\XML Schemas</Filter>
-    </Xsd>
-    <Xsd Include="files\FictionBookLinks.xsd">
-      <Filter>Dependance Files\XML Schemas</Filter>
-    </Xsd>
+    <Xsd Include="FictionBookGenres.xsd" />
+    <Xsd Include="FictionBookLang.xsd" />
+    <Xsd Include="FictionBookLinks.xsd" />
+    <Xsd Include="FictionBook.xsd" />
   </ItemGroup>
 </Project>
