@@ -510,7 +510,7 @@ function apiLoadFB2(path, lang)
 	var css=document.getElementById("css");
 	var css_filename = css.href;
 	css.href="";
-	var xml = new ActiveXObject("Msxml2.DOMDocument.4.0");
+	var xml = new ActiveXObject("Msxml2.DOMDocument.6.0");
 	xml.async=false;
 	xml.preserveWhiteSpace = true;
 
