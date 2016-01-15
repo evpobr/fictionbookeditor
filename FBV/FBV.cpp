@@ -590,14 +590,14 @@ static void   ValidateFiles() {
 
   try {
     MSXML2::IXMLDOMSchemaCollection2Ptr scol;
-    CheckError(scol.CreateInstance(L"Msxml2.XMLSchemaCache.4.0"));
+    CheckError(scol.CreateInstance(L"Msxml2.XMLSchemaCache.6.0"));
 
     // load fictionbook schema
     scol->add(FBNS,g_schema_file);
 
     // create a SAX reader
     MSXML2::ISAXXMLReaderPtr	  rdr;
-    CheckError(rdr.CreateInstance(L"Msxml2.SAXXMLReader.4.0"));
+    CheckError(rdr.CreateInstance(L"Msxml2.SAXXMLReader.6.0"));
 
     // attach a schema
     rdr->putFeature((USHORT*)L"schema-validation",VARIANT_TRUE);

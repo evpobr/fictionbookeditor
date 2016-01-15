@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <tchar.h>
 
-#import <msxml4.dll>
+#import <msxml6.dll>
 
 using namespace _com_util;
 
