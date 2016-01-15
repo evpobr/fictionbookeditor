@@ -41,7 +41,7 @@ extern CString    _SettingsPath;
 // control IDs
 #include <dlgs.h>
 
-#import <msxml4.dll>
+#import <msxml6.dll>
 
 // C library
 #include <time.h>
