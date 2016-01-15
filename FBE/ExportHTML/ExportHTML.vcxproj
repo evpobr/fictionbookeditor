@@ -175,6 +175,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CustomFileSaveDialog.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="ExportHTMLPlugin.h" />
     <ClInclude Include="ExportHTML_i.h" />
