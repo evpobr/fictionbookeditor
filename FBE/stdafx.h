@@ -30,9 +30,12 @@
 #include <atlfile.h>
 #include <atlcomtime.h>
 #include <atlimage.h>
+#include <atlutil.h>
 #include "atlimageex.h"
 
 #include <shellapi.h>
+#include <Wininet.h>
+#include <Urlmon.h>
 
 #include <atlapp.h>
 
@@ -44,9 +47,9 @@ extern CAppModule _Module;
 #include <atluser.h>
 
 #include <atlframe.h>
+#include <atlcrack.h>
 #include <atlctrls.h>
 #include <atldlgs.h>
-#include <atlctrlw.h>
 #include <atlctrlw.h>
 #include <atlctrlx.h>
 #include <atlsplit.h>
@@ -55,8 +58,37 @@ extern CAppModule _Module;
 #include <atltheme.h>
 
 // C library
+#include <stdlib.h>
+#include <stdio.h>
+#include <assert.h>
 #include <ctype.h>
+#include <fcntl.h>
+#include <math.h>
 #include <time.h>
+#include <sys/stat.h>
+
+// C++ library
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <deque>
+#include <exception>
+
+// Scintilla
+#include "Scintilla.h"
+#include "SciLexer.h"
+
+// Hunspell
+#include "hunspell.h"
+
+// PCRE
+#ifdef USE_PCRE
+#include "pcre.h"
+#endif
 
 // MSXML
 #import <msxml4.dll>
@@ -70,6 +102,9 @@ extern CAppModule _Module;
 #include <mshtmcid.h>
 #import <shdocvw.dll> no_auto_exclude rename_namespace("SHD") rename("FindText","FindTextX")
 #import <mshtml.tlb> no_auto_exclude rename("TranslateAccelerator","TranslateAcceleratorX") rename("min", "minX") rename("max", "maxX")
+
+#include <gl\gl.h>
+#include <gl\glu.h>
 
 // use com utils
 using namespace _com_util;
