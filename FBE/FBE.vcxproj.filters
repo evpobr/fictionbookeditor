@@ -421,6 +421,8 @@
     <None Include="rus.xsl" />
     <None Include="ukr.xsl" />
     <None Include="symbols.ini" />
+    <None Include="genres.rus.txt_L" />
+    <None Include="genres.txt_L" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">
@@ -431,5 +433,10 @@
     <ResourceCompile Include="FBE.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="genres.rus.txt" />
+    <Text Include="genres.txt" />
+    <Text Include="genres.ukr.txt" />
   </ItemGroup>
 </Project>
