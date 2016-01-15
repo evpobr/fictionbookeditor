@@ -350,6 +350,7 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="apputils.h" />
     <ClInclude Include="atlimageex.h" />
     <ClInclude Include="extras\atlcrypt.h" />
+    <ClInclude Include="targetver.h" />
     <ClInclude Include="utils\CFileDialogEx.h" />
     <ClInclude Include="ContainerWnd.h" />
     <ClInclude Include="DocumentTree.h" />
