@@ -41,12 +41,12 @@ public:
 
     // read saved template name
     m_template=U::QuerySV(_Settings,_T("Template"),U::GetProgDirFile(_T("html.xsl")));
-    ::SetDlgItemText(hWnd,IDC_TEMPLATE,m_template);
+    SetDlgItemText(IDC_TEMPLATE,m_template);
     m_includedesc=U::QueryIV(_Settings,_T("IncludeDesc"),1)!=0;
-    ::SendDlgItemMessage(hWnd,IDC_DOCINFO,BM_SETCHECK,
+	SendDlgItemMessage(IDC_DOCINFO,BM_SETCHECK,
       m_includedesc ? BST_CHECKED : BST_UNCHECKED,0);
     m_tocdepth=U::QueryIV(_Settings,_T("TOCDepth"),1);
-    ::SetDlgItemInt(hWnd,IDC_TOCDEPTH,m_tocdepth,FALSE);
+    SetDlgItemInt(IDC_TOCDEPTH,m_tocdepth,FALSE);
     return TRUE;
   }
 
