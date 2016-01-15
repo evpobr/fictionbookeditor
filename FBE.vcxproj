@@ -76,8 +76,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <PreBuildEvent>
       <Message>Copying requisite resources...</Message>
-      <Command>xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
-</Command>
+      <Command>xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y /D</Command>
     </PreBuildEvent>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -130,8 +129,7 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>
       <Message>Copying requisite resources...</Message>
-      <Command>xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y
-</Command>
+      <Command>xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y /D</Command>
     </PreBuildEvent>
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -195,6 +193,10 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile>
       <PreprocessorDefinitions>HUNSPELL_STATIC;_USING_V110_SDK71_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <PreBuildEvent>
+      <Command>xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y /D</Command>
+      <Message>Copying requisite resources...</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutBox.cpp" />
