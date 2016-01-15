@@ -12,7 +12,7 @@ copy ..\Release\res_ukr.dll .\Input\
 copy ..\Release\FBSHell.dll .\Input\
 copy ..\Release\ExportHTML.dll .\Input\
 
-xcopy ..\files\*.* .\Input\ /E /Y /D
+xcopy ..\FBE\files\*.* .\Input\ /E /Y /D
 
 makensis.exe MakeInstaller.nsi
 pause
