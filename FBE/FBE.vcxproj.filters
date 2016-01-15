@@ -26,9 +26,6 @@
     <Filter Include="Dependance Files\Style Sheets">
       <UniqueIdentifier>{4824b569-5baa-4847-b66b-a21ffbcc5b93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dependance Files\FictionBook Files">
-      <UniqueIdentifier>{ba1b12bd-aa55-4b44-b16c-0235bcd5cb11}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Dependance Files\Hypertext Files">
       <UniqueIdentifier>{739cf53b-fcad-4838-b088-5b22085673ca}</UniqueIdentifier>
     </Filter>
@@ -412,9 +409,6 @@
     <None Include="files\main_fast.css">
       <Filter>Dependance Files\Style Sheets</Filter>
     </None>
-    <None Include="files\blank.fb2">
-      <Filter>Dependance Files\FictionBook Files</Filter>
-    </None>
     <None Include="files\imgprev.html">
       <Filter>Dependance Files\Hypertext Files</Filter>
     </None>
@@ -432,6 +426,11 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="FictionBook.xsd" />
+    <None Include="FictionBookGenres.xsd" />
+    <None Include="FictionBookLang.xsd" />
+    <None Include="FictionBookLinks.xsd" />
+    <None Include="blank.fb2" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">
@@ -442,11 +441,5 @@
     <ResourceCompile Include="FBE.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Xsd Include="FictionBookGenres.xsd" />
-    <Xsd Include="FictionBookLang.xsd" />
-    <Xsd Include="FictionBookLinks.xsd" />
-    <Xsd Include="FictionBook.xsd" />
   </ItemGroup>
 </Project>
