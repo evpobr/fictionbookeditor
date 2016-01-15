@@ -354,14 +354,14 @@ MSXML2::IXMLDOMDocument2Ptr  CreateDocument(bool fFreeThreaded)
 {
   MSXML2::IXMLDOMDocument2Ptr  doc;
   wchar_t		      *cls=fFreeThreaded ?
-    L"Msxml2.FreeThreadedDOMDocument.4.0" : L"Msxml2.DOMDocument.4.0";
+    L"Msxml2.FreeThreadedDOMDocument.6.0" : L"Msxml2.DOMDocument.6.0";
   CheckError(doc.CreateInstance(cls));
   return doc;
 }
 
 MSXML2::IXSLTemplatePtr    CreateTemplate() {
   MSXML2::IXSLTemplatePtr    tp;
-  CheckError(tp.CreateInstance(L"Msxml2.XSLTemplate.4.0"));
+  CheckError(tp.CreateInstance(L"Msxml2.XSLTemplate.6.0"));
   return tp;
 }
 
