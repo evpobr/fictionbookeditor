@@ -422,6 +422,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="targetver.h" />
     <ClInclude Include="zlib\deflate.h" />
     <ClInclude Include="FBShell.h" />
     <ClInclude Include="Image.h" />
@@ -459,4 +460,3 @@
     <Import Project="..\packages\wtl.9.1\build\native\wtl.targets" Condition="Exists('..\packages\wtl.9.1\build\native\wtl.targets')" />
   </ImportGroup>
 </Project>
-
