@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Fri Jan 15 14:45:18 2016
+/* at Fri Jan 15 20:28:51 2016
  */
 /* Compiler settings for fbe.idl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
@@ -76,7 +76,7 @@ extern "C"{
 /* [helpstring][version][uuid] */ 
 
 
-EXTERN_C const IID LIBID_FBELib;
+DEFINE_GUID(LIBID_FBELib,0x37B16C7D,0x4400,0x4d7d,0xAA,0x35,0x14,0xC7,0x4E,0x26,0x5E,0xA4);
 
 #ifndef __IFBEImportPlugin_INTERFACE_DEFINED__
 #define __IFBEImportPlugin_INTERFACE_DEFINED__
@@ -85,7 +85,7 @@ EXTERN_C const IID LIBID_FBELib;
 /* [unique][helpstring][uuid][object] */ 
 
 
-EXTERN_C const IID IID_IFBEImportPlugin;
+DEFINE_GUID(IID_IFBEImportPlugin,0x8094bc55,0x99c0,0x4adf,0xbd,0x55,0x71,0xe2,0x06,0xdf,0xd4,0x03);
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
@@ -168,7 +168,7 @@ EXTERN_C const IID IID_IFBEImportPlugin;
 /* [unique][helpstring][uuid][object] */ 
 
 
-EXTERN_C const IID IID_IFBEExportPlugin;
+DEFINE_GUID(IID_IFBEExportPlugin,0x1afaab7f,0x6f66,0x4ef6,0xb1,0x99,0x16,0xfa,0x49,0xcc,0x5b,0x52);
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
@@ -251,7 +251,7 @@ EXTERN_C const IID IID_IFBEExportPlugin;
 /* [unique][helpstring][dual][uuid][object] */ 
 
 
-EXTERN_C const IID IID_IExternalHelper;
+DEFINE_GUID(IID_IExternalHelper,0x7269066E,0x2089,0x4408,0xB3,0xF3,0xE8,0xD7,0x59,0x84,0xD5,0xA6);
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     

@@ -94,7 +94,9 @@ extern CAppModule _Module;
 #import <msxml4.dll>
 
 // vb regexps
-#import "vbscript3.tlb"
+#ifndef USE_PCRE
+#import "progid:VBScript.RegExp"
+#endif
 
 // mshtml additional includes
 #include <exdispid.h>
