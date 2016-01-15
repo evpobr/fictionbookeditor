@@ -20,9 +20,6 @@
     <Filter Include="Dependance Files">
       <UniqueIdentifier>{ec6d40b1-6c46-4771-8c2d-e3968dadb91c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dependance Files\XML Stylesheets">
-      <UniqueIdentifier>{b00b3d8d-440c-4ff4-9fd4-7290f74f57ce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Dependance Files\Style Sheets">
       <UniqueIdentifier>{4824b569-5baa-4847-b66b-a21ffbcc5b93}</UniqueIdentifier>
     </Filter>
@@ -391,18 +388,6 @@
     <None Include="res\xml.bmp">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="files\eng.xsl">
-      <Filter>Dependance Files\XML Stylesheets</Filter>
-    </None>
-    <None Include="files\fb2.xsl">
-      <Filter>Dependance Files\XML Stylesheets</Filter>
-    </None>
-    <None Include="files\html.xsl">
-      <Filter>Dependance Files\XML Stylesheets</Filter>
-    </None>
-    <None Include="files\rus.xsl">
-      <Filter>Dependance Files\XML Stylesheets</Filter>
-    </None>
     <None Include="files\main.css">
       <Filter>Dependance Files\Style Sheets</Filter>
     </None>
@@ -441,5 +426,11 @@
     <ResourceCompile Include="FBE.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="eng.xsl" />
+    <Xml Include="fb2.xsl" />
+    <Xml Include="rus.xsl" />
+    <Xml Include="ukr.xsl" />
   </ItemGroup>
 </Project>

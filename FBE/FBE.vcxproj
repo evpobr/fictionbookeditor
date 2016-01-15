@@ -439,10 +439,6 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <None Include="res\wordstat.bmp" />
     <None Include="res\wsoverlays.bmp" />
     <None Include="res\xml.bmp" />
-    <None Include="files\eng.xsl" />
-    <None Include="files\fb2.xsl" />
-    <None Include="files\html.xsl" />
-    <None Include="files\rus.xsl" />
     <None Include="files\main.css" />
     <None Include="files\main_fast.css" />
     <None Include="files\imgprev.html" />
@@ -462,8 +458,20 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="eng.xsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fb2.xsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="rus.xsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ukr.xsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="blank.fb2">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="FictionBook.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
