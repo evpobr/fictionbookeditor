@@ -218,3 +218,4 @@ pip-log.txt
 /FBE.h
 installer/Input/
 installer/*.exe
+/FBE/ExportHTML/ExportHTML_i.h
