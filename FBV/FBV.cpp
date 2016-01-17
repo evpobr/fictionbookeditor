@@ -573,7 +573,7 @@ static void   SetItemState(int idx,FileInfo *fi,VState state) {
 static void   SetCOMError(int idx,FileInfo *fi,_com_error& e) {
   wchar_t    buffer[1024];
 
-  _snwprintf(buffer,sizeof(buffer)/sizeof(buffer[0]),L"COM Error: %x [%s]",
+  _snwprintf_s(buffer, _countof(buffer),L"COM Error: %x [%s]",
       e.Error(),(const wchar_t *)e.Description());
 
   fi->errmsg=::SysAllocString(buffer);
