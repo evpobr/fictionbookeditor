@@ -487,14 +487,14 @@ static INT_PTR CALLBACK  DlgProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam
 }
 
 // SAX error handler
-class SAXEH : public MSXML2::ISAXErrorHandler {
+class SAXEH : public ISAXErrorHandler {
 public:
   SAXEH() : m_error_msg(0) { }
   ~SAXEH() { ::SysFreeString(m_error_msg); }
 
   // dummy IUnknown
   STDMETHOD(QueryInterface)(REFIID iid,void **ppvObject) {
-    if (iid==IID_IUnknown || iid==__uuidof(MSXML2::ISAXErrorHandler)) {
+    if (iid==IID_IUnknown || iid==__uuidof(ISAXErrorHandler)) {
       *ppvObject=this;
       return S_OK;
     }
@@ -504,27 +504,29 @@ public:
   STDMETHOD_(ULONG,Release)() { return 1; }
 
   // ISAXErrorHandler
-  STDMETHOD(raw_error)(MSXML2::ISAXLocator *loc, USHORT *msg, HRESULT hr) {
+  STDMETHOD(error)(ISAXLocator *loc, const wchar_t *msg, HRESULT hr) {
     SetMsg(loc,msg,hr);
     return E_FAIL;
   }
-  STDMETHOD(raw_fatalError)(MSXML2::ISAXLocator *loc, USHORT *msg, HRESULT hr) {
+  STDMETHOD(fatalError)(ISAXLocator *loc, const wchar_t *msg, HRESULT hr) {
     SetMsg(loc,msg,hr);
     return E_FAIL;
   }
-  STDMETHOD(raw_ignorableWarning)(MSXML2::ISAXLocator *loc, USHORT *msg, HRESULT hr) {
+  STDMETHOD(ignorableWarning)(ISAXLocator *loc, const wchar_t *msg, HRESULT hr) {
     SetMsg(loc,msg,hr);
     return E_FAIL;
   }
 
   BSTR	    m_error_msg;
 
-  void	  SetMsg(MSXML2::ISAXLocator *loc,const USHORT *msg,HRESULT hr) {
+  void	  SetMsg(ISAXLocator *loc, const wchar_t *msg,HRESULT hr) {
     if (m_error_msg)
       return;
 
-    int	  line=loc->getLineNumber();
-    int	  col=loc->getColumnNumber();
+	int	  line = 0;
+	loc->getLineNumber(&line);
+	int	  col = 0;
+	loc->getColumnNumber(&col);
 
     if (line>0 && col>0) {
       wchar_t	buffer[2048];
@@ -589,22 +591,22 @@ static void   ValidateFiles() {
   SAXEH     eh;
 
   try {
-    MSXML2::IXMLDOMSchemaCollection2Ptr scol;
+    IXMLDOMSchemaCollection2Ptr scol;
     CheckError(scol.CreateInstance(L"Msxml2.XMLSchemaCache.6.0"));
 
     // load fictionbook schema
-    scol->add(FBNS,g_schema_file);
+	CheckError(scol->add(bstr_t(FBNS), variant_t(g_schema_file)));
 
     // create a SAX reader
-    MSXML2::ISAXXMLReaderPtr	  rdr;
-    CheckError(rdr.CreateInstance(L"Msxml2.SAXXMLReader.6.0"));
+    ISAXXMLReaderPtr	  rdr;
+	CheckError(rdr.CreateInstance(L"Msxml2.SAXXMLReader.6.0"));
 
     // attach a schema
-    rdr->putFeature((USHORT*)L"schema-validation",VARIANT_TRUE);
-    rdr->putProperty((USHORT*)L"schemas",scol.GetInterfacePtr());
-    rdr->putFeature((USHORT*)L"exhaustive-errors",VARIANT_TRUE);
+	CheckError(rdr->putFeature(L"schema-validation", VARIANT_TRUE));
+	CheckError(rdr->putProperty(L"schemas", variant_t(scol.GetInterfacePtr())));
+	CheckError(rdr->putFeature(L"exhaustive-errors", VARIANT_TRUE));
 
-    rdr->putErrorHandler(&eh);
+    CheckError(rdr->putErrorHandler(&eh));
 
     for (int i=0;!g_stop && i<g_list_items;++i) {
       FileInfo  *fi=&g_file_list[i];
@@ -632,7 +634,7 @@ static void   ValidateFiles() {
       if (fDV) {
 	::SendDlgItemMessage(g_dialog,IDC_STATUS,SB_SETTEXT,0,(LPARAM)fi->filename);
 	try {
-	  rdr->parseURL((USHORT*)fi->filename);
+	  CheckError(rdr->parseURL(fi->filename));
 	  SetItemState(i,fi,VALID);
 	}
 	catch (_com_error& e) {

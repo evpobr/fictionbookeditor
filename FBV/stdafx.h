@@ -7,9 +7,14 @@
 #include <assert.h>
 #include <tchar.h>
 
-#import <msxml6.dll>
+#include <msxml6.h>
+#include <comdef.h>
+#include <comdefsp.h>
 
 using namespace _com_util;
+
+_COM_SMARTPTR_TYPEDEF(IXMLDOMSchemaCollection2, __uuidof(IXMLDOMSchemaCollection2));
+_COM_SMARTPTR_TYPEDEF(ISAXXMLReader, __uuidof(ISAXXMLReader));
 
 #if defined _M_IX86
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
