@@ -530,7 +530,7 @@ public:
       wchar_t	buffer[2048];
 
       _snwprintf_s(buffer, _countof(buffer),L"At line %d, column %d:\r\n%s",
-	  line,col,msg);
+	  line,col,(const wchar_t*)msg);
 
       // delete namespace references
       for (wchar_t *cp=buffer;*cp;++cp)
