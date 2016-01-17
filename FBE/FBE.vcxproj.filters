@@ -224,12 +224,6 @@
     <ClInclude Include="extras\MD5.h">
       <Filter>extras</Filter>
     </ClInclude>
-    <ClInclude Include="extras\SciLexer.h">
-      <Filter>extras</Filter>
-    </ClInclude>
-    <ClInclude Include="extras\Scintilla.h">
-      <Filter>extras</Filter>
-    </ClInclude>
     <ClInclude Include="extras\atlcrypt.h">
       <Filter>extras</Filter>
     </ClInclude>
@@ -403,26 +397,23 @@
     <None Include="main_fast.css" />
     <None Include="main.js" />
     <None Include="main.html" />
-    <None Include="SciLexer.dll" />
     <None Include="gdiplus.cat" />
     <None Include="GdiPlus.dll" />
+    <None Include="gdiplus.manifest" />
+    <None Include="gpl-3.0.txt" />
+    <None Include="gpl-3.0.ru.txt" />
+    <None Include="gpl-3.0.ua.txt" />
+    <None Include="contributors.txt" />
+    <None Include="copying.txt" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">
       <Filter>Resource Files</Filter>
     </Manifest>
-    <Manifest Include="gdiplus.manifest" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FBE.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="contributors.txt" />
-    <Text Include="copying.txt" />
-    <Text Include="gpl-3.0.ru.txt" />
-    <Text Include="gpl-3.0.txt" />
-    <Text Include="gpl-3.0.ua.txt" />
   </ItemGroup>
 </Project>

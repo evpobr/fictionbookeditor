@@ -80,7 +80,7 @@ extern CAppModule _Module;
 
 // Scintilla
 #include "Scintilla.h"
-#include "SciLexer.h"
+#include "SciLexer_new.h"
 
 // Hunspell
 #include "hunspell.h"

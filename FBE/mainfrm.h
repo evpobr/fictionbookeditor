@@ -21,7 +21,7 @@
 #include "OptDlg.h"
 #include "ContainerWnd.h"
 #include "Scintilla.h"
-#include "SciLexer.h"
+#include "SciLexer_new.h"
 #include "FBE.h"
 #include "Words.h"
 #include "SearchReplace.h"
