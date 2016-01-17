@@ -649,7 +649,7 @@ static void   ValidateFiles() {
   }
   catch (_com_error& e) {
     wchar_t	buffer[1024];
-    _snwprintf(buffer,sizeof(buffer)/sizeof(buffer[0]),L"COM Error: %x [%s]",
+    _snwprintf_s(buffer,_countof(buffer),L"COM Error: %x [%s]",
 	e.Error(),(const wchar_t *)e.Description());
     ::MessageBox(g_dialog,buffer,_T("Error"),MB_OK|MB_ICONERROR);
   }
