@@ -529,7 +529,7 @@ public:
     if (line>0 && col>0) {
       wchar_t	buffer[2048];
 
-      _snwprintf(buffer,sizeof(buffer)/sizeof(buffer[0]),L"At line %d, column %d:\r\n%s",
+      _snwprintf_s(buffer, _countof(buffer),L"At line %d, column %d:\r\n%s",
 	  line,col,msg);
 
       // delete namespace references
