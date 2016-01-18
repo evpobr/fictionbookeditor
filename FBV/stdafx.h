@@ -2,7 +2,20 @@
 
 #include "targetver.h"
 
-#include <windows.h>
+#include <atlbase.h>
+#include <atlstr.h>
+#include <atlpath.h>
+#include <atlapp.h>
+
+extern CAppModule _Module;
+
+#include <atlwin.h>
+
+#include <atlframe.h>
+#include <atlctrls.h>
+#include <atldlgs.h>
+#include <atlmisc.h>
+
 #include <commctrl.h>
 #include <assert.h>
 #include <tchar.h>

@@ -7,51 +7,119 @@
 
 #include "resource.h"
 
+CAppModule _Module;
+
+enum VState {
+	UNCHECKED, VALID, INVALID
+};
+
+struct FileInfo {
+	BSTR		  filename;
+	BSTR		  errmsg;
+	FILETIME	  timestamp;
+	ULARGE_INTEGER  size;
+	VState	  state;
+};
+
+// dialog box resizing support
+enum SizeMode {
+	BL, BR, BS, BT = BL, BB = BR
+};
+
+struct ControlInfo {
+	int	      id;
+	SizeMode    borders[4]; // left, top, right, bottom
+	int	      flags; // redraw flags
+	RECT	      rc;
+};
+
+static ControlInfo  g_controls[] = {
+	{ IDC_FILELIST,{ BL, BT, BR, BB } },
+	{ IDC_MSG,{ BL, BB, BR, BB }, TRUE },
+	{ IDC_VALIDATE,{ BR, BB, BS, BS }, TRUE },
+	{ IDCANCEL,{ BR, BB, BS, BS }, TRUE },
+	{ IDC_STATUS,{ BL, BB, BR, BB }, TRUE },
+};
+#define NCONTROLS (sizeof(g_controls)/sizeof(g_controls[0]))
+
+class CMainDlg : public CDialogImpl<CMainDlg>, public CDialogResize<CMainDlg>
+{
+public:
+	enum { IDD = IDD_MAIN };
+
+	BEGIN_MSG_MAP(CMainDlg)
+		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
+		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
+		COMMAND_ID_HANDLER(IDC_VALIDATE, OnValidate)
+		MESSAGE_HANDLER(WM_TIMER, OnTimer)
+		NOTIFY_HANDLER(IDC_FILELIST, LVN_GETDISPINFO, OnLvnGetdispinfoFilelist)
+		NOTIFY_HANDLER(IDC_FILELIST, LVN_ITEMCHANGED, OnLvnItemchangedFilelist)
+		CHAIN_MSG_MAP(CDialogResize<CMainDlg>)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+	END_MSG_MAP()
+
+	BEGIN_DLGRESIZE_MAP(CMainDlg)
+		DLGRESIZE_CONTROL(IDC_FILELIST, DLSZ_SIZE_X | DLSZ_SIZE_Y)
+		DLGRESIZE_CONTROL(IDC_MSG, DLSZ_SIZE_X | DLSZ_MOVE_Y)
+		DLGRESIZE_CONTROL(IDC_VALIDATE, DLSZ_MOVE_X | DLSZ_MOVE_Y)
+		DLGRESIZE_CONTROL(IDCANCEL, DLSZ_MOVE_X | DLSZ_MOVE_Y)
+		DLGRESIZE_CONTROL(IDC_STATUS, DLSZ_MOVE_Y)
+	END_DLGRESIZE_MAP()
+
+	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnValidate(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnLvnGetdispinfoFilelist(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
+	LRESULT OnLvnItemchangedFilelist(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
+
+	CPath m_pathSchema;
+	UINT_PTR m_timer;
+	bool m_stop;
+	bool m_validating;
+
+	void   ValidateFiles();
+	void   ScanDirectory(const wchar_t *filename);
+	void   AddFile(const wchar_t *filename);
+	void   ProcessCommandLine();
+	void   SetItemState(int idx, FileInfo *fi, VState state);
+	void   SetCOMError(int idx, FileInfo *fi, _com_error& e);
+	bool   GetSchemaFile();
+	void   AddFileInfo(const wchar_t *filename, DWORD attr, FILETIME ft,
+		DWORD szLow, DWORD szHigh);
+	void   FreeFileData();
+	void ScreenToClient(HWND hWnd, RECT& rc);
+	void SizeInit(HWND hDlg, ControlInfo *ii, int nitems);
+	void SizeDialog(HWND hDlg, ControlInfo *ii, int nitems);
+	void DoEvents();
+};
+
 enum {
   INIT_TIMER=1
 };
 
-static HWND		g_dialog;
-static HINSTANCE	g_instance;
-static UINT_PTR		g_timer;
-static bool		g_stop;
-static bool		g_validating;
-static TCHAR		g_schema_file[MAX_PATH];
 static const wchar_t	*FBNS=L"http://www.gribuser.ru/xml/fictionbook/2.0";
 static int		FBNS_len;
 static const wchar_t	*XLINKNS=L"http://www.w3.org/1999/xlink";
 static int		XLINKNS_len;
 
-static void		DoEvents() {
+void CMainDlg::DoEvents()
+{
   MSG	msg;
 
   while (::PeekMessage(&msg,NULL,0,0,PM_REMOVE)) {
-    if (!::IsDialogMessage(g_dialog,&msg)) {
+    if (!::IsDialogMessage(*this, &msg)) {
       ::TranslateMessage(&msg);
       ::DispatchMessage(&msg);
     }
   }
 }
 
-enum VState {
-  UNCHECKED, VALID, INVALID
-};
-
-struct FileInfo {
-  BSTR		  filename;
-  BSTR		  errmsg;
-  FILETIME	  timestamp;
-  ULARGE_INTEGER  size;
-  VState	  state;
-};
-
 static struct FileInfo	*g_file_list;
 static int		g_list_items,g_list_max;
 
-static void   ScanDirectory(const wchar_t *filename);
-static void   ValidateFiles();
-
-static void   AddFileInfo(const wchar_t *filename,DWORD attr,FILETIME ft,
+void CMainDlg::AddFileInfo(const wchar_t *filename,DWORD attr,FILETIME ft,
 			  DWORD szLow,DWORD szHigh)
 {
   if (g_list_items>=g_list_max) {
@@ -84,10 +152,10 @@ static void   AddFileInfo(const wchar_t *filename,DWORD attr,FILETIME ft,
   lvi.pszText=LPSTR_TEXTCALLBACK;
   lvi.lParam=g_list_items-1;
 
-  ::SendDlgItemMessage(g_dialog,IDC_FILELIST,LVM_INSERTITEM,0,(LPARAM)&lvi);
+  SendDlgItemMessage(IDC_FILELIST,LVM_INSERTITEM,0,(LPARAM)&lvi);
 }
 
-static void   AddFile(const wchar_t *filename) {
+void CMainDlg::AddFile(const wchar_t *filename) {
   DWORD	      attr=::GetFileAttributes(filename);
 
   if (attr == INVALID_FILE_ATTRIBUTES)
@@ -113,8 +181,9 @@ static void   AddFile(const wchar_t *filename) {
   AddFileInfo(filename,attr,ft,fs.LowPart,fs.HighPart);
 }
 
-static void   ScanDirectory(const wchar_t *filename) {
-  ::SendDlgItemMessage(g_dialog,IDC_STATUS,SB_SETTEXT,0,(LPARAM)filename);
+void CMainDlg::ScanDirectory(const wchar_t *filename)
+{
+  SendDlgItemMessage(IDC_STATUS,SB_SETTEXT,0,(LPARAM)filename);
   DoEvents(); // pump messages
 
   int		  namelen=lstrlen(filename);
@@ -134,7 +203,7 @@ static void   ScanDirectory(const wchar_t *filename) {
   WIN32_FIND_DATA fd;
 
   for (hFind=::FindFirstFile(buffer,&fd);
-       hFind!=INVALID_HANDLE_VALUE && fNext && !g_stop;
+       hFind!=INVALID_HANDLE_VALUE && fNext && !m_stop;
        fNext=::FindNextFile(hFind,&fd))
   {
     if (lstrcmp(fd.cFileName,_T("."))==0 || lstrcmp(fd.cFileName,_T(".."))==0)
@@ -160,7 +229,7 @@ static void   ScanDirectory(const wchar_t *filename) {
     ::FindClose(hFind);
 }
 
-static void   ProcessCommandLine() {
+void CMainDlg::ProcessCommandLine() {
   int	    argc;
   wchar_t   **argv=::CommandLineToArgvW(::GetCommandLineW(),&argc);
 
@@ -176,13 +245,13 @@ static void   ProcessCommandLine() {
 
   ::GlobalFree((HGLOBAL)argv);
 
-  if (!g_stop) {
-    ::SendDlgItemMessage(g_dialog,IDC_STATUS,SB_SETTEXT,0,(LPARAM)_T("Done."));
-    ::ShowWindow(::GetDlgItem(g_dialog,IDC_VALIDATE),SW_SHOW);
+  if (!m_stop) {
+    SendDlgItemMessage(IDC_STATUS,SB_SETTEXT,0,(LPARAM)_T("Done."));
+    ::ShowWindow(GetDlgItem(IDC_VALIDATE),SW_SHOW);
   }
 }
 
-static void   FreeFileData() {
+void   CMainDlg::FreeFileData() {
   for (int i=0;i<g_list_items;++i) {
     ::SysFreeString(g_file_list[i].filename);
     ::SysFreeString(g_file_list[i].errmsg);
@@ -194,76 +263,55 @@ static void   FreeFileData() {
   g_list_items=g_list_max=0;
 }
 
-static INT_PTR CALLBACK  DlgProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
+bool CMainDlg::GetSchemaFile()
+{
+	TCHAR szExePath[MAX_PATH] = { 0 };
+	DWORD nCount = ::GetModuleFileName(nullptr, szExePath, MAX_PATH);
+	m_pathSchema.m_strPath = szExePath;
+	m_pathSchema.RemoveFileSpec();
+	m_pathSchema.Append(_T("FictionBook.xsd"));
 
-static bool   GetSchemaFile() {
-  ::GetModuleFileName(NULL,g_schema_file,MAX_PATH);
 
-  TCHAR	  *cp=wcsrchr(g_schema_file,_T('\\'));
-  if (cp)
-    ++cp;
-  else
-    cp=g_schema_file;
-
-  *cp=0;
-
-  int	len=lstrlen(g_schema_file);
-  lstrcpyn(g_schema_file+len,_T("FictionBook.xsd"),MAX_PATH-len);
-
-  if (::GetFileAttributes(g_schema_file)==INVALID_FILE_ATTRIBUTES) {
-    ::MessageBox(NULL,_T("Can't load FictionBook schema."),_T("Error"),MB_OK|MB_ICONERROR);
+  if (::GetFileAttributes(m_pathSchema)==INVALID_FILE_ATTRIBUTES) {
+    MessageBox(_T("Can't load FictionBook schema."),_T("Error"),MB_OK|MB_ICONERROR);
     return false;
   }
 
   return true;
 }
 
-int __stdcall WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,
-		      LPSTR lpCmdLine,int nCmdShow)
+int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,
+		      LPTSTR lpCmdLine,int nCmdShow)
 {
-  g_instance=hInstance;
-
-  if (!GetSchemaFile())
-    return 0;
+  HRESULT hRes = ::CoInitialize(NULL);
+  ATLASSERT(SUCCEEDED(hRes));
 
   FBNS_len=lstrlenW(FBNS);
   XLINKNS_len=lstrlenW(XLINKNS);
 
-  ::CoInitialize(NULL);
+  ::DefWindowProc(NULL, 0, 0, 0L);
 
-  ::InitCommonControls();
+  AtlInitCommonControls(ICC_BAR_CLASSES);
 
-  ::DialogBox(hInstance,MAKEINTRESOURCE(IDD_MAIN),NULL,DlgProc);
+  hRes = _Module.Init(NULL, hInstance);
+  ATLASSERT(SUCCEEDED(hRes));
 
-  FreeFileData();
+  int nRet = 0;
+  // BLOCK: Run application
+  {
+	  CMainDlg dlgMain;
+	  nRet = dlgMain.DoModal();
+  }
+
+  _Module.Term();
 
   ::CoUninitialize();
 
-  return 0;
+  return nRet;
 }
 
-// dialog box resizing support
-enum SizeMode {
-  BL, BR, BS, BT=BL, BB=BR
-};
-
-struct ControlInfo {
-  int	      id;
-  SizeMode    borders[4]; // left, top, right, bottom
-  int	      flags; // redraw flags
-  RECT	      rc;
-};
-
-static ControlInfo  g_controls[]={
-  { IDC_FILELIST, { BL, BT, BR, BB } },
-  { IDC_MSG, { BL, BB, BR, BB }, TRUE },
-  { IDC_VALIDATE, { BR, BB, BS, BS }, TRUE },
-  { IDCANCEL, { BR, BB, BS, BS }, TRUE },
-  { IDC_STATUS, { BL, BB, BR, BB }, TRUE },
-};
-#define NCONTROLS (sizeof(g_controls)/sizeof(g_controls[0]))
-
-static void   ScreenToClient(HWND hWnd,RECT& rc) {
+void CMainDlg::ScreenToClient(HWND hWnd,RECT& rc)
+{
   POINT	  pt1={rc.left,rc.top};
   POINT	  pt2={rc.right,rc.bottom};
   ::ScreenToClient(hWnd,&pt1);
@@ -272,14 +320,15 @@ static void   ScreenToClient(HWND hWnd,RECT& rc) {
   rc.right=pt2.x; rc.bottom=pt2.y;
 }
 
-static void   SizeInit(HWND hDlg, ControlInfo *ii, int nitems) {
+void CMainDlg::SizeInit(HWND hDlg, ControlInfo *ii, int nitems)
+{
   RECT	cli;
   ::GetClientRect(hDlg,&cli);
 
   for (;nitems;--nitems,++ii) {
     RECT  rc;
     ::GetWindowRect(::GetDlgItem(hDlg,ii->id),&rc);
-    ::ScreenToClient(hDlg,rc);
+    ScreenToClient(hDlg,rc);
 
     // left
     switch (ii->borders[0]) {
@@ -311,7 +360,8 @@ static void   SizeInit(HWND hDlg, ControlInfo *ii, int nitems) {
   }
 }
 
-static void   SizeDialog(HWND hDlg, ControlInfo *ii,int nitems) {
+void CMainDlg::SizeDialog(HWND hDlg, ControlInfo *ii,int nitems)
+{
   RECT	cli;
   ::GetClientRect(hDlg,&cli);
 
@@ -366,124 +416,6 @@ static void   SizeDialog(HWND hDlg, ControlInfo *ii,int nitems) {
       ::RedrawWindow(::GetDlgItem(hDlg,ii->id),NULL,NULL,
 	RDW_ERASE|RDW_INVALIDATE|RDW_UPDATENOW);
   }
-}
-
-static INT_PTR CALLBACK  DlgProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
-{
-  NMHDR	      *nmh;
-
-  switch (uMsg) {
-  case WM_INITDIALOG: {
-    RECT	      rcmsg,rcstatus;
-
-    g_dialog=hDlg;
-    // adjust the edit control height to avoid overlapping the status line
-    ::GetWindowRect(::GetDlgItem(hDlg,IDC_STATUS),&rcstatus);
-    ::GetWindowRect(::GetDlgItem(hDlg,IDC_MSG),&rcmsg);
-    rcmsg.bottom=rcstatus.top;
-    ScreenToClient(hDlg,rcmsg);
-    ::MoveWindow(::GetDlgItem(hDlg,IDC_MSG),rcmsg.left,rcmsg.top,
-      rcmsg.right-rcmsg.left,rcmsg.bottom-rcmsg.top,FALSE);
-    // initialize resizing structures
-    SizeInit(hDlg,g_controls,NCONTROLS);
-    ::SendMessage(hDlg,WM_SETICON,ICON_BIG,
-      (LPARAM)::LoadIcon(g_instance,MAKEINTRESOURCE(IDI_MAIN)));
-    // set list view imagelist
-    ::SendDlgItemMessage(hDlg,IDC_FILELIST,LVM_SETIMAGELIST,LVSIL_SMALL,
-      (LPARAM)::ImageList_LoadBitmap(g_instance,MAKEINTRESOURCE(IDB_VICONS),
-      16,0,RGB(255,0,255)));
-    // add one column to list view
-    ::GetClientRect(::GetDlgItem(hDlg,IDC_FILELIST),&rcmsg);
-    LVCOLUMN  lvc;
-    memset(&lvc,0,sizeof(lvc));
-    lvc.mask=LVCF_FMT|LVCF_WIDTH;
-    lvc.fmt=LVCFMT_LEFT;
-    lvc.cx=rcmsg.right-rcmsg.left-::GetSystemMetrics(SM_CXVSCROLL)-4;
-    lvc.pszText=_T("File name");
-    ::SendDlgItemMessage(hDlg,IDC_FILELIST,LVM_INSERTCOLUMN,0,(LPARAM)&lvc);
-    // set startup timer
-    g_timer=::SetTimer(hDlg,INIT_TIMER,100,NULL);
-    return TRUE; }
-
-  case WM_COMMAND:
-    if (HIWORD(wParam)==0 || HIWORD(wParam)==1) {
-      switch (LOWORD(wParam)) {
-      case IDCANCEL:
-	g_stop=true;
-	::EndDialog(hDlg,IDCANCEL);
-	break;
-      case IDC_VALIDATE:
-	if (g_validating)
-	  g_stop=true;
-	else
-	  ValidateFiles();
-	break;
-      }
-    }
-    break;
-
-  case WM_SIZE:
-    SizeDialog(hDlg,g_controls,NCONTROLS);
-    break;
-
-  case WM_TIMER:
-    if (wParam==g_timer) {
-      ::KillTimer(hDlg,g_timer);
-      ProcessCommandLine();
-      if (g_list_items==0)
-	::EndDialog(hDlg,IDCANCEL);
-      else
-	ValidateFiles();
-    } else
-      return FALSE;
-    break;
-
-  case WM_NOTIFY:
-    nmh=(NMHDR *)lParam;
-    if (nmh->idFrom==IDC_FILELIST && nmh->code==LVN_GETDISPINFO) {
-      NMLVDISPINFO  *lvi=(NMLVDISPINFO*)lParam;
-
-      if (lvi->item.mask & LVIF_TEXT && lvi->item.lParam>=0 && lvi->item.lParam<g_list_items)
-      {
-	// extract a file title
-	const wchar_t	*name=g_file_list[lvi->item.lParam].filename;
-	const wchar_t	*slash=wcsrchr(name,_T('\\'));
-	if (slash)
-	  name=slash+1;
-
-	int		len=lstrlenW(name);
-	if (len>4 && lstrcmpiW(name+len-4,L".fb2")==0)
-	  len-=4;
-
-	// copy filename
-	if (len>lvi->item.cchTextMax-1)
-	  len=lvi->item.cchTextMax-1;
-	memcpy(lvi->item.pszText,name,len*sizeof(wchar_t));
-	lvi->item.pszText[len]=0;
-      }
-    } else if (nmh->idFrom==IDC_FILELIST && nmh->code==LVN_ITEMCHANGED) {
-      NMLISTVIEW  *lvi=(NMLISTVIEW *)lParam;
-
-      if (lvi->iItem>=0 && lvi->lParam>=0 && lvi->lParam<g_list_items &&
-	  lvi->uNewState & LVIS_SELECTED)
-      {
-	FileInfo  *fi=&g_file_list[lvi->lParam];
-
-	if (fi->errmsg && fi->errmsg[0])
-	  ::SetDlgItemText(hDlg,IDC_MSG,fi->errmsg);
-	else
-	  ::SetDlgItemText(hDlg,IDC_MSG,_T("No errors."));
-
-	::SendDlgItemMessage(g_dialog,IDC_STATUS,SB_SETTEXT,0,(LPARAM)fi->filename);
-      }
-    }
-    break;
-
-  default:
-    return FALSE;
-  }
-
-  return TRUE;
 }
 
 // SAX error handler
@@ -556,7 +488,7 @@ public:
   }
 };
 
-static void   SetItemState(int idx,FileInfo *fi,VState state) {
+void CMainDlg::SetItemState(int idx,FileInfo *fi,VState state) {
   if (fi->state==state)
     return;
 
@@ -569,10 +501,10 @@ static void   SetItemState(int idx,FileInfo *fi,VState state) {
   lvi.mask=LVIF_IMAGE;
   lvi.iImage=fi->state;
 
-  ::SendDlgItemMessage(g_dialog,IDC_FILELIST,LVM_SETITEM,0,(LPARAM)&lvi);
+  SendDlgItemMessage(IDC_FILELIST,LVM_SETITEM,0,(LPARAM)&lvi);
 }
 
-static void   SetCOMError(int idx,FileInfo *fi,_com_error& e) {
+void CMainDlg::SetCOMError(int idx,FileInfo *fi,_com_error& e) {
   wchar_t    buffer[1024];
 
   _snwprintf_s(buffer, _countof(buffer),L"COM Error: %x [%s]",
@@ -582,10 +514,10 @@ static void   SetCOMError(int idx,FileInfo *fi,_com_error& e) {
   SetItemState(idx,fi,INVALID);
 }
 
-static void   ValidateFiles() {
-  g_validating=true;
-  g_stop=false;
-  ::SetDlgItemText(g_dialog,IDC_VALIDATE,_T("&Stop"));
+void CMainDlg::ValidateFiles() {
+  m_validating=true;
+  m_stop=false;
+  SetDlgItemText(IDC_VALIDATE,_T("&Stop"));
 
   // create an error handler
   SAXEH     eh;
@@ -595,7 +527,7 @@ static void   ValidateFiles() {
     CheckError(scol.CreateInstance(L"Msxml2.XMLSchemaCache.6.0"));
 
     // load fictionbook schema
-	CheckError(scol->add(bstr_t(FBNS), variant_t(g_schema_file)));
+	CheckError(scol->add(bstr_t(FBNS), variant_t(m_pathSchema)));
 
     // create a SAX reader
     ISAXXMLReaderPtr	  rdr;
@@ -608,7 +540,7 @@ static void   ValidateFiles() {
 
     CheckError(rdr->putErrorHandler(&eh));
 
-    for (int i=0;!g_stop && i<g_list_items;++i) {
+    for (int i=0;!m_stop && i<g_list_items;++i) {
       FileInfo  *fi=&g_file_list[i];
 
       bool  fDV=fi->state==UNCHECKED;
@@ -632,7 +564,7 @@ static void   ValidateFiles() {
       }
 
       if (fDV) {
-	::SendDlgItemMessage(g_dialog,IDC_STATUS,SB_SETTEXT,0,(LPARAM)fi->filename);
+	SendDlgItemMessage(IDC_STATUS,SB_SETTEXT,0,(LPARAM)fi->filename);
 	try {
 	  CheckError(rdr->parseURL(fi->filename));
 	  SetItemState(i,fi,VALID);
@@ -653,10 +585,142 @@ static void   ValidateFiles() {
     wchar_t	buffer[1024];
     _snwprintf_s(buffer,_countof(buffer),L"COM Error: %x [%s]",
 	e.Error(),(const wchar_t *)e.Description());
-    ::MessageBox(g_dialog,buffer,_T("Error"),MB_OK|MB_ICONERROR);
+    MessageBox(buffer,_T("Error"),MB_OK|MB_ICONERROR);
   }
 
-  ::SendDlgItemMessage(g_dialog,IDC_STATUS,SB_SETTEXT,0,(LPARAM)_T("Done."));
-  ::SetDlgItemText(g_dialog,IDC_VALIDATE,_T("Re&validate"));
-  g_validating=false;
+  SendDlgItemMessage(IDC_STATUS,SB_SETTEXT,0,(LPARAM)_T("Done."));
+  SetDlgItemText(IDC_VALIDATE,_T("Re&validate"));
+  m_validating=false;
+}
+
+LRESULT CMainDlg::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	if (!GetSchemaFile())
+		EndDialog(FALSE);
+
+	DlgResize_Init(false);
+
+	RECT	      rcmsg, rcstatus;
+
+	// adjust the edit control height to avoid overlapping the status line
+	::GetWindowRect(GetDlgItem(IDC_STATUS), &rcstatus);
+	::GetWindowRect(GetDlgItem(IDC_MSG), &rcmsg);
+	rcmsg.bottom = rcstatus.top;
+	ScreenToClient(*this, rcmsg);
+	::MoveWindow(GetDlgItem(IDC_MSG), rcmsg.left, rcmsg.top,
+		rcmsg.right - rcmsg.left, rcmsg.bottom - rcmsg.top, FALSE);
+	// initialize resizing structures
+	SizeInit(*this, g_controls, NCONTROLS);
+	::SendMessage(*this, WM_SETICON, ICON_BIG,
+		(LPARAM)AtlLoadIcon(MAKEINTRESOURCE(IDI_MAIN)));
+	// set list view imagelist
+	SendDlgItemMessage(IDC_FILELIST, LVM_SETIMAGELIST, LVSIL_SMALL,
+		(LPARAM)::ImageList_LoadBitmap(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDB_VICONS),
+			16, 0, RGB(255, 0, 255)));
+	// add one column to list view
+	::GetClientRect(GetDlgItem(IDC_FILELIST), &rcmsg);
+	LVCOLUMN  lvc;
+	memset(&lvc, 0, sizeof(lvc));
+	lvc.mask = LVCF_FMT | LVCF_WIDTH;
+	lvc.fmt = LVCFMT_LEFT;
+	lvc.cx = rcmsg.right - rcmsg.left - ::GetSystemMetrics(SM_CXVSCROLL) - 4;
+	lvc.pszText = _T("File name");
+	::SendDlgItemMessage(*this, IDC_FILELIST, LVM_INSERTCOLUMN, 0, (LPARAM)&lvc);
+	// set startup timer
+	m_timer = ::SetTimer(*this, INIT_TIMER, 100, NULL);
+
+	return TRUE;
+}
+
+
+LRESULT CMainDlg::OnCancel(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	m_stop = true;
+	EndDialog(IDCANCEL);
+
+	return 0;
+}
+
+
+LRESULT CMainDlg::OnValidate(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	if (m_validating)
+		m_stop = true;
+	else
+		ValidateFiles();
+
+	return 0;
+}
+
+
+LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+{
+	if (wParam == m_timer) {
+		KillTimer(m_timer);
+		ProcessCommandLine();
+		if (g_list_items == 0)
+			EndDialog(IDCANCEL);
+		else
+			ValidateFiles();
+	}
+	else
+		return FALSE;
+
+	return 0;
+}
+
+
+LRESULT CMainDlg::OnLvnGetdispinfoFilelist(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/)
+{
+	NMLVDISPINFO *lvi = reinterpret_cast<NMLVDISPINFO*>(pNMHDR);
+
+	if (lvi->item.mask & LVIF_TEXT && lvi->item.lParam >= 0 && lvi->item.lParam < g_list_items)
+	{
+		// extract a file title
+		const wchar_t	*name = g_file_list[lvi->item.lParam].filename;
+		const wchar_t	*slash = wcsrchr(name, _T('\\'));
+		if (slash)
+			name = slash + 1;
+
+		int		len = lstrlenW(name);
+		if (len > 4 && lstrcmpiW(name + len - 4, L".fb2") == 0)
+			len -= 4;
+
+		// copy filename
+		if (len > lvi->item.cchTextMax - 1)
+			len = lvi->item.cchTextMax - 1;
+		memcpy(lvi->item.pszText, name, len*sizeof(wchar_t));
+		lvi->item.pszText[len] = 0;
+	}
+	 
+	return 0;
+}
+
+
+LRESULT CMainDlg::OnLvnItemchangedFilelist(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/)
+{
+	LPNMLISTVIEW lvi = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+
+	if (lvi->iItem >= 0 && lvi->lParam >= 0 && lvi->lParam < g_list_items &&
+		lvi->uNewState & LVIS_SELECTED)
+	{
+		FileInfo  *fi = &g_file_list[lvi->lParam];
+
+		if (fi->errmsg && fi->errmsg[0])
+			SetDlgItemText(IDC_MSG, fi->errmsg);
+		else
+			SetDlgItemText(IDC_MSG, _T("No errors."));
+
+		SendDlgItemMessage(IDC_STATUS, SB_SETTEXT, 0, (LPARAM)fi->filename);
+	}
+
+	return 0;
+}
+
+
+LRESULT CMainDlg::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+{
+	FreeFileData();
+
+	return 0;
 }
