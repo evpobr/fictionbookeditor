@@ -350,29 +350,34 @@ CString	GetCBString(HWND hWnd,int idx) {
   return ret;
 }
 
-MSXML2::IXMLDOMDocument2Ptr  CreateDocument(bool fFreeThreaded)
+IXMLDOMDocument2Ptr  CreateDocument(bool fFreeThreaded)
 {
-  MSXML2::IXMLDOMDocument2Ptr  doc;
+  IXMLDOMDocument2Ptr  doc;
   wchar_t		      *cls=fFreeThreaded ?
     L"Msxml2.FreeThreadedDOMDocument.6.0" : L"Msxml2.DOMDocument.6.0";
   CheckError(doc.CreateInstance(cls));
   return doc;
 }
 
-MSXML2::IXSLTemplatePtr    CreateTemplate() {
-  MSXML2::IXSLTemplatePtr    tp;
+IXSLTemplatePtr    CreateTemplate() {
+  IXSLTemplatePtr    tp;
   CheckError(tp.CreateInstance(L"Msxml2.XSLTemplate.6.0"));
   return tp;
 }
 
-void  ReportParseError(MSXML2::IXMLDOMDocument2Ptr doc)
+void  ReportParseError(IXMLDOMDocument2Ptr doc)
 {
   try {
-    MSXML2::IXMLDOMParseErrorPtr err(doc->parseError);
-    long	  line=err->line;
-    long	  col=err->linepos;
-    _bstr_t	  url(err->url);
-    _bstr_t	  reason(err->reason);
+    IXMLDOMParseErrorPtr err;
+	CheckError(doc->get_parseError(&err));
+	long	  line = 0;
+	CheckError(err->get_line(&line));
+	long	  col = 0;
+	CheckError(err->get_linepos(&col));
+    CComBSTR url;
+	CheckError(err->get_url(&url));
+    CComBSTR reason;
+	CheckError(err->get_reason(&reason));
     CString   msg;
     if (line && col)
       U::MessageBox(MB_OK|MB_ICONERROR,_T("XML Parse Error"),
@@ -387,12 +392,12 @@ void  ReportParseError(MSXML2::IXMLDOMDocument2Ptr doc)
   }
 }
 
-bool  LoadXml(MSXML2::IXMLDOMDocument2Ptr doc,const CString& url)
+bool  LoadXml(IXMLDOMDocument2Ptr doc,const CString& url)
 {
   doc->put_async(VARIANT_FALSE);
   _variant_t  vturl((const TCHAR *)url);
   VARIANT_BOOL	flag;
-  HRESULT   hr=doc->raw_load(vturl,&flag);
+  HRESULT   hr=doc->load(vturl,&flag);
   if (FAILED(hr)) {
     ReportError(hr);
     return false;

@@ -11,7 +11,7 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc)
 
   try {
     // * construct doc pointer
-    MSXML2::IXMLDOMDocument2Ptr	    source(doc);
+    IXMLDOMDocument2Ptr	    source(doc);
 
     // * ask the user where he wants his html
     CCustomSaveDialog	    dlg(FALSE,_T("html"),filename,
@@ -25,21 +25,22 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc)
       return S_FALSE;
 
     // * load template
-    MSXML2::IXMLDOMDocument2Ptr	    tdoc(U::CreateDocument(true));
+    IXMLDOMDocument2Ptr	    tdoc(U::CreateDocument(true));
     if (!U::LoadXml(tdoc,dlg.m_template))
       return S_FALSE;
-    MSXML2::IXSLTemplatePtr	    tmpl(U::CreateTemplate());
-    tmpl->stylesheet=tdoc;
+    IXSLTemplatePtr	    tmpl(U::CreateTemplate());
+    CheckError(tmpl->putref_stylesheet(tdoc));
 
     // * create processor
-    MSXML2::IXSLProcessorPtr	    proc(tmpl->createProcessor());
+	IXSLProcessorPtr	    proc;
+	CheckError(tmpl->createProcessor(&proc));
 
     // * setup input
-    proc->input=doc;
+    CheckError(proc->put_input(variant_t(doc)));
 
     // * install template parameters
-    proc->addParameter(L"includedesc",dlg.m_includedesc,_bstr_t());
-    proc->addParameter(L"tocdepth",(long)dlg.m_tocdepth,_bstr_t());
+    CheckError(proc->addParameter(bstr_t(L"includedesc"), variant_t(dlg.m_includedesc),_bstr_t()));
+    CheckError(proc->addParameter(bstr_t(L"tocdepth"),variant_t((long)dlg.m_tocdepth),_bstr_t()));
 
     bool    fImages=dlg.m_ofn.nFilterIndex<=2;
     bool    fMIME=dlg.m_ofn.nFilterIndex==2;
@@ -76,7 +77,7 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc)
 
       if (fAscii && !fMIME) {
 	relpath+=_T('/');
-	proc->addParameter(L"imgprefix",(const TCHAR *)relpath,_bstr_t());
+	CheckError(proc->addParameter(bstr_t(L"imgprefix"), variant_t((const TCHAR *)relpath),_bstr_t()));
 
 	if (!::CreateDirectory(dfile,NULL) && ::GetLastError()!=ERROR_ALREADY_EXISTS) {
 	  DWORD	de=::GetLastError();
@@ -89,7 +90,7 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc)
       } else
 	dfile.Delete(cp,dfile.GetLength()-cp);
 
-      proc->addParameter(L"saveimages",true,_bstr_t());
+      CheckError(proc->addParameter(bstr_t(L"saveimages"),variant_t(true),_bstr_t()));
     }
 
     char    boundary[256];
@@ -137,28 +138,38 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc)
     }
 
     // * transform
-    proc->output=(IUnknown*)U::NewStream(hOut,!fMIME);
-    proc->transform();
+    CheckError(proc->put_output(variant_t((IUnknown*)U::NewStream(hOut,!fMIME))));
+	VARIANT_BOOL Done = VARIANT_FALSE;
+    CheckError(proc->transform(&Done));
 
     // * save images
     if (fImages) {
       if (dfile.IsEmpty() || dfile[dfile.GetLength()-1]!=_T('\\'))
 	dfile+=_T('\\');
-      MSXML2::IXMLDOMNodeListPtr      bins(source->selectNodes(L"/fb:FictionBook/fb:binary"));
-      for (long l=0;l<bins->length;++l) {
+	  IXMLDOMNodeListPtr      bins;
+	  CheckError(source->selectNodes(bstr_t(L"/fb:FictionBook/fb:binary"), &bins));
+	  long listLength = 0;
+	  CheckError(bins->get_length(&listLength));
+      for (long l=0;l<listLength;++l) {
 	try {
-	  MSXML2::IXMLDOMElementPtr   be(bins->item[l]);
-	  _variant_t	id(be->getAttribute(L"id"));
-	  _variant_t	ct(be->getAttribute(L"content-type"));
-	  if (V_VT(&id)!=VT_BSTR || V_VT(&ct)!=VT_BSTR)
+		IXMLDOMNodePtr   be;
+		CheckError(bins->get_item(l, &be));
+		IXMLDOMElementPtr element;
+		CheckError(be->QueryInterface(IID_PPV_ARGS(&element)));
+		_variant_t	id;
+		CheckError(element->getAttribute(bstr_t(L"id"), &id));
+		_variant_t	ct;
+		CheckError(element->getAttribute(bstr_t(L"content-type"), &ct));
+		if (V_VT(&id)!=VT_BSTR || V_VT(&ct)!=VT_BSTR)
 	    continue;
 
 	  if (fMIME) {
 	    // get base64 data
-	    _bstr_t   data(be->text);
+		  CComBSTR   data;
+		  CheckError(be->get_text(&data));
 
 	    // allocate buffer
-	    char      *buffer=(char*)malloc(data.length()+1024);
+	    char      *buffer=(char*)malloc(data.Length()+1024);
 	    if (buffer==NULL)
 	      continue;
 
@@ -175,8 +186,8 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc)
 
 	    // convert data to ascii
 	    DWORD     mlen=WideCharToMultiByte(CP_ACP,0,
-	      data,data.length(),
-	      buffer+hlen,data.length(),
+	      data,data.Length(),
+	      buffer+hlen,data.Length(),
 	      NULL,NULL);
 
 	    // write a new mime header+data
@@ -198,8 +209,9 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc)
 	      return S_FALSE;
 	    }
 	  } else {
-	    be->PutdataType(L"bin.base64");
-	    _variant_t	data(be->nodeTypedValue);
+	    CheckError(be->put_dataType(bstr_t(L"bin.base64")));
+		_variant_t	data;
+		CheckError(be->get_nodeTypedValue(&data));
 	    if (V_VT(&data)!=(VT_ARRAY|VT_UI1) || ::SafeArrayGetDim(V_ARRAY(&data))!=1)
 	      continue;
 	    DWORD len=V_ARRAY(&data)->rgsabound[0].cElements;

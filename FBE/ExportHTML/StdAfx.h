@@ -37,11 +37,16 @@ extern CString    _SettingsPath;
 
 #include <comutil.h>
 #include <comdef.h>
+#include <comdefsp.h>
 
 // control IDs
 #include <dlgs.h>
 
-#import <msxml6.dll>
+#include <msxml6.h>
+
+_COM_SMARTPTR_TYPEDEF(IXMLDOMDocument2, __uuidof(IXMLDOMDocument2));
+_COM_SMARTPTR_TYPEDEF(IXSLTemplate, __uuidof(IXSLTemplate));
+_COM_SMARTPTR_TYPEDEF(IXSLProcessor, __uuidof(IXSLProcessor));
 
 // C library
 #include <time.h>

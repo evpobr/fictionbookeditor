@@ -107,11 +107,11 @@ namespace U { // place all utilities into their own namespace
   CString GetCharName(int ch);
 
   // msxml support
-  MSXML2::IXMLDOMDocument2Ptr CreateDocument(bool fFreeThreaded=false);
-  void			      ReportParseError(MSXML2::IXMLDOMDocument2Ptr doc);
-  bool			      LoadXml(MSXML2::IXMLDOMDocument2Ptr doc,
+  IXMLDOMDocument2Ptr CreateDocument(bool fFreeThreaded=false);
+  void			      ReportParseError(IXMLDOMDocument2Ptr doc);
+  bool			      LoadXml(IXMLDOMDocument2Ptr doc,
 				      const CString& url);
-  MSXML2::IXSLTemplatePtr     CreateTemplate();
+  IXSLTemplatePtr     CreateTemplate();
 
 } // namespace
 
