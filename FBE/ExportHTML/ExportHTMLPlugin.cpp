@@ -2,7 +2,6 @@
 #include "ExportHTMLPlugin.h"
 
 #include "utils.h"
-#include "FBE.h"
 #include "CustomFileSaveDialog.h"
 
 HRESULT	CExportHTMLPlugin::Export(long hWnd,BSTR filename,IDispatch *doc)
