@@ -105,6 +105,24 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDR_EXPORTHTML          "Export HTML"
+    IDS_ERROR_OPEN_FILE     "Can't open %s: %s"
+    IDS_ERROR_CREATE_DIRECTORY "Can't create directory %s: %s"
+    IDS_ERROR_WRITE_FILE    """Can't write to %s: %s"
+    IDS_ERROR_WRITE_FILE2   "Can't write to %s: short write."
+    IDS_WARNING_FILE_ALREADY_EXISTS 
+                            "%s already exists.\nDo you want to replace it?"
+    IDS_SAVE_FILE_FILTER    "Web Page, complete (*.html;*.htm)|*.htm;*.html|Web Archive, single file (*.mht)|*.mht|Web Page, HTML only (*.html;*.htm)|*.htm;*.html|"
+END
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
