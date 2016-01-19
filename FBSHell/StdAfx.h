@@ -1,51 +1,54 @@
-#pragma once
+// stdafx.h : include file for standard system include files,
+//  or project specific include files that are used frequently, but
+//      are changed infrequently
+//
 
-#include "targetver.h"
+#if !defined(AFX_STDAFX_H__AA787312_D02C_4332_A4DD_1B1AA8B9E8BF__INCLUDED_)
+#define AFX_STDAFX_H__AA787312_D02C_4332_A4DD_1B1AA8B9E8BF__INCLUDED_
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
 
 // check for unicode
 #ifndef UNICODE
 #error This program requires unicode support to run
 #endif
 
+#define WINVER       0x0501     // W2K/98
+#define _WIN32_WINNT 0x0501     // W2K
+#define _WIN32_IE    0x0500     // IE 5+
+
 // we are MT by default
-#define _ATL_MULTI_THREADED
+#define _ATL_APARTMENT_THREADED
 
 // Insert your headers here
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 
 #include <atlbase.h>
-
-extern CComModule _Module;
-
-#include <atlapp.h>
-#include <atlmisc.h>
+#include <atlstr.h>
 
 #include <atlcom.h>
 
 #include <comutil.h>
 #include <comdef.h>
+#include <comdefsp.h>
 
-#import <msxml6.dll>
+#include <msxml6.h>
+
+_COM_SMARTPTR_TYPEDEF(ISAXXMLReader, __uuidof(ISAXXMLReader));
 
 #include <shellapi.h>
 #include <shlobj.h>
 #include <shlguid.h>
 
-#include <initguid.h>
-
-#include <windows.h>
-
-#include <string.h>
-#include <stdlib.h>
-#include <setjmp.h>
-#include <math.h>
-
-#include "resource.h"
-#include "ptr.h"
-#include "Image.h"
-#include "FBShell.h"
-
-#include <wchar.h>
+#include <atlimage.h>
+#include <WinCrypt.h>
 
 using namespace _com_util;
+
+//{{AFX_INSERT_LOCATION}}
+// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#endif // !defined(AFX_STDAFX_H__AA787312_D02C_4332_A4DD_1B1AA8B9E8BF__INCLUDED_)
 

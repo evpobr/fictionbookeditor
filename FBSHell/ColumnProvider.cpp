@@ -1,7 +1,9 @@
-#include "stdafx.h"
+#include "StdAfx.h"
+#include "ColumnProvider.h"
+#include "FBShell.h"
 
-#define	F(cat,name)	&ColumnProvider::FBInfo::get_##cat##_##name
-ColumnProvider::ColumnInfo    ColumnProvider::g_columns[]={
+#define	F(cat,name)	&CColumnProvider::FBInfo::get_##cat##_##name
+CColumnProvider::ColumnInfo    CColumnProvider::g_columns[]={
   { L"Genre",		12,   SHCOLSTATE_TYPE_STR,  &FMTID_MUSIC,		PIDSI_GENRE,  F(title,genres)   },
   { L"Author",		32,   SHCOLSTATE_TYPE_STR,  &FMTID_SummaryInformation,  PIDSI_AUTHOR, F(title,authors)  },
   { L"Title",		32,   SHCOLSTATE_TYPE_STR,  &FMTID_SummaryInformation,  PIDSI_TITLE,  F(title,title)    },
@@ -19,7 +21,7 @@ ColumnProvider::ColumnInfo    ColumnProvider::g_columns[]={
 #undef F
 #define	NCOLUMNS  (sizeof(g_columns)/sizeof(g_columns[0]))
 
-HRESULT	  ColumnProvider::FBInfo::GetVariant(const CString& str,VARIANT *vt) {
+HRESULT	  CColumnProvider::FBInfo::GetVariant(const CString& str,VARIANT *vt) {
   if (V_BSTR(vt)=str.AllocSysString()) {
     V_VT(vt)=VT_BSTR;
     return S_OK;
@@ -27,7 +29,7 @@ HRESULT	  ColumnProvider::FBInfo::GetVariant(const CString& str,VARIANT *vt) {
   return E_OUTOFMEMORY;
 }
 
-HRESULT ColumnProvider::GetColumnInfo(DWORD dwIndex,SHCOLUMNINFO *psci)
+HRESULT CColumnProvider::GetColumnInfo(DWORD dwIndex,SHCOLUMNINFO *psci)
 {
   if (dwIndex>=NCOLUMNS)
     return S_FALSE;
@@ -48,7 +50,7 @@ HRESULT ColumnProvider::GetColumnInfo(DWORD dwIndex,SHCOLUMNINFO *psci)
   return S_OK;
 }
 
-HRESULT ColumnProvider::GetItemData(LPCSHCOLUMNID pscid, LPCSHCOLUMNDATA pscd, VARIANT* pvarData)
+HRESULT CColumnProvider::GetItemData(LPCSHCOLUMNID pscid, LPCSHCOLUMNDATA pscd, VARIANT* pvarData)
 {
   // don't even boter with others' files
   if (pscd->dwFileAttributes & (FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_OFFLINE) ||
@@ -74,9 +76,9 @@ HRESULT ColumnProvider::GetItemData(LPCSHCOLUMNID pscid, LPCSHCOLUMNDATA pscd, V
   return S_FALSE;
 }
 
-class ColumnProvider::ContentHandlerImpl :
+class CColumnProvider::ContentHandlerImpl :
   public CComObjectRoot,
-  public MSXML2::ISAXContentHandler
+  public ISAXContentHandler
 {
 public:
   enum ParseMode {
@@ -99,32 +101,32 @@ public:
     m_ok(false), m_root(true), m_prefix(0),
     m_forceprefix(false) { m_mstack.Add(ROOT); }
 
-  void	SetInfo(ColumnProvider::FBInfo *fbi) { m_info=fbi; m_dest=0; }
+  void	SetInfo(CColumnProvider::FBInfo *fbi) { m_info=fbi; m_dest=0; }
   bool	Ok() { return m_ok; }
 
   DECLARE_NO_REGISTRY()
 
   BEGIN_COM_MAP(ContentHandlerImpl)
-    COM_INTERFACE_ENTRY(MSXML2::ISAXContentHandler)
+    COM_INTERFACE_ENTRY(ISAXContentHandler)
   END_COM_MAP()
 
   // ISAXContentHandler
-  STDMETHOD(raw_characters)(wchar_t *chars,int nch);
-  STDMETHOD(raw_endDocument)() { return S_OK; }
-  STDMETHOD(raw_startDocument)() { return S_OK; }
-  STDMETHOD(raw_endElement)(wchar_t *nsuri,int nslen,wchar_t *name,int namelen,
-			    wchar_t *qname,int qnamelen);
-  STDMETHOD(raw_startElement)(wchar_t *nsuri,int nslen,wchar_t *name,int namelen,
-			      wchar_t *qname,int qnamelen,MSXML2::ISAXAttributes *attr);
-  STDMETHOD(raw_ignorableWhitespace)(wchar_t *spc,int spclen) { return S_OK; }
-  STDMETHOD(raw_endPrefixMapping)(wchar_t *prefix,int len) { return S_OK; }
-  STDMETHOD(raw_startPrefixMapping)(wchar_t *prefix,int plen,wchar_t *uri,int urilen) { return S_OK; }
-  STDMETHOD(raw_processingInstruction)(wchar_t *targ,int targlen,wchar_t *data,int datalen) { return S_OK; }
-  STDMETHOD(raw_skippedEntity)(wchar_t *name,int namelen) { return S_OK; }
-  STDMETHOD(raw_putDocumentLocator)(MSXML2::ISAXLocator *loc) { return S_OK; }
+  STDMETHOD(characters)(const wchar_t *chars,int nch);
+  STDMETHOD(endDocument)() { return S_OK; }
+  STDMETHOD(startDocument)() { return S_OK; }
+  STDMETHOD(endElement)(const wchar_t *nsuri,int nslen, const wchar_t *name,int namelen,
+	  const wchar_t *qname,int qnamelen);
+  STDMETHOD(startElement)(const wchar_t *nsuri,int nslen, const wchar_t *name,int namelen,
+	  const wchar_t *qname,int qnamelen,ISAXAttributes *attr);
+  STDMETHOD(ignorableWhitespace)(const wchar_t *spc,int spclen) { return S_OK; }
+  STDMETHOD(endPrefixMapping)(const wchar_t *prefix,int len) { return S_OK; }
+  STDMETHOD(startPrefixMapping)(const wchar_t *prefix,int plen, const wchar_t *uri,int urilen) { return S_OK; }
+  STDMETHOD(processingInstruction)(const wchar_t *targ,int targlen, const wchar_t *data,int datalen) { return S_OK; }
+  STDMETHOD(skippedEntity)(const wchar_t *name,int namelen) { return S_OK; }
+  STDMETHOD(putDocumentLocator)(ISAXLocator *loc) { return S_OK; }
 
 protected:
-  ColumnProvider::FBInfo	*m_info;
+  CColumnProvider::FBInfo	*m_info;
   CString			*m_dest;
   CSimpleValArray<ParseMode>	m_mstack;
   bool				m_ok;
@@ -149,7 +151,7 @@ protected:
   }
 };
 
-HRESULT	ColumnProvider::FBInfo::Init(const wchar_t *fn) {
+HRESULT	CColumnProvider::FBInfo::Init(const wchar_t *fn) {
   if (filename==fn)
     return S_OK;
 
@@ -157,7 +159,7 @@ HRESULT	ColumnProvider::FBInfo::Init(const wchar_t *fn) {
     ContentHandlerPtr	      ch;
     CheckError(CreateObject(ch));
 
-    MSXML2::ISAXXMLReaderPtr  rdr;
+    ISAXXMLReaderPtr  rdr;
     CheckError(rdr.CreateInstance(L"MSXML2.SAXXMLReader.6.0"));
 
     rdr->putContentHandler(ch);
@@ -165,7 +167,7 @@ HRESULT	ColumnProvider::FBInfo::Init(const wchar_t *fn) {
     ch->SetInfo(this);
     Clear();
 
-    HRESULT hr=rdr->raw_parseURL((wchar_t *)fn);
+    HRESULT hr=rdr->parseURL(fn);
     if (!ch->Ok())
       return FAILED(hr) ? hr : S_FALSE;
 
@@ -179,7 +181,7 @@ HRESULT	ColumnProvider::FBInfo::Init(const wchar_t *fn) {
   return S_OK;
 }
 
-void  ColumnProvider::FBInfo::Clear() {
+void  CColumnProvider::FBInfo::Clear() {
   title.authors.Empty();
   title.date.Empty();
   title.dateval.Empty();
@@ -199,57 +201,57 @@ void  ColumnProvider::FBInfo::Clear() {
   filename.Empty();
 }
 
-HRESULT	ColumnProvider::ContentHandlerImpl::raw_startElement(wchar_t *nsuri,int urilen,
-					     wchar_t *name,int namelen,
-					     wchar_t *qname,int qnamelen,
-					     MSXML2::ISAXAttributes *attr)
+HRESULT	CColumnProvider::ContentHandlerImpl::startElement(const wchar_t *nsuri,int urilen,
+	const wchar_t *name,int namelen,
+	const wchar_t *qname,int qnamelen,
+	ISAXAttributes *attr)
 {
   // all elements must be in a fictionbook namespace
-  if (!StrEQ(FBNS,nsuri,urilen))
+  if (!StrEQ(FBNS, (wchar_t*)nsuri,urilen))
     return E_FAIL;
 
   ParseMode   next=m_mstack[m_mstack.GetSize()-1];
 
   switch (next) {
   case ROOT:
-    if (!StrEQ(L"FictionBook",name,namelen))
+    if (!StrEQ(L"FictionBook", (wchar_t*)name,namelen))
       return E_FAIL;
     next=TOP;
     break;
   case TOP:
-    if (StrEQ(L"description",name,namelen))
+    if (StrEQ(L"description", (wchar_t*)name,namelen))
       next=DESC;
     break;
   case DESC:
-    if (StrEQ(L"title-info",name,namelen))
+    if (StrEQ(L"title-info", (wchar_t*)name,namelen))
       next=TITLE;
-    else if (StrEQ(L"document-info",name,namelen))
+    else if (StrEQ(L"document-info", (wchar_t*)name,namelen))
       next=DOC;
     break;
   case TITLE:
-    if (StrEQ(L"genre",name,namelen)) {
+    if (StrEQ(L"genre", (wchar_t*)name,namelen)) {
       m_tmp=GetAttr(attr,L"match");
       m_dest=&m_info->title.genres;
       SetPrefix(L", ");
       next=GENRE;
-    } else if (StrEQ(L"author",name,namelen)) {
+    } else if (StrEQ(L"author", (wchar_t*)name,namelen)) {
       next=AUTHOR;
       m_dest=&m_info->title.authors;
       SetPrefix(L", ");
-    } else if (StrEQ(L"book-title",name,namelen)) {
+    } else if (StrEQ(L"book-title", (wchar_t*)name,namelen)) {
       next=GRAB;
       m_dest=&m_info->title.title;
-    } else if (StrEQ(L"lang",name,namelen)) {
+    } else if (StrEQ(L"lang", (wchar_t*)name,namelen)) {
       next=GRAB;
       m_dest=&m_info->title.lang;
-    } else if (StrEQ(L"src-lang",name,namelen)) {
+    } else if (StrEQ(L"src-lang", (wchar_t*)name,namelen)) {
       next=GRAB;
       m_dest=&m_info->title.srclang;
-    } else if (StrEQ(L"date",name,namelen)) {
+    } else if (StrEQ(L"date", (wchar_t*)name,namelen)) {
       next=DATE;
       m_dest=&m_info->title.date;
       m_info->title.dateval=GetAttr(attr,L"value");
-    } else if (StrEQ(L"sequence",name,namelen)) {
+    } else if (StrEQ(L"sequence", (wchar_t*)name,namelen)) {
       CString name(GetAttr(attr,L"name"));
       if (!name.IsEmpty()) {
 	if (!m_info->title.seq.IsEmpty())
@@ -266,30 +268,30 @@ HRESULT	ColumnProvider::ContentHandlerImpl::raw_startElement(wchar_t *nsuri,int 
     }
     break;
   case DOC:
-    if (StrEQ(L"author",name,namelen)) {
+    if (StrEQ(L"author", (wchar_t*)name,namelen)) {
       next=AUTHOR;
       m_dest=&m_info->doc.authors;
       SetPrefix(L", ");
-    } else if (StrEQ(L"date",name,namelen)) {
+    } else if (StrEQ(L"date", (wchar_t*)name,namelen)) {
       next=DATE;
       m_dest=&m_info->doc.date;
       m_info->doc.dateval=GetAttr(attr,L"value");
-    } else if (StrEQ(L"id",name,namelen)) {
+    } else if (StrEQ(L"id", (wchar_t*)name,namelen)) {
       next=GRAB;
       m_dest=&m_info->doc.id;
-    } else if (StrEQ(L"version",name,namelen)) {
+    } else if (StrEQ(L"version", (wchar_t*)name,namelen)) {
       next=GRAB;
       m_dest=&m_info->doc.ver;
     }
     break;
   case AUTHOR:
-    if (StrEQ(L"nickname",name,namelen)) {
+    if (StrEQ(L"nickname", (wchar_t*)name,namelen)) {
       SetPrefix(L" [",true);
       next=NICK;
-    } else if (StrEQ(L"email",name,namelen)) {
+    } else if (StrEQ(L"email", (wchar_t*)name,namelen)) {
       SetPrefix(L" (",true);
       next=EMAIL;
-    } else if (StrEQ(L"home-page",name,namelen)) {
+    } else if (StrEQ(L"home-page", (wchar_t*)name,namelen)) {
       SetPrefix(L" <",true);
       next=HOME;
     } else
@@ -302,9 +304,9 @@ HRESULT	ColumnProvider::ContentHandlerImpl::raw_startElement(wchar_t *nsuri,int 
   return S_OK;
 }
 
-HRESULT ColumnProvider::ContentHandlerImpl::raw_endElement(wchar_t *nsuri,int nslen,
-					   wchar_t *name,int namelen,
-					   wchar_t *qname,int qnamelen)
+HRESULT CColumnProvider::ContentHandlerImpl::endElement(const wchar_t *nsuri,int nslen,
+	const wchar_t *name,int namelen,
+	const wchar_t *qname,int qnamelen)
 {
   ParseMode	cur=m_mstack[m_mstack.GetSize()-1],next=m_mstack[m_mstack.GetSize()-2];
   m_mstack.RemoveAt(m_mstack.GetSize()-1);
@@ -370,12 +372,12 @@ HRESULT ColumnProvider::ContentHandlerImpl::raw_endElement(wchar_t *nsuri,int ns
   return S_OK;
 }
 
-HRESULT ColumnProvider::ContentHandlerImpl::raw_characters(wchar_t *chars,int nch)
+HRESULT CColumnProvider::ContentHandlerImpl::characters(const wchar_t *chars,int nch)
 {
   if (m_dest) {
     FlushPrefix();
 
-    AppendText(*m_dest,chars,nch);
+    AppendText(*m_dest,(wchar_t*)chars,nch);
   }
 
   return S_OK;

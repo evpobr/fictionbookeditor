@@ -1,25 +1,10 @@
 #include "stdafx.h"
+#include "IconExtractor.h"
 
-// a MemReader helper class
-class MemReader : public ImageLoader::BinReader {
-private:
-  const BYTE  *m_data;
-  int	      m_len;
-public:
-  MemReader(void *mem,int len) { Init(mem,len); }
-  int Read(void *buffer,int count) {
-    if (count>m_len)
-      count=m_len;
-    memcpy(buffer,m_data,count);
-    m_data+=count;
-    m_len-=count;
-    return count;
-  }
-  void	Init(void *mem,int len) { m_data=(const BYTE *)mem; m_len=len; }
-};
+#include "FBShell.h"
 
 // IExtractImage
-HRESULT IconExtractor::GetLocation(wchar_t *file,DWORD filelen,DWORD *prio,
+HRESULT CIconExtractor::GetLocation(wchar_t *file,DWORD filelen,DWORD *prio,
 				   const SIZE *sz,
 				   DWORD depth,DWORD *flags)
 {
@@ -39,29 +24,57 @@ HRESULT IconExtractor::GetLocation(wchar_t *file,DWORD filelen,DWORD *prio,
   return S_OK;
 }
 
-HRESULT IconExtractor::Extract(HBITMAP *hBmp) {
+HRESULT CIconExtractor::Extract(HBITMAP *hBmp) {
   // load image if available
-  CString     type;
-  int	      datalen;
+  CString     type = _T("");
+  int	      datalen = 0;
   void	      *data=NULL;
   if (!LoadObject(m_filename,type,data,datalen))
     return E_FAIL;
 
-  // create an image from our data
-  MemReader rdr(data,datalen);
-  HDC	hDC=::GetDC(NULL);
-  int	w,h;
-  bool ok=ImageLoader::Load(hDC,type,&rdr,
-    m_desired_size.cx,m_desired_size.cy,
-    0,*hBmp,w,h);
-  ::ReleaseDC(NULL,hDC);
-  free(data);
+  CComPtr<IStream> spImageStream;
+  HRESULT hr = CreateStreamOnHGlobal(NULL, TRUE, &spImageStream);
+  if (SUCCEEDED(hr))
+  {
+	  ULONG cbRead = 0;
+	  hr = spImageStream->Write(data, datalen, &cbRead);
+	  free(data);
+	  if (SUCCEEDED(hr))
+	  {
+		  CImage image;
+		  image.Load(spImageStream);
 
-  return ok ? S_OK : E_FAIL;
+		  float imageWidth = (float)image.GetWidth();
+		  float imageHeight = (float)image.GetHeight();
+		  float scale = 0.0f;
+
+		  if (imageWidth <= imageHeight)
+			  scale = (float)m_desired_size.cy / (float)image.GetHeight();
+		  else
+			  scale = (float)m_desired_size.cx / (float)image.GetWidth();
+
+		  float thumbWidth = (float)imageWidth * scale;
+		  float thumbHeight = (float)imageHeight * scale;
+
+		  CImage thumb;
+		  thumb.Create((int)thumbWidth, (int)thumbHeight, m_desired_depth);
+
+		  image.Draw(thumb.GetDC(), CRect(0, 0, (int)thumbWidth, (int)thumbHeight), Gdiplus::InterpolationMode::InterpolationModeHighQuality);
+
+		  thumb.ReleaseDC();
+
+		  *hBmp = thumb.Detach();
+
+		  hr = S_OK;
+	  }
+  }
+
+  return hr;
+
 }
 
 // IExtractImage2
-HRESULT	IconExtractor::GetDateStamp(FILETIME *tm) {
+HRESULT	CIconExtractor::GetDateStamp(FILETIME *tm) {
   HANDLE  hFile=::CreateFile(m_filename,FILE_READ_ATTRIBUTES,0,NULL,OPEN_EXISTING,0,NULL);
   if (hFile==INVALID_HANDLE_VALUE)
     return HRESULT_FROM_WIN32(::GetLastError());
@@ -72,9 +85,9 @@ HRESULT	IconExtractor::GetDateStamp(FILETIME *tm) {
 
 ///////////////////////////////////////////////////////////
 // SAX xml content handler (I use SAX instead of DOM for speed)
-class IconExtractor::ContentHandlerImpl :
+class CIconExtractor::ContentHandlerImpl :
   public CComObjectRoot,
-  public MSXML2::ISAXContentHandler
+  public ISAXContentHandler
 {
 public:
   enum ParseMode {
@@ -84,39 +97,43 @@ public:
   };
 
   // construction
-  ContentHandlerImpl() : m_mode(NONE), m_data(NULL), m_ok(false) { }
+  ContentHandlerImpl()
+	  : m_mode(NONE), m_ok(false), m_cover_id(_T("")), m_cover_type(_T("")), m_strBase64Image(_T("")), m_nDestLen(0), m_bDest(NULL)
+  {
+  }
+
   ~ContentHandlerImpl() {
-    free(m_data);
   }
 
   DECLARE_NO_REGISTRY()
 
   BEGIN_COM_MAP(ContentHandlerImpl)
-    COM_INTERFACE_ENTRY(MSXML2::ISAXContentHandler)
+    COM_INTERFACE_ENTRY(ISAXContentHandler)
   END_COM_MAP()
 
   // ISAXContentHandler
-  STDMETHOD(raw_characters)(wchar_t *chars,int nch);
-  STDMETHOD(raw_endDocument)() { return S_OK; }
-  STDMETHOD(raw_startDocument)() { return S_OK; }
-  STDMETHOD(raw_endElement)(wchar_t *nsuri,int nslen,wchar_t *name,int namelen,
-			    wchar_t *qname,int qnamelen);
-  STDMETHOD(raw_startElement)(wchar_t *nsuri,int nslen,wchar_t *name,int namelen,
-			      wchar_t *qname,int qnamelen,MSXML2::ISAXAttributes *attr);
-  STDMETHOD(raw_ignorableWhitespace)(wchar_t *spc,int spclen) { return S_OK; }
-  STDMETHOD(raw_endPrefixMapping)(wchar_t *prefix,int len) { return S_OK; }
-  STDMETHOD(raw_startPrefixMapping)(wchar_t *prefix,int plen,wchar_t *uri,int urilen) { return S_OK; }
-  STDMETHOD(raw_processingInstruction)(wchar_t *targ,int targlen,wchar_t *data,int datalen) { return S_OK; }
-  STDMETHOD(raw_skippedEntity)(wchar_t *name,int namelen) { return S_OK; }
-  STDMETHOD(raw_putDocumentLocator)(MSXML2::ISAXLocator *loc) { return S_OK; }
+  STDMETHOD(characters)(const wchar_t *chars,int nch);
+  STDMETHOD(endDocument)() { return S_OK; }
+  STDMETHOD(startDocument)() { return S_OK; }
+  STDMETHOD(endElement)(const wchar_t *nsuri,int nslen, const wchar_t *name,int namelen,
+	  const wchar_t *qname,int qnamelen);
+  STDMETHOD(startElement)(const wchar_t *nsuri,int nslen, const wchar_t *name,int namelen,
+	  const wchar_t *qname,int qnamelen,ISAXAttributes *attr);
+  STDMETHOD(ignorableWhitespace)(const wchar_t *spc,int spclen) { return S_OK; }
+  STDMETHOD(endPrefixMapping)(const wchar_t *prefix,int len) { return S_OK; }
+  STDMETHOD(startPrefixMapping)(const wchar_t *prefix,int plen, const wchar_t *uri,int urilen) { return S_OK; }
+  STDMETHOD(processingInstruction)(const wchar_t *targ,int targlen, const wchar_t *data,int datalen) { return S_OK; }
+  STDMETHOD(skippedEntity)(const wchar_t *name,int namelen) { return S_OK; }
+  STDMETHOD(putDocumentLocator)(ISAXLocator *loc) { return S_OK; }
 
   // data access
   void	  *Detach() {
-    void *tmp=m_data;
-    m_data=NULL;
-    return tmp;
+	  if (m_bDest)
+		  return m_bDest.Detach();
+	  else
+		  return NULL;
   }
-  int	  Length() { return m_data_ptr; }
+  int	  Length() { return m_nDestLen; }
   CString Type() { return m_cover_type; }
   bool	  Ok() { return m_ok; }
 
@@ -126,42 +143,25 @@ private:
 
   CString	  m_cover_id;
   CString	  m_cover_type;
-  DWORD		  m_data_length;
-  DWORD		  m_data_ptr;
-  BYTE		  *m_data;
+  CString	m_strBase64Image;
+  int		m_nDestLen;
+  CHeapPtr<BYTE> m_bDest;
 
-  // base64 decoder state
-  DWORD		  m_bits;
-  BYTE		  m_shift;
-
-  // extend the data array
-  bool		  Extend(BYTE *np) {
-    m_data_ptr=np-m_data;
-    DWORD   tmp=m_data_length<<1;
-    void    *mem=realloc(m_data,tmp);
-    if (!mem)
-      return false;
-    m_data_length=tmp;
-    m_data=(BYTE*)mem;
-    return true;
-  }
 };
 
-bool    IconExtractor::LoadObject(const wchar_t *filename,CString& type,void *&data,int& datalen)
+bool    CIconExtractor::LoadObject(const wchar_t *filename,CString& type,void *&data,int& datalen)
 {
-  ContentHandlerPtr	      ch;
+  ContentHandlerPtr	      ch = NULL;
   if (FAILED(CreateObject(ch)))
     return IStreamPtr();
 
-  MSXML2::ISAXXMLReaderPtr    rdr;
+  ISAXXMLReaderPtr    rdr = NULL;
   if (FAILED(rdr.CreateInstance(L"MSXML2.SAXXMLReader.6.0")))
     return IStreamPtr();
 
   rdr->putContentHandler(ch);
 
-  rdr->raw_parseURL((wchar_t *)filename);
-  if (!ch->Ok())
-    return false;
+  rdr->parseURL(filename);
 
   type=ch->Type();
   datalen=ch->Length();
@@ -170,21 +170,21 @@ bool    IconExtractor::LoadObject(const wchar_t *filename,CString& type,void *&d
   return true;
 }
 
-HRESULT	IconExtractor::ContentHandlerImpl::raw_endElement(wchar_t *nsuri,int nslen,
-							  wchar_t *name,int namelen,
-							  wchar_t *qname,int qnamelen)
+HRESULT	CIconExtractor::ContentHandlerImpl::endElement(const wchar_t *nsuri,int nslen,
+	const wchar_t *name,int namelen,
+	const wchar_t *qname,int qnamelen)
 {
   // all elements must be in a fictionbook namespace
-  if (!StrEQ(FBNS,nsuri,nslen))
+  if (!StrEQ(FBNS,(wchar_t*)nsuri,nslen))
     return E_FAIL;
 
   switch (m_mode) {
   case NONE:
-    if (StrEQ(L"description",name,namelen) && m_cover_id.IsEmpty())
+    if (StrEQ(L"description", (wchar_t*)name,namelen) && m_cover_id.IsEmpty())
 	return E_FAIL;
     break;
   case COVERPAGE:
-    if (StrEQ(L"coverpage",name,namelen)) {
+    if (StrEQ(L"coverpage", (wchar_t*)name,namelen)) {
       if (m_cover_id.IsEmpty())
 	return E_FAIL;
       m_mode=NONE;
@@ -193,28 +193,46 @@ HRESULT	IconExtractor::ContentHandlerImpl::raw_endElement(wchar_t *nsuri,int nsl
   case DATA:
     // if we got here and have some bits left in our buffer then we have malformed
     // base64 data
-    if (m_shift==18)
-      m_ok=true;
-    return E_FAIL;
+	  DWORD cbBinary = 0;
+	  HRESULT hr = S_OK;
+	  if (!CryptStringToBinaryW(m_strBase64Image, m_strBase64Image.GetLength(), CRYPT_STRING_BASE64, NULL, &cbBinary, 0, NULL))
+		  hr = E_FAIL;
+
+	  if (SUCCEEDED(hr))
+	  {
+		  m_nDestLen = cbBinary;
+		  m_bDest.Allocate(m_nDestLen);
+		  if (!CryptStringToBinaryW(m_strBase64Image, m_strBase64Image.GetLength(), CRYPT_STRING_BASE64, m_bDest, &cbBinary, 0, NULL))
+			  hr = E_FAIL;
+
+		  m_nDestLen = cbBinary;
+
+		  if (FAILED(hr))
+			  m_bDest.Free();
+
+		  m_mode = NONE;
+	  }
+
+	  return hr;
   }
 
   return S_OK;
 }
 
-HRESULT	IconExtractor::ContentHandlerImpl::raw_startElement(wchar_t *nsuri,int nslen,
-							    wchar_t *name,int namelen,
-							    wchar_t *qname,int qnamelen,
-							    MSXML2::ISAXAttributes *attr)
+HRESULT	CIconExtractor::ContentHandlerImpl::startElement(const wchar_t *nsuri,int nslen,
+	const wchar_t *name,int namelen,
+	const wchar_t *qname,int qnamelen,
+	ISAXAttributes *attr)
 {
   // all elements must be in a fictionbook namespace
-  if (!StrEQ(FBNS,nsuri,nslen))
+  if (!StrEQ(FBNS, (wchar_t*)nsuri,nslen))
     return E_FAIL;
 
   switch (m_mode) {
   case NONE:
-    if (StrEQ(L"coverpage",name,namelen))
+    if (StrEQ(L"coverpage", (wchar_t*)name,namelen))
       m_mode=COVERPAGE;
-    else if (StrEQ(L"binary",name,namelen)) {
+    else if (StrEQ(L"binary", (wchar_t*)name,namelen)) {
       if (m_cover_id.IsEmpty()) // invalid file
 	return E_FAIL;
       if (m_cover_id!=GetAttr(attr,L"id"))
@@ -222,19 +240,11 @@ HRESULT	IconExtractor::ContentHandlerImpl::raw_startElement(wchar_t *nsuri,int n
 
       m_cover_type=GetAttr(attr,L"content-type");
 
-      // initialize memory block and a base64 decoder
-      m_data_length=32768; // arbitrary initial size
-      m_data_ptr=0;
-      m_data=(BYTE*)malloc(m_data_length);
-      if (m_data==NULL)
-	return E_FAIL;
-      m_shift=18;
-      m_bits=0;
       m_mode=DATA;
     }
     break;
   case COVERPAGE:
-    if (StrEQ(L"image",name,namelen)) {
+    if (StrEQ(L"image", (wchar_t*)name,namelen)) {
       CString	tmp(GetAttr(attr,L"href",XLINKNS));
       if (tmp.GetLength()>1 && tmp[0]==_T('#')) {
 	m_cover_id=tmp;
@@ -265,76 +275,15 @@ static BYTE	g_base64_table[256]={
 65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65
 };
 
-HRESULT	IconExtractor::ContentHandlerImpl::raw_characters(wchar_t *chars,int nch) {
+HRESULT	CIconExtractor::ContentHandlerImpl::characters(const wchar_t *chars,int nch) {
   if (m_mode!=DATA)
     return S_OK;
 
   // process base64 data and append to m_data
 
-  // copy globals to local variables
-  BYTE	  shift=m_shift;
-  DWORD	  acc=m_bits;
-  BYTE	  *data=m_data+m_data_ptr;
-  DWORD	  space=m_data_length-m_data_ptr;
+  if ((chars != NULL) && (nch > 0))
+  m_strBase64Image.Append((LPCWSTR)chars, nch);
 
-  for (wchar_t *chars_end=chars+nch;chars<chars_end;++chars) {
-    BYTE     bits=g_base64_table[*chars & 0xff]; // not my problem if it wraps
-    switch (bits) {
-    case 64: // end of data
-      switch (shift) { // store remaining bytes
-      case 18:
-      case 12:
-	// malformed base64 data
-	return E_FAIL;
-      case 6: // one byte
-	if (space<2) {
-	  if (!Extend(data))
-	    return E_FAIL;
-	  data=m_data+m_data_ptr;
-	  space=m_data_length-m_data_ptr;
-	}
-	*data++ = (BYTE)(acc>>16);
-	break;
-      case 0: // two bytes
-	if (space<2) {
-	  if (!Extend(data))
-	    return E_FAIL;
-	  data=m_data+m_data_ptr;
-	  space=m_data_length-m_data_ptr;
-	}
-	*data++ = (BYTE)(acc>>16);
-	*data++ = (BYTE)(acc>>8);
-	break;
-      }
-      m_data_ptr=data-m_data;
-      m_ok=true;
-      return E_FAIL;
-    case 65: // whitespace, ignore;
-      break;
-    default: // valid bits, process
-      acc|=(DWORD)bits << shift;
-      if ((shift-=6)>18) { // wraparound, full triplet ready
-	if (space<3) {
-	  if (!Extend(data))
-	    return E_FAIL;
-	  data=m_data+m_data_ptr;
-	  space=m_data_length-m_data_ptr;
-	}
-	*data++ = (BYTE)(acc>>16);
-	*data++ = (BYTE)(acc>>8);
-	*data++ = (BYTE)(acc);
-	shift=18;
-	space-=3;
-	acc=0;
-      }
-      break;
-    }
-  }
-
-  // store back vars
-  m_data_ptr=data-m_data;
-  m_shift=shift;
-  m_bits=acc;
 
   return S_OK;
 }
