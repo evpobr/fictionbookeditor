@@ -154,6 +154,7 @@
     <ResourceCompile Include="FBV.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\FBE\res\FBE.ico" />
     <Image Include="vicons.bmp" />
   </ItemGroup>
   <ItemGroup>

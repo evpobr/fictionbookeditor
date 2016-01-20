@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -13,13 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Russian resources
+// Russian (Russia) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
-#ifdef _WIN32
 LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
 #pragma code_page(1251)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -27,18 +25,18 @@ LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "\r\n"
     "\0"
@@ -46,18 +44,55 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Russian resources
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,6,10,0
+ PRODUCTVERSION 2,6,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "FBE Team"
+            VALUE "FileDescription", "FictionBook Validator"
+            VALUE "FileVersion", "2.6.10.0"
+            VALUE "InternalName", "FBV"
+            VALUE "LegalCopyright", "Copyright 2016 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
+            VALUE "OriginalFilename", "FBV.exe"
+            VALUE "ProductName", "FictionBook Editor"
+            VALUE "ProductVersion", "2.6"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -65,22 +100,15 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 IDD_MAIN DIALOGEX 0, 0, 346, 201
-STYLE DS_NOIDLEMSG | DS_CENTERMOUSE | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | 
-    WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | 
-    WS_THICKFRAME
+STYLE DS_SETFONT | DS_NOIDLEMSG | DS_CENTERMOUSE | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "FictionBook Validator"
-FONT 10, "Tahoma"
+FONT 10, "Tahoma", 0, 0, 0x1
 BEGIN
-    CONTROL         "List1",IDC_FILELIST,"SysListView32",LVS_REPORT | 
-                    LVS_SINGLESEL | LVS_NOCOLUMNHEADER | WS_TABSTOP,0,0,346,
-                    144,WS_EX_STATICEDGE
-    EDITTEXT        IDC_MSG,0,144,288,47,ES_MULTILINE | ES_AUTOVSCROLL | 
-                    ES_READONLY | NOT WS_BORDER | WS_VSCROLL,
-                    WS_EX_STATICEDGE
+    CONTROL         "List1",IDC_FILELIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_NOCOLUMNHEADER | WS_TABSTOP,0,0,346,144,WS_EX_STATICEDGE
+    EDITTEXT        IDC_MSG,0,144,288,47,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | WS_VSCROLL,WS_EX_STATICEDGE
     PUSHBUTTON      "Re&validate",IDC_VALIDATE,294,150,48,14,NOT WS_VISIBLE
     PUSHBUTTON      "E&xit",IDCANCEL,294,171,48,14
-    CONTROL         "Scanning...",IDC_STATUS,"msctls_statusbar32",0x0,0,191,
-                    346,10
+    CONTROL         "Scanning...",IDC_STATUS,"msctls_statusbar32",0x0,0,191,346,10
 END
 
 
@@ -91,15 +119,17 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_MAIN                ICON    DISCARDABLE     "..\\FBE\\res\\FBE.ico"
+IDI_MAIN                ICON                    "..\\FBE\\res\\FBE.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDB_VICONS              BITMAP  DISCARDABLE     "vicons.bmp"
-#endif    // English (U.S.) resources
+IDB_VICONS              BITMAP                  "vicons.bmp"
+
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
