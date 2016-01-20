@@ -1,7 +1,5 @@
 @ECHO OFF
 
-rd .\Input /S /Q
-
 devenv ..\FBE.sln /clean Release
 devenv ..\FBE.sln /build Release
 
@@ -13,7 +11,10 @@ copy ..\Release\res_rus.dll .\Input\
 copy ..\Release\res_ukr.dll .\Input\
 copy ..\Release\FBSHell.dll .\Input\
 copy ..\Release\ExportHTML.dll .\Input\
+copy ..\Release\FBV.exe .\Input\
+copy ..\Release\SciLexer.exe .\Input\
 
-xcopy ..\files\*.* .\Input\ /E /Y
+xcopy ..\FBE\files\*.* .\Input\ /E /Y /D
 
-"C:\Program Files\NSIS\Unicode\makensis" MakeInstaller.nsi
+makensis.exe MakeInstaller.nsi
+pause

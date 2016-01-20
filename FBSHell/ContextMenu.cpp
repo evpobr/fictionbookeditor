@@ -1,7 +1,8 @@
 #include "stdafx.h"
+#include "ContextMenu.h"
 
 // IShellExtInit
-HRESULT	ContextMenu::Initialize(LPCITEMIDLIST pidlFolder,IDataObject *obj,HKEY progid)
+HRESULT	CContextMenu::Initialize(LPCITEMIDLIST pidlFolder,IDataObject *obj,HKEY progid)
 {
   Lock();
   m_files.RemoveAll();
@@ -75,7 +76,7 @@ static struct {
 #define	NCOMMANDS (sizeof(g_menu_items)/sizeof(g_menu_items[0]))
 
 // IContextMenu
-HRESULT	ContextMenu::QueryContextMenu(HMENU hMenu,UINT idx,UINT cmdFirst,UINT cmdLast,
+HRESULT	CContextMenu::QueryContextMenu(HMENU hMenu,UINT idx,UINT cmdFirst,UINT cmdLast,
 				      UINT flags)
 {
   if (!(flags & CMF_DEFAULTONLY) && m_files.GetSize()>0) {
@@ -93,7 +94,7 @@ HRESULT	ContextMenu::QueryContextMenu(HMENU hMenu,UINT idx,UINT cmdFirst,UINT cm
   return MAKE_HRESULT(SEVERITY_SUCCESS, 0, (USHORT)0);
 }
 
-HRESULT	ContextMenu::GetCommandString(UINT_PTR cmd,UINT flags,UINT *,LPSTR name,UINT namelen)
+HRESULT	CContextMenu::GetCommandString(UINT_PTR cmd,UINT flags,UINT *,LPSTR name,UINT namelen)
 {
   if (cmd >= NCOMMANDS)
     return E_INVALIDARG;
@@ -116,7 +117,7 @@ HRESULT	ContextMenu::GetCommandString(UINT_PTR cmd,UINT flags,UINT *,LPSTR name,
   return S_OK;
 }
 
-HRESULT	ContextMenu::InvokeCommand(LPCMINVOKECOMMANDINFO pici) {
+HRESULT	CContextMenu::InvokeCommand(LPCMINVOKECOMMANDINFO pici) {
   bool			fEx = pici->cbSize >= sizeof(CMINVOKECOMMANDINFOEX);
   bool			fUnicode = fEx && (pici->fMask & CMIC_MASK_UNICODE);
 
@@ -143,7 +144,7 @@ HRESULT	ContextMenu::InvokeCommand(LPCMINVOKECOMMANDINFO pici) {
   // get program dir
   CString     tmp;
   TCHAR	      *cp=tmp.GetBuffer(MAX_PATH);
-  ::GetModuleFileName(_Module.GetModuleInstance(),cp,MAX_PATH);
+  ::GetModuleFileName(_AtlBaseModule.GetModuleInstance(),cp,MAX_PATH);
   tmp.ReleaseBuffer();
 
   int	      slash=tmp.ReverseFind(_T('\\'));
