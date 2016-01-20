@@ -1,0 +1,38 @@
+import "oaidl.idl";
+import "ocidl.idl";
+import "shobjIdl.idl";
+
+[
+	uuid(52DFA274-E911-470E-A2AA-F2B7795F56E6),
+	version(1.0),
+]
+library FBShellLib
+{
+	importlib("stdole2.tlb");
+
+	[
+		uuid(E4D8441D-F89C-4b5c-90AC-A857E1768F1F)
+	]
+	coclass IconExtractor
+	{
+		interface IPersistFile;
+		interface IExtractImage2;
+	};
+
+	[
+		uuid(FDABCF3B-57BE-4110-94B5-4EF8EE3C6A62)
+	]
+	coclass ContextMenu
+	{
+		interface IShellExtInit;
+		interface IContextMenu;
+	};
+
+	[
+		uuid(8CBB373E-693A-4bea-ADF3-D05EAE41684B)
+	]
+	coclass ColumnProvider
+	{
+		interface IUnknown;
+	};
+}
