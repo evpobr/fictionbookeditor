@@ -219,3 +219,5 @@ pip-log.txt
 installer/Input/
 installer/*.exe
 /FBE/ExportHTML/ExportHTML_i.h
+FBE/FBE.h
+FBSHell/FBShell_h.h
