@@ -532,6 +532,18 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <None Include="copying.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="..\CHANGELOG.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\NOWTO.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ReadMe.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ToDo.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="hunspell\src\win_api\libhunspell.vcxproj">

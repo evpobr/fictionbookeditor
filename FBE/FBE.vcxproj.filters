@@ -405,6 +405,10 @@
     <None Include="gpl-3.0.ua.txt" />
     <None Include="contributors.txt" />
     <None Include="copying.txt" />
+    <None Include="..\CHANGELOG.md" />
+    <None Include="..\NOWTO.md" />
+    <None Include="..\ReadMe.md" />
+    <None Include="..\ToDo.md" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">
