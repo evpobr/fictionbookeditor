@@ -13,6 +13,4 @@ FBE consists of the following components:
 
 ## System requirements
 
-You need at least Windows XP SP3 to run FictionBook Editor, Windows Vista and higher are supported as well. 64-bit OSes are supported, except FBShell, which will not work under 64-bit Explorer.
-
-To run FictionBook Editor [MSXML 4.0](https://www.microsoft.com/en-us/download/details.aspx?id=15697) is required.
+You need at least Windows XP SP3 to run FictionBook Editor, Windows Vista and higher, 32-bit and 64-bit are supported as well.

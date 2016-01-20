@@ -1,5 +1,10 @@
 # FictionBook Editor Changelog
 
+## v2.6.10
+
+* 64-bit FBShell build - now shell extension works under 64-bit OS. The installer will automatically install the correct version.
+* FBE now uses MSXML 6.0 instead of 4.0. This version is default XML parser in WinXP SP3 and supported up to Windows 10.
+
 ## v2.6.9
 
 * Fixed bug, introduced in 2.6.9 - FBE cannot find plugins
