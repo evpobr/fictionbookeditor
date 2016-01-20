@@ -78,13 +78,13 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "CompanyName", "evpobr"
-            VALUE "FileDescription", "FictionBook Shell Extension"
+            VALUE "FileDescription", "FictionBook shell extension"
             VALUE "FileVersion", "2.6.10.0"
             VALUE "InternalName", "FBShell"
-            VALUE "LegalCopyright", "Copyright 2002 Mike Matsnev, 2015-2016 evpobr"
+            VALUE "LegalCopyright", "Copyright 2016 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBShell.dll"
             VALUE "ProductName", "FictionBook Editor"
-            VALUE "ProductVersion", "2.6.0.0"
+            VALUE "ProductVersion", "2.6"
         END
     END
     BLOCK "VarFileInfo"
