@@ -768,6 +768,45 @@ IDR_MAINFRAME           ICON                    "res\\FBE2.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,6,10,0
+ PRODUCTVERSION 2,6,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041904b0"
+        BEGIN
+            VALUE "CompanyName", "FBE Team"
+            VALUE "FileDescription", "FictionBook russian language support"
+            VALUE "FileVersion", "2.6.10.0"
+            VALUE "InternalName", "res_rus"
+            VALUE "LegalCopyright", "Copyright 2016 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
+            VALUE "OriginalFilename", "res_rus.dll"
+            VALUE "ProductName", "FictionBook Editor"
+            VALUE "ProductVersion", "2.6"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x419, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
