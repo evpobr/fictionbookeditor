@@ -1,101 +1,12 @@
-// FictionBook.cpp : Implementation of CFictionBook
+// ThumbnailHandler.cpp : Implementation of CThumbnailHandler
 
 #include "stdafx.h"
-#include <propkey.h>
-#include <atlgdi.h>
-#include "FictionBook.h"
-
-using namespace FictionBook2;
-
-HRESULT CFictionBook::LoadFromStream(IStream* pStream, DWORD grfMode)
-{
-	HRESULT hr = S_FALSE;
-	// Load from stream your document data
-	try
-	{
-		if (!pStream)
-			AtlThrow(E_INVALIDARG);
-		if (!m_imgCoverpage.IsNull())
-			AtlThrow(HRESULT_FROM_WIN32(ERROR_ALREADY_INITIALIZED));
+#include "ThumbnailHandler.h"
 
 
-		CComPtr<IXMLDOMDocument2> spDoc = nullptr;
-		hr = LoadFB2Document(pStream, &spDoc);
-		if (SUCCEEDED(hr))
-		{
-			CString strHRef;
-			hr = GetCoverpageHRef(spDoc, strHRef);
-			if (SUCCEEDED(hr))
-			{
-				CComPtr<IXMLDOMNode> spNode;
-				hr = GetBinaryNodeById(spDoc, strHRef, &spNode);
-				if (SUCCEEDED(hr))
-				{
-					CString strBase64;
-					hr = GetBinaryBase64String(spNode, strBase64);
-					if (SUCCEEDED(hr))
-					{
-						CComPtr<IStream> spCoverpageStream = nullptr;
-						hr = DecodeBase64StringToStream(strBase64, &spCoverpageStream);
-						if (SUCCEEDED(hr))
-						{
-							hr = m_imgCoverpage.Load(spCoverpageStream);
-						}
-					}
-				}
-			}
-		}
-	}
-	catch (CAtlException &ex)
-	{
-		hr = ex;
-	}
+// CThumbnailHandler
 
-	return hr;
-}
-
-void CFictionBook::InitializeSearchContent()
-{
-	// initialise search content from document's data as the following value
-	CString value = _T("test;content;");
-	SetSearchContent(value);
-}
-
-void CFictionBook::SetSearchContent(CString& value)
-{
-	// Assigns search content to PKEY_Search_Contents key
-	if (value.IsEmpty())
-	{
-		RemoveChunk(PKEY_Search_Contents.fmtid, PKEY_Search_Contents.pid);
-	}
-	else
-	{
-		CFilterChunkValueImpl *pChunk = NULL;
-		ATLTRY(pChunk = new CFilterChunkValueImpl);
-		if (pChunk != NULL)
-		{
-			pChunk->SetTextValue(PKEY_Search_Contents, value, CHUNK_TEXT);
-			SetChunkValue(pChunk);
-		}
-	}
-}
-
-void CFictionBook::OnDrawThumbnail(HDC hDrawDC, LPRECT lprcBounds)
-{
-		float imageWidth = (float)m_imgCoverpage.GetWidth();
-		float imageHeight = (float)m_imgCoverpage.GetHeight();
-		float scale = 0.0f;
-
-		if (imageWidth <= imageHeight)
-			scale = (float)lprcBounds->bottom - lprcBounds->top / (float)m_imgCoverpage.GetHeight();
-		else
-			scale = (float)lprcBounds->right - lprcBounds->left / (float)m_imgCoverpage.GetWidth();
-
-		float thumbWidth = (float)imageWidth * scale;
-		float thumbHeight = (float)imageHeight * scale;
-}
-
-HRESULT FictionBook2::CFictionBook::LoadFB2Document(IStream * pStream, IXMLDOMDocument2 ** pDoc)
+HRESULT CThumbnailHandler::LoadFB2Document(IStream * pStream, _COM_Outptr_ IXMLDOMDocument2 **pDoc)
 {
 	HRESULT hr;
 
@@ -140,7 +51,7 @@ HRESULT FictionBook2::CFictionBook::LoadFB2Document(IStream * pStream, IXMLDOMDo
 	return hr;
 }
 
-HRESULT FictionBook2::CFictionBook::DecodeBase64StringToStream(CString strBase64, IStream ** pStream)
+HRESULT CThumbnailHandler::DecodeBase64StringToStream(CString strBase64, IStream ** pStream)
 {
 	HRESULT hr = E_FAIL;
 
@@ -176,7 +87,7 @@ HRESULT FictionBook2::CFictionBook::DecodeBase64StringToStream(CString strBase64
 	return hr;
 }
 
-HRESULT FictionBook2::CFictionBook::GetCoverpageHRef(IXMLDOMDocument2 * pDoc, CString & strHRef)
+HRESULT CThumbnailHandler::GetCoverpageHRef(IXMLDOMDocument2 * pDoc, CString & strHRef)
 {
 	HRESULT hr = E_FAIL;
 	CComPtr<IXMLDOMNode> spCoverpageImageNode;
@@ -215,7 +126,7 @@ HRESULT FictionBook2::CFictionBook::GetCoverpageHRef(IXMLDOMDocument2 * pDoc, CS
 	return hr;
 }
 
-HRESULT FictionBook2::CFictionBook::GetBinaryNodeById(IXMLDOMDocument2 * pDoc, LPCWSTR pszId, IXMLDOMNode ** pNode)
+HRESULT CThumbnailHandler::GetBinaryNodeById(IXMLDOMDocument2 * pDoc, LPCWSTR pszId, IXMLDOMNode ** pNode)
 {
 	HRESULT hr = E_FAIL;
 
@@ -246,7 +157,7 @@ HRESULT FictionBook2::CFictionBook::GetBinaryNodeById(IXMLDOMDocument2 * pDoc, L
 	return hr;
 }
 
-HRESULT FictionBook2::CFictionBook::GetBinaryBase64String(IXMLDOMNode * pNode, CString & strBase64)
+HRESULT CThumbnailHandler::GetBinaryBase64String(IXMLDOMNode * pNode, CString & strBase64)
 {
 	HRESULT hr = E_FAIL;
 
@@ -266,6 +177,83 @@ HRESULT FictionBook2::CFictionBook::GetBinaryBase64String(IXMLDOMNode * pNode, C
 	{
 		strBase64.Empty();
 		hr = ex;
+	}
+
+	return hr;
+}
+
+HRESULT CThumbnailHandler::Initialize(IStream * pstream, DWORD grfMode)
+{
+	HRESULT hr;
+	try
+	{
+		if (!m_imgCoverpage.IsNull())
+			AtlThrow(HRESULT_FROM_WIN32(ERROR_ALREADY_INITIALIZED));
+
+		CComPtr<IXMLDOMDocument2> spDoc = nullptr;
+		hr = LoadFB2Document(pstream, &spDoc);
+		if (SUCCEEDED(hr))
+		{
+			CString strHRef;
+			hr = GetCoverpageHRef(spDoc, strHRef);
+			if (SUCCEEDED(hr))
+			{
+				CComPtr<IXMLDOMNode> spNode;
+				hr = GetBinaryNodeById(spDoc, strHRef, &spNode);
+				if (SUCCEEDED(hr))
+				{
+					CString strBase64;
+					hr = GetBinaryBase64String(spNode, strBase64);
+					if (SUCCEEDED(hr))
+					{
+						CComPtr<IStream> spStream = nullptr;
+						hr = DecodeBase64StringToStream(strBase64, &spStream);
+						if (SUCCEEDED(hr))
+							hr = m_imgCoverpage.Load(spStream);
+					}
+				}
+			}
+		}
+	}
+	catch (CAtlException &ex)
+	{
+		hr = ex;
+	}
+	return hr;
+}
+
+HRESULT CThumbnailHandler::GetThumbnail(UINT cx, HBITMAP * phbmp, WTS_ALPHATYPE * pdwAlpha)
+{
+	HRESULT hr = S_FALSE;
+	float imageWidth = (float)m_imgCoverpage.GetWidth();
+	float imageHeight = (float)m_imgCoverpage.GetHeight();
+	float scale = 0.0f;
+
+	if ((int)imageWidth <= (int)imageHeight)
+		scale = (float)cx / (float)m_imgCoverpage.GetHeight();
+	else
+		scale = (float)cx / (float)m_imgCoverpage.GetWidth();
+
+
+	float thumbWidth = (float)imageWidth * scale;
+	float thumbHeight = (float)imageHeight * scale;
+
+	CImage thumb;
+	BOOL bRet = thumb.Create((int)thumbWidth, (int)thumbHeight, 32);
+	if (bRet)
+	{
+		bRet = m_imgCoverpage.Draw(
+			thumb.GetDC(),
+			CRect(0, 0, (int)thumbWidth, (int)thumbHeight),
+			Gdiplus::InterpolationMode::InterpolationModeHighQuality);
+
+		if (bRet)
+		{
+			thumb.ReleaseDC();
+			*phbmp = thumb.Detach();
+			*pdwAlpha = WTSAT_UNKNOWN;
+			hr = S_OK;
+		}
 	}
 
 	return hr;

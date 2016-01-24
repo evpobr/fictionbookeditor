@@ -28,13 +28,9 @@
 
 #include <atlcom.h>
 
-#include <atlapp.h>
-#include <atlgdi.h>
-
 #include <comutil.h>
 #include <comdef.h>
 #include <comdefsp.h>
-#include <atlxml.h>
 
 #include <msxml6.h>
 
