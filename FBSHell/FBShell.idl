@@ -3,6 +3,13 @@ import "ocidl.idl";
 import "shobjIdl.idl";
 
 [
+	object,
+	uuid(F78C41C3-CA33-4674-AFE9-AADEA62FFF61),
+	pointer_default(unique)
+]
+interface IThumbnailHandler : IUnknown{
+};
+[
 	uuid(52DFA274-E911-470E-A2AA-F2B7795F56E6),
 	version(1.0),
 ]
@@ -35,4 +42,12 @@ library FBShellLib
 	{
 		interface IUnknown;
 	};
+	[
+		uuid(585CFC85-7939-4004-9693-EB8C6F848B1F)		
+	]
+	coclass ThumbnailHandler
+	{
+		[default] interface IThumbnailProvider;
+	};
 }
+import "thumbcache.idl";

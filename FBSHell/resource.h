@@ -1,13 +1,14 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// Used by FBShell.rc
+// Microsoft Visual C++ generated include file.
+// Used by FBSHell.rc
 //
 #define IDR_COLUMNPROVIDER              101
 #define IDR_ICONEXTRACTOR               102
 #define IDI_FB2                         103
 #define IDR_CONTEXTMENU                 104
 #define IDR_NSFOLDER                    105
-#define IDR_FBSHELL						106
+#define IDR_FBSHELL                     106
+#define IDR_THUMBNAILHANDLER            107
 
 // Next default values for new objects
 // 
@@ -16,6 +17,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        107
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1000
-#define _APS_NEXT_SYMED_VALUE           102
+#define _APS_NEXT_SYMED_VALUE           108
 #endif
 #endif

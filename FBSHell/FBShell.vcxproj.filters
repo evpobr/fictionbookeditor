@@ -39,6 +39,12 @@
     <ClCompile Include="FBShell_i.c">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="FictionBook.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ThumbnailHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="FBShell.idl">
@@ -64,6 +70,10 @@
     <None Include="NSFolder.rgs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="ThumbnailHandler.rgs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColumnProvider.h">
@@ -89,6 +99,15 @@
     </ClInclude>
     <ClInclude Include="FBShell_h.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FictionBook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ThumbnailHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -218,6 +218,7 @@
     <Link>
       <ModuleDefinitionFile>FBShell.def</ModuleDefinitionFile>
       <AdditionalDependencies>msxml6.lib;crypt32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ClCompile>
       <AdditionalOptions>/Zc:threadSafeInit-</AdditionalOptions>
@@ -230,6 +231,7 @@
     <Link>
       <ModuleDefinitionFile>FBShell.def</ModuleDefinitionFile>
       <AdditionalDependencies>msxml6.lib;crypt32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ClCompile>
       <AdditionalOptions>/Zc:threadSafeInit-</AdditionalOptions>
@@ -242,6 +244,7 @@
     <Link>
       <ModuleDefinitionFile>FBShell.def</ModuleDefinitionFile>
       <AdditionalDependencies>msxml6.lib;crypt32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ClCompile>
       <AdditionalOptions>/Zc:threadSafeInit-</AdditionalOptions>
@@ -254,6 +257,7 @@
     <Link>
       <ModuleDefinitionFile>FBShell.def</ModuleDefinitionFile>
       <AdditionalDependencies>msxml6.lib;crypt32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ClCompile>
       <AdditionalOptions>/Zc:threadSafeInit-</AdditionalOptions>
@@ -277,6 +281,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_xp|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="FictionBook.cpp" />
     <ClCompile Include="IconExtractor.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -288,6 +293,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_xp|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ThumbnailHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="FBShell.idl" />
@@ -299,6 +305,8 @@
     <None Include="FBShell.rgs" />
     <None Include="IconExtractor.rgs" />
     <None Include="NSFolder.rgs" />
+    <None Include="packages.config" />
+    <None Include="ThumbnailHandler.rgs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColumnProvider.h" />
@@ -306,9 +314,12 @@
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="FBShell.h" />
     <ClInclude Include="FBShell_h.h" />
+    <ClInclude Include="FictionBook.h" />
     <ClInclude Include="IconExtractor.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="ThumbnailHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FBSHell.rc" />
@@ -318,5 +329,12 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\wtl.9.1\build\native\wtl.targets" Condition="Exists('..\packages\wtl.9.1\build\native\wtl.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\wtl.9.1\build\native\wtl.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\wtl.9.1\build\native\wtl.targets'))" />
+  </Target>
 </Project>

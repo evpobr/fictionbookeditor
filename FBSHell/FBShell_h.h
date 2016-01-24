@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Jan 20 15:09:52 2016
+/* at Sat Jan 23 18:35:58 2016
  */
 /* Compiler settings for FBShell.idl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -31,6 +31,10 @@
 #error this stub requires an updated version of <rpcndr.h>
 #endif // __RPCNDR_H_VERSION__
 
+#ifndef COM_NO_WINDOWS_H
+#include "windows.h"
+#include "ole2.h"
+#endif /*COM_NO_WINDOWS_H*/
 
 #ifndef __FBShell_h_h__
 #define __FBShell_h_h__
@@ -40,6 +44,12 @@
 #endif
 
 /* Forward Declarations */ 
+
+#ifndef __IThumbnailHandler_FWD_DEFINED__
+#define __IThumbnailHandler_FWD_DEFINED__
+typedef interface IThumbnailHandler IThumbnailHandler;
+#endif 	/* __IThumbnailHandler_FWD_DEFINED__ */
+
 
 #ifndef __IconExtractor_FWD_DEFINED__
 #define __IconExtractor_FWD_DEFINED__
@@ -77,14 +87,96 @@ typedef struct ColumnProvider ColumnProvider;
 #endif 	/* __ColumnProvider_FWD_DEFINED__ */
 
 
+#ifndef __ThumbnailHandler_FWD_DEFINED__
+#define __ThumbnailHandler_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class ThumbnailHandler ThumbnailHandler;
+#else
+typedef struct ThumbnailHandler ThumbnailHandler;
+#endif /* __cplusplus */
+
+#endif 	/* __ThumbnailHandler_FWD_DEFINED__ */
+
+
 /* header files for imported files */
 #include "oaidl.h"
 #include "ocidl.h"
 #include "shobjIdl.h"
+#include "thumbcache.h"
 
 #ifdef __cplusplus
 extern "C"{
 #endif 
+
+
+#ifndef __IThumbnailHandler_INTERFACE_DEFINED__
+#define __IThumbnailHandler_INTERFACE_DEFINED__
+
+/* interface IThumbnailHandler */
+/* [unique][uuid][object] */ 
+
+
+EXTERN_C const IID IID_IThumbnailHandler;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("F78C41C3-CA33-4674-AFE9-AADEA62FFF61")
+    IThumbnailHandler : public IUnknown
+    {
+    public:
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IThumbnailHandlerVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IThumbnailHandler * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IThumbnailHandler * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IThumbnailHandler * This);
+        
+        END_INTERFACE
+    } IThumbnailHandlerVtbl;
+
+    interface IThumbnailHandler
+    {
+        CONST_VTBL struct IThumbnailHandlerVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IThumbnailHandler_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IThumbnailHandler_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IThumbnailHandler_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IThumbnailHandler_INTERFACE_DEFINED__ */
 
 
 
@@ -119,6 +211,14 @@ EXTERN_C const CLSID CLSID_ColumnProvider;
 
 class DECLSPEC_UUID("8CBB373E-693A-4bea-ADF3-D05EAE41684B")
 ColumnProvider;
+#endif
+
+EXTERN_C const CLSID CLSID_ThumbnailHandler;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("585CFC85-7939-4004-9693-EB8C6F848B1F")
+ThumbnailHandler;
 #endif
 #endif /* __FBShellLib_LIBRARY_DEFINED__ */
 
