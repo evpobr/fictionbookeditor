@@ -103,8 +103,13 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 		// * write relevant MIME headers
 		if (fMIME) {
 			// format date
-			char  date[256]; time_t  tt; time(&tt);
-			strftime(date, _countof(date), "%a, %d %b %Y %H:%M:%S +0000", gmtime(&tt));
+			char  date[256];
+			tm _tm;
+			time_t tt;
+			
+			time(&tt);
+			gmtime_s(&_tm, &tt);
+			strftime(date, _countof(date), "%a, %d %b %Y %H:%M:%S +0000", &_tm);
 
 			// construct some random mime boundary
 			_snprintf_s(boundary, _countof(boundary), "------NextPart---%08X.%08X", tt, rand());
