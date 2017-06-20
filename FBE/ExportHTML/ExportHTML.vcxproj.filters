@@ -87,5 +87,8 @@
     <Midl Include="ExportHTML.idl">
       <Filter>Source Files</Filter>
     </Midl>
+    <Midl Include="..\fbe.idl">
+      <Filter>Source Files</Filter>
+    </Midl>
   </ItemGroup>
 </Project>

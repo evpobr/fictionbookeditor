@@ -301,3 +301,7 @@ __pycache__/
 
 # Cake - Uncomment if you are using it
 # tools/
+
+# Misc ignores
+
+FBE.h
