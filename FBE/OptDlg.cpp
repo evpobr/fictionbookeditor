@@ -50,13 +50,13 @@ LRESULT COptDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
   m_bg.SetColor(_Settings.GetColorBG());
   m_fg.SetColor(_Settings.GetColorFG());
 
-  wchar_t buf[MAX_LOAD_STRING + 1];
-  if(::LoadString(_Module.GetResourceInstance(), IDS_LANG_ENGLISH, buf, MAX_LOAD_STRING))
- 	m_lang.AddString(buf);
-  if(::LoadString(_Module.GetResourceInstance(), IDS_LANG_RUSSIAN, buf, MAX_LOAD_STRING))
-	m_lang.AddString(buf);
-  if(::LoadString(_Module.GetResourceInstance(), IDS_LANG_UKRAINIAN, buf, MAX_LOAD_STRING))
-	m_lang.AddString(buf);
+  CString strLanguage;
+  if(strLanguage.LoadString(IDS_LANG_ENGLISH))
+ 	m_lang.AddString(strLanguage);
+  if(strLanguage.LoadString(IDS_LANG_RUSSIAN))
+	m_lang.AddString(strLanguage);
+  if(strLanguage.LoadString(IDS_LANG_UKRAINIAN))
+	m_lang.AddString(strLanguage);
 
   if(LANG_RUSSIAN == _Settings.GetInterfaceLanguageID())
 	m_lang.SetCurSel(1);
