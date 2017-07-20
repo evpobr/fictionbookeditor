@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+#include "winres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -32,7 +32,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\n"
+    "#include ""winres.h""\r\n"
     "\0"
 END
 
@@ -43,6 +43,14 @@ BEGIN
 END
 
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_THUMBNAILHANDLER    REGISTRY                "ThumbnailHandler.rgs"
 
 #endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
@@ -57,11 +65,25 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// REGISTRY
+//
+
+IDR_COLUMNPROVIDER      REGISTRY                "ColumnProvider.rgs"
+
+IDR_ICONEXTRACTOR       REGISTRY                "IconExtractor.rgs"
+
+IDR_CONTEXTMENU         REGISTRY                "ContextMenu.rgs"
+
+IDR_FBSHELL             REGISTRY                "FBShell.rgs"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // Version
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,10,0
+ FILEVERSION 2,6,11,0
  PRODUCTVERSION 2,6,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -79,9 +101,9 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "evpobr"
             VALUE "FileDescription", "FictionBook shell extension"
-            VALUE "FileVersion", "2.6.10.0"
+            VALUE "FileVersion", "2.6.11.0"
             VALUE "InternalName", "FBShell"
-            VALUE "LegalCopyright", "Copyright 2016 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
+            VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBShell.dll"
             VALUE "ProductName", "FictionBook Editor"
             VALUE "ProductVersion", "2.6"
@@ -92,20 +114,6 @@ BEGIN
         VALUE "Translation", 0x409, 1200
     END
 END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// REGISTRY
-//
-
-IDR_COLUMNPROVIDER      REGISTRY                "ColumnProvider.rgs"
-
-IDR_ICONEXTRACTOR       REGISTRY                "IconExtractor.rgs"
-
-IDR_CONTEXTMENU         REGISTRY                "ContextMenu.rgs"
-
-IDR_FBSHELL             REGISTRY                "FBShell.rgs"
 
 
 /////////////////////////////////////////////////////////////////////////////

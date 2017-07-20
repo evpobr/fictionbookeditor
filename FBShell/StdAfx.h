@@ -15,9 +15,7 @@
 #error This program requires unicode support to run
 #endif
 
-#define WINVER       0x0501     // W2K/98
-#define _WIN32_WINNT 0x0501     // W2K
-#define _WIN32_IE    0x0500     // IE 5+
+#include "targetver.h"
 
 // we are MT by default
 #define _ATL_APARTMENT_THREADED
@@ -37,6 +35,7 @@
 #include <msxml6.h>
 
 _COM_SMARTPTR_TYPEDEF(ISAXXMLReader, __uuidof(ISAXXMLReader));
+#define SHARED_HANDLERS 
 
 #include <shellapi.h>
 #include <shlobj.h>

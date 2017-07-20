@@ -17,6 +17,9 @@
       <UniqueIdentifier>{f4ba7b2e-b161-4bea-8393-950f5ce075c1}</UniqueIdentifier>
       <Extensions>cpp;h</Extensions>
     </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{f928136f-2a54-4191-989d-a01e7f63bba4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutBox.cpp">
@@ -102,6 +105,9 @@
     </ClCompile>
     <ClCompile Include="buildstamp.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FBE_i.c">
+      <Filter>Generated Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FBE.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

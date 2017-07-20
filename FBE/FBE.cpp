@@ -25,9 +25,6 @@
 // implementation
 #include "ExternalHelper.h"
 
-// typelib guids
-#include "fbe_i.c"
-
 #define	DEFINE_CLSID(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
 		EXTERN_C const CLSID DECLSPEC_SELECTANY name \
 		= { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }

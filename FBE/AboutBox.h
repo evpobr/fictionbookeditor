@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <math.h>
+#include <memory>
 #include "ModelessDialog.h"
 #include "extras/http_download.h"
 #include "extras/MD5.h"
