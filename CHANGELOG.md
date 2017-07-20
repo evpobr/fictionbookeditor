@@ -1,5 +1,10 @@
 # FictionBook Editor Changelog
 
+## v2.6.11
+
+* Add thumbnail handler shell extension
+* Use VS2017 compiler
+
 ## v2.6.10
 
 * 64-bit FBShell build - now shell extension works under 64-bit OS. The installer will automatically install the correct version.
