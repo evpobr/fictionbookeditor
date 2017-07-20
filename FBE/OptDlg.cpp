@@ -67,12 +67,12 @@ LRESULT COptDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
 
   // get font list
   CSimpleArray<CString> installedFonts;
-  HDC	hDC=::CreateDC(_T("DISPLAY"),NULL,NULL,NULL);
+  CDC hdc;
+  hdc.CreateDC(_T("DISPLAY"), NULL, NULL, NULL);
   LOGFONT lf;
   memset(&lf,0,sizeof(lf));
   lf.lfCharSet=ANSI_CHARSET;
-  ::EnumFontFamiliesEx(hDC,&lf,(FONTENUMPROC)&EnumFontProc,(LPARAM)&installedFonts,0);
-  ::DeleteDC(hDC);
+  ::EnumFontFamiliesEx(hdc,&lf,(FONTENUMPROC)&EnumFontProc,(LPARAM)&installedFonts,0);
 
   for (int i=0; i<installedFonts.GetSize(); i++)
   {
