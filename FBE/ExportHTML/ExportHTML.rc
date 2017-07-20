@@ -59,7 +59,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,10,0
+ FILEVERSION 2,6,11,0
  PRODUCTVERSION 2,6,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -77,9 +77,9 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook Editor HTML export plugin"
-            VALUE "FileVersion", "2.6.10.0"
+            VALUE "FileVersion", "2.6.11.0"
             VALUE "InternalName", "ExportHTML"
-            VALUE "LegalCopyright", "Copyright 2016 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
+            VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "ExportHTML.dll"
             VALUE "ProductName", "FictionBook Editor"
             VALUE "ProductVersion", "2.6"
