@@ -24,6 +24,7 @@
 #include <atlbase.h>
 #include <atlstr.h>
 #include <atltypes.h>
+#include <atlsafe.h>
 #include <atlcom.h>
 #include <atlwin.h>
 #include <atlctl.h>
