@@ -3499,6 +3499,8 @@ LRESULT CFBEView::OnEditInsImage(WORD, WORD cmdID, HWND, BOOL&)
 			L"FBE supported (*.jpg;*.jpeg;*.png)\0*.jpg;*.jpeg;*.png\0JPEG (*.jpg)\0*.jpg\0PNG (*.png)\0*.png\0Bitmap (*.bmp"\
 			L")\0*.bmp\0GIF (*.gif)\0*.gif\0TIFF (*.tif)\0*.tif\0\0"
 			);
+		dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
+		dlg.m_ofn.lpfnHook = NULL;
 
 		wchar_t dlgTitle[MAX_LOAD_STRING + 1];
 		::LoadString(_Module.GetResourceInstance(), IDS_ADD_IMAGE_FILEDLG, dlgTitle, MAX_LOAD_STRING);

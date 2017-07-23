@@ -131,8 +131,10 @@ void  CMainFrame::AttachDocument(FB::Doc *doc)
 
 CString	CMainFrame::GetOpenFileName() 
 {
-	CFileDialog dlg(TRUE, L"fb2", NULL, OFN_HIDEREADONLY|OFN_PATHMUSTEXIST, 
+	CFileDialog dlg(TRUE, L"fb2", NULL, OFN_HIDEREADONLY|OFN_PATHMUSTEXIST | OFN_EXPLORER, 
 		L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
+	dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
+	dlg.m_ofn.lpfnHook = NULL;
 	if (dlg.DoModal(*this)==IDOK) return dlg.m_szFileName;
 	return CString();
 }
@@ -3230,6 +3232,8 @@ LRESULT CMainFrame::OnEditAddBinary(WORD, WORD, HWND, BOOL&) {
   ::LoadString(_Module.GetResourceInstance(), IDS_ADD_BINARIES_FILEDLG, dlgTitle, MAX_LOAD_STRING);
   dlg.m_ofn.lpstrTitle = dlgTitle;
   dlg.m_ofn.nFilterIndex = 2;
+  dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
+  dlg.m_ofn.lpfnHook = NULL;
 
 
   if (dlg.DoModal(*this)==IDOK) {
