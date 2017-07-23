@@ -5,7 +5,6 @@
 
 #include "MainFrm.h"
 #include "AboutBox.h"
-#include "CFileDialogEx.h"
 #include "SettingsDlg.h"
 #include "xmlMatchedTagsHighlighter.h"
 
@@ -3220,8 +3219,7 @@ LRESULT CMainFrame::OnEditAddBinary(WORD, WORD, HWND, BOOL&) {
     return 0;
 
   // Modification by Pilgrim
-  CFileDialogEx	dlg(
-    TRUE,
+  CMultiFileDialog	dlg(
     _T("*"),
     NULL,
 	OFN_ALLOWMULTISELECT | OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR,
@@ -3236,12 +3234,18 @@ LRESULT CMainFrame::OnEditAddBinary(WORD, WORD, HWND, BOOL&) {
   dlg.m_ofn.lpfnHook = NULL;
 
 
-  if (dlg.DoModal(*this)==IDOK) {
-	_POSITION_ pos = dlg.GetStartPosition();
-	while(pos) {
-		CString fileName(dlg.GetNextPathName(pos));
-		m_doc->AddBinary(fileName);
-	}	
+  if (dlg.DoModal(*this)==IDOK)
+  {
+	  CString strPath;
+	  if (dlg.GetFirstPathName(strPath))
+	  {
+		  if (strPath.IsEmpty())
+			  return 0;
+		  do
+		  {
+			  m_doc->AddBinary(strPath);
+		  } while (dlg.GetNextPathName(strPath));
+	  }
   }
 
   return 0;

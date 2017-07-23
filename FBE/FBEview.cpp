@@ -3491,7 +3491,7 @@ LRESULT CFBEView::OnEditInsImage(WORD, WORD cmdID, HWND, BOOL&)
 
 	if(!_Settings.GetIsInsClearImage())
 	{
-		CFileDialogEx dlg(
+		CFileDialog dlg(
 			TRUE,
 			NULL,
 			NULL,

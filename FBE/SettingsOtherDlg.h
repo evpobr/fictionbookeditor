@@ -3,7 +3,6 @@
 #pragma once
 
 #include "resource.h" 
-#include "CFileDialogEx.h"
 #include <atlhost.h>
 
 

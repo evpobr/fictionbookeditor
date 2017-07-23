@@ -13,7 +13,6 @@
 
 #include "resource.h"
 #include "Settings.h"
-#include "CFileDialogEx.h"
 
 extern CSettings _Settings;
 
