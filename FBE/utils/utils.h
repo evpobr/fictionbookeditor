@@ -159,7 +159,7 @@ namespace U // place all utilities into their own namespace
   CString GetCharName(int ch);
 
   // msxml support
-  MSXML2::IXMLDOMDocument2Ptr CreateDocument(bool fFreeThreaded=false);
+  HRESULT CreateDocument(bool fFreeThreaded, MSXML2::IXMLDOMDocument2 **ppDocument);
   void ReportParseError(MSXML2::IXMLDOMDocument2Ptr doc);
   HRESULT LoadXml(MSXML2::IXMLDOMDocument2 *pDoc, PCWSTR pszUrl);
   HRESULT CreateTemplate(_COM_Outptr_ MSXML2::IXSLTemplate **ppTemplate);
