@@ -130,12 +130,30 @@ void  CMainFrame::AttachDocument(FB::Doc *doc)
 
 CString	CMainFrame::GetOpenFileName() 
 {
-	CFileDialog dlg(TRUE, L"fb2", NULL, OFN_HIDEREADONLY|OFN_PATHMUSTEXIST | OFN_EXPLORER, 
-		L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
-	dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
-	dlg.m_ofn.lpfnHook = NULL;
-	if (dlg.DoModal(*this)==IDOK) return dlg.m_szFileName;
-	return CString();
+	CString strFileName;
+	if (RunTimeHelper::IsVista())
+	{
+		const COMDLG_FILTERSPEC arrFilterSpec[] =
+		{
+			{ L"FictionBook files", L"*.fb2" },
+			{ L"All files", L"*.*" }
+		};
+		CShellFileOpenDialog dlg(NULL, FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_FILEMUSTEXIST, L"fb",
+			arrFilterSpec, ARRAYSIZE(arrFilterSpec));
+		if (dlg.DoModal() == IDOK)
+			dlg.GetFilePath(strFileName);
+	}
+	else
+	{
+
+		CFileDialog dlg(TRUE, L"fb2", NULL, OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_EXPLORER,
+			L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
+		dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
+		dlg.m_ofn.lpfnHook = NULL;
+		if (dlg.DoModal(*this) == IDOK)
+			strFileName = dlg.m_szFileName;
+	}
+	return strFileName;
 }
 
 class CCustomSaveDialog : public CFileDialogImpl<CCustomSaveDialog>
