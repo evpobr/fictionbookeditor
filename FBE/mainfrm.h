@@ -237,6 +237,7 @@ public:
 
   MSXML2::IXMLDOMDocumentPtr		m_saved_xml;
 
+  CComPtr<IShellItem> m_spShellItem;
 
   // IDs in combobox
   bool			  m_cb_updated:1;
