@@ -256,12 +256,49 @@ CString	CMainFrame::GetSaveFileName(CString& encoding)
 
 		CShellFileSaveDialog dlg(NULL, FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_OVERWRITEPROMPT,
 			L"fb2", arrFilterSpec, ARRAYSIZE(arrFilterSpec));
-		HRESULT hr = dlg.GetPtr()->SetSaveAsItem(m_spShellItem);
-		if (dlg.DoModal() == IDOK)
+		CComPtr<IFileDialogCustomize> spFileDialogCustomize;
+		HRESULT hr = dlg.GetPtr()->QueryInterface(&spFileDialogCustomize);
+		if (SUCCEEDED(hr))
 		{
-			dlg.GetFilePath(strFileName);
-			m_spShellItem.Release();
-			dlg.GetPtr()->GetResult(&m_spShellItem);
+
+			spFileDialogCustomize->StartVisualGroup(1000, L"Encoding:");
+			spFileDialogCustomize->AddComboBox(1001);
+			
+			CString strEncodings;
+			strEncodings.LoadString(IDS_ENCODINGS);
+			CSimpleArray<CString> lstEncodings;	
+			CString strEncoding;
+			int iStart = 0;
+			do
+			{
+				strEncoding = strEncodings.Tokenize(L",", iStart);
+				if (strEncoding.IsEmpty())
+					break;
+				lstEncodings.Add(strEncoding);
+			} while (true);
+
+			for (int i = 0; i < lstEncodings.GetSize(); i++)
+			{
+				spFileDialogCustomize->AddControlItem(1001, 1100 + i, lstEncodings[i]);
+			}
+			
+			CString strSelectedEncodding = _Settings.KeepEncoding() ? m_doc->m_encoding : _Settings.GetDefaultEncoding();
+			int nEncodingIndex = lstEncodings.Find(strSelectedEncodding.MakeLower());
+			spFileDialogCustomize->SetSelectedControlItem(1001, 1100 + nEncodingIndex);
+
+			spFileDialogCustomize->EndVisualGroup();
+
+			hr = dlg.GetPtr()->SetSaveAsItem(m_spShellItem);
+			if (dlg.DoModal() == IDOK)
+			{
+				dlg.GetFilePath(strFileName);
+				m_spShellItem.Release();
+				dlg.GetPtr()->GetResult(&m_spShellItem);
+				CComHeapPtr<WCHAR> szSelectedEncoding;
+				DWORD dwItem;
+				spFileDialogCustomize->GetSelectedControlItem(1001, &dwItem);
+				encoding = lstEncodings[dwItem - 1100];
+			}
 		}
 	}
 	else
