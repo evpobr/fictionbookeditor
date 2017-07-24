@@ -260,8 +260,9 @@ CString	CMainFrame::GetSaveFileName(CString& encoding)
 		HRESULT hr = dlg.GetPtr()->QueryInterface(&spFileDialogCustomize);
 		if (SUCCEEDED(hr))
 		{
-
-			spFileDialogCustomize->StartVisualGroup(1000, L"Encoding:");
+			CString strTitle;
+			strTitle.LoadString(IDS_ENCODING);
+			spFileDialogCustomize->StartVisualGroup(1000, strTitle);
 			spFileDialogCustomize->AddComboBox(1001);
 			
 			CString strEncodings;
