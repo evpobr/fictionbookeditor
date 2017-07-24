@@ -141,7 +141,9 @@ CString	CMainFrame::GetOpenFileName()
 		CShellFileOpenDialog dlg(NULL, FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_FILEMUSTEXIST, L"fb",
 			arrFilterSpec, ARRAYSIZE(arrFilterSpec));
 		if (dlg.DoModal() == IDOK)
+		{
 			dlg.GetFilePath(strFileName);
+		}
 	}
 	else
 	{
@@ -237,20 +239,45 @@ public:
   }
 };
 
-CString	CMainFrame::GetSaveFileName(CString& encoding) {
+CString	CMainFrame::GetSaveFileName(CString& encoding)
+{
+	CString strFileName;
 	bstr_t filename = m_doc->m_filename;
 	if (!filename || (filename == bstr_t(L"Untitled.fb2")))
 		filename = L"";
 
-  CCustomSaveDialog	dlg(FALSE,
-	_Settings.KeepEncoding() ? m_doc->m_encoding : _Settings.GetDefaultEncoding(), L"fb2", filename,
-    OFN_HIDEREADONLY|OFN_NOREADONLYRETURN|OFN_OVERWRITEPROMPT| OFN_ENABLETEMPLATE,
-    L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
-  if (dlg.DoModal(*this)==IDOK) {
-    encoding=dlg.m_encoding;
-    return dlg.m_szFileName;
-  }
-  return CString();
+	if (RunTimeHelper::IsVista)
+	{
+		const COMDLG_FILTERSPEC arrFilterSpec[] =
+		{
+			{ L"FictionBook files", L"*.fb2" },
+			{ L"All files", L"*.*" }
+		};
+
+		CShellFileSaveDialog dlg(NULL, FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_OVERWRITEPROMPT,
+			L"fb2", arrFilterSpec, ARRAYSIZE(arrFilterSpec));
+		HRESULT hr = dlg.GetPtr()->SetSaveAsItem(m_spShellItem);
+		if (dlg.DoModal() == IDOK)
+		{
+			dlg.GetFilePath(strFileName);
+			m_spShellItem.Release();
+			dlg.GetPtr()->GetResult(&m_spShellItem);
+		}
+	}
+	else
+	{
+		CCustomSaveDialog	dlg(FALSE,
+			_Settings.KeepEncoding() ? m_doc->m_encoding : _Settings.GetDefaultEncoding(), L"fb2", filename,
+			OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT | OFN_ENABLETEMPLATE,
+			L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
+		if (dlg.DoModal(*this) == IDOK)
+		{
+			encoding = dlg.m_encoding;
+			strFileName = dlg.m_szFileName;
+		}
+	}
+	
+	return strFileName;
 }
 
 bool	CMainFrame::DocChanged() {
@@ -378,6 +405,16 @@ CMainFrame::FILE_OP_STATUS  CMainFrame::LoadFile(const wchar_t *initfilename)
   delete m_doc;
   m_doc=doc;
   m_bad_xml = false;
+
+  m_spShellItem.Release();
+  PIDLIST_ABSOLUTE pidl = { 0 };
+  HRESULT hr = SHParseDisplayName(m_doc->m_filename, NULL, &pidl, 0, NULL);
+  if (SUCCEEDED(hr))
+  {
+	  SHCreateShellItem(NULL, NULL, pidl, &m_spShellItem);
+	  ILFree(pidl);
+  }
+
   return OK;
 }
 
@@ -2127,8 +2164,18 @@ LRESULT CMainFrame::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 	  ext.SetString(ATLPath::FindExtension(buf));
 	  if (ext.CompareNoCase(L".FB2") == 0 )
 	  {
-		if (LoadFile(buf)==OK)
-			m_mru.AddToList(m_doc->m_filename);
+		  if (LoadFile(buf) == OK)
+		  {
+			  m_mru.AddToList(m_doc->m_filename);
+			  PIDLIST_ABSOLUTE pidl = { 0 };
+			  HRESULT hr = SHParseDisplayName(m_doc->m_filename, NULL, &pidl, 0, NULL);
+			  if (SUCCEEDED(hr))
+			  {
+				  m_spShellItem.Release();
+				  SHCreateShellItem(NULL, NULL, pidl, &m_spShellItem);
+				  ILFree(pidl);
+			  }
+		  }
 	  }
 	  else if ((ext.CompareNoCase(L".JPG") == 0) || (ext.CompareNoCase(L".JPEG") == 0) || (ext.CompareNoCase(L".PNG") == 0))
 	  {
