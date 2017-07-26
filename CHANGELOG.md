@@ -1,5 +1,10 @@
 # FictionBook Editor Changelog
 
+## v.2.6.12
+
+* File dialogs now are styled and look native under Windows XP and higher
+* Fixed script bug https://github.com/evpobr/fictionbookeditor/issues/197
+
 ## v2.6.11
 
 * Add thumbnail handler shell extension
