@@ -159,10 +159,10 @@ namespace U // place all utilities into their own namespace
   CString GetCharName(int ch);
 
   // msxml support
-  MSXML2::IXMLDOMDocument2Ptr CreateDocument(bool fFreeThreaded=false);
+  HRESULT CreateDocument(bool fFreeThreaded, MSXML2::IXMLDOMDocument2 **ppDocument);
   void ReportParseError(MSXML2::IXMLDOMDocument2Ptr doc);
-  bool LoadXml(MSXML2::IXMLDOMDocument2Ptr doc, const CString& url);
-  MSXML2::IXSLTemplatePtr     CreateTemplate();
+  HRESULT LoadXml(MSXML2::IXMLDOMDocument2 *pDoc, PCWSTR pszUrl);
+  HRESULT CreateTemplate(_COM_Outptr_ MSXML2::IXSLTemplate **ppTemplate);
 
   void SaveFileSelectedPos(const CString& filename, int pos);
   int GetFileSelectedPos(const CString& filename);

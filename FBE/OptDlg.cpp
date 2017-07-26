@@ -50,13 +50,13 @@ LRESULT COptDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
   m_bg.SetColor(_Settings.GetColorBG());
   m_fg.SetColor(_Settings.GetColorFG());
 
-  wchar_t buf[MAX_LOAD_STRING + 1];
-  if(::LoadString(_Module.GetResourceInstance(), IDS_LANG_ENGLISH, buf, MAX_LOAD_STRING))
- 	m_lang.AddString(buf);
-  if(::LoadString(_Module.GetResourceInstance(), IDS_LANG_RUSSIAN, buf, MAX_LOAD_STRING))
-	m_lang.AddString(buf);
-  if(::LoadString(_Module.GetResourceInstance(), IDS_LANG_UKRAINIAN, buf, MAX_LOAD_STRING))
-	m_lang.AddString(buf);
+  CString strLanguage;
+  if(strLanguage.LoadString(IDS_LANG_ENGLISH))
+ 	m_lang.AddString(strLanguage);
+  if(strLanguage.LoadString(IDS_LANG_RUSSIAN))
+	m_lang.AddString(strLanguage);
+  if(strLanguage.LoadString(IDS_LANG_UKRAINIAN))
+	m_lang.AddString(strLanguage);
 
   if(LANG_RUSSIAN == _Settings.GetInterfaceLanguageID())
 	m_lang.SetCurSel(1);
@@ -67,12 +67,12 @@ LRESULT COptDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
 
   // get font list
   CSimpleArray<CString> installedFonts;
-  HDC	hDC=::CreateDC(_T("DISPLAY"),NULL,NULL,NULL);
+  CDC hdc;
+  hdc.CreateDC(_T("DISPLAY"), NULL, NULL, NULL);
   LOGFONT lf;
   memset(&lf,0,sizeof(lf));
   lf.lfCharSet=ANSI_CHARSET;
-  ::EnumFontFamiliesEx(hDC,&lf,(FONTENUMPROC)&EnumFontProc,(LPARAM)&installedFonts,0);
-  ::DeleteDC(hDC);
+  ::EnumFontFamiliesEx(hdc,&lf,(FONTENUMPROC)&EnumFontProc,(LPARAM)&installedFonts,0);
 
   for (int i=0; i<installedFonts.GetSize(); i++)
   {
@@ -216,22 +216,16 @@ TCHAR FileNameBuffer[_MAX_PATH];
 
 LRESULT COptDlg::OnShowFileDialog(WORD, WORD, HWND, BOOL&)
 {
-	OPENFILENAME ofn;
-	memset (&ofn, 0, sizeof (OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hInstance = _Module.m_hInst;
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrDefExt = L"dic";
-	ofn.lpstrFilter = L"Dictionaries (*.dic)\0*.dic\0All files (*.*)\0*.*\0\0";
-	m_custom_dict.GetWindowText(FileNameBuffer, _MAX_PATH);
-	ofn.lpstrFile = FileNameBuffer;
-    ofn.nFilterIndex = 0;
-    ofn.nMaxFile = _MAX_PATH;
-    ofn.nMaxFileTitle = _MAX_PATH;
-    ofn.Flags = OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY;
-	if (GetOpenFileName(&ofn))
+	CString strFileName;
+	m_custom_dict.GetWindowText(strFileName);
+	CFileDialog dlg(TRUE, L"dic", strFileName, OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY,
+		L"Dictionaries (*.dic)\0*.dic\0All files (*.*)\0*.*\0\0");
+	dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
+	dlg.m_ofn.lpfnHook = NULL;
+
+	if (dlg.DoModal())
 	{
-		m_custom_dict.SetWindowText(ofn.lpstrFile);
+		m_custom_dict.SetWindowText(dlg.m_szFileName);
 	}
     return 0;	
 }

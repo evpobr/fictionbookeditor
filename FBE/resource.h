@@ -281,6 +281,7 @@
 #define IDS_HOTKEY_EDIT_SUB             304
 #define IDS_HOTKEY_EDIT_SUP             305
 #define ID_PANE_CHAR                    305
+#define IDS_ENCODING                    306
 #define IDB_UPD_CHECK1                  400
 #define IDB_UPD_CHECK2                  401
 #define IDB_UPD_CHECK3                  402

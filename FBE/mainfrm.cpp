@@ -5,9 +5,15 @@
 
 #include "MainFrm.h"
 #include "AboutBox.h"
-#include "CFileDialogEx.h"
 #include "SettingsDlg.h"
 #include "xmlMatchedTagsHighlighter.h"
+
+// Vista file dialogs client GUIDs
+// {CF7C097D-0A2D-47EF-939D-1760BF4D0154}
+static const GUID GUID_FB2Dialog = 
+{
+	0xcf7c097d, 0xa2d, 0x47ef, { 0x93, 0x9d, 0x17, 0x60, 0xbf, 0x4d, 0x1, 0x54 }
+};
 
 // MessageBox localization
 HHOOK hCBTHook;
@@ -131,10 +137,33 @@ void  CMainFrame::AttachDocument(FB::Doc *doc)
 
 CString	CMainFrame::GetOpenFileName() 
 {
-	CFileDialog dlg(TRUE, L"fb2", NULL, OFN_HIDEREADONLY|OFN_PATHMUSTEXIST, 
-		L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
-	if (dlg.DoModal(*this)==IDOK) return dlg.m_szFileName;
-	return CString();
+	CString strFileName;
+	if (RunTimeHelper::IsVista())
+	{
+		const COMDLG_FILTERSPEC arrFilterSpec[] =
+		{
+			{ L"FictionBook files", L"*.fb2" },
+			{ L"All files", L"*.*" }
+		};
+		CShellFileOpenDialog dlg(NULL, FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_FILEMUSTEXIST, L"fb",
+			arrFilterSpec, ARRAYSIZE(arrFilterSpec));
+		dlg.GetPtr()->SetClientGuid(GUID_FB2Dialog);
+		if (dlg.DoModal() == IDOK)
+		{
+			dlg.GetFilePath(strFileName);
+		}
+	}
+	else
+	{
+
+		CFileDialog dlg(TRUE, L"fb2", NULL, OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_EXPLORER,
+			L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
+		dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
+		dlg.m_ofn.lpfnHook = NULL;
+		if (dlg.DoModal(*this) == IDOK)
+			strFileName = dlg.m_szFileName;
+	}
+	return strFileName;
 }
 
 class CCustomSaveDialog : public CFileDialogImpl<CCustomSaveDialog>
@@ -218,20 +247,84 @@ public:
   }
 };
 
-CString	CMainFrame::GetSaveFileName(CString& encoding) {
+CString	CMainFrame::GetSaveFileName(CString& encoding)
+{
+	CString strFileName;
 	bstr_t filename = m_doc->m_filename;
 	if (!filename || (filename == bstr_t(L"Untitled.fb2")))
 		filename = L"";
 
-  CCustomSaveDialog	dlg(FALSE,
-	_Settings.KeepEncoding() ? m_doc->m_encoding : _Settings.GetDefaultEncoding(), L"fb2", filename,
-    OFN_HIDEREADONLY|OFN_NOREADONLYRETURN|OFN_OVERWRITEPROMPT| OFN_ENABLETEMPLATE,
-    L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
-  if (dlg.DoModal(*this)==IDOK) {
-    encoding=dlg.m_encoding;
-    return dlg.m_szFileName;
-  }
-  return CString();
+	if (RunTimeHelper::IsVista)
+	{
+		const COMDLG_FILTERSPEC arrFilterSpec[] =
+		{
+			{ L"FictionBook files", L"*.fb2" },
+			{ L"All files", L"*.*" }
+		};
+
+		CShellFileSaveDialog dlg(NULL, FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_OVERWRITEPROMPT,
+			L"fb2", arrFilterSpec, ARRAYSIZE(arrFilterSpec));
+		dlg.GetPtr()->SetClientGuid(GUID_FB2Dialog);
+		CComPtr<IFileDialogCustomize> spFileDialogCustomize;
+		HRESULT hr = dlg.GetPtr()->QueryInterface(&spFileDialogCustomize);
+		if (SUCCEEDED(hr))
+		{
+			CString strTitle;
+			strTitle.LoadString(IDS_ENCODING);
+			spFileDialogCustomize->StartVisualGroup(1000, strTitle);
+			spFileDialogCustomize->AddComboBox(1001);
+			
+			CString strEncodings;
+			strEncodings.LoadString(IDS_ENCODINGS);
+			CSimpleArray<CString> lstEncodings;	
+			CString strEncoding;
+			int iStart = 0;
+			do
+			{
+				strEncoding = strEncodings.Tokenize(L",", iStart);
+				if (strEncoding.IsEmpty())
+					break;
+				lstEncodings.Add(strEncoding);
+			} while (true);
+
+			for (int i = 0; i < lstEncodings.GetSize(); i++)
+			{
+				spFileDialogCustomize->AddControlItem(1001, 1100 + i, lstEncodings[i]);
+			}
+			
+			CString strSelectedEncodding = _Settings.KeepEncoding() ? m_doc->m_encoding : _Settings.GetDefaultEncoding();
+			int nEncodingIndex = lstEncodings.Find(strSelectedEncodding.MakeLower());
+			spFileDialogCustomize->SetSelectedControlItem(1001, 1100 + nEncodingIndex);
+
+			spFileDialogCustomize->EndVisualGroup();
+
+			hr = dlg.GetPtr()->SetSaveAsItem(m_spShellItem);
+			if (dlg.DoModal() == IDOK)
+			{
+				dlg.GetFilePath(strFileName);
+				m_spShellItem.Release();
+				dlg.GetPtr()->GetResult(&m_spShellItem);
+				CComHeapPtr<WCHAR> szSelectedEncoding;
+				DWORD dwItem;
+				spFileDialogCustomize->GetSelectedControlItem(1001, &dwItem);
+				encoding = lstEncodings[dwItem - 1100];
+			}
+		}
+	}
+	else
+	{
+		CCustomSaveDialog	dlg(FALSE,
+			_Settings.KeepEncoding() ? m_doc->m_encoding : _Settings.GetDefaultEncoding(), L"fb2", filename,
+			OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT | OFN_ENABLETEMPLATE,
+			L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
+		if (dlg.DoModal(*this) == IDOK)
+		{
+			encoding = dlg.m_encoding;
+			strFileName = dlg.m_szFileName;
+		}
+	}
+	
+	return strFileName;
 }
 
 bool	CMainFrame::DocChanged() {
@@ -359,6 +452,16 @@ CMainFrame::FILE_OP_STATUS  CMainFrame::LoadFile(const wchar_t *initfilename)
   delete m_doc;
   m_doc=doc;
   m_bad_xml = false;
+
+  m_spShellItem.Release();
+  PIDLIST_ABSOLUTE pidl = { 0 };
+  HRESULT hr = SHParseDisplayName(m_doc->m_filename, NULL, &pidl, 0, NULL);
+  if (SUCCEEDED(hr))
+  {
+	  SHCreateShellItem(NULL, NULL, pidl, &m_spShellItem);
+	  ILFree(pidl);
+  }
+
   return OK;
 }
 
@@ -2108,8 +2211,18 @@ LRESULT CMainFrame::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 	  ext.SetString(ATLPath::FindExtension(buf));
 	  if (ext.CompareNoCase(L".FB2") == 0 )
 	  {
-		if (LoadFile(buf)==OK)
-			m_mru.AddToList(m_doc->m_filename);
+		  if (LoadFile(buf) == OK)
+		  {
+			  m_mru.AddToList(m_doc->m_filename);
+			  PIDLIST_ABSOLUTE pidl = { 0 };
+			  HRESULT hr = SHParseDisplayName(m_doc->m_filename, NULL, &pidl, 0, NULL);
+			  if (SUCCEEDED(hr))
+			  {
+				  m_spShellItem.Release();
+				  SHCreateShellItem(NULL, NULL, pidl, &m_spShellItem);
+				  ILFree(pidl);
+			  }
+		  }
 	  }
 	  else if ((ext.CompareNoCase(L".JPG") == 0) || (ext.CompareNoCase(L".JPEG") == 0) || (ext.CompareNoCase(L".PNG") == 0))
 	  {
@@ -3218,8 +3331,7 @@ LRESULT CMainFrame::OnEditAddBinary(WORD, WORD, HWND, BOOL&) {
     return 0;
 
   // Modification by Pilgrim
-  CFileDialogEx	dlg(
-    TRUE,
+  CMultiFileDialog	dlg(
     _T("*"),
     NULL,
 	OFN_ALLOWMULTISELECT | OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR,
@@ -3230,14 +3342,22 @@ LRESULT CMainFrame::OnEditAddBinary(WORD, WORD, HWND, BOOL&) {
   ::LoadString(_Module.GetResourceInstance(), IDS_ADD_BINARIES_FILEDLG, dlgTitle, MAX_LOAD_STRING);
   dlg.m_ofn.lpstrTitle = dlgTitle;
   dlg.m_ofn.nFilterIndex = 2;
+  dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
+  dlg.m_ofn.lpfnHook = NULL;
 
 
-  if (dlg.DoModal(*this)==IDOK) {
-	_POSITION_ pos = dlg.GetStartPosition();
-	while(pos) {
-		CString fileName(dlg.GetNextPathName(pos));
-		m_doc->AddBinary(fileName);
-	}	
+  if (dlg.DoModal(*this)==IDOK)
+  {
+	  CString strPath;
+	  if (dlg.GetFirstPathName(strPath))
+	  {
+		  if (strPath.IsEmpty())
+			  return 0;
+		  do
+		  {
+			  m_doc->AddBinary(strPath);
+		  } while (dlg.GetNextPathName(strPath));
+	  }
   }
 
   return 0;

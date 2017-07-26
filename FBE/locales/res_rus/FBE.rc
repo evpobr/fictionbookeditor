@@ -252,14 +252,14 @@ BEGIN
 END
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 266, 151
-STYLE DS_SETFONT | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "О программе"
-FONT 9, "Tahoma", 0, 0, 0x0
+FONT 8, "MS Shell Dlg", 400, 0, 0xCC
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,215,133,44,14
     CONTROL         IDB_BITMAP1,IDC_AB_STATIC_BANNER,"Static",SS_BITMAP | SS_NOTIFY | NOT WS_VISIBLE,6,6,56,123,WS_EX_CLIENTEDGE
     CONTROL         "",IDC_AB_BANNER,"Static",SS_OWNERDRAW | SS_NOTIFY | NOT WS_VISIBLE,6,6,57,123,WS_EX_CLIENTEDGE
-    ICON            IDR_MAINFRAME,IDC_STATIC_AB_APPICON,73,8,20,20
+    ICON            IDR_MAINFRAME,IDC_STATIC_AB_APPICON,73,8,21,20
     EDITTEXT        IDC_STATIC_AB_APPNAMEVER,99,8,157,12,ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
     LTEXT           "Сборка",IDC_STATIC_BUILD,101,20,28,8
     EDITTEXT        IDC_BUILDSTAMP,130,20,123,12,ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
@@ -525,6 +525,10 @@ BEGIN
         BOTTOMMARGIN, 69
     END
 
+    IDD_CUSTOMSAVEDLG, DIALOG
+    BEGIN
+    END
+
     IDD_HOTKEYS, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -772,7 +776,7 @@ IDR_MAINFRAME           ICON                    "res\\FBE2.ico"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,11,0
+ FILEVERSION 2,6,12,0
  PRODUCTVERSION 2,6,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -790,7 +794,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook russian language support"
-            VALUE "FileVersion", "2.6.11.0"
+            VALUE "FileVersion", "2.6.12.0"
             VALUE "InternalName", "res_rus"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "res_rus.dll"
@@ -1221,6 +1225,7 @@ STRINGTABLE
 BEGIN
     IDS_HOTKEY_EDIT_SUB     "Субскрипт"
     IDS_HOTKEY_EDIT_SUP     "Суперскрипт"
+    IDS_ENCODING            "Кодировка:"
 END
 
 #endif    // Russian (Russia) resources

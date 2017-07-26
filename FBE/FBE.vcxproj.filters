@@ -122,9 +122,6 @@
     <ClInclude Include="apputils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils\CFileDialogEx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ContainerWnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -13,7 +13,6 @@
 
 #include "resource.h"
 #include "Settings.h"
-#include "CFileDialogEx.h"
 
 extern CSettings _Settings;
 
@@ -472,6 +471,8 @@ public:
 		imgSaveDlg.m_ofn.lpstrFilter = L"JPEG files (*.jpg)\0*.jpg\0PNG files (*.png)\0*.png\0All files (*.*)\0*.*\0\0";
 		imgSaveDlg.m_ofn.nFilterIndex = 0;
 		imgSaveDlg.m_ofn.lpstrDefExt = L"jpg";
+		imgSaveDlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
+		imgSaveDlg.m_ofn.lpfnHook = NULL;
 
 		if(imgSaveDlg.DoModal(m_hWnd) == IDOK)
 		{

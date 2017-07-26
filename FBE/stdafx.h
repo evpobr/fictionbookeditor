@@ -14,17 +14,21 @@
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
 
+#define _WTL_NO_CSTRING
+#define _WTL_NO_WTYPES
+
 // turns off ATL's hiding of some common and often safely ignored warning messages
 #define _ATL_ALL_WARNINGS
 #pragma warning(disable : 4996)
 
 #include <atlbase.h>
+#include <atlstr.h>
+#include <atltypes.h>
+#include <atlsafe.h>
 #include <atlcom.h>
 #include <atlwin.h>
-#include <atltypes.h>
 #include <atlctl.h>
 #include <atlhost.h>
-#include <atlstr.h>
 #include <atlpath.h>
 #include <atlcoll.h>
 #include <atlfile.h>
@@ -36,13 +40,12 @@
 #include <shellapi.h>
 #include <Wininet.h>
 #include <Urlmon.h>
+#include <msxml6.h>
 
 #include <atlapp.h>
 
 extern CAppModule _Module;
 
-#define _WTL_NO_CSTRING
-#define _WTL_NO_WTYPES
 #include <atlmisc.h>
 #include <atluser.h>
 

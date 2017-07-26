@@ -132,6 +132,10 @@ BEGIN
         BOTTOMMARGIN, 69
     END
 
+    IDD_CUSTOMSAVEDLG, DIALOG
+    BEGIN
+    END
+
     IDD_ABOUTBOX, DIALOG
     BEGIN
         LEFTMARGIN, 6
@@ -360,9 +364,9 @@ BEGIN
 END
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 266, 151
-STYLE DS_SETFONT | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "About"
-FONT 9, "Tahoma", 0, 0, 0x0
+FONT 8, "MS Shell Dlg", 400, 0, 0xCC
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,215,133,44,14
     CONTROL         IDB_BITMAP1,IDC_AB_STATIC_BANNER,"Static",SS_BITMAP | SS_NOTIFY | NOT WS_VISIBLE,6,6,56,123,WS_EX_CLIENTEDGE
@@ -670,7 +674,7 @@ IDB_TEXT                BITMAP                  "res\\text.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,11,0
+ FILEVERSION 2,6,12,0
  PRODUCTVERSION 2,6,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -688,7 +692,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook Editor"
-            VALUE "FileVersion", "2.6.11.0"
+            VALUE "FileVersion", "2.6.12.0"
             VALUE "InternalName", "FBE"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBE.exe"
@@ -1262,6 +1266,7 @@ STRINGTABLE
 BEGIN
     IDS_HOTKEY_EDIT_SUB     "Subscript"
     IDS_HOTKEY_EDIT_SUP     "Superscript"
+    IDS_ENCODING            "Encoding:"
 END
 
 #endif    // English (United States) resources
