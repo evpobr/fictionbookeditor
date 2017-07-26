@@ -88,7 +88,10 @@
 //======================================
 //v.2.2 — убрал Ко
 //======================================
-var VersionNumber="2.2";
+//v.2.3 — патч https://github.com/evpobr/fictionbookeditor/issues/197
+//======================================
+
+var VersionNumber="2.3";
 
 //обрабатывать ли history
 var ObrabotkaHistory=true;
@@ -471,7 +474,7 @@ function Run() {
 // var re66_ = "$1 K°$5";
 
 //  градус Цельсия
- var re67 = new RegExp("(\\\d)(\\\s|"+nbspEntity+"){0,1}[oо0°](\\\s){0,1}[CС]([^A-zА-яЁё]){0,1}","g");
+ ar re67 = new RegExp("(\\\d)(\\\s|"+nbspEntity+"){0,1}[oо°](\\\s){0,1}[CС]([^A-zА-яЁё]){0,1}","g");
  var re67_ = "$1"+nbspChar+"°C$4";
 
 //  даты по-римски
