@@ -474,7 +474,7 @@ function Run() {
 // var re66_ = "$1 K°$5";
 
 //  градус Цельсия
- ar re67 = new RegExp("(\\\d)(\\\s|"+nbspEntity+"){0,1}[oо°](\\\s){0,1}[CС]([^A-zА-яЁё]){0,1}","g");
+ var re67_ = new RegExp("(\\\d)(\\\s|"+nbspEntity+"){0,1}[oо°](\\\s){0,1}[CС]([^A-zА-яЁё]){0,1}","g");
  var re67_ = "$1"+nbspChar+"°C$4";
 
 //  даты по-римски
