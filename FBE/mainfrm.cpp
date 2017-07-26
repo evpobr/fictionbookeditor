@@ -8,6 +8,13 @@
 #include "SettingsDlg.h"
 #include "xmlMatchedTagsHighlighter.h"
 
+// Vista file dialogs client GUIDs
+// {CF7C097D-0A2D-47EF-939D-1760BF4D0154}
+static const GUID GUID_FB2Dialog = 
+{
+	0xcf7c097d, 0xa2d, 0x47ef, { 0x93, 0x9d, 0x17, 0x60, 0xbf, 0x4d, 0x1, 0x54 }
+};
+
 // MessageBox localization
 HHOOK hCBTHook;
 HWND activatedWnd = 0;
@@ -140,6 +147,7 @@ CString	CMainFrame::GetOpenFileName()
 		};
 		CShellFileOpenDialog dlg(NULL, FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_FILEMUSTEXIST, L"fb",
 			arrFilterSpec, ARRAYSIZE(arrFilterSpec));
+		dlg.GetPtr()->SetClientGuid(GUID_FB2Dialog);
 		if (dlg.DoModal() == IDOK)
 		{
 			dlg.GetFilePath(strFileName);
@@ -256,6 +264,7 @@ CString	CMainFrame::GetSaveFileName(CString& encoding)
 
 		CShellFileSaveDialog dlg(NULL, FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_OVERWRITEPROMPT,
 			L"fb2", arrFilterSpec, ARRAYSIZE(arrFilterSpec));
+		dlg.GetPtr()->SetClientGuid(GUID_FB2Dialog);
 		CComPtr<IFileDialogCustomize> spFileDialogCustomize;
 		HRESULT hr = dlg.GetPtr()->QueryInterface(&spFileDialogCustomize);
 		if (SUCCEEDED(hr))
