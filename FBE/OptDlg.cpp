@@ -216,22 +216,16 @@ TCHAR FileNameBuffer[_MAX_PATH];
 
 LRESULT COptDlg::OnShowFileDialog(WORD, WORD, HWND, BOOL&)
 {
-	OPENFILENAME ofn;
-	memset (&ofn, 0, sizeof (OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hInstance = _Module.m_hInst;
-	ofn.hwndOwner = m_hWnd;
-	ofn.lpstrDefExt = L"dic";
-	ofn.lpstrFilter = L"Dictionaries (*.dic)\0*.dic\0All files (*.*)\0*.*\0\0";
-	m_custom_dict.GetWindowText(FileNameBuffer, _MAX_PATH);
-	ofn.lpstrFile = FileNameBuffer;
-    ofn.nFilterIndex = 0;
-    ofn.nMaxFile = _MAX_PATH;
-    ofn.nMaxFileTitle = _MAX_PATH;
-    ofn.Flags = OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY;
-	if (GetOpenFileName(&ofn))
+	CString strFileName;
+	m_custom_dict.GetWindowText(strFileName);
+	CFileDialog dlg(TRUE, L"dic", strFileName, OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY,
+		L"Dictionaries (*.dic)\0*.dic\0All files (*.*)\0*.*\0\0");
+	dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
+	dlg.m_ofn.lpfnHook = NULL;
+
+	if (dlg.DoModal())
 	{
-		m_custom_dict.SetWindowText(ofn.lpstrFile);
+		m_custom_dict.SetWindowText(dlg.m_szFileName);
 	}
     return 0;	
 }
