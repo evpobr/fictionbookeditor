@@ -776,7 +776,7 @@ IDR_MAINFRAME           ICON                    "res\\FBE2.ico"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,11,0
+ FILEVERSION 2,6,12,0
  PRODUCTVERSION 2,6,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -794,7 +794,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook russian language support"
-            VALUE "FileVersion", "2.6.11.0"
+            VALUE "FileVersion", "2.6.12.0"
             VALUE "InternalName", "res_rus"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "res_rus.dll"
