@@ -203,7 +203,7 @@ CSpeller::CSpeller(CString dictPath):
 	m_Dictionaries[LANG_RU].handle = LoadDictionary(dictPath, dicts[LANG_RU].name);
 
 	// don't split on apostrophes
-	splitter = new CSplitter(L"'’\u0301");
+	splitter = new CSplitter(L"'â€™\u0301");
 }
 
 //
@@ -363,7 +363,7 @@ void CSpeller::Replace(int nIndex)
 	try
 	{ 
 		CString replace = (*m_menuSuggestions)[nIndex];
-		if (m_numAphChanged) replace.Replace(L"'", L"’");
+		if (m_numAphChanged) replace.Replace(L"'", L"â€™");
 		 replace = replace + addSpace; 
 		_bstr_t b = replace.AllocSysString();
 		range->put_text(b);
@@ -378,7 +378,7 @@ void CSpeller::Replace(CString word)
 {
 	if (m_selRange)
 	{
-		if (m_numAphChanged) word.Replace(L"'", L"’");
+		if (m_numAphChanged) word.Replace(L"'", L"â€™");
 		_bstr_t b = word.AllocSysString();
 		m_selRange->put_text(b);
 	}
@@ -501,13 +501,13 @@ SPELL_RESULT CSpeller::SpellCheck(CString word)
 			checkWord.Delete(word.GetLength()-1);
 
 		// replace aphostrophes (dictionaries understand only regular ' aphostrophe
-		m_numAphChanged = checkWord.Replace(L"’", L"'");
+		m_numAphChanged = checkWord.Replace(L"â€™", L"'");
 		// remove all soft hyphens
 		checkWord.Replace(L"\u00AD", L"");
 		// remove accent
 		checkWord.Replace(L"\u0301", L"");
-		// special case for Russian letter "¸"
-		if (currDict == m_Dictionaries[LANG_RU].handle) checkWord.Replace(L"¸", L"å");
+		// special case for Russian letter "Ñ‘"
+		if (currDict == m_Dictionaries[LANG_RU].handle) checkWord.Replace(L"Ñ‘", L"Ðµ");
 
 		// encode string to the dictionary encoding 
 		CW2A str (checkWord, CP_UTF8);
@@ -889,7 +889,7 @@ void CSpeller::ContinueDocumentCheck()
 			{
 				CString replaceStr = m_ChangeWordsTo[m_ChangeWords.Find(word)];
 				// replace aphostrophes back
-				if (m_numAphChanged) replaceStr.Replace(L"'", L"’");
+				if (m_numAphChanged) replaceStr.Replace(L"'", L"â€™");
 				BeginUndoUnit(L"replace word");
 				b = replaceStr.AllocSysString();
 				m_selRange->put_text(b);

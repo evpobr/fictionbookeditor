@@ -672,7 +672,7 @@ HRESULT	ScriptLoad(const wchar_t *filename) {
   IMultiLanguage2 *pimlang2;
   CoCreateInstance(CLSID_CMultiLanguage, NULL, CLSCTX_ALL, IID_IMultiLanguage2, (void **)&pimlang2);
 
-  // 1ÊÁ òåêñòà âïîëíå äîñòàòî÷íî äëÿ îïðåäåëåíèÿ êîäèðîâêè. Ðàáîòàåò ãîðàçäî áûñòðåå, ÷åì ñ öåëûì ôàéëîì.
+  // 1ÐšÐ‘ Ñ‚ÐµÐºÑÑ‚Ð° Ð²Ð¿Ð¾Ð»Ð½Ðµ Ð´Ð¾ÑÑ‚Ð°Ñ‚Ð¾Ñ‡Ð½Ð¾ Ð´Ð»Ñ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ñ ÐºÐ¾Ð´Ð¸Ñ€Ð¾Ð²ÐºÐ¸. Ð Ð°Ð±Ð¾Ñ‚Ð°ÐµÑ‚ Ð³Ð¾Ñ€Ð°Ð·Ð´Ð¾ Ð±Ñ‹ÑÑ‚Ñ€ÐµÐµ, Ñ‡ÐµÐ¼ Ñ Ñ†ÐµÐ»Ñ‹Ð¼ Ñ„Ð°Ð¹Ð»Ð¾Ð¼.
   INT len = min(1024, length);
   HRESULT hCP = pimlang2->DetectInputCodepage(MLDETECTCP_8BIT, 0, (CHAR*)tmp, &len, &pencode, &nos);
 

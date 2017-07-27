@@ -44,7 +44,7 @@ public:
 		bReflection=true;	// Draw reflection
 		bFloor=true;		// Draw floor
 		bWireFrame=false;	// Draw mesh
-		b—rystallize=false;
+		b–°rystallize=false;
 
 		m_Timer = 0;
 	}
@@ -87,7 +87,7 @@ private:
 	bool	bReflection;		// Draw reflection
 	bool	bFloor;				// Draw floor
 	bool	bWireFrame;			// Draw mesh
-	bool	b—rystallize;		// Special effect
+	bool	b–°rystallize;		// Special effect
 	POINT	lastPos;			// Mouse position
 	GLuint	texture[9];			// Storage for textures
 
