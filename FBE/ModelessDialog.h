@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define LODWORD(l) ((DWORD)((DWORDLONG)(l)))
 #define HIDWORD(l) ((DWORD)(((DWORDLONG)(l)>>32)&0xFFFFFFFF))
