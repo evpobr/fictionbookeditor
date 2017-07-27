@@ -27,25 +27,25 @@ public:
 	CEdit m_eRows;
 	CUpDownCtrl m_udRows;
 
-	int m_nRows;		// Выбранное число строк
-	bool m_bTitle;		// Нужна ли строка заголовков таблицы (true - да)
+	int m_nRows;		// Р’С‹Р±СЂР°РЅРЅРѕРµ С‡РёСЃР»Рѕ СЃС‚СЂРѕРє
+	bool m_bTitle;		// РќСѓР¶РЅР° Р»Рё СЃС‚СЂРѕРєР° Р·Р°РіРѕР»РѕРІРєРѕРІ С‚Р°Р±Р»РёС†С‹ (true - РґР°)
 
 	BEGIN_MSG_MAP(CTableDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		COMMAND_ID_HANDLER(IDOK, OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL, OnCloseCmd)
-		COMMAND_RANGE_CODE_HANDLER_EX(IDC_EDIT_TABLE_ROWS, IDC_EDIT_TABLE_ROWS, EN_CHANGE, OnEditChange)//изменения в эдитах
-		REFLECT_NOTIFICATIONS()//Отправить обратно извещающие сообщения от контрола
+		COMMAND_RANGE_CODE_HANDLER_EX(IDC_EDIT_TABLE_ROWS, IDC_EDIT_TABLE_ROWS, EN_CHANGE, OnEditChange)//РёР·РјРµРЅРµРЅРёСЏ РІ СЌРґРёС‚Р°С…
+		REFLECT_NOTIFICATIONS()//РћС‚РїСЂР°РІРёС‚СЊ РѕР±СЂР°С‚РЅРѕ РёР·РІРµС‰Р°СЋС‰РёРµ СЃРѕРѕР±С‰РµРЅРёСЏ РѕС‚ РєРѕРЅС‚СЂРѕР»Р°
 	END_MSG_MAP()
 
-	//карта DDX обмена
+	//РєР°СЂС‚Р° DDX РѕР±РјРµРЅР°
 	BEGIN_DDX_MAP(CTableDlg)
 		DDX_INT(IDC_EDIT_TABLE_ROWS, m_nRows)
 		//DDX_CHECK(IDC_CHECK_TABLE_TITLE, m_bTitle)
 	END_DDX_MAP()
 
 	LRESULT OnInitDialog(UINT, WPARAM, LPARAM, BOOL&) {
-		DoDataExchange(FALSE, IDC_EDIT_TABLE_ROWS);//запись значений из переменных в контрол(по FALSE)
+		DoDataExchange(FALSE, IDC_EDIT_TABLE_ROWS);//Р·Р°РїРёСЃСЊ Р·РЅР°С‡РµРЅРёР№ РёР· РїРµСЂРµРјРµРЅРЅС‹С… РІ РєРѕРЅС‚СЂРѕР»(РїРѕ FALSE)
 		//m_nRows = 1; 
 		m_bTitle = true;
 
@@ -79,7 +79,7 @@ public:
 		return IDCANCEL;
 	}
 
-	//на изменения в эдите
+	//РЅР° РёР·РјРµРЅРµРЅРёСЏ РІ СЌРґРёС‚Рµ
 	LRESULT OnEditChange(UINT, int id, HWND)
 	{		
 		static BOOL bAlreadyThere = FALSE;

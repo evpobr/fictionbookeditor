@@ -222,7 +222,7 @@ HRESULT ExternalHelper::GenrePopup(IDispatch *obj,LONG x,LONG y,BSTR *name)
 
 	if(!fp){
 		U::MessageBox(MB_OK|MB_ICONERROR,_T("FBE"),
-			  _T("Не могу найти файл-список языков '%s'."),_T("languages.txt"));
+			  _T("РќРµ РјРѕРіСѓ РЅР°Р№С‚Рё С„Р°Р№Р»-СЃРїРёСЃРѕРє СЏР·С‹РєРѕРІ '%s'."),_T("languages.txt"));
 		return;
 	}
 

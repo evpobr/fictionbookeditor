@@ -1,4 +1,4 @@
-﻿// FBEView.cpp : implementation of the CFBEView class
+// FBEView.cpp : implementation of the CFBEView class
 //
 /////////////////////////////////////////////////////////////////////////////
 
