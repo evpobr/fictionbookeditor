@@ -831,7 +831,7 @@ BOOL CMainFrame::OnIdle()
 					m_image_title_caption.SetEnabled(false);
 				}
 		
-				// отображение ID для тегов <section>
+				// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ ID РґР»СЏ С‚РµРіРѕРІ <section>
 				MSHTML::IHTMLElementPtr scstn(m_doc->m_body.SelectionStructSection());
 				if(scstn)
 				{
@@ -847,7 +847,7 @@ BOOL CMainFrame::OnIdle()
 					m_section_box.EnableWindow(FALSE);
 					m_section_id_caption.SetEnabled(false);
 				}	
-				// отображение ID для тегов <table>
+				// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ ID РґР»СЏ С‚РµРіРѕРІ <table>
 				MSHTML::IHTMLElementPtr sct(m_doc->m_body.SelectionStructTable());
 				if(sct)
 				{
@@ -864,7 +864,7 @@ BOOL CMainFrame::OnIdle()
 					m_table_id_caption.SetEnabled(false);
 				}
 
-				// отображение ID для тегов <tr>, <th>, <td>
+				// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ ID РґР»СЏ С‚РµРіРѕРІ <tr>, <th>, <td>
 				MSHTML::IHTMLElementPtr sctc(m_doc->m_body.SelectionStructTableCon());
 				if (sctc) {
 					m_id_table_box.EnableWindow(TRUE);
@@ -880,7 +880,7 @@ BOOL CMainFrame::OnIdle()
 					m_id_table_caption.SetEnabled(false);
 				}
 
-				// отображение style для тегов <table>
+				// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ style РґР»СЏ С‚РµРіРѕРІ <table>
 				_bstr_t	styleT("");
 				MSHTML::IHTMLElementPtr scsT(m_doc->m_body.SelectionsStyleTB(styleT));
 				if(scsT)
@@ -907,7 +907,7 @@ BOOL CMainFrame::OnIdle()
 					m_styleT_table_box.EnableWindow(FALSE);
 				}
 
-				// отображение style для тегов <th>, <td>
+				// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ style РґР»СЏ С‚РµРіРѕРІ <th>, <td>
 				_bstr_t	style("");
 				MSHTML::IHTMLElementPtr scs(m_doc->m_body.SelectionsStyleB(style));
 				if(scs)
@@ -934,7 +934,7 @@ BOOL CMainFrame::OnIdle()
 					m_style_caption.SetEnabled(false);
 				}
 
-				// отображение colspan для тегов <th>, <td>
+				// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ colspan РґР»СЏ С‚РµРіРѕРІ <th>, <td>
 				_bstr_t colspan("");
 				MSHTML::IHTMLElementPtr scc(m_doc->m_body.SelectionsColspanB(colspan));
 				if(scc)
@@ -961,7 +961,7 @@ BOOL CMainFrame::OnIdle()
 					m_colspan_caption.SetEnabled(false);
 				}
 
-				// отображение rowspan для тегов <th>, <td>
+				// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ rowspan РґР»СЏ С‚РµРіРѕРІ <th>, <td>
 				_bstr_t rowspan("");
 				MSHTML::IHTMLElementPtr scr(m_doc->m_body.SelectionsRowspanB(rowspan));
 				if(scr)
@@ -988,7 +988,7 @@ BOOL CMainFrame::OnIdle()
 					m_rowspan_caption.SetEnabled(false);
 				}
 
-				// отображение align для тегов <tr>
+				// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ align РґР»СЏ С‚РµРіРѕРІ <tr>
 				_bstr_t alignTR("");
 				MSHTML::IHTMLElementPtr scaTR(m_doc->m_body.SelectionsAlignTRB(alignTR));
 				if(scaTR)
@@ -1015,7 +1015,7 @@ BOOL CMainFrame::OnIdle()
 					m_tr_allign_caption.SetEnabled(false);
 				}
 
-				// отображение align для тегов <th>, <td>
+				// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ align РґР»СЏ С‚РµРіРѕРІ <th>, <td>
 				_bstr_t align("");
 				MSHTML::IHTMLElementPtr sca(m_doc->m_body.SelectionsAlignB(align));
 				if(sca)
@@ -1042,7 +1042,7 @@ BOOL CMainFrame::OnIdle()
 					m_th_allign_caption.SetEnabled(false);
 				}
 
-				// отображение valign для тегов <th>, <td>
+				// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ valign РґР»СЏ С‚РµРіРѕРІ <th>, <td>
 				_bstr_t valign("");
 				MSHTML::IHTMLElementPtr scva(m_doc->m_body.SelectionsVAlignB(valign));
 				if(scva)
@@ -2587,9 +2587,9 @@ LRESULT CMainFrame::OnToolsScript(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL
 	if(IsSourceActive())
 		return 0;
 
-  // скрипты от FBE и от FBW запускаются по разному. В FBE скрипты исполняются через Active Scripting
-  // и документ в него передаетяся через параметры. 
-  // В FBW скрипты выполняются в самом HTML документе
+  // СЃРєСЂРёРїС‚С‹ РѕС‚ FBE Рё РѕС‚ FBW Р·Р°РїСѓСЃРєР°СЋС‚СЃСЏ РїРѕ СЂР°Р·РЅРѕРјСѓ. Р’ FBE СЃРєСЂРёРїС‚С‹ РёСЃРїРѕР»РЅСЏСЋС‚СЃСЏ С‡РµСЂРµР· Active Scripting
+  // Рё РґРѕРєСѓРјРµРЅС‚ РІ РЅРµРіРѕ РїРµСЂРµРґР°РµС‚СЏСЃСЏ С‡РµСЂРµР· РїР°СЂР°РјРµС‚СЂС‹. 
+  // Р’ FBW СЃРєСЂРёРїС‚С‹ РІС‹РїРѕР»РЅСЏСЋС‚СЃСЏ РІ СЃР°РјРѕРј HTML РґРѕРєСѓРјРµРЅС‚Рµ
 	for(int i = 0; i < m_scripts.GetSize(); ++i)
 	{
 		if(m_scripts[i].wID == -1) continue;
@@ -2602,7 +2602,7 @@ LRESULT CMainFrame::OnToolsScript(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL
 		}
 	}
   
-  // TODO тут должен быть else
+  // TODO С‚СѓС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ else
 
   /*if (wID < m_scripts.GetSize()) {
   if (StartScript(this) >= 0) {
@@ -3149,18 +3149,18 @@ LRESULT CMainFrame::OnTreeMoveLeftElement(WORD, WORD, HWND, BOOL&)
 
 LRESULT CMainFrame::OnTreeMoveElementSmart(WORD, WORD, HWND, BOOL&)
 {
-	// если выделен только один элемент, то двигаем его вправо
-	// если несколько, то проверяем братья они или нет
-	// если братья, то делаем такую фичу
+	// РµСЃР»Рё РІС‹РґРµР»РµРЅ С‚РѕР»СЊРєРѕ РѕРґРёРЅ СЌР»РµРјРµРЅС‚, С‚Рѕ РґРІРёРіР°РµРј РµРіРѕ РІРїСЂР°РІРѕ
+	// РµСЃР»Рё РЅРµСЃРєРѕР»СЊРєРѕ, С‚Рѕ РїСЂРѕРІРµСЂСЏРµРј Р±СЂР°С‚СЊСЏ РѕРЅРё РёР»Рё РЅРµС‚
+	// РµСЃР»Рё Р±СЂР°С‚СЊСЏ, С‚Рѕ РґРµР»Р°РµРј С‚Р°РєСѓСЋ С„РёС‡Сѓ
 	// ----------
 	// ----------
-	//   ----------    первый выделенный элемент
+	//   ----------    РїРµСЂРІС‹Р№ РІС‹РґРµР»РµРЅРЅС‹Р№ СЌР»РµРјРµРЅС‚
 	//   ----------
 	// ----------
-	//   ----------    второй выделенный элемент
+	//   ----------    РІС‚РѕСЂРѕР№ РІС‹РґРµР»РµРЅРЅС‹Р№ СЌР»РµРјРµРЅС‚
 	//   ----------
 
-	// для небратьев делаем то же что и для одного
+	// РґР»СЏ РЅРµР±СЂР°С‚СЊРµРІ РґРµР»Р°РµРј С‚Рѕ Р¶Рµ С‡С‚Рѕ Рё РґР»СЏ РѕРґРЅРѕРіРѕ
 
 	m_doc->m_body.BeginUndoUnit(L"structure editing");
 	CTreeItem item = m_document_tree.m_tree.m_tree.GetFirstSelectedItem();
@@ -3430,17 +3430,17 @@ bool  CMainFrame::SourceToHTML()
 	int end_char = 0;
 	int bodies_count = 0;
 	
-	// берем текст
+	// Р±РµСЂРµРј С‚РµРєСЃС‚
 	textlen = m_source.SendMessage(SCI_GETLENGTH);
 	buffer = new char[textlen + 1];
 	m_source.SendMessage(SCI_GETTEXT, textlen+1, (LPARAM)buffer);
-	// конвертим в UTF16
+	// РєРѕРЅРІРµСЂС‚РёРј РІ UTF16
 	DWORD   ulen=::MultiByteToWideChar(CP_UTF8,0,buffer,textlen,NULL,0);
 
 	BSTR    ustr=::SysAllocStringLen(NULL,ulen);
 	::MultiByteToWideChar(CP_UTF8,0,buffer,textlen,ustr,ulen);
 	
-	//	смотрим выделенную позицию	
+	//	СЃРјРѕС‚СЂРёРј РІС‹РґРµР»РµРЅРЅСѓСЋ РїРѕР·РёС†РёСЋ	
 	int	  selectedPosBegin = m_source.SendMessage(SCI_GETSELECTIONSTART);    
 	int	  selectedPosEnd = m_source.SendMessage(SCI_GETSELECTIONEND);    
 	bool one_pos = selectedPosEnd == selectedPosBegin;
@@ -3454,7 +3454,7 @@ bool  CMainFrame::SourceToHTML()
 		selectedPosEnd = MultiByteToWideChar(CP_UTF8,0,buffer,selectedPosEnd,NULL,0);
 	}	
 
-	//	перегоняем в XML
+	//	РїРµСЂРµРіРѕРЅСЏРµРј РІ XML
 	U::DomPath path_begin;
 	U::DomPath path_end;
 
@@ -3488,7 +3488,7 @@ bool  CMainFrame::SourceToHTML()
 			if(ret.vt == VT_DISPATCH)
 			{
 				m_saved_xml = ret.pdispVal;
-				// если вернулся не xml, значит вернулась ошибка
+				// РµСЃР»Рё РІРµСЂРЅСѓР»СЃСЏ РЅРµ xml, Р·РЅР°С‡РёС‚ РІРµСЂРЅСѓР»Р°СЃСЊ РѕС€РёР±РєР°
 				if(!(bool)m_saved_xml)
 				{
 					MSXML2::IXMLDOMParseErrorPtr err = ret.pdispVal;
@@ -3536,7 +3536,7 @@ bool  CMainFrame::SourceToHTML()
 		}
 	}
 	
-	// строим относительный путь. Относительно секции body
+	// СЃС‚СЂРѕРёРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Р№ РїСѓС‚СЊ. РћС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ СЃРµРєС†РёРё body
 	path_begin.CreatePathFromXMLDOM(body, selectedElementBegin);
 	MSXML2::IXMLDOMElementPtr selectedElementEnd;
 	if(one_pos)
@@ -3550,24 +3550,24 @@ bool  CMainFrame::SourceToHTML()
 	}	
 	
 
-	// если документ был изменен, то перегоняем его в HTML
+	// РµСЃР»Рё РґРѕРєСѓРјРµРЅС‚ Р±С‹Р» РёР·РјРµРЅРµРЅ, С‚Рѕ РїРµСЂРµРіРѕРЅСЏРµРј РµРіРѕ РІ HTML
 	if(changed)
 	{
-		// перегоняем в HTML
+		// РїРµСЂРµРіРѕРЅСЏРµРј РІ HTML
 		CComDispatchDriver	body(m_doc->m_body.Script());
 		CComVariant		    args[2];
 		args[1] = m_saved_xml.GetInterfacePtr();
 		args[0] = _Settings.GetInterfaceLanguageName();
 		CheckError(body.InvokeN(L"LoadFromDOM", args, 2));
 		m_doc->m_body.Init();
-		// у нас совершенно новый HTML и указатели на элшементы старого теперь невалидны.
+		// Сѓ РЅР°СЃ СЃРѕРІРµСЂС€РµРЅРЅРѕ РЅРѕРІС‹Р№ HTML Рё СѓРєР°Р·Р°С‚РµР»Рё РЅР° СЌР»С€РµРјРµРЅС‚С‹ СЃС‚Р°СЂРѕРіРѕ С‚РµРїРµСЂСЊ РЅРµРІР°Р»РёРґРЅС‹.
 		ClearSelection();
 		
         //m_saved_xml.Release();
 		//m_saved_xml = 0;		
 	}
 
-	//	В HTML по пути находим нужный элемент
+	//	Р’ HTML РїРѕ РїСѓС‚Рё РЅР°С…РѕРґРёРј РЅСѓР¶РЅС‹Р№ СЌР»РµРјРµРЅС‚
 	MSHTML::IHTMLElementPtr selectedHTMLElementBegin;	
 	MSHTML::IHTMLElementPtr selectedHTMLElementEnd;	
 	
@@ -3622,8 +3622,8 @@ bool CMainFrame::ShowSource(bool saveSelection)
 	bool one_element = false;
 
 	int bodies_count = 0;
-	// берем HTML
-	// запоминаем путь до выделенного элемента
+	// Р±РµСЂРµРј HTML
+	// Р·Р°РїРѕРјРёРЅР°РµРј РїСѓС‚СЊ РґРѕ РІС‹РґРµР»РµРЅРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
 	if(saveSelection)
 	{
 		MSHTML::IHTMLElementPtr selectedBeginElement;
@@ -3668,7 +3668,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 		}while(root = root->nextSibling);
 	}
 
-	// если документ изменился, то заново строим XMLDOM
+	// РµСЃР»Рё РґРѕРєСѓРјРµРЅС‚ РёР·РјРµРЅРёР»СЃСЏ, С‚Рѕ Р·Р°РЅРѕРІРѕ СЃС‚СЂРѕРёРј XMLDOM
 	{
 		if(m_doc->DocRelChanged() || !(bool)m_saved_xml)
 		{
@@ -3702,7 +3702,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 
 	MSXML2::IXMLDOMNodePtr xml_selected_begin;
 	MSXML2::IXMLDOMNodePtr xml_selected_end;
-	//	по пути находим нужный элемент в XML
+	//	РїРѕ РїСѓС‚Рё РЅР°С…РѕРґРёРј РЅСѓР¶РЅС‹Р№ СЌР»РµРјРµРЅС‚ РІ XML
 	//if(saveSelection)
 	{
 		MSXML2::IXMLDOMNodePtr xml_body = m_saved_xml->firstChild->firstChild;		
@@ -3718,7 +3718,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 				}
 				xml_selected_begin = selection_begin_path.GetNodeFromXMLDOM(xml_body);
 				
-				// строим абсолютный путь до него.
+				// СЃС‚СЂРѕРёРј Р°Р±СЃРѕР»СЋС‚РЅС‹Р№ РїСѓС‚СЊ РґРѕ РЅРµРіРѕ.
 				selection_begin_path.CreatePathFromXMLDOM(m_saved_xml, xml_selected_begin);
 				path = selection_begin_path;
 
@@ -3738,7 +3738,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 		}
 	}
 
-	// перегоняем XML в текст
+	// РїРµСЂРµРіРѕРЅСЏРµРј XML РІ С‚РµРєСЃС‚
 	_bstr_t   src(m_saved_xml->xml);
 
 	int savedPosBegin = 0;
@@ -3761,7 +3761,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 
 	DWORD nch=::WideCharToMultiByte(CP_UTF8,0,src,src.length(),	NULL,0,NULL,NULL);
 
-	//	загоняем текст в сцинтиллу
+	//	Р·Р°РіРѕРЅСЏРµРј С‚РµРєСЃС‚ РІ СЃС†РёРЅС‚РёР»Р»Сѓ
 	if(m_doc->DocRelChanged())
 	{
 		m_source.SendMessage(SCI_CLEARALL);
@@ -3775,7 +3775,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 		}
 	}
 
-	//	переходим на позицию
+	//	РїРµСЂРµС…РѕРґРёРј РЅР° РїРѕР·РёС†РёСЋ
 	m_source.SendMessage(SCI_SETSELECTIONSTART,savedPosBegin);
 	m_source.SendMessage(SCI_SETSELECTIONEND,savedPosEnd);
 	m_source.SendMessage(SCI_SCROLLCARET);	
@@ -3850,7 +3850,7 @@ void  CMainFrame::ShowView(VIEW_TYPE vt)
 	  {
 			int col,line;
 			bool fv;
-			fv=m_doc->SetXMLAndValidate(m_source,true,line,col);// Из режима Source
+			fv=m_doc->SetXMLAndValidate(m_source,true,line,col);// РР· СЂРµР¶РёРјР° Source
 			if (!fv) 
 			{
 				U::MessageBox(MB_OK|MB_ICONERROR, IDR_MAINFRAME, IDS_BAD_XML_MSG);
@@ -3891,7 +3891,7 @@ void  CMainFrame::ShowView(VIEW_TYPE vt)
 
   if (prev!=vt && vt!=SOURCE) {
     UIEnable(ID_VIEW_TREE,1);	
-	/*m_save_sp_mode=true;// Modification by Pilgrim - иначе только на ХР(!)при выборе DESC слитает ID_VIEW_TREE и переход на BODY не восстанавливает. Но, если после запуска сразу перейти на SOURCE, то переходы на DESC и BODY не сносят ID_VIEW_TREE. Надо разобраться, а потом удалить m_save_sp_mode=true;
+	/*m_save_sp_mode=true;// Modification by Pilgrim - РёРЅР°С‡Рµ С‚РѕР»СЊРєРѕ РЅР° РҐР (!)РїСЂРё РІС‹Р±РѕСЂРµ DESC СЃР»РёС‚Р°РµС‚ ID_VIEW_TREE Рё РїРµСЂРµС…РѕРґ РЅР° BODY РЅРµ РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµС‚. РќРѕ, РµСЃР»Рё РїРѕСЃР»Рµ Р·Р°РїСѓСЃРєР° СЃСЂР°Р·Сѓ РїРµСЂРµР№С‚Рё РЅР° SOURCE, С‚Рѕ РїРµСЂРµС…РѕРґС‹ РЅР° DESC Рё BODY РЅРµ СЃРЅРѕСЃСЏС‚ ID_VIEW_TREE. РќР°РґРѕ СЂР°Р·РѕР±СЂР°С‚СЊСЃСЏ, Р° РїРѕС‚РѕРј СѓРґР°Р»РёС‚СЊ m_save_sp_mode=true;
     UISetCheck(ID_VIEW_TREE, m_save_sp_mode);*/
     m_splitter.SetSinglePaneMode(_Settings.ViewDocumentTree() ? SPLIT_PANE_NONE : SPLIT_PANE_RIGHT);
   }
@@ -4064,9 +4064,9 @@ LRESULT CMainFrame::OnFileValidate(WORD, WORD, HWND, BOOL&) {
   int col,line;
   bool fv;
   if (IsSourceActive())
-    fv=m_doc->SetXMLAndValidate(m_source,true,line,col);// Из режима Source
+    fv=m_doc->SetXMLAndValidate(m_source,true,line,col);// РР· СЂРµР¶РёРјР° Source
   else
-    fv=m_doc->Validate(line,col);						// Из режима Body
+    fv=m_doc->Validate(line,col);						// РР· СЂРµР¶РёРјР° Body
   if (!fv) {
     ShowView(SOURCE);
     // have to jump through the hoops to move to required column
@@ -4314,8 +4314,8 @@ MSHTML::IHTMLDOMNodePtr CMainFrame::MoveRightElementWithoutChildren(MSHTML::IHTM
 	MSHTML::IHTMLDOMNodePtr move_to;
 	MSHTML::IHTMLDOMNodePtr insert_before;
 	MSHTML::IHTMLDOMNodePtr ret;
-	// делаем себя ребенком своего предыдущего брата
-	// потом всех своих детей делаем своими братьями	
+	// РґРµР»Р°РµРј СЃРµР±СЏ СЂРµР±РµРЅРєРѕРј СЃРІРѕРµРіРѕ РїСЂРµРґС‹РґСѓС‰РµРіРѕ Р±СЂР°С‚Р°
+	// РїРѕС‚РѕРј РІСЃРµС… СЃРІРѕРёС… РґРµС‚РµР№ РґРµР»Р°РµРј СЃРІРѕРёРјРё Р±СЂР°С‚СЊСЏРјРё	
 
 	if(!(bool)(ret = MoveRightElement(node)))
 		return 0;
@@ -4346,16 +4346,16 @@ MSHTML::IHTMLDOMNodePtr CMainFrame::MoveRightElement(MSHTML::IHTMLDOMNodePtr nod
 	MSHTML::IHTMLDOMNodePtr move_from;
 	MSHTML::IHTMLDOMNodePtr move_to;
 	MSHTML::IHTMLDOMNodePtr insert_before;
-	// делаем себя ребенком своего предыдущего брата
+	// РґРµР»Р°РµРј СЃРµР±СЏ СЂРµР±РµРЅРєРѕРј СЃРІРѕРµРіРѕ РїСЂРµРґС‹РґСѓС‰РµРіРѕ Р±СЂР°С‚Р°
 	
 	if(!(bool)node)
 		return 0;
 
-	// пока будем таскать только секции
+	// РїРѕРєР° Р±СѓРґРµРј С‚Р°СЃРєР°С‚СЊ С‚РѕР»СЊРєРѕ СЃРµРєС†РёРё
 	if(!IsNodeSection(node))
 		return 0;
 
-	// если не можем переместить себя, то не дклаем ничего
+	// РµСЃР»Рё РЅРµ РјРѕР¶РµРј РїРµСЂРµРјРµСЃС‚РёС‚СЊ СЃРµР±СЏ, С‚Рѕ РЅРµ РґРєР»Р°РµРј РЅРёС‡РµРіРѕ
 	MSHTML::IHTMLDOMNodePtr prev_sibling = GetPrevSiblingSection(node);
 	
 	if(!(bool)prev_sibling)
@@ -4363,7 +4363,7 @@ MSHTML::IHTMLDOMNodePtr CMainFrame::MoveRightElement(MSHTML::IHTMLDOMNodePtr nod
 
 	MSHTML::IHTMLDOMNodePtr child = GetLastChildSection(prev_sibling);
 
-	// делаем себя последним ребенком своего предыдущего брата
+	// РґРµР»Р°РµРј СЃРµР±СЏ РїРѕСЃР»РµРґРЅРёРј СЂРµР±РµРЅРєРѕРј СЃРІРѕРµРіРѕ РїСЂРµРґС‹РґСѓС‰РµРіРѕ Р±СЂР°С‚Р°
 	move_to = prev_sibling;
 	insert_before = 0;		
 	move_from = node;		
@@ -4379,17 +4379,17 @@ MSHTML::IHTMLDOMNodePtr CMainFrame::MoveRightElement(MSHTML::IHTMLDOMNodePtr nod
 MSHTML::IHTMLDOMNodePtr CMainFrame::MoveLeftElement(MSHTML::IHTMLDOMNodePtr node)
 {
 	MSHTML::IHTMLDOMNodePtr ret;
-	// делаем себя  ближайшим братом своего отца
-	// а своих следующих братьев своими детьми
+	// РґРµР»Р°РµРј СЃРµР±СЏ  Р±Р»РёР¶Р°Р№С€РёРј Р±СЂР°С‚РѕРј СЃРІРѕРµРіРѕ РѕС‚С†Р°
+	// Р° СЃРІРѕРёС… СЃР»РµРґСѓСЋС‰РёС… Р±СЂР°С‚СЊРµРІ СЃРІРѕРёРјРё РґРµС‚СЊРјРё
 	
 	if(!(bool)node)
 		return 0;
 
-	// пока будем таскать только секции
+	// РїРѕРєР° Р±СѓРґРµРј С‚Р°СЃРєР°С‚СЊ С‚РѕР»СЊРєРѕ СЃРµРєС†РёРё
 	if(!IsNodeSection(node))
 		return 0;
 
-	// если не можем переместить себя, то не делаем ничего
+	// РµСЃР»Рё РЅРµ РјРѕР¶РµРј РїРµСЂРµРјРµСЃС‚РёС‚СЊ СЃРµР±СЏ, С‚Рѕ РЅРµ РґРµР»Р°РµРј РЅРёС‡РµРіРѕ
 	MSHTML::IHTMLDOMNodePtr parent = node->parentNode;
 	if(!(bool)parent || !IsNodeSection(parent->parentNode))
 		return 0;
@@ -4402,7 +4402,7 @@ MSHTML::IHTMLDOMNodePtr CMainFrame::MoveLeftElement(MSHTML::IHTMLDOMNodePtr node
 		m_doc->MoveNode(sibling, node, 0);	
 		sibling = next_sibling;
 	}	
-	// делаем себя  ближайшим братом своего отца	
+	// РґРµР»Р°РµРј СЃРµР±СЏ  Р±Р»РёР¶Р°Р№С€РёРј Р±СЂР°С‚РѕРј СЃРІРѕРµРіРѕ РѕС‚С†Р°	
 	ret = m_doc->MoveNode(node, parent->parentNode, parent->nextSibling);	
 	
 	return ret;			
@@ -4523,12 +4523,12 @@ LRESULT CMainFrame::OnSciExpand(WORD cose, WORD wID, HWND, BOOL&)
 //////////////////////////////////////////////////////////////////////
 /// @fn CMainFrame::IsEmptySection
 ///
-/// Функция проверяет есть ли реальный текст внутри нее. Текстом считается
-/// любая последовательность символов, содержащая хотябы один символ, отличный 
-/// от пробелов, переносов строк, переводов каретки и символов табуляции
-///	@param MSHTML::IHTMLDOMNodePtr section [in, out] проверяемая секция
-/// @return bool true - если секция пустая
-/// @date 17.12.07 @author Ильин Иван
+/// Р¤СѓРЅРєС†РёСЏ РїСЂРѕРІРµСЂСЏРµС‚ РµСЃС‚СЊ Р»Рё СЂРµР°Р»СЊРЅС‹Р№ С‚РµРєСЃС‚ РІРЅСѓС‚СЂРё РЅРµРµ. РўРµРєСЃС‚РѕРј СЃС‡РёС‚Р°РµС‚СЃСЏ
+/// Р»СЋР±Р°СЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃРёРјРІРѕР»РѕРІ, СЃРѕРґРµСЂР¶Р°С‰Р°СЏ С…РѕС‚СЏР±С‹ РѕРґРёРЅ СЃРёРјРІРѕР», РѕС‚Р»РёС‡РЅС‹Р№ 
+/// РѕС‚ РїСЂРѕР±РµР»РѕРІ, РїРµСЂРµРЅРѕСЃРѕРІ СЃС‚СЂРѕРє, РїРµСЂРµРІРѕРґРѕРІ РєР°СЂРµС‚РєРё Рё СЃРёРјРІРѕР»РѕРІ С‚Р°Р±СѓР»СЏС†РёРё
+///	@param MSHTML::IHTMLDOMNodePtr section [in, out] РїСЂРѕРІРµСЂСЏРµРјР°СЏ СЃРµРєС†РёСЏ
+/// @return bool true - РµСЃР»Рё СЃРµРєС†РёСЏ РїСѓСЃС‚Р°СЏ
+/// @date 17.12.07 @author РР»СЊРёРЅ РРІР°РЅ
 //////////////////////////////////////////////////////////////////////
 bool CMainFrame::IsEmptySection(MSHTML::IHTMLDOMNodePtr section)
 {

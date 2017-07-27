@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #define LODWORD(l) ((DWORD)((DWORDLONG)(l)))
 #define HIDWORD(l) ((DWORD)(((DWORDLONG)(l)>>32)&0xFFFFFFFF))
@@ -40,11 +40,11 @@ protected:
 				 lpMsg->wParam == 'F' || lpMsg->wParam == 'R' || lpMsg->wParam == 'A' ||
 			     lpMsg->wParam == 'f' || lpMsg->wParam == 'r' || lpMsg->wParam == 'a' || 
 			     // Russian shortcuts
-			     lpMsg->wParam == L'Ç' || lpMsg->wParam == L'È' || lpMsg->wParam == L'Â' || 
-			     lpMsg->wParam == L'ç' || lpMsg->wParam == L'è' || lpMsg->wParam == L'â' || 
+			     lpMsg->wParam == L'Ð—' || lpMsg->wParam == L'Ð˜' || lpMsg->wParam == L'Ð’' || 
+			     lpMsg->wParam == L'Ð·' || lpMsg->wParam == L'Ð¸' || lpMsg->wParam == L'Ð²' || 
 				 // Ukrainian shortcuts
-			     lpMsg->wParam == L'Ó' || lpMsg->wParam == L'Í' ||
-			     lpMsg->wParam == L'ó' || lpMsg->wParam == L'í')) 
+			     lpMsg->wParam == L'Ð£' || lpMsg->wParam == L'Ð' ||
+			     lpMsg->wParam == L'Ñƒ' || lpMsg->wParam == L'Ð½')) 
 			{
 				for(int i = 0, m = windows().GetSize(); i < m; ++i)
 				{

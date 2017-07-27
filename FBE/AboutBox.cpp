@@ -328,8 +328,7 @@ void CAboutDlg::OnAfterDownloadFinish (FCHttpDownload* pTask)
 	// process XML update file
 	if ((WPARAM)pTask->GetURL().Right(3).CompareNoCase(L"XML")==0)
 	{
-		MSXML2::IXMLDOMDocument2Ptr xmlDoc;
-		CheckError(U::CreateDocument(false, &xmlDoc));
+		MSXML2::IXMLDOMDocument2Ptr xmlDoc(U::CreateDocument(false));
 		_bstr_t str(m_file.str().c_str());
 		if (xmlDoc->loadXML(str))
 		{

@@ -1,5 +1,12 @@
 # FictionBook Editor Changelog
 
+## v.2.6.13
+
+* Fix v2.6.12 bug then document cannot be loaded and new images cannot be 
+  inserted (issue https://github.com/evpobr/fictionbookeditor/issues/212)
+* Source files converted to UTF8 to avoid various problems
+
+
 ## v.2.6.12
 
 * File dialogs now are styled and look native under Windows XP and higher

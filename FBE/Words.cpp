@@ -15,7 +15,7 @@ extern CSettings _Settings;
 #define IMG_LIST_DIMS 16
 #define MAKEDWORDLONG(a,b) ((DWORDLONG)(((DWORD)(a))|(((DWORDLONG)((DWORD)(b)))<<32)))
 
-static const wchar_t* pattern = L"%s( |\\n)*-( |\\n)*%s(?:[^A-Za-zÀ-ßà-ÿ])";
+static const wchar_t* pattern = L"%s( |\\n)*-( |\\n)*%s(?:[^A-Za-zÐ-Ð¯Ð°-Ñ])";
 
 enum
 {

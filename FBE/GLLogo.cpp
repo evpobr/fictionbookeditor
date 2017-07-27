@@ -298,9 +298,9 @@ void CGLLogoView::DrawGLScene()
 			glRotatef(xrot,1,0,0);
 			glRotatef(yrot,0,1,0);
 			glRotatef(zrot,0,0,1);
-			if (b—rystallize) { glLogicOp(glColorOp); glEnable(GL_COLOR_LOGIC_OP); }
+			if (bCrystallize) { glLogicOp(glColorOp); glEnable(GL_COLOR_LOGIC_OP); }
 			glCallList(logo);
-			if (b—rystallize) { glLogicOp(GL_CLEAR); glDisable(GL_COLOR_LOGIC_OP); }
+			if (bCrystallize) { glLogicOp(GL_CLEAR); glDisable(GL_COLOR_LOGIC_OP); }
 			glFrontFace(GL_CCW);
 
 		glPopMatrix();
@@ -337,13 +337,13 @@ void CGLLogoView::DrawGLScene()
 
 	// draw object
 	glPushMatrix();
-		if (b—rystallize) { glLogicOp(glColorOp); glEnable(GL_COLOR_LOGIC_OP); }
+		if (bCrystallize) { glLogicOp(glColorOp); glEnable(GL_COLOR_LOGIC_OP); }
 		glTranslatef(0.0f,1.0f, 0.0f);
 		glRotatef(xrot,1,0,0);
 		glRotatef(yrot,0,1,0);
 		glRotatef(zrot,0,0,1);
 		glCallList(logo);
-		if (b—rystallize) { glLogicOp(GL_CLEAR); glDisable(GL_COLOR_LOGIC_OP); }
+		if (bCrystallize) { glLogicOp(GL_CLEAR); glDisable(GL_COLOR_LOGIC_OP); }
 	glPopMatrix();
 
 	// draw info window
@@ -531,7 +531,7 @@ LRESULT CGLLogoView::OnKeyDown(UINT, WPARAM wParam, LPARAM lParam, BOOL&)
 		}
 		case 'C':								// Toggle crystallize
 		{
-			b—rystallize = !b—rystallize; 
+			bCrystallize = !bCrystallize;
 			break;
 		}
 	}
