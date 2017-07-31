@@ -28,6 +28,8 @@
 #include "DocumentTree.h"
 #include "Speller.h"
 
+#include "OptionsPropertySheet.h"
+
 #if _MSC_VER >= 1000
 #pragma once
 #pragma warning(disable : 4996)
@@ -569,6 +571,7 @@ public:
 
 		COMMAND_ID_HANDLER(ID_TOOLS_SPELLCHECK, OnSpellCheck);
 		COMMAND_ID_HANDLER(ID_TOOLS_SPELLCHECK_HIGHLIGHT, OnToggleHighlight);
+		COMMAND_ID_HANDLER(ID_TOOLS_NEWSETTINGS, OnToolsNewSettings);
 
 		// help menu
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
@@ -995,6 +998,13 @@ public:
 		if (m_Speller && m_current_view == BODY)
 			m_Speller->StartDocumentCheck(m_doc->m_body.m_mk_srv);
 		return S_OK;
+	}
+
+	LRESULT OnToolsNewSettings(WORD, WORD, HWND, BOOL&)
+	{
+		COptionsPropertySheet dlg;
+		dlg.DoModal();
+		return TRUE;
 	}
 
 	LRESULT OnToggleHighlight(WORD, WORD, HWND, BOOL&)

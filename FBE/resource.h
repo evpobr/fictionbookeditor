@@ -559,6 +559,7 @@
 #define ID_GOTO_WRONGTAG                32908
 #define ID_TOOLS_CUSTOMIZE              32909
 #define ID_HIDETOOLBAR                  32910
+#define ID_TOOLS_NEWSETTINGS            32912
 #define ID_EDIT_PASTE2                  0xE525
 #define IDS_ENCODINGS                   61403
 #define IDS_DOCUMENT_TREE_CAPTION       61404
@@ -568,8 +569,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        256
-#define _APS_NEXT_COMMAND_VALUE         32912
+#define _APS_NEXT_RESOURCE_VALUE        257
+#define _APS_NEXT_COMMAND_VALUE         32913
 #define _APS_NEXT_CONTROL_VALUE         1109
 #define _APS_NEXT_SYMED_VALUE           133
 #endif

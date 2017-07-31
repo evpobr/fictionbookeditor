@@ -29,6 +29,7 @@
 extern CComModule _Module;
 
 #include <atlapp.h>
+#include <atlcrack.h>
 #include <atldlgs.h>
 #include <atlddx.h>
 

@@ -14,6 +14,7 @@
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
 
+#define _WTL_NEW_PAGE_NOTIFY_HANDLERS
 #define _WTL_NO_CSTRING
 #define _WTL_NO_WTYPES
 
