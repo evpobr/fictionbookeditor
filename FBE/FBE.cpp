@@ -120,8 +120,6 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 	else
 	ATL::_AtlBaseModule.SetResourceInstance(ATL::_AtlBaseModule.GetModuleInstance());
 
-	HookSysDialogs();
-
 	U::InitKeycodes();
 	U::InitSettingsHotkeyGroups();
 
@@ -144,9 +142,6 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 	int nRet = theLoop.Run();
 
 	_Module.RemoveMessageLoop();
-
-	// exit CBT hook
-	UnhookSysDialogs();
 
 	return nRet;
 }

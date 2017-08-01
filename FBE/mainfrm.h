@@ -140,10 +140,6 @@ public:
   END_UPDATE_UI_MAP()
 };
 
-// for MessageBox localization
-void HookSysDialogs();
-void UnhookSysDialogs();
-
 class CMainFrame :	public CFrameWindowImpl<CMainFrame>,
 					public CCustomizableToolBarCommands<CMainFrame>,
 					public CUpdateUI<CMainFrame>,
@@ -786,11 +782,10 @@ public:
 
   LRESULT OnToolCustomize(WORD /*wNotifyCode*/, WORD /*wID*/, HWND hWndCtl, BOOL& /*bHandled*/)
   {
-	  UnhookSysDialogs();
 	  if (m_selBandID == ATL_IDW_BAND_FIRST+1) m_CmdToolbar.Customize(); else
 	  if (m_selBandID == ATL_IDW_BAND_FIRST+2) m_ScriptsToolbar.Customize();
-	  HookSysDialogs();
-      return 0;
+
+	  return 0;
   }
 
 	LRESULT OnLastScript(WORD, WORD, HWND, BOOL&)
