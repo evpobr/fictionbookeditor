@@ -58,7 +58,7 @@ struct hkIndex
 };
 
 // CSettingsHotkeysDlg
-class CSettingsHotkeysDlg: public CAxDialogImpl<CSettingsHotkeysDlg>
+class CSettingsHotkeysDlg: public CPropertyPageImpl<CSettingsHotkeysDlg>
 {
 public:
 	CListBox	m_hkGroups;
@@ -75,7 +75,6 @@ public:
 	int		m_selHk;
 
 	CSettingsHotkeysDlg();
-	~CSettingsHotkeysDlg();
 
 	enum { IDD = IDD_HOTKEYS };
 
@@ -84,8 +83,6 @@ public:
 		MESSAGE_HANDLER(WM_USER + 0x401, OnKeyPressed)
 		MESSAGE_HANDLER(WM_USER + 0x402, OnKeyReleased)
 
-		COMMAND_HANDLER(IDOK, BN_CLICKED, OnClickedOK)
-		COMMAND_HANDLER(IDCANCEL, BN_CLICKED, OnClickedCancel)
 		COMMAND_HANDLER(IDC_LIST_HOTKEYS_GROUPS, LBN_SELCHANGE, OnGroupsSelChange)
 		COMMAND_HANDLER(IDC_LIST_HOTKEYS, LBN_SELCHANGE, OnHotkeysSelChange)
 		COMMAND_HANDLER(IDC_EDIT_HOTKEY, EN_SETFOCUS, OnEditSetFocus)
@@ -93,7 +90,7 @@ public:
 
 		COMMAND_HANDLER(IDC_BUTTON_DEFAULT, BN_CLICKED, OnBnClickedButtonDefault)
 		COMMAND_HANDLER(IDC_BUTTON_HOTKEY_ASSIGN, BN_CLICKED, OnBnClickedButtonHotkeyAssign)
-		CHAIN_MSG_MAP(CAxDialogImpl<CSettingsHotkeysDlg>)
+		CHAIN_MSG_MAP(CPropertyPageImpl<CSettingsHotkeysDlg>)
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -106,9 +103,6 @@ public:
 	LRESULT OnBnClickedButtonHotkeyDelete(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnBnClickedButtonHotkeyAssign(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
-	LRESULT OnClickedOK(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
-	LRESULT OnClickedCancel(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
-
 	LRESULT OnEditSetFocus(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 
 	hkIndex	GetCollIndex(ACCEL);
@@ -116,4 +110,7 @@ public:
 	int		GetTextLen(CString text);
 	bool	Test();
 	void	ClearAndSet();
+
+	int		OnApply();
+	void	OnReset();
 };

@@ -16,6 +16,7 @@
 
 #define _WTL_NO_CSTRING
 #define _WTL_NO_WTYPES
+#define _WTL_NEW_PAGE_NOTIFY_HANDLERS
 
 // turns off ATL's hiding of some common and often safely ignored warning messages
 #define _ATL_ALL_WARNINGS

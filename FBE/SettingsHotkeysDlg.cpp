@@ -14,6 +14,8 @@ CSettingsHotkeysDlg::CSettingsHotkeysDlg(): m_count(0),
 											m_selGr(0),
 											m_selHk(0)
 {
+	SetTitle(IDS_SETTINGS_HOTKEYS_CAPTION);
+
 	for(unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
 	{
 		CString groupname = _Settings.m_hotkey_groups[i].m_reg_name;
@@ -31,14 +33,8 @@ CSettingsHotkeysDlg::CSettingsHotkeysDlg(): m_count(0),
 	m_wrongHkMsg.ReleaseBuffer();
 }
 
-CSettingsHotkeysDlg::~CSettingsHotkeysDlg()
-{
-}
-
 LRESULT CSettingsHotkeysDlg::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	CAxDialogImpl<CSettingsHotkeysDlg>::OnInitDialog(uMsg, wParam, lParam, bHandled);
-
 	m_hkGroups = GetDlgItem(IDC_LIST_HOTKEYS_GROUPS);
 	for(unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
 		m_hkGroups.AddString(_Settings.m_hotkey_groups[i].m_name);
@@ -203,34 +199,6 @@ LRESULT CSettingsHotkeysDlg::OnBnClickedButtonHotkeyDelete(WORD wNotifyCode, WOR
 	::ZeroMemory(&_Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_accel, sizeof(ACCEL));
 	ClearAndSet();
 
-	return 0;
-}
-
-LRESULT CSettingsHotkeysDlg::OnClickedOK(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
-{
-	for(unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
-	{
-		for(unsigned int j = 0; j < _Settings.m_hotkey_groups.at(i).m_hotkeys.size(); ++j)
-		{
-			ACCEL accel = _Settings.m_hotkey_groups[i].m_hotkeys[j].m_accel;
-			ACCEL init_accel = m_initHkGroups[i].m_hotkeys[j].m_accel;
-			if(accel.fVirt != init_accel.fVirt || accel.key != init_accel.key || accel.cmd != init_accel.cmd)
-			{
-				_Settings.SetNeedRestart();
-				break;
-			}
-		}
-	}
-	
-	EndDialog(wID);
-	return 0;
-}
-
-LRESULT CSettingsHotkeysDlg::OnClickedCancel(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
-{
-	_Settings.m_hotkey_groups = m_initHkGroups;
-
-	EndDialog(wID);
 	return 0;
 }
 
@@ -443,4 +411,28 @@ void CSettingsHotkeysDlg::ClearAndSet()
 		::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_DESCRIPTION), _Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_desc);
 	else
 		::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_DESCRIPTION), NULL);
+}
+
+int CSettingsHotkeysDlg::OnApply()
+{
+	for (unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
+	{
+		for (unsigned int j = 0; j < _Settings.m_hotkey_groups.at(i).m_hotkeys.size(); ++j)
+		{
+			ACCEL accel = _Settings.m_hotkey_groups[i].m_hotkeys[j].m_accel;
+			ACCEL init_accel = m_initHkGroups[i].m_hotkeys[j].m_accel;
+			if (accel.fVirt != init_accel.fVirt || accel.key != init_accel.key || accel.cmd != init_accel.cmd)
+			{
+				_Settings.SetNeedRestart();
+				break;
+			}
+		}
+	}
+
+	return 0;
+}
+
+void CSettingsHotkeysDlg::OnReset()
+{
+	_Settings.m_hotkey_groups = m_initHkGroups;
 }

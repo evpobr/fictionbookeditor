@@ -64,6 +64,8 @@ static int (*g_compare_funcs[])(const void*, const void*) =
 // CSettingsWordsDlg
 CSettingsWordsDlg::CSettingsWordsDlg() : m_sort(0), m_sel_all(false), m_ct(0)
 {
+	SetTitle(IDS_SETTINGS_WORDS_CAPTION);
+
 	unsigned int size = _Settings.m_words.size();
 	for(unsigned int i = 0; i < size; ++i)
 	{
@@ -407,21 +409,15 @@ LRESULT CSettingsWordsDlg::OnBnClickedButtonRemovesel(WORD /*wNotifyCode*/, WORD
 	return 0;
 }
 
-void CSettingsWordsDlg::RemoveWord(int index)
+int CSettingsWordsDlg::OnApply()
 {
-	m_list_words.DeleteItem(index);
-	m_words.RemoveAt(index);
-}
-
-LRESULT CSettingsWordsDlg::OnOK(WORD, WORD wID, HWND, BOOL&)
-{
-	if(GetFocus() == m_edit)
+	if (GetFocus() == m_edit)
 	{
 		CString edWord = U::GetWindowText(m_edit);
 
-		if(m_words[m_editidx].m_word != edWord.Trim())
+		if (m_words[m_editidx].m_word != edWord.Trim())
 		{
-			if(AddNewWord(edWord, true))
+			if (AddNewWord(edWord, true))
 			{
 				RemoveWord(m_editidx);
 				AddNewWord(edWord);
@@ -430,7 +426,7 @@ LRESULT CSettingsWordsDlg::OnOK(WORD, WORD wID, HWND, BOOL&)
 
 		m_edit.ShowWindow(SW_HIDE);
 	}
-	else if(GetFocus() == m_edt_new)
+	else if (GetFocus() == m_edt_new)
 	{
 		SendMessage(WM_COMMAND, MAKEWPARAM(IDC_BUTTON_ADD, BN_CLICKED), (LPARAM)m_btn_add.m_hWnd);
 	}
@@ -440,7 +436,7 @@ LRESULT CSettingsWordsDlg::OnOK(WORD, WORD wID, HWND, BOOL&)
 
 		_Settings.m_words.clear();
 		int n = m_words.GetSize();
-		for(int i = 0; i < n; ++i)
+		for (int i = 0; i < n; ++i)
 			_Settings.m_words.push_back(m_words[i]);
 
 		_Settings.SaveWords();
@@ -449,13 +445,16 @@ LRESULT CSettingsWordsDlg::OnOK(WORD, WORD wID, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CSettingsWordsDlg::OnCancel(WORD, WORD wID, HWND, BOOL&)
+void CSettingsWordsDlg::OnReset()
 {
-	if(GetFocus() == m_edit)
+	if (GetFocus() == m_edit)
 	{
 		m_edit.ShowWindow(SW_HIDE);
-		return 0;
 	}
+}
 
-	return 1;
+void CSettingsWordsDlg::RemoveWord(int index)
+{
+	m_list_words.DeleteItem(index);
+	m_words.RemoveAt(index);
 }

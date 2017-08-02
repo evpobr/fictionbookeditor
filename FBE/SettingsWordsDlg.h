@@ -6,7 +6,7 @@
 class WordsItem;
 
 // CSettingsWordsDlg
-class CSettingsWordsDlg : public CDialogImpl<CSettingsWordsDlg>
+class CSettingsWordsDlg : public CPropertyPageImpl<CSettingsWordsDlg>
 {
 public:
 	CListViewCtrl		m_list_words;
@@ -38,8 +38,7 @@ public:
 		NOTIFY_HANDLER(IDC_LIST_WORDS, NM_CLICK, OnListClick)
 		NOTIFY_HANDLER(IDC_WLIST, LVN_ITEMCHANGED, OnListChanged)
 		NOTIFY_HANDLER(IDC_EDIT_LV, EN_KILLFOCUS, OnEditLVDefocused)
-		COMMAND_ID_HANDLER(IDOK, OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
+		CHAIN_MSG_MAP(CPropertyPageImpl<CSettingsWordsDlg>)
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -49,8 +48,6 @@ public:
 	LRESULT OnListChanged(int, NMHDR*, BOOL&);
 	LRESULT OnEditLVDefocused(int, NMHDR*, BOOL&);
 	LRESULT OnCustomDraw(int id,NMHDR *hdr,BOOL&);
-	LRESULT OnOK(WORD, WORD wID, HWND, BOOL&);
-	LRESULT OnCancel(WORD, WORD wID, HWND, BOOL&);
 
 //	void CreateStatBitmaps();
 	bool AddNewWord(CString&, bool test = false);
@@ -58,4 +55,7 @@ public:
 	LRESULT OnBnClickedButtonAdd(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnBnClickedCheckSelall(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnBnClickedButtonRemovesel(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+
+	int		OnApply();
+	void	OnReset();
 };

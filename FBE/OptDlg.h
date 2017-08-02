@@ -9,12 +9,12 @@
 #include "FBEView.h"
 #include "ModelessDialog.h"
 
-class COptDlg: public CModelessDialogImpl<COptDlg>
+class COptDlg: public CPropertyPageImpl<COptDlg>
 {
 public:
   enum { IDD=IDD_OPTIONS };
 
-  COptDlg() { }
+  COptDlg();
 
   CColorButton	m_fg,m_bg;
   CComboBox	    m_fonts;
@@ -39,20 +39,15 @@ public:
   CButton	    m_src_line_numbers;
   
   BEGIN_MSG_MAP(COptDlg)
-    COMMAND_ID_HANDLER(IDOK, OnOK)
-    COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
 	COMMAND_HANDLER(IDC_USESPELLCHECKER, BN_CLICKED, OnUseSpellChecker)
 	COMMAND_HANDLER(IDC_DICTPATH, BN_CLICKED, OnShowFileDialog)
     MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
-    REFLECT_NOTIFICATIONS()
+ 	CHAIN_MSG_MAP(CPropertyPageImpl<COptDlg>)
+	REFLECT_NOTIFICATIONS()
   END_MSG_MAP()
 
   LRESULT OnInitDialog(UINT, WPARAM, LPARAM, BOOL&);
 
-  LRESULT OnOK(WORD, WORD wID, HWND, BOOL&);
-  LRESULT OnCancel(WORD, WORD wID, HWND, BOOL&);
-
-  LRESULT OnTcnSelchangeTab3(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
   // SeNS
   LRESULT OnShowFileDialog(WORD, WORD, HWND, BOOL&);
   LRESULT OnUseSpellChecker(WORD, WORD, HWND, BOOL&)
@@ -69,5 +64,8 @@ public:
 	  }
 	  return 0;
   }
+
+  int OnApply();
+
 };
 #endif

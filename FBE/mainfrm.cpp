@@ -4681,7 +4681,7 @@ void CMainFrame::GoTo(int selected_pos)
 
 bool CMainFrame::ShowSettingsDialog(HWND parent)
 {	
-	CSettingsDlg dlg;
+	CSettingsDlg dlg(IDS_SETTINGS);
 	return dlg.DoModal(parent) == IDOK;
 }
 
