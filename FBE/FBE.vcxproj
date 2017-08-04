@@ -269,7 +269,7 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="OptDlg.cpp">
+    <ClCompile Include="SettingsViewPage.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -371,7 +371,7 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="mainfrm.h" />
     <ClInclude Include="MemProtocol.h" />
     <ClInclude Include="ModelessDialog.h" />
-    <ClInclude Include="OptDlg.h" />
+    <ClInclude Include="SettingsViewPage.h" />
     <ClInclude Include="res1.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SearchReplace.h" />

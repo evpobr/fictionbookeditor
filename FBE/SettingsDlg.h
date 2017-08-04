@@ -3,7 +3,7 @@
 #pragma once
 
 #include "resource.h"
-#include "OptDlg.h"
+#include "SettingsViewPage.h"
 #include "SettingsOtherDlg.h"
 #include "SettingsHotkeysDlg.h"
 #include "SettingsWordsDlg.h"
@@ -26,7 +26,7 @@ public:
 private:
 	bool m_bCentered;
 
-	COptDlg m_pgView;
+	CSettingsViewPage m_pgView;
 	CSettingsOtherDlg m_pgOther;
 	CSettingsHotkeysDlg m_pgHotkeys;
 	CSettingsWordsDlg m_pgWords;

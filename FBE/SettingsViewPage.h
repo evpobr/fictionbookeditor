@@ -9,12 +9,12 @@
 #include "FBEView.h"
 #include "ModelessDialog.h"
 
-class COptDlg: public CPropertyPageImpl<COptDlg>
+class CSettingsViewPage: public CPropertyPageImpl<CSettingsViewPage>
 {
 public:
-  enum { IDD=IDD_OPTIONS };
+  enum { IDD=IDD_SETTINGS_VIEW };
 
-  COptDlg();
+  CSettingsViewPage();
 
   CColorButton	m_fg,m_bg;
   CComboBox	    m_fonts;
@@ -38,11 +38,11 @@ public:
   CButton	    m_src_whitespace;
   CButton	    m_src_line_numbers;
   
-  BEGIN_MSG_MAP(COptDlg)
+  BEGIN_MSG_MAP(CSettingsViewPage)
 	COMMAND_HANDLER(IDC_USESPELLCHECKER, BN_CLICKED, OnUseSpellChecker)
 	COMMAND_HANDLER(IDC_DICTPATH, BN_CLICKED, OnShowFileDialog)
     MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
- 	CHAIN_MSG_MAP(CPropertyPageImpl<COptDlg>)
+ 	CHAIN_MSG_MAP(CPropertyPageImpl<CSettingsViewPage>)
 	REFLECT_NOTIFICATIONS()
   END_MSG_MAP()
 

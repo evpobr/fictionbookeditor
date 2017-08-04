@@ -18,7 +18,7 @@
 #include "FBEView.h"
 #include "FBDoc.h"
 #include "TreeView.h"
-#include "OptDlg.h"
+#include "SettingsViewPage.h"
 #include "ContainerWnd.h"
 #include "Scintilla.h"
 #include "SciLexer_new.h"

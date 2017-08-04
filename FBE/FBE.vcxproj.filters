@@ -55,9 +55,6 @@
     <ClCompile Include="mainfrm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OptDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="script.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -109,6 +106,9 @@
     <ClCompile Include="FBE_i.c">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="SettingsViewPage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="fbe.idl">
@@ -156,9 +156,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ModelessDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OptDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="res1.h">
@@ -238,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="FBE.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsViewPage.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

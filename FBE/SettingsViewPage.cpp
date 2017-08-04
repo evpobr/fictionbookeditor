@@ -12,7 +12,7 @@
 #endif
 
 
-#include "OptDlg.h"
+#include "SettingsViewPage.h"
 #include "Settings.h"
 
 extern CSettings _Settings;
@@ -30,12 +30,12 @@ static int __stdcall EnumFontProc(const ENUMLOGFONTEX *lfe,
 
 static int  font_sizes[]={8,9,10,11,12,13,14,15,16,18,20,22,24,26,28,36,48,72};
 
-COptDlg::COptDlg()
+CSettingsViewPage::CSettingsViewPage()
 {
 	SetTitle(IDS_SETTINGS_VIEW_CAPTION);
 }
 
-LRESULT COptDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
+LRESULT CSettingsViewPage::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
 {
   m_fg.SubclassWindow(GetDlgItem(IDC_FG));
   m_bg.SubclassWindow(GetDlgItem(IDC_BG));  
@@ -151,7 +151,7 @@ LRESULT COptDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
 
 TCHAR FileNameBuffer[_MAX_PATH];
 
-LRESULT COptDlg::OnShowFileDialog(WORD, WORD, HWND, BOOL&)
+LRESULT CSettingsViewPage::OnShowFileDialog(WORD, WORD, HWND, BOOL&)
 {
 	CString strFileName;
 	m_custom_dict.GetWindowText(strFileName);
@@ -167,7 +167,7 @@ LRESULT COptDlg::OnShowFileDialog(WORD, WORD, HWND, BOOL&)
     return 0;	
 }
 
-int COptDlg::OnApply()
+int CSettingsViewPage::OnApply()
 {
 	// fetch zoom
 	CString   szstr(U::GetWindowText(m_fontsize));
