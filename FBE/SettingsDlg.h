@@ -6,7 +6,7 @@
 #include "SettingsViewPage.h"
 #include "SettingsOtherPage.h"
 #include "SettingsHotkeysDlg.h"
-#include "SettingsWordsDlg.h"
+#include "SettingsWordsPage.h"
 
 // CSettingsDlg
 

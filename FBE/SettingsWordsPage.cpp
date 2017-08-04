@@ -1,7 +1,7 @@
 // SettingsWordsDlg.cpp : Implementation of CSettingsWordsDlg
 
 #include "stdafx.h"
-#include "SettingsWordsDlg.h"
+#include "SettingsWordsPage.h"
 #include "Settings.h"
 
 #define IMG_STAT_WIDTH	40

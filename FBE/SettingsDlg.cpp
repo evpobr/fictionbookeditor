@@ -5,7 +5,7 @@
 #include "SettingsDlg.h"
 #include "SettingsOtherPage.h"
 #include "SettingsHotkeysDlg.h"
-#include "SettingsWordsDlg.h"
+#include "SettingsWordsPage.h"
 #include "res1.h"
 
 extern CSettings _Settings;
