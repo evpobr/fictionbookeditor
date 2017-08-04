@@ -1,15 +1,15 @@
-// SettingsHotkeysDlg.cpp : Implementation of CSettingsHotkeysDlg
+// SettingsHotkeysDlg.cpp : Implementation of CSettingsHotkeysPage
 
 #include "stdafx.h"
-#include "SettingsHotkeysDlg.h"
+#include "SettingsHotkeysPage.h"
 #include "utils.h"
 #include "Settings.h"
 #include "res1.h"
 
 extern CSettings _Settings;
 
-// CSettingsHotkeysDlg
-CSettingsHotkeysDlg::CSettingsHotkeysDlg(): m_count(0),
+// CSettingsHotkeysPage
+CSettingsHotkeysPage::CSettingsHotkeysPage(): m_count(0),
 											m_initHkGroups(_Settings.m_hotkey_groups),
 											m_selGr(0),
 											m_selHk(0)
@@ -33,7 +33,7 @@ CSettingsHotkeysDlg::CSettingsHotkeysDlg(): m_count(0),
 	m_wrongHkMsg.ReleaseBuffer();
 }
 
-LRESULT CSettingsHotkeysDlg::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CSettingsHotkeysPage::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	m_hkGroups = GetDlgItem(IDC_LIST_HOTKEYS_GROUPS);
 	for(unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
@@ -57,7 +57,7 @@ LRESULT CSettingsHotkeysDlg::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lPara
 	return 0;
 }
 
-int CSettingsHotkeysDlg::GetTextLen(CString text)
+int CSettingsHotkeysPage::GetTextLen(CString text)
 {
 	CDC DC = m_hotkeys.GetDC();
 
@@ -70,7 +70,7 @@ int CSettingsHotkeysDlg::GetTextLen(CString text)
 	return size.cx;
 }
 
-LRESULT CSettingsHotkeysDlg::OnGroupsSelChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CSettingsHotkeysPage::OnGroupsSelChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	m_selGr = m_hkGroups.GetCurSel();
 	m_hotkeys.ResetContent();
@@ -98,7 +98,7 @@ LRESULT CSettingsHotkeysDlg::OnGroupsSelChange(WORD wNotifyCode, WORD wID, HWND 
 	return 0;
 }
 
-LRESULT CSettingsHotkeysDlg::OnHotkeysSelChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CSettingsHotkeysPage::OnHotkeysSelChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	m_selHk = m_hotkeys.GetCurSel();
 	ClearAndSet();
@@ -106,7 +106,7 @@ LRESULT CSettingsHotkeysDlg::OnHotkeysSelChange(WORD wNotifyCode, WORD wID, HWND
 	return 0;
 }
 
-hkIndex CSettingsHotkeysDlg::GetCollIndex(ACCEL newAccel)
+hkIndex CSettingsHotkeysPage::GetCollIndex(ACCEL newAccel)
 {
 	hkIndex index = {-1, -1};
 
@@ -132,7 +132,7 @@ ret:
 	return index;
 }
 
-bool CSettingsHotkeysDlg::TestAndSet()
+bool CSettingsHotkeysPage::TestAndSet()
 {
 	bool collisions = false;
 	for(int i = 0; i< m_mapHotkeys.GetSize(); ++i)
@@ -152,7 +152,7 @@ bool CSettingsHotkeysDlg::TestAndSet()
 	return collisions;
 }
 
-LRESULT CSettingsHotkeysDlg::OnBnClickedButtonDefault(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CSettingsHotkeysPage::OnBnClickedButtonDefault(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	hkIndex index = GetCollIndex(_Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_def_accel);
 	if(index.group != -1 && index.hotkey != -1)
@@ -194,7 +194,7 @@ LRESULT CSettingsHotkeysDlg::OnBnClickedButtonDefault(WORD wNotifyCode, WORD wID
 	return 0;
 }
 
-LRESULT CSettingsHotkeysDlg::OnBnClickedButtonHotkeyDelete(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CSettingsHotkeysPage::OnBnClickedButtonHotkeyDelete(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	::ZeroMemory(&_Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_accel, sizeof(ACCEL));
 	ClearAndSet();
@@ -202,7 +202,7 @@ LRESULT CSettingsHotkeysDlg::OnBnClickedButtonHotkeyDelete(WORD wNotifyCode, WOR
 	return 0;
 }
 
-LRESULT CSettingsHotkeysDlg::OnEditSetFocus(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CSettingsHotkeysPage::OnEditSetFocus(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	m_editHotkey.SetWindowText(NULL);
 	::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_COLLISION), NULL);
@@ -212,7 +212,7 @@ LRESULT CSettingsHotkeysDlg::OnEditSetFocus(WORD wNotifyCode, WORD wID, HWND hWn
 	return 0;
 }
 
-bool CSettingsHotkeysDlg::Test()
+bool CSettingsHotkeysPage::Test()
 {
 	hkIndex index = GetCollIndex(m_accel);
 	wchar_t collMsg[MAX_LOAD_STRING +1];
@@ -249,7 +249,7 @@ bool CSettingsHotkeysDlg::Test()
 	}
 }
 
-LRESULT CSettingsHotkeysDlg::OnKeyPressed(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	CString wndText;
 	m_editHotkey.GetWindowText(wndText);
@@ -382,7 +382,7 @@ LRESULT CSettingsHotkeysDlg::OnKeyPressed(UINT uMsg, WPARAM wParam, LPARAM lPara
 	return 0;
 }
 
-LRESULT CSettingsHotkeysDlg::OnKeyReleased(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CSettingsHotkeysPage::OnKeyReleased(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	if(m_accel.key == NULL)
 	{
@@ -392,7 +392,7 @@ LRESULT CSettingsHotkeysDlg::OnKeyReleased(UINT uMsg, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
-LRESULT CSettingsHotkeysDlg::OnBnClickedButtonHotkeyAssign(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CSettingsHotkeysPage::OnBnClickedButtonHotkeyAssign(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
 	TestAndSet();
 	ClearAndSet();
@@ -400,7 +400,7 @@ LRESULT CSettingsHotkeysDlg::OnBnClickedButtonHotkeyAssign(WORD wNotifyCode, WOR
 	return 0;
 }
 
-void CSettingsHotkeysDlg::ClearAndSet()
+void CSettingsHotkeysPage::ClearAndSet()
 {
 	m_count = 0;
 	ZeroMemory(&m_accel, sizeof(ACCEL));
@@ -413,7 +413,7 @@ void CSettingsHotkeysDlg::ClearAndSet()
 		::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_DESCRIPTION), NULL);
 }
 
-int CSettingsHotkeysDlg::OnApply()
+int CSettingsHotkeysPage::OnApply()
 {
 	for (unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
 	{
@@ -432,7 +432,7 @@ int CSettingsHotkeysDlg::OnApply()
 	return 0;
 }
 
-void CSettingsHotkeysDlg::OnReset()
+void CSettingsHotkeysPage::OnReset()
 {
 	_Settings.m_hotkey_groups = m_initHkGroups;
 }

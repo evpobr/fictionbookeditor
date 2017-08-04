@@ -1,4 +1,4 @@
-// SettingsHotkeysDlg.h : Declaration of the CSettingsHotkeysDlg
+// SettingsHotkeysDlg.h : Declaration of the CSettingsHotkeysPage
 #pragma once
 
 #include "resource.h"
@@ -57,8 +57,8 @@ struct hkIndex
 	int hotkey;
 };
 
-// CSettingsHotkeysDlg
-class CSettingsHotkeysDlg: public CPropertyPageImpl<CSettingsHotkeysDlg>
+// CSettingsHotkeysPage
+class CSettingsHotkeysPage: public CPropertyPageImpl<CSettingsHotkeysPage>
 {
 public:
 	CListBox	m_hkGroups;
@@ -74,11 +74,11 @@ public:
 	int		m_selGr;
 	int		m_selHk;
 
-	CSettingsHotkeysDlg();
+	CSettingsHotkeysPage();
 
-	enum { IDD = IDD_HOTKEYS };
+	enum { IDD = IDD_SETTINGS_HOTKEYS };
 
-	BEGIN_MSG_MAP(CSettingsHotkeysDlg)
+	BEGIN_MSG_MAP(CSettingsHotkeysPage)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_USER + 0x401, OnKeyPressed)
 		MESSAGE_HANDLER(WM_USER + 0x402, OnKeyReleased)
@@ -90,7 +90,7 @@ public:
 
 		COMMAND_HANDLER(IDC_BUTTON_DEFAULT, BN_CLICKED, OnBnClickedButtonDefault)
 		COMMAND_HANDLER(IDC_BUTTON_HOTKEY_ASSIGN, BN_CLICKED, OnBnClickedButtonHotkeyAssign)
-		CHAIN_MSG_MAP(CPropertyPageImpl<CSettingsHotkeysDlg>)
+		CHAIN_MSG_MAP(CPropertyPageImpl<CSettingsHotkeysPage>)
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);

@@ -281,7 +281,7 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="script.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="SettingsDlg.cpp" />
-    <ClCompile Include="SettingsHotkeysDlg.cpp" />
+    <ClCompile Include="SettingsHotkeysPage.cpp" />
     <ClCompile Include="SettingsOtherPage.cpp" />
     <ClCompile Include="SettingsWordsPage.cpp" />
     <ClCompile Include="Speller.cpp" />
@@ -378,7 +378,7 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="XMLSerializer\Serializable.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SettingsDlg.h" />
-    <ClInclude Include="SettingsHotkeysDlg.h" />
+    <ClInclude Include="SettingsHotkeysPage.h" />
     <ClInclude Include="SettingsOtherPage.h" />
     <ClInclude Include="SettingsWordsPage.h" />
     <ClInclude Include="Speller.h" />

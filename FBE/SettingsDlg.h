@@ -5,7 +5,7 @@
 #include "resource.h"
 #include "SettingsViewPage.h"
 #include "SettingsOtherPage.h"
-#include "SettingsHotkeysDlg.h"
+#include "SettingsHotkeysPage.h"
 #include "SettingsWordsPage.h"
 
 // CSettingsDlg
@@ -28,6 +28,6 @@ private:
 
 	CSettingsViewPage m_pgView;
 	CSettingsOtherPage m_pgOther;
-	CSettingsHotkeysDlg m_pgHotkeys;
+	CSettingsHotkeysPage m_pgHotkeys;
 	CSettingsWordsDlg m_pgWords;
 };

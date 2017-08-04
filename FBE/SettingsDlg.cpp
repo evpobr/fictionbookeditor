@@ -4,7 +4,7 @@
 #include "Settings.h"
 #include "SettingsDlg.h"
 #include "SettingsOtherPage.h"
-#include "SettingsHotkeysDlg.h"
+#include "SettingsHotkeysPage.h"
 #include "SettingsWordsPage.h"
 #include "res1.h"
 
