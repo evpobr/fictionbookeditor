@@ -282,7 +282,7 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="SettingsDlg.cpp" />
     <ClCompile Include="SettingsHotkeysDlg.cpp" />
-    <ClCompile Include="SettingsOtherDlg.cpp" />
+    <ClCompile Include="SettingsOtherPage.cpp" />
     <ClCompile Include="SettingsWordsDlg.cpp" />
     <ClCompile Include="Speller.cpp" />
     <ClCompile Include="Splitter.cpp" />
@@ -379,7 +379,7 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SettingsDlg.h" />
     <ClInclude Include="SettingsHotkeysDlg.h" />
-    <ClInclude Include="SettingsOtherDlg.h" />
+    <ClInclude Include="SettingsOtherPage.h" />
     <ClInclude Include="SettingsWordsDlg.h" />
     <ClInclude Include="Speller.h" />
     <ClInclude Include="Splitter.h" />

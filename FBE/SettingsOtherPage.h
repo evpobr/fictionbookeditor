@@ -1,4 +1,4 @@
-// SettingsOtherDlg.h : Declaration of the CSettingsOtherDlg
+// SettingsOtherDlg.h : Declaration of the CSettingsOtherPage
 
 #pragma once
 
@@ -6,10 +6,10 @@
 #include <atlhost.h>
 
 
-// CSettingsOtherDlg
+// CSettingsOtherPage
 
-class CSettingsOtherDlg : 
-	public CPropertyPageImpl<CSettingsOtherDlg>
+class CSettingsOtherPage : 
+	public CPropertyPageImpl<CSettingsOtherPage>
 {
 	CButton		m_keep;
 	CComboBox	m_def_enc;
@@ -30,16 +30,16 @@ class CSettingsOtherDlg :
 	CString		m_scripts_fld_dlg_msg;
 
 public:
-	CSettingsOtherDlg();
+	CSettingsOtherPage();
 
-	enum { IDD = IDD_SETTING_OTHER };
+	enum { IDD = IDD_SETTINGS_OTHER };
 
-BEGIN_MSG_MAP(CSettingsOtherDlg)
+BEGIN_MSG_MAP(CSettingsOtherPage)
 	MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 	COMMAND_HANDLER(IDC_DEFAULT_SCRIPTS_FOLDER, BN_CLICKED, OnBnClickedDefaultScriptsFolder)
 	COMMAND_HANDLER(IDC_SELECT_SCRIPTS_FOLDER_BUTTON, BN_CLICKED, OnBnClickedSelectScriptsFolderButton)
 	COMMAND_HANDLER(IDC_SETTINGS_ASKIMAGE, BN_CLICKED, OnBnClickedSettingsAskimage)
-	CHAIN_MSG_MAP(CPropertyPageImpl<CSettingsOtherDlg>)
+	CHAIN_MSG_MAP(CPropertyPageImpl<CSettingsOtherPage>)
 END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);

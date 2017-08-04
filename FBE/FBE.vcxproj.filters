@@ -67,9 +67,6 @@
     <ClCompile Include="SettingsHotkeysDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SettingsOtherDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SettingsWordsDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -107,6 +104,9 @@
       <Filter>Generated Files</Filter>
     </ClCompile>
     <ClCompile Include="SettingsViewPage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsOtherPage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -179,9 +179,6 @@
     <ClInclude Include="SettingsHotkeysDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SettingsOtherDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SettingsWordsDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -237,6 +234,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="SettingsViewPage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsOtherPage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

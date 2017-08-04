@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "Settings.h"
 #include "SettingsDlg.h"
-#include "SettingsOtherDlg.h"
+#include "SettingsOtherPage.h"
 #include "SettingsHotkeysDlg.h"
 #include "SettingsWordsDlg.h"
 #include "res1.h"

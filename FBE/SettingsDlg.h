@@ -4,7 +4,7 @@
 
 #include "resource.h"
 #include "SettingsViewPage.h"
-#include "SettingsOtherDlg.h"
+#include "SettingsOtherPage.h"
 #include "SettingsHotkeysDlg.h"
 #include "SettingsWordsDlg.h"
 
@@ -27,7 +27,7 @@ private:
 	bool m_bCentered;
 
 	CSettingsViewPage m_pgView;
-	CSettingsOtherDlg m_pgOther;
+	CSettingsOtherPage m_pgOther;
 	CSettingsHotkeysDlg m_pgHotkeys;
 	CSettingsWordsDlg m_pgWords;
 };
