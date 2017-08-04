@@ -14,7 +14,6 @@
 #define IDS_HOTKEY_FILE_OPEN            105
 #define IDS_HOTKEY_FILE_SAVE            106
 #define IDS_HOTKEY_FILE_SAVEAS          107
-#define IDD_PROPPAGE_LARGE              107
 #define IDS_HOTKEY_FILE_VALIDATE        108
 #define IDS_HOTKEY_GROUP_FILE           109
 #define IDN_ED_TEXT                     110
@@ -138,7 +137,7 @@
 #define IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE4 208
 #define IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE5 209
 #define IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE6 210
-#define IDD_SETTINGS_VIEW                     211
+#define IDD_SETTINGS_VIEW               211
 #define IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE7 211
 #define IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE8 212
 #define IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE9 213
@@ -179,11 +178,10 @@
 #define IDR_ACCELERATOR1                240
 #define IDS_HOTKEY_GROUP_SCRIPTS        240
 #define IDS_HOTKEY_SCRIPTS_LAST_SCRIPT  241
-#define IDD_TOOLS_SETTINGS              242
 #define IDS_SETTINGS_HOTKEYS_CAPTION    242
 #define IDS_STRING243                   243
 #define IDS_HOTKEY_GROUP_SYMBOLS        243
-#define IDD_SETTINGS_OTHER               244
+#define IDD_SETTINGS_OTHER              244
 #define IDS_HOTKEY_SYMBOL_ACUTE_ACCENT  244
 #define IDS_SETTINGS_WORDS_CAPTION      244
 #define IDS_HOTKEY_SYMBOL_QUOTATION_MARK 245
@@ -199,7 +197,7 @@
 #define IDD_ADDIMAGE                    249
 #define IDS_HOTKEY_SYMBOL_SUPERSCRIPT_THREE 249
 #define IDS_SETTINGS_WORDS_ADD_ERR_SYM  249
-#define IDD_SETTINGS_HOTKEYS                     250
+#define IDD_SETTINGS_HOTKEYS            250
 #define IDS_HOTKEY_SYMBOL_MULTIPLICATION_SIGN 250
 #define IDS_WORDS_WLIST_WORD            250
 #define IDS_HOTKEY_SYMBOL_DIVISION_SIGN 251
@@ -370,7 +368,6 @@
 #define IDC_SPIN_TABLE_ROWS             1040
 #define IDC_SECTION                     1041
 #define IDC_IMAGE_TITLE                 1042
-#define IDC_TAB_CTRL                    1042
 #define IDC_SHORTCUTS                   1045
 #define IDC_RADIO_KEEP                  1047
 #define IDC_RADIO_ALWAYS                1048
