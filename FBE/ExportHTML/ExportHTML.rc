@@ -107,9 +107,9 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Dialog
 //
 
-IDD_CUSTOMSAVEDLG DIALOG 0, 0, 330, 32
-STYLE DS_SETFONT | DS_3DLOOK | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
-FONT 8, "MS Shell Dlg"
+IDD_CUSTOMSAVEDLG DIALOGEX 0, 0, 330, 32
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     LTEXT           "XSL Template:",IDC_STATIC,68,2,53,8
     EDITTEXT        IDC_TEMPLATE,130,0,164,12,ES_AUTOHSCROLL
@@ -143,6 +143,17 @@ BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_CUSTOMSAVEDLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
 
 
 /////////////////////////////////////////////////////////////////////////////
