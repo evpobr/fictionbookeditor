@@ -114,11 +114,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 	_Module.AddMessageLoop(&theLoop);
 	CMainFrame wndMain;
 
-	resLib = ::LoadLibrary(_Settings.GetInterfaceLanguageDllName());
-	if(resLib)
-	ATL::_AtlBaseModule.SetResourceInstance(resLib);
-	else
-	ATL::_AtlBaseModule.SetResourceInstance(ATL::_AtlBaseModule.GetModuleInstance());
+	SetThreadUILanguage(MAKELANGID(_Settings.GetInterfaceLanguageID(), SUBLANG_DEFAULT));
 
 	U::InitKeycodes();
 	U::InitSettingsHotkeyGroups();
