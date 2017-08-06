@@ -188,7 +188,7 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 							continue;
 
 						// construct a MIME header
-						_snprintf(buffer, 1024,
+						_snprintf_s(buffer, 1024, _TRUNCATE,
 							"\r\n"
 							"%s\r\n"
 							"Content-Type: %S\r\n"

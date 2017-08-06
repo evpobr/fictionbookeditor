@@ -663,12 +663,7 @@ BOOL CColorButton::Picker ()
 	// See what version we are using
 	//
 
-	OSVERSIONINFO osvi;
-	osvi .dwOSVersionInfoSize = sizeof (osvi);
-	::GetVersionEx (&osvi);
-	bool fIsXP = osvi .dwPlatformId == VER_PLATFORM_WIN32_NT &&
-		(osvi .dwMajorVersion > 5 || (osvi .dwMajorVersion == 5 &&
-		osvi .dwMinorVersion >= 1));
+	bool fIsXP = !RunTimeHelper::IsVista();
 
 	//
 	// Get the flat flag

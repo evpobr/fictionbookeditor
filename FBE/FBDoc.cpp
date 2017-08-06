@@ -31,7 +31,7 @@ Doc* FB::Doc::m_active_doc;
 bool FB::Doc::m_fast_mode;
 
 Doc   *Doc::LocateDocument(const wchar_t *id) {
-  unsigned long	  *lv;
+  unsigned long	  *lv = nullptr;
   if (swscanf(id,L"%lu",lv)!=1)
     return NULL;
   return m_active_docs.Lookup((Doc*)lv);
@@ -1294,7 +1294,8 @@ void Doc::GetWordList(int flags, CSimpleArray<Word>& words, CString tagName)
 
 		// iterate over bb using a primitive fsm
 		wchar_t *p = bb, *e = p + bb.length() + 1; // include trailing 0!
-		wchar_t *wstart,*wend;
+		wchar_t *wstart = nullptr;
+		wchar_t *wend = nullptr;
 
 		enum
 		{

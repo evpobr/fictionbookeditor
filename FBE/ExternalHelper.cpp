@@ -74,7 +74,7 @@ static void FillDescElements()
 // genre list helper
 static void LoadGenres()
 {
-	FILE *fp;
+	FILE *fp = nullptr;
   CString file_name = _Settings.GetLocalizedGenresFileName();
   // Modification by Pilgrim 
   try{

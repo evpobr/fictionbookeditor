@@ -1444,7 +1444,7 @@ void InitSettingsHotkeyGroups()
 	{
 		CRegKey rk;
 		rk.Create(HKEY_CURRENT_USER, _Settings.GetKeyPath() + _T("\\Documents"));
-		rk.SetValue(pos, filename);
+		rk.SetDWORDValue(filename, pos);
 		rk.Close();
 	}
 
