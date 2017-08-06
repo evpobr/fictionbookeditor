@@ -13,10 +13,10 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Russian (Russia) resources
+// Ukrainian (Ukraine) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
-LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_UKR)
+LANGUAGE LANG_UKRAINIAN, SUBLANG_DEFAULT
 #pragma code_page(1251)
 
 /////////////////////////////////////////////////////////////////////////////
@@ -57,16 +57,6 @@ BEGIN
     END
 END
 
-#endif    // Russian (Russia) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Ukrainian (Ukraine) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_UKR)
-LANGUAGE LANG_UKRAINIAN, SUBLANG_DEFAULT
-#pragma code_page(1251)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -232,6 +222,20 @@ BEGIN
     "\0"
 END
 
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""..\\..\\wtl\\atlres.h""\r\n"
+    "#include ""..\\..\\res1.h""\r\n"
+    "#include ""..\\..\\resource.h""\r\n"
+    "\r\n"
+    "\0"
+END
+
 #endif    // APSTUDIO_INVOKED
 
 
@@ -304,7 +308,7 @@ BEGIN
                     "SysLink",0x0,101,32,154,8
     EDITTEXT        IDC_CONTRIBS,70,51,189,77,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | ES_WANTRETURN | NOT WS_BORDER | WS_VSCROLL | NOT WS_TABSTOP,WS_EX_STATICEDGE
     CONTROL         "Static",IDC_TEXT_STATUS,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,24,137,180,8
-    CONTROL         IDB_UPD_CHECK1,IDC_PIC_UPDATE,"Static",SS_BITMAP,9,136,9,9
+    CONTROL         400,IDC_PIC_UPDATE,"Static",SS_BITMAP,9,136,9,9
     PUSHBUTTON      "Обновити",IDC_UPDATE,161,133,49,14,NOT WS_VISIBLE
 END
 
@@ -593,220 +597,6 @@ BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Toolbar
-//
-
-IDR_MAINFRAME TOOLBAR 24, 24
-BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    SEPARATOR
-    BUTTON      ID_FILE_VALIDATE
-    SEPARATOR
-    BUTTON      ID_VIEW_DESC
-    BUTTON      ID_VIEW_BODY
-    BUTTON      ID_VIEW_SOURCE
-    SEPARATOR
-    BUTTON      ID_EDIT_ADDBINARY
-    BUTTON      ID_EDIT_INS_IMAGE
-    BUTTON      ID_EDIT_INS_INLINEIMAGE
-    SEPARATOR
-    BUTTON      ID_EDIT_FIND
-    BUTTON      ID_EDIT_FINDNEXT
-    SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    SEPARATOR
-    BUTTON      ID_EDIT_UNDO
-    BUTTON      ID_EDIT_REDO
-    SEPARATOR
-    BUTTON      ID_EDIT_BOLD
-    BUTTON      ID_EDIT_ITALIC
-    BUTTON      ID_EDIT_SUP
-    BUTTON      ID_EDIT_SUB
-    BUTTON      ID_EDIT_STRIK
-    BUTTON      ID_EDIT_CODE
-    SEPARATOR
-    BUTTON      ID_STYLE_LINK
-    BUTTON      ID_STYLE_NOTE
-    BUTTON      ID_STYLE_NOLINK
-    BUTTON      ID_GOTO_FOOTNOTE
-    SEPARATOR
-    BUTTON      ID_STYLE_NORMAL
-    BUTTON      ID_STYLE_SUBTITLE
-    BUTTON      ID_STYLE_TEXTAUTHOR
-    SEPARATOR
-    BUTTON      ID_TOOLS_SPELLCHECK
-END
-
-IDR_MAINFRAME_SMALL TOOLBAR 16, 16
-BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    BUTTON      ID_FILE_VALIDATE
-    BUTTON      ID_VIEW_DESC
-    BUTTON      ID_VIEW_BODY
-    BUTTON      ID_VIEW_SOURCE
-    BUTTON      ID_VIEW_OPTIONS
-    BUTTON      ID_EDIT_ADDBINARY
-    BUTTON      ID_EDIT_FIND
-    BUTTON      ID_EDIT_FINDNEXT
-    BUTTON      ID_EDIT_REPLACE
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    BUTTON      ID_EDIT_UNDO
-    BUTTON      ID_EDIT_REDO
-    BUTTON      ID_EDIT_INS_IMAGE
-    BUTTON      ID_EDIT_INS_INLINEIMAGE
-    BUTTON      ID_EDIT_ADD_IMAGE
-    BUTTON      ID_STYLE_LINK
-    BUTTON      ID_STYLE_NOTE
-    BUTTON      ID_STYLE_NOLINK
-    BUTTON      ID_STYLE_NORMAL
-    BUTTON      ID_STYLE_SUBTITLE
-    BUTTON      ID_STYLE_TEXTAUTHOR
-    BUTTON      ID_GOTO_FOOTNOTE
-    BUTTON      ID_EDIT_ADD_BODY
-    BUTTON      ID_EDIT_ADD_TITLE
-    BUTTON      ID_EDIT_ADD_EPIGRAPH
-    BUTTON      ID_EDIT_ADD_ANN
-    BUTTON      ID_EDIT_INS_POEM
-    BUTTON      ID_EDIT_INS_CITE
-    BUTTON      ID_INSERT_TABLE
-    BUTTON      ID_TOOLS_SPELLCHECK
-END
-
-IDR_DOCUMENT_TREE TOOLBAR 24, 24
-BEGIN
-    BUTTON      ID_DT_RIGHT_ONE
-    BUTTON      ID_DT_RIGHT_SMART
-    BUTTON      ID_DT_LEFT
-    BUTTON      ID_DT_MERGE
-    BUTTON      ID_DT_DELETE
-END
-
-IDR_SCRIPTS TOOLBAR 16, 16
-BEGIN
-    BUTTON      ID_LAST_SCRIPT
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
-
-IDR_MAINFRAME_SMALL     BITMAP                  "res\\Toolbar_small.bmp"
-
-IDR_SCRIPTS             BITMAP                  "res\\Scripts.bmp"
-
-IDB_STRUCTURE           BITMAP                  "res\\struct.bmp"
-
-IDB_WORDSTATES          BITMAP                  "res\\wordstat.bmp"
-
-IDR_DOCUMENT_TREE       BITMAP                  "res\\document.bmp"
-
-IDB_AB_BANNER           BITMAP                  "res\\Fb2-shema.bmp"
-
-IDB_UPD_OK              BITMAP                  "res\\ok.bmp"
-
-IDB_UPD_ERR             BITMAP                  "res\\error.bmp"
-
-IDB_UPD_UPDATE          BITMAP                  "res\\update.bmp"
-
-IDB_UPD_CHECK1          BITMAP                  "res\\Icon_02.bmp"
-
-IDB_UPD_CHECK2          BITMAP                  "res\\Icon_03.bmp"
-
-IDB_UPD_CHECK3          BITMAP                  "res\\Icon_04.bmp"
-
-IDB_UPD_CHECK4          BITMAP                  "res\\Icon_05.bmp"
-
-IDB_UPD_CHECK5          BITMAP                  "res\\Icon_06.bmp"
-
-IDB_UPD_CHECK6          BITMAP                  "res\\Icon_07.bmp"
-
-IDB_UPD_CHECK7          BITMAP                  "res\\Icon_08.bmp"
-
-IDB_UPD_CHECK8          BITMAP                  "res\\Icon_09.bmp"
-
-IDB_UPD_CHECK9          BITMAP                  "res\\Icon_10.bmp"
-
-IDB_UPD_CHECK10         BITMAP                  "res\\Icon_11.bmp"
-
-IDB_UPD_CHECK11         BITMAP                  "res\\Icon_12.bmp"
-
-IDB_UPD_CHECK12         BITMAP                  "res\\Icon_13.bmp"
-
-IDB_UPD_CHECK13         BITMAP                  "res\\Icon_14.bmp"
-
-IDB_UPD_CHECK14         BITMAP                  "res\\Icon_15.bmp"
-
-IDB_UPD_CHECK15         BITMAP                  "res\\Icon_16.bmp"
-
-IDB_UPD_CHECK16         BITMAP                  "res\\Icon_17.bmp"
-
-IDB_UPD_CHECK17         BITMAP                  "res\\Icon_18.bmp"
-
-IDB_UPD_CHECK18         BITMAP                  "res\\Icon_19.bmp"
-
-IDB_UPD_CHECK19         BITMAP                  "res\\Icon_20.bmp"
-
-IDB_UPD_CHECK20         BITMAP                  "res\\Icon_21.bmp"
-
-IDB_UPD_CHECK21         BITMAP                  "res\\Icon_22.bmp"
-
-IDB_UPD_CHECK22         BITMAP                  "res\\Icon_23.bmp"
-
-IDB_UPD_CHECK23         BITMAP                  "res\\Icon_24.bmp"
-
-IDB_UPD_CHECK24         BITMAP                  "res\\Icon_25.bmp"
-
-IDB_CENTER              BITMAP                  "res\\center.bmp"
-
-IDB_ORANGE              BITMAP                  "res\\orange.bmp"
-
-IDB_GREEN               BITMAP                  "res\\green.bmp"
-
-IDB_DOC                 BITMAP                  "res\\doc.bmp"
-
-IDB_XML                 BITMAP                  "res\\xml.bmp"
-
-IDB_OTHER               BITMAP                  "res\\other.bmp"
-
-IDB_HTML                BITMAP                  "res\\html.bmp"
-
-IDB_PRC                 BITMAP                  "res\\prc.bmp"
-
-IDB_TEXT                BITMAP                  "res\\text.bmp"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\FBE2.ico"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// RT_MANIFEST
-//
-
-1                       RT_MANIFEST             "res\\FBE.exe.manifest"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1231,39 +1021,6 @@ BEGIN
 END
 
 #endif    // Ukrainian (Ukraine) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE 
-BEGIN
-    "resource.h\0"
-END
-
-2 TEXTINCLUDE 
-BEGIN
-    "#include ""..\\..\\wtl\\atlres.h""\r\n"
-    "#include ""..\\..\\res1.h""\r\n"
-    "#include ""..\\..\\resource.h""\r\n"
-    "\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
