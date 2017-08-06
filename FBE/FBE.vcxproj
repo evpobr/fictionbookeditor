@@ -9,10 +9,6 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Template|Win32">
-      <Configuration>Template</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E1B04471-3393-4970-93ED-FB6A57BCDA8B}</ProjectGuid>
@@ -29,18 +25,15 @@
     <UseOfMfc>false</UseOfMfc>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
-    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -58,7 +51,7 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</EmbedManifest>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
@@ -66,9 +59,6 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -94,9 +84,10 @@
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
+      <WarningLevel>Level3</WarningLevel>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
       <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <ResourceCompile>
@@ -120,7 +111,7 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <TargetMachine>MachineX86</TargetMachine>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)$(Configuration)" md "$(SolutionDir)\$(Configuration)"
@@ -176,13 +167,12 @@ gdiplus.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependen
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\hunspell\src\win_api\Release\libhunspell;.\pcre;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <DataExecutionPrevention>true</DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
       <Profile>false</Profile>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <ImageHasSafeExceptionHandlers>
+      </ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)$(Configuration)" md "$(SolutionDir)\$(Configuration)"
@@ -194,27 +184,6 @@ link.exe /OUT:"$(SolutionDir)$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENTRY /
       <TypeLibraryFile>
       </TypeLibraryFile>
     </Manifest>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
-    <ClCompile>
-      <PreprocessorDefinitions>HUNSPELL_STATIC;_USING_V110_SDK71_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)files\*.*" "$(TargetDir)" /E /Q /Y /D</Command>
-      <Message>Copying requisite resources...</Message>
-    </PreBuildEvent>
-    <Link>
-      <AdditionalDependencies>msxml6.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <ResourceCompile>
-      <AdditionalOptions>/r /fm "$(IntDir)"\FBE.muires /q ../mui.rcconfig %(AdditionalOptions)</AdditionalOptions>
-    </ResourceCompile>
-    <PostBuildEvent>
-      <Command>if not exist "$(SolutionDir)$(Configuration)" md "$(SolutionDir)\$(Configuration)"
-if not exist "$(SolutionDir)$(Configuration)\en-US" md "$(SolutionDir)$(Configuration)\en-US"
-link.exe /OUT:"$(SolutionDir)$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X86 "$(IntDir)FBE.muires"
-</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutBox.cpp" />
