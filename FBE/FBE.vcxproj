@@ -129,7 +129,6 @@ link.exe /OUT:"$(SolutionDir)$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENTRY /
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Debug/FBE.tlb</TypeLibraryName>
       <HeaderFileName>
       </HeaderFileName>
       <MkTypLibCompatible>true</MkTypLibCompatible>
