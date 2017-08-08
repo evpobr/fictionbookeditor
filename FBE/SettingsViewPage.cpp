@@ -42,11 +42,8 @@ LRESULT CSettingsViewPage::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
   m_fonts=GetDlgItem(IDC_FONT);
   m_srcfonts=GetDlgItem(IDC_SRCFONT);
   m_fontsize=GetDlgItem(IDC_FONT_SIZE);
-  m_fast_mode = GetDlgItem(IDC_FAST_MODE); 
   m_lang = GetDlgItem(IDC_LANG);
   // SeNS
-  m_usespell_check = GetDlgItem(IDC_USESPELLCHECKER);
-  m_highlight_check = GetDlgItem(IDC_BACKGROUNDSPELLCHECK);
   m_custom_dict = GetDlgItem(IDC_CUSTOM_DICT);
 
   // init color controls
@@ -108,43 +105,19 @@ LRESULT CSettingsViewPage::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
     m_fontsize.AddString(szstr);
   }
 
-  m_src_wrap=GetDlgItem(IDC_WRAP);
-  m_src_hl=GetDlgItem(IDC_SYNTAXHL);
-  m_src_taghl=GetDlgItem(IDC_TAGHL);
-  m_src_eol=GetDlgItem(IDC_SHOWEOL);
-  m_src_whitespace=GetDlgItem(IDC_SHOWWHITESPACE);
-  m_src_line_numbers=GetDlgItem(IDC_SHOWLINENUMBERS);
-
   // init controls
-  m_src_wrap.SetCheck(_Settings.XmlSrcWrap());
-  m_src_hl.SetCheck(_Settings.XmlSrcSyntaxHL());  
-  m_src_taghl.SetCheck(_Settings.XmlSrcTagHL());  
-  m_src_eol.SetCheck(_Settings.XmlSrcShowEOL());  
-  m_src_whitespace.SetCheck(_Settings.XmlSrcShowSpace());
-  m_src_line_numbers.SetCheck(_Settings.XMLSrcShowLineNumbers());
   
-  if(_Settings.FastMode())
-	m_fast_mode.SetCheck(BST_CHECKED);
-  else
-    m_fast_mode.SetCheck(BST_UNCHECKED);
-
   // SeNS
-  if (_Settings.GetUseSpellChecker())
+  if (_Settings.m_usespell_check)
   {
-	  m_usespell_check.SetCheck(BST_CHECKED);
 	  m_highlight_check.EnableWindow(TRUE);
   }
   else
   {
-	  m_usespell_check.SetCheck(BST_UNCHECKED);
 	  m_highlight_check.EnableWindow(FALSE);
   }
-  if(_Settings.GetHighlightMisspells())
-	m_highlight_check.SetCheck(BST_CHECKED);
-  else
-	m_highlight_check.SetCheck(BST_UNCHECKED);
 
-  m_custom_dict.SetWindowText (_Settings.GetCustomDict());
+  DoDataExchange(DDX_LOAD);
 
   return 0;
 }
@@ -194,21 +167,6 @@ int CSettingsViewPage::OnApply()
 	// save zoom
 	_Settings.SetFontSize(m_fsz_val);
 
-	_Settings.SetXmlSrcWrap(m_src_wrap.GetCheck() != 0);
-	_Settings.SetXmlSrcSyntaxHL(m_src_hl.GetCheck() != 0);
-	_Settings.SetXmlSrcTagHL(m_src_taghl.GetCheck() != 0);
-	_Settings.SetXmlSrcShowEOL(m_src_eol.GetCheck() != 0);
-	_Settings.SetXmlSrcShowSpace(m_src_whitespace.GetCheck() != 0);
-	_Settings.SetXMLSrcShowLineNumbers(m_src_line_numbers.GetCheck() != 0);
-
-	_Settings.SetFastMode(m_fast_mode.GetCheck() != 0);
-	_Settings.SetUseSpellChecker(m_usespell_check.GetCheck() != 0); // SeNS
-	_Settings.SetHighlightMisspells(m_highlight_check.GetCheck() != 0); // SeNS
-
-	CString s;
-	m_custom_dict.GetWindowText(s);
-	_Settings.SetCustomDict(s);
-
 	DWORD new_lang;
 	switch (m_lang.GetCurSel())
 	{
@@ -226,6 +184,8 @@ int CSettingsViewPage::OnApply()
 		_Settings.SetNeedRestart();
 		_Settings.SetInterfaceLanguage(new_lang);
 	}
+
+	DoDataExchange(DDX_SAVE);
 
 	return 0;
 }

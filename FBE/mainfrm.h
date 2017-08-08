@@ -297,7 +297,7 @@ public:
 		TCHAR prgPath[MAX_PATH];
 		DWORD pathlen = ::GetModuleFileName(_Module.GetModuleInstance(), prgPath, MAX_PATH);
 		PathRemoveFileSpec(prgPath);
-		if (_Settings.GetUseSpellChecker())
+		if (_Settings.m_usespell_check)
 		{
 			m_Speller = new CSpeller(CString(prgPath)+L"\\dict\\");
 		}
@@ -867,7 +867,7 @@ public:
 
 	// added by SeNS: do spellcheck
 	if (m_Speller && m_current_view == BODY)
-		if (m_Speller->Enabled() && _Settings.GetHighlightMisspells())
+		if (m_Speller->Enabled() && _Settings.m_highlght_check)
 			m_Speller->CheckElement(m_doc->m_body.SelectionContainer(), -1, m_doc->m_body.IsHTMLChanged());
 
 	return 0;
@@ -996,8 +996,8 @@ public:
 	{
 		if (m_Speller && m_current_view == BODY)
 		{
-			_Settings.SetHighlightMisspells(!_Settings.GetHighlightMisspells());
-			m_Speller->SetHighlightMisspells(_Settings.GetHighlightMisspells());
+			_Settings.SetHighlightMisspells(!_Settings.m_highlght_check);
+			m_Speller->SetHighlightMisspells(_Settings.m_highlght_check);
 		}
 		return S_OK;
 	}

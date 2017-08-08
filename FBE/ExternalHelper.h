@@ -203,7 +203,7 @@ public:
 
   STDMETHOD(IsFastMode)(BOOL* ext)
   {
-    *ext = _Settings.FastMode();
+    *ext = _Settings.m_fast_mode;
     return S_OK;
   }
 

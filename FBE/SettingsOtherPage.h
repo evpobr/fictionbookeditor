@@ -4,26 +4,25 @@
 
 #include "resource.h" 
 #include <atlhost.h>
+#include "Settings.h"
 
+extern CSettings _Settings;
 
 // CSettingsOtherPage
 
 class CSettingsOtherPage : 
-	public CPropertyPageImpl<CSettingsOtherPage>
+	public CPropertyPageImpl<CSettingsOtherPage>,
+	public CWinDataExchange<CSettingsOtherPage>
 {
-	CButton		m_keep;
 	CComboBox	m_def_enc;
-	CButton		m_restore_pos;
 	CButton		m_def_scripts_fld;
 	CEdit		m_scripts_folder;
 	CButton		m_scripts_folder_sel;
 
 	// added by SeNS
 	CComboBox   m_nbsp_char;
-	CButton		m_change_keyb;
 	CComboBox	m_image_type;
 	CUpDownCtrl	m_updown;
-	CEdit		m_jpeg_quality;
 	CComboBox	m_keyb_layout;
 
 	bool		m_scripts_switched;
@@ -41,6 +40,15 @@ BEGIN_MSG_MAP(CSettingsOtherPage)
 	COMMAND_HANDLER(IDC_SETTINGS_ASKIMAGE, BN_CLICKED, OnBnClickedSettingsAskimage)
 	CHAIN_MSG_MAP(CPropertyPageImpl<CSettingsOtherPage>)
 END_MSG_MAP()
+
+BEGIN_DDX_MAP(CSettingsOtherPage)
+	DDX_CHECK(IDC_KEEP, _Settings.m_keep_encoding)
+	DDX_CHECK(IDC_RESTORE_POS, _Settings.m_restore_file_position)
+	DDX_CHECK(IDC_SETTINGS_ASKIMAGE, _Settings.m_insimage_ask)
+	DDX_CHECK(IDC_OPTIONS_CLEARIMGS, _Settings.m_ins_clear_image)
+	DDX_INT(IDC_JPEGQUALITY, _Settings.m_jpeg_quality)
+	DDX_CHECK(IDC_CHANGE_KEYB, _Settings.m_change_kbd_layout_check)
+END_DDX_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnBnClickedDefaultScriptsFolder(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);

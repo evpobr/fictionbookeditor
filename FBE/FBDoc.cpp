@@ -918,7 +918,7 @@ bool  Doc::SaveToFile(const CString& filename,bool fValidateOnly,
     rdr->putErrorHandler(eh);
 
     // construct the document
-	MSXML2::IXMLDOMDocument2Ptr	ndoc(CreateDOMImp(_Settings.KeepEncoding() ? m_encoding : _Settings.GetDefaultEncoding()));
+	MSXML2::IXMLDOMDocument2Ptr	ndoc(CreateDOMImp(_Settings.m_keep_encoding ? m_encoding : _Settings.GetDefaultEncoding()));
 
     // reparse the document
     IStreamPtr	    isp(ndoc);
@@ -1027,7 +1027,7 @@ forcesave:
     // rename tmp file to original filename
     ::DeleteFile(filename);
     ::MoveFile(buf,filename);
-	m_encoding = _Settings.KeepEncoding() ? m_encoding : _Settings.GetDefaultEncoding();
+	m_encoding = _Settings.m_keep_encoding ? m_encoding : _Settings.GetDefaultEncoding();
   }
   catch (_com_error& e) {
     U::ReportError(e);
@@ -1218,7 +1218,7 @@ void  Doc::ApplyConfChanges() {
     fss.Format(_T("rgb(%d,%d,%d)"),GetRValue(fs),GetGValue(fs),GetBValue(fs));
     hs->backgroundColor=(const wchar_t *)fss;
 
-	bool mode = _Settings.FastMode();
+	bool mode = _Settings.m_fast_mode;
 	SetFastMode(mode);
 	::SendMessage(m_frame, WM_COMMAND, MAKELONG(mode,IDN_FAST_MODE_CHANGE), (LPARAM)0);
   }

@@ -1820,7 +1820,7 @@ LRESULT CFBEView::OnPaste(WORD, WORD, HWND, BOOL&)
 				if (::GetTempPath(sizeof(szPathName)/sizeof(TCHAR), szPathName))
 					if (::GetTempFileName(szPathName, L"img", ::GetTickCount(), szFileName))
 					{
-						int quality = _Settings.GetJpegQuality();
+						int quality = _Settings.m_jpeg_quality;
 
 						CString fileName(szFileName);
 						FBE::CImageEx image; 
@@ -3483,13 +3483,13 @@ LRESULT CFBEView::OnEditInsImage(WORD, WORD cmdID, HWND, BOOL&)
 	// added by SeNS
 	bool bInline = (cmdID != ID_EDIT_INS_IMAGE);
 	
-	if(_Settings.GetInsImageAsking())
+	if(_Settings.m_insimage_ask)
 	{
 		CAddImageDlg imgDialog;
 		imgDialog.DoModal(*this);
 	}
 
-	if(!_Settings.GetIsInsClearImage())
+	if(!_Settings.m_ins_clear_image)
 	{
 		CFileDialog dlg(
 			TRUE,

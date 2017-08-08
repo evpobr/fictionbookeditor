@@ -51,7 +51,7 @@ void  CMainFrame::AttachDocument(FB::Doc *doc)
 	if (m_Speller && m_Speller->Enabled())
 	{
 		m_Speller->SetFrame(m_hWnd);
-		CString custDictName = _Settings.GetCustomDict();
+		CString custDictName = _Settings.m_custom_dict;
 		if (custDictName.Compare(ATLPath::FindFileName(custDictName))==0)
 		{
 			custDictName = doc->m_body.m_file_path+custDictName;
@@ -221,7 +221,7 @@ CString	CMainFrame::GetSaveFileName(CString& encoding)
 				spFileDialogCustomize->AddControlItem(1001, 1100 + i, lstEncodings[i]);
 			}
 			
-			CString strSelectedEncodding = _Settings.KeepEncoding() ? m_doc->m_encoding : _Settings.GetDefaultEncoding();
+			CString strSelectedEncodding = _Settings.m_keep_encoding ? m_doc->m_encoding : _Settings.GetDefaultEncoding();
 			int nEncodingIndex = lstEncodings.Find(strSelectedEncodding.MakeLower());
 			spFileDialogCustomize->SetSelectedControlItem(1001, 1100 + nEncodingIndex);
 
@@ -243,7 +243,7 @@ CString	CMainFrame::GetSaveFileName(CString& encoding)
 	else
 	{
 		CCustomSaveDialog	dlg(FALSE,
-			_Settings.KeepEncoding() ? m_doc->m_encoding : _Settings.GetDefaultEncoding(), L"fb2", filename,
+			_Settings.m_keep_encoding ? m_doc->m_encoding : _Settings.GetDefaultEncoding(), L"fb2", filename,
 			OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT | OFN_ENABLETEMPLATE,
 			L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
 		if (dlg.DoModal(*this) == IDOK)
@@ -1565,7 +1565,7 @@ LRESULT CMainFrame::OnCreate(UINT, WPARAM, LPARAM, BOOL&)
 	m_file_age = ~0;
   }
 
-  if (_Settings.FastMode()) {
+  if (_Settings.m_fast_mode) {
 		m_doc->SetFastMode(true);
 		UISetCheck(ID_VIEW_FASTMODE, TRUE);
   } else
@@ -1657,14 +1657,14 @@ LRESULT CMainFrame::OnCreate(UINT, WPARAM, LPARAM, BOOL&)
   if(start_with_params)
   {
 	  m_mru.AddToList(_ARGV[0]);
-  	  if(_Settings.RestoreFilePosition())
+  	  if(_Settings.m_restore_file_position)
 	  {
 			m_restore_pos_cmdline = true;
 	  }
   }
 
   // Change keyboard layout
-  if (_Settings.GetChangeKeybLayout())
+  if (_Settings.m_change_kbd_layout_check)
   {
 	  CString layout;
 	  layout.Format(L"%08x", _Settings.GetKeybLayout());
@@ -1682,7 +1682,7 @@ LRESULT CMainFrame::OnCreate(UINT, WPARAM, LPARAM, BOOL&)
 		UIEnable(ID_TOOLS_SPELLCHECK, false, true);
 	else
 		UIEnable(ID_TOOLS_SPELLCHECK, true, true);
-	m_Speller->SetHighlightMisspells(_Settings.GetHighlightMisspells());
+	m_Speller->SetHighlightMisspells(_Settings.m_highlght_check);
   }
   else UIEnable(ID_TOOLS_SPELLCHECK, false, true);
 
@@ -2204,7 +2204,7 @@ LRESULT CMainFrame::OnFileOpen(WORD, WORD, HWND, BOOL& bHandled)
   if (LoadFile()==OK)
   {
     m_mru.AddToList(m_doc->m_filename);
-	if(_Settings.RestoreFilePosition())
+	if(_Settings.m_restore_file_position)
 	{
 		int saved_pos = U::GetFileSelectedPos(m_doc->m_filename);
 		GoTo(saved_pos);
@@ -2223,7 +2223,7 @@ LRESULT CMainFrame::OnFileOpenMRU(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL
 		case OK:
 			m_mru.MoveToTop(wID);
 			// added by SeNS
-			if(_Settings.RestoreFilePosition())
+			if(_Settings.m_restore_file_position)
 			{
 				int saved_pos = U::GetFileSelectedPos(m_doc->m_filename);
 				GoTo(saved_pos);
@@ -3909,7 +3909,7 @@ void  CMainFrame::ShowView(VIEW_TYPE vt)
     break;
   case SOURCE:
 	// added by SeNS: display line numbers
-	if (_Settings.XMLSrcShowLineNumbers()) m_source.SendMessage(SCI_SETMARGINWIDTHN,0,64);
+	if (_Settings.m_show_line_numbers) m_source.SendMessage(SCI_SETMARGINWIDTHN,0,64);
 	else m_source.SendMessage(SCI_SETMARGINWIDTHN,0,0);
 
     UISetCheck(ID_VIEW_SOURCE, 1);
@@ -3984,7 +3984,7 @@ void  CMainFrame::SetSciStyles() {
     { 18, RGB(128,0,0) },   // question
     { 19, RGB(96,128,96) }, // unquoted value
   };
-  if (_Settings.XmlSrcSyntaxHL())
+  if (_Settings.m_xml_src_syntaxHL)
     for (int i=0;i<sizeof(styles)/sizeof(styles[0]);++i)
       m_source.SendMessage(SCI_STYLESETFORE,styles[i].style,styles[i].color);
 }
@@ -4080,15 +4080,15 @@ void  CMainFrame::SetupSci()
 {
   m_source.SendMessage(SCI_SETCODEPAGE,SC_CP_UTF8);
   m_source.SendMessage(SCI_SETEOLMODE,SC_EOL_CRLF);
-  m_source.SendMessage(SCI_SETVIEWEOL, _Settings.XmlSrcShowEOL());
-  m_source.SendMessage(SCI_SETVIEWWS, _Settings.XmlSrcShowSpace());
-  m_source.SendMessage(SCI_SETWRAPMODE, _Settings.XmlSrcWrap() ? SC_WRAP_WORD : SC_WRAP_NONE);
+  m_source.SendMessage(SCI_SETVIEWEOL, _Settings.m_xml_src_showEOL);
+  m_source.SendMessage(SCI_SETVIEWWS, _Settings.m_xml_src_showSpace);
+  m_source.SendMessage(SCI_SETWRAPMODE, _Settings.m_xml_src_wrap ? SC_WRAP_WORD : SC_WRAP_NONE);
   // added by SeNS: try to speed-up wrap mode
   m_source.SendMessage(SCI_SETLAYOUTCACHE,SC_CACHE_DOCUMENT);
   m_source.SendMessage(SCI_SETXCARETPOLICY,CARET_SLOP|CARET_EVEN,50);
   m_source.SendMessage(SCI_SETYCARETPOLICY,CARET_SLOP|CARET_EVEN,50);
   // added by SeNS: display line numbers
-  if (_Settings.XMLSrcShowLineNumbers()) m_source.SendMessage(SCI_SETMARGINWIDTHN,0,64);
+  if (_Settings.m_show_line_numbers) m_source.SendMessage(SCI_SETMARGINWIDTHN,0,64);
   else m_source.SendMessage(SCI_SETMARGINWIDTHN,0,0);
   m_source.SendMessage(SCI_SETMARGINWIDTHN,1,0);
   m_source.SendMessage(SCI_SETFOLDFLAGS, 16);
@@ -4105,7 +4105,7 @@ void  CMainFrame::SetupSci()
   for (int i=0; i<sizeof(sciCtrlShiftChars); i++)
     m_source.SendMessage(SCI_ASSIGNCMDKEY, sciCtrlShiftChars[i]+((SCMOD_CTRL+SCMOD_SHIFT) << 16), SCI_NULL);
   ///
-  if (_Settings.XmlSrcSyntaxHL()) 
+  if (_Settings.m_xml_src_syntaxHL)
   {
     m_source.SendMessage(SCI_SETLEXER, SCLEX_XML);
     m_source.SendMessage(SCI_SETMARGINTYPEN, 2, SC_MARGIN_SYMBOL);
@@ -4158,10 +4158,10 @@ void  CMainFrame::SciModified(const SCNotification& scn) {
 
 bool CMainFrame::SciUpdateUI(bool gotoTag)
 {
-	if (_Settings.XmlSrcTagHL() || gotoTag)
+	if (_Settings.m_xml_src_tagHL || gotoTag)
 	{
 		XmlMatchedTagsHighlighter xmlTagMatchHiliter(&m_source);
-		UIEnable(ID_GOTO_MATCHTAG, xmlTagMatchHiliter.tagMatch(_Settings.XmlSrcTagHL(), false, gotoTag));
+		UIEnable(ID_GOTO_MATCHTAG, xmlTagMatchHiliter.tagMatch(_Settings.m_xml_src_tagHL, false, gotoTag));
 		return true;
 	}
 	return false;
@@ -4698,17 +4698,17 @@ void CMainFrame::ApplyConfChanges()
 	SetSciStyles();
 
 	// added by SeNS: display line numbers
-	if (_Settings.XMLSrcShowLineNumbers())
+	if (_Settings.m_show_line_numbers)
 		m_source.SendMessage(SCI_SETMARGINWIDTHN,0,64);
 	else
 		m_source.SendMessage(SCI_SETMARGINWIDTHN,0,0);
 
 	XmlMatchedTagsHighlighter xmlTagMatchHiliter(&m_source);
-	xmlTagMatchHiliter.tagMatch(_Settings.XmlSrcTagHL(), false, false);
-	UIEnable(ID_GOTO_MATCHTAG, _Settings.XmlSrcTagHL());
+	xmlTagMatchHiliter.tagMatch(_Settings.m_xml_src_tagHL, false, false);
+	UIEnable(ID_GOTO_MATCHTAG, _Settings.m_xml_src_tagHL);
 
 	// added by SeNS
-	if (_Settings.GetUseSpellChecker())
+	if (_Settings.m_usespell_check)
 	{
 		if (!m_Speller)
 		{
@@ -4730,8 +4730,8 @@ void CMainFrame::ApplyConfChanges()
 
 	if (m_Speller && m_Speller->Enabled())
 	{
-		m_Speller->SetHighlightMisspells(_Settings.GetHighlightMisspells());
-		CString custDictName = _Settings.GetCustomDict();
+		m_Speller->SetHighlightMisspells(_Settings.m_highlght_check);
+		CString custDictName = _Settings.m_custom_dict;
 		if (custDictName.Compare(ATLPath::FindFileName(custDictName))==0)
 		{
 			custDictName = m_doc->m_body.m_file_path+custDictName;

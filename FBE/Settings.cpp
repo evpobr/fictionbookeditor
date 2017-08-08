@@ -1377,35 +1377,6 @@ void CSettings::LoadHotkeyGroups()
 	}
 }
 
-bool CSettings::KeepEncoding()const
-{
-	return m_keep_encoding;
-}
-bool CSettings::XmlSrcWrap()const
-{
-	return m_xml_src_wrap;
-}
-bool CSettings::XmlSrcSyntaxHL()const
-{
-	return m_xml_src_syntaxHL;
-}
-bool CSettings::XmlSrcTagHL()const
-{
-	return m_xml_src_tagHL;
-}
-bool CSettings::XmlSrcShowEOL()const
-{
-	return m_xml_src_showEOL;
-}
-bool CSettings::XmlSrcShowSpace()const
-{
-	return m_xml_src_showSpace;
-}
-bool CSettings::FastMode()const
-{
-	return m_fast_mode;
-}
-
 bool CSettings::ViewStatusBar()const
 {
 	return m_view_status_bar;
@@ -1414,11 +1385,6 @@ bool CSettings::ViewStatusBar()const
 bool CSettings::ViewDocumentTree()const
 {
 	return m_view_doc_tree;
-}
-
-bool CSettings::RestoreFilePosition()const
-{
-	return m_restore_file_position;
 }
 
 bool CSettings::NeedRestart()const
@@ -1461,21 +1427,6 @@ const CRegKey& CSettings::GetKey()const
 }
 
 // SeNS
-bool CSettings::GetUseSpellChecker()const
-{
-	return m_usespell_check;
-}
-
-bool CSettings::GetHighlightMisspells()const
-{
-	return m_highlght_check;
-}
-
-CString CSettings::GetCustomDict()const
-{
-	return m_custom_dict;
-}
-
 DWORD CSettings::GetCustomDictCodepage()const
 {
 	return m_custom_dict_codepage;
@@ -1494,29 +1445,14 @@ CString CSettings::GetOldNBSPChar()const
 		return m_old_nbsp;
 }
 
-bool CSettings::GetChangeKeybLayout()const
-{
-	return m_change_kbd_layout_check;
-}
-
 DWORD CSettings::GetKeybLayout()const
 {
 	return m_keyb_layout;
 }
 
-bool CSettings::XMLSrcShowLineNumbers() const
-{
-	return m_show_line_numbers;
-}
-
 DWORD CSettings::GetImageType() const
 {
 	return m_image_type;
-}
-
-DWORD CSettings::GetJpegQuality() const 
-{
-	return m_jpeg_quality;
 }
 
 ///
@@ -1664,16 +1600,6 @@ CString CSettings::GetDefaultScriptsFolder()
 bool CSettings::IsDefaultScriptsFolder()
 {
 	return GetScriptsFolder() == GetDefaultScriptsFolder();
-}
-
-bool CSettings::GetInsImageAsking() const
-{
-	return m_insimage_ask;
-}
-
-bool CSettings::GetIsInsClearImage() const
-{
-	return m_ins_clear_image;
 }
 
 bool CSettings::GetShowWordsExcls() const

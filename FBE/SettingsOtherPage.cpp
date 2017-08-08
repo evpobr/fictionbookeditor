@@ -3,7 +3,6 @@
 #include "stdafx.h"
 #include "SettingsOtherPage.h"
 #include "utils.h"
-#include "Settings.h"
 #include "res1.h"
 
 // {715BECF4-911B-457E-9766-78F273F25938}
@@ -11,8 +10,6 @@ static const GUID GUID_ScriptDialog =
 {
 	0x715becf4, 0x911b, 0x457e, { 0x97, 0x66, 0x78, 0xf2, 0x73, 0xf2, 0x59, 0x38 }
 };
-
-extern CSettings _Settings;
 
 // CSettingsOtherPage
 
@@ -24,29 +21,19 @@ CSettingsOtherPage::CSettingsOtherPage()
 
 LRESULT CSettingsOtherPage::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	m_keep = GetDlgItem(IDC_KEEP);
 	m_def_enc = GetDlgItem(IDC_DEFAULT_ENC);
-	m_restore_pos = GetDlgItem(IDC_RESTORE_POS);
 	m_def_scripts_fld = GetDlgItem(IDC_DEFAULT_SCRIPTS_FOLDER);
 	m_scripts_folder = GetDlgItem(IDC_SCRIPTS_FOLDER_PATH);
 	m_scripts_folder_sel = GetDlgItem(IDC_SELECT_SCRIPTS_FOLDER_BUTTON);
 
 	// added by SeNS
 	m_nbsp_char = GetDlgItem(IDC_NBSP_CHAR);
-	m_change_keyb = GetDlgItem(IDC_CHANGE_KEYB);
-
 	m_image_type = GetDlgItem(IDC_IMAGETYPE);
-	m_jpeg_quality = GetDlgItem(IDC_JPEGQUALITY);
 	m_updown = GetDlgItem(IDC_JPEGSPIN);
 
 	m_keyb_layout = GetDlgItem(IDC_KEYB_LAYOUT);
 
-	::SendMessage(GetDlgItem(IDC_SETTINGS_ASKIMAGE), BM_SETCHECK, 
-				_Settings.GetInsImageAsking() ? BST_CHECKED : BST_UNCHECKED, 0);
-
 	::EnableWindow(GetDlgItem(IDC_OPTIONS_CLEARIMGS), !IsDlgButtonChecked(IDC_SETTINGS_ASKIMAGE));
-	::SendMessage(GetDlgItem(IDC_OPTIONS_CLEARIMGS), BM_SETCHECK, 
-				_Settings.GetIsInsClearImage() ? BST_CHECKED : BST_UNCHECKED, 0);
 	
     wchar_t buf[MAX_LOAD_STRING + 1];
 	if (::LoadString(_Module.GetResourceInstance(),IDS_ENCODINGS,buf,sizeof(buf)/sizeof(buf[0])))
@@ -66,8 +53,6 @@ LRESULT CSettingsOtherPage::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam
 	}
 	
 	m_def_enc.SelectString(0, _Settings.GetDefaultEncoding());
-	m_keep.SetCheck(_Settings.KeepEncoding() ? BST_CHECKED : BST_UNCHECKED);
-	m_restore_pos.SetCheck(_Settings.RestoreFilePosition() ? BST_CHECKED : BST_UNCHECKED);
 
 	_Settings.m_initial_scripts_folder = _Settings.GetScriptsFolder();
 	m_def_scripts_fld.SetCheck(_Settings.IsDefaultScriptsFolder());
@@ -82,14 +67,10 @@ LRESULT CSettingsOtherPage::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam
 	m_nbsp_char.AddString(L"◦");  // \u26E6
 	m_nbsp_char.AddString(L"\u00A0");  // original nbsp
 	m_nbsp_char.SelectString (0, _Settings.GetNBSPChar());
-	m_change_keyb.SetCheck(_Settings.GetChangeKeybLayout());
 
 	m_image_type.AddString(L"PNG");
 	m_image_type.AddString(L"JPEG");
 	m_image_type.SetCurSel(_Settings.GetImageType());
-	CString quality;
-	quality.Format(L"%d", _Settings.GetJpegQuality());
-	m_jpeg_quality.SetWindowText(quality);
 	m_updown.SetRange(20, 100);
 
 	// process keyboard layouts
@@ -115,6 +96,8 @@ LRESULT CSettingsOtherPage::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam
 		}
 	
 	::LoadString(_Module.GetResourceInstance(), IDS_CHOOSE_SCRIPTS_FLD, m_scripts_fld_dlg_msg.GetBuffer(), MAX_LOAD_STRING + 1);
+
+	DoDataExchange(DDX_LOAD);
 
 	return 1;
 }
@@ -203,8 +186,6 @@ int CSettingsOtherPage::OnApply()
 	m_def_enc.GetLBText(m_def_enc.GetCurSel(), def_enc);
 
 	_Settings.SetDefaultEncoding(def_enc);
-	_Settings.SetKeepEncoding(m_keep.GetState() != 0);
-	_Settings.SetRestoreFilePosition(m_restore_pos.GetState() != 0);
 
 	CString folderPath;
 	m_scripts_folder.GetWindowText(folderPath);
@@ -215,20 +196,16 @@ int CSettingsOtherPage::OnApply()
 		_Settings.SetNeedRestart();
 	}
 
-	_Settings.SetInsImageAsking(IsDlgButtonChecked(IDC_SETTINGS_ASKIMAGE) != 0);
-	_Settings.SetIsInsClearImage(IsDlgButtonChecked(IDC_OPTIONS_CLEARIMGS) != 0);
-
 	// Added by SeNS
 	CString s;
 	m_nbsp_char.GetWindowText(s);
 	_Settings.SetNBSPChar(s);
-	_Settings.SetChangeKeybLayout(IsDlgButtonChecked(IDC_CHANGE_KEYB) != 0);
-
 	_Settings.SetImageType(m_image_type.GetCurSel());
-	_Settings.SetJpegQuality(m_updown.GetPos());
 
 	int n = m_keyb_layout.GetCurSel();
 	_Settings.SetKeybLayout(m_keyb_layout.GetItemData(n));
+
+	DoDataExchange(DDX_SAVE);
 
 	return 0;
 }

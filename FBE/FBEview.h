@@ -123,7 +123,7 @@ public:
 	{
 		::CenterChildWindow(GetParent(), m_hWnd);
 		CButton btn = GetDlgItem(IDC_ADDIMAGE_ASKAGAIN);
-		btn.SetCheck(!_Settings.GetInsImageAsking());
+		btn.SetCheck(!_Settings.m_insimage_ask);
 		return 0;
 	}
 
