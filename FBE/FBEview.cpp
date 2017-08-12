@@ -2757,7 +2757,9 @@ public:
   virtual void DoFind() {
     if (!m_view->DoSearch())
 	{
-		U::MessageBox(MB_OK|MB_ICONEXCLAMATION, IDR_MAINFRAME, IDS_SEARCH_END_MSG, m_view->m_fo.pattern);	
+		CString strMessage;
+		strMessage.Format(IDS_SEARCH_END_MSG, (LPCTSTR)m_view->m_fo.pattern);
+		AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_WARNING_ICON);
 	}
     else {
       SaveString();
@@ -2774,18 +2776,26 @@ public:
 	m_view->m_startMatch = m_view->m_endMatch = 0;
     DoFind();
   }
-  virtual void DoReplaceAll() {
-    int nRepl=m_view->GlobalReplace();
-    if (nRepl>0) {
-      SaveString();
-      SaveHistory();
-      U::MessageBox(MB_OK, IDS_REPL_ALL_CAPT, IDS_REPL_DONE_MSG, nRepl);
-      MakeClose();
-      m_selvalid=false;
-    } else
-	{
-		U::MessageBox(MB_OK|MB_ICONEXCLAMATION, IDR_MAINFRAME, IDS_SEARCH_END_MSG, m_view->m_fo.pattern);
-	}
+  virtual void DoReplaceAll()
+  {
+	  int nRepl = m_view->GlobalReplace();
+
+	  CString strMessage;
+	  if (nRepl > 0)
+	  {
+		  SaveString();
+		  SaveHistory();
+
+		  strMessage.Format(IDS_REPL_DONE_MSG, nRepl);
+		  AtlTaskDialog(*this, IDS_REPL_ALL_CAPT, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		  MakeClose();
+		  m_selvalid = false;
+	  }
+	  else
+	  {
+		  strMessage.Format(IDS_SEARCH_END_MSG, (LPCTSTR)m_view->m_fo.pattern);
+		  AtlTaskDialog(*this, IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_WARNING_ICON);
+	  }
   }
 };
 
@@ -2815,12 +2825,15 @@ LRESULT CFBEView::OnReplace(WORD, WORD, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT  CFBEView::OnFindNext(WORD, WORD, HWND, BOOL&) {
-  if (!DoSearch())
-  {
-	U::MessageBox(MB_OK|MB_ICONEXCLAMATION, IDR_MAINFRAME, IDS_SEARCH_FAIL_MSG, m_fo.pattern);
-  }
-  return 0;
+LRESULT  CFBEView::OnFindNext(WORD, WORD, HWND, BOOL&)
+{
+	if (!DoSearch())
+	{
+		CString strMessage;
+		strMessage.Format(IDS_SEARCH_FAIL_MSG, (LPCTSTR)m_fo.pattern);
+		AtlTaskDialog(*this, IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_WARNING_ICON);
+	}
+	return 0;
 }
 
 // binary objects
@@ -3237,7 +3250,9 @@ bool CFBEView::SciFindNext(HWND src,bool fFwdOnly,bool fBarf) {
 			free(tmp);
 			if (fBarf)
 			{
-				U::MessageBox(MB_OK|MB_ICONEXCLAMATION, IDR_MAINFRAME, IDS_SEARCH_FAIL_MSG, m_fo.pattern);
+				CString strMessage;
+				strMessage.Format(IDS_SEARCH_FAIL_MSG, (LPCTSTR)m_fo.pattern);
+				AtlTaskDialog(*this, IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_WARNING_ICON);
 			}
 			return false;
 		}
@@ -3250,13 +3265,10 @@ bool CFBEView::SciFindNext(HWND src,bool fFwdOnly,bool fBarf) {
     ::SendMessage(src,SCI_SETSELECTIONEND,p2,0);
     ::SendMessage(src,SCI_SCROLLCARET,0,0);
     return true;
-  } else
+  }
+  else
   {
-    wchar_t msg[MAX_LOAD_STRING + 1];
-	wchar_t cpt[MAX_LOAD_STRING + 1];
-	::LoadString(_Module.GetResourceInstance(), IDS_OUT_OF_MEM_MSG, msg, MAX_LOAD_STRING);
-	::LoadString(_Module.GetResourceInstance(), IDR_MAINFRAME, cpt, MAX_LOAD_STRING);
-    ::MessageBox(::GetActiveWindow(), msg, cpt, MB_OK|MB_ICONERROR);
+	  AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, IDS_OUT_OF_MEM_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
   }
 
   return false;
@@ -3417,11 +3429,7 @@ bool CFBEView::GoToReference(bool fCheck)
 	MSHTML::IHTMLElementCollectionPtr	coll(elem->getElementsByTagName(L"A"));
 	if (!(bool)coll || coll->length==0) 
 	{
-		wchar_t cpt[MAX_LOAD_STRING + 1];
-		wchar_t msg[MAX_LOAD_STRING + 1];
-		::LoadString(_Module.GetResourceInstance(), IDR_MAINFRAME, cpt, MAX_LOAD_STRING);
-		::LoadString(_Module.GetResourceInstance(), IDS_GOTO_REF_FAIL_MSG, msg, MAX_LOAD_STRING);		
-		::MessageBox(::GetActiveWindow(), msg, cpt, MB_OK|MB_ICONINFORMATION);
+		AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, IDS_GOTO_REF_FAIL_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_INFORMATION_ICON);
 		return false;
 	}
 
@@ -3485,8 +3493,19 @@ LRESULT CFBEView::OnEditInsImage(WORD, WORD cmdID, HWND, BOOL&)
 	
 	if(_Settings.m_insimage_ask)
 	{
-		CAddImageDlg imgDialog;
-		imgDialog.DoModal(*this);
+		CTaskDialog imgDialog;
+		imgDialog.SetWindowTitle(IDR_MAINFRAME);
+		imgDialog.SetMainInstructionText(IDS_ADD_CLEARIMG_TEXT);
+		imgDialog.SetCommonButtons(TDCBF_YES_BUTTON | TDCBF_NO_BUTTON);
+		imgDialog.SetMainIcon(TD_WARNING_ICON);
+		imgDialog.SetVerificationText(IDS_DONT_ASK_AGAIN);
+		if (!_Settings.m_insimage_ask)
+			imgDialog.m_tdc.dwFlags |= TDF_VERIFICATION_FLAG_CHECKED;
+		int nButton;
+		BOOL fVerificationFlagChecked;
+		imgDialog.DoModal(*this, &nButton, NULL, &fVerificationFlagChecked);
+		_Settings.SetIsInsClearImage(nButton == IDYES ? true : false);
+		_Settings.SetInsImageAsking(fVerificationFlagChecked == TRUE ? false : true);
 	}
 
 	if(!_Settings.m_ins_clear_image)

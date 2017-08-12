@@ -938,7 +938,7 @@ void CSpeller::EndDocumentCheck(bool bCancel)
 	// display message box
 	if (!bCancel)
 	{
-		U::MessageBox(MB_OK | MB_ICONINFORMATION, IDR_MAINFRAME, IDS_SPELL_CHECK_COMPLETED);
+		AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, IDS_SPELL_CHECK_COMPLETED, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_INFORMATION_ICON);
 	}
 	// restore previous selection
 	if (m_prevSelRange)

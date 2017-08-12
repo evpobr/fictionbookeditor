@@ -404,18 +404,6 @@ BEGIN
     COMBOBOX        IDC_ENCODING,130,0,164,104,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
 
-IDD_ADDIMAGE DIALOGEX 0, 0, 147, 66
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
-CAPTION "Зробіть вибір"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "Так",IDYES,21,31,49,14
-    PUSHBUTTON      "Ні",IDCANCEL,77,31,49,14
-    CONTROL         "Більше не запитувати",IDC_ADDIMAGE_ASKAGAIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,28,53,91,10
-    LTEXT           "Вставити порожній малюнок?",IDS_ADD_CLEARIMG_TEXT,29,11,110,10
-    ICON            IDR_MAINFRAME,IDC_ADDIMAGE_ICON,3,6,20,20
-END
-
 IDD_SETTINGS_HOTKEYS DIALOGEX 0, 0, 225, 219
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
 FONT 8, "MS Shell Dlg", 400, 0, 0xCC
@@ -561,10 +549,6 @@ BEGIN
     END
 
     IDD_CUSTOMSAVEDLG, DIALOG
-    BEGIN
-    END
-
-    IDD_ADDIMAGE, DIALOG
     BEGIN
     END
 
@@ -1018,6 +1002,7 @@ BEGIN
     IDS_HOTKEY_EDIT_SUP     "Суперскріпт"
     IDS_ENCODING            "Кодування:"
     IDS_SETTINGS            "Налаштування"
+    IDS_DONT_ASK_AGAIN      "Більше не запитувати"
 END
 
 #endif    // Ukrainian (Ukraine) resources

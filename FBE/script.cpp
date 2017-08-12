@@ -57,19 +57,20 @@ static HRESULT	sLoad(VARIANT *filename) {
   return ScriptLoad(V_BSTR(filename));
 }
 
-static HRESULT	sMessage(VARIANT *msg) {
-  VARIANT   vm;
+static HRESULT	sMessage(VARIANT *msg)
+{
+	VARIANT   vm;
 
-  VariantInit(&vm);
+	VariantInit(&vm);
 
-  if (FAILED(VariantChangeType(&vm,msg,0,VT_BSTR)))
-    return DISP_E_TYPEMISMATCH;
+	if (FAILED(VariantChangeType(&vm, msg, 0, VT_BSTR)))
+		return DISP_E_TYPEMISMATCH;
 
-  MessageBoxW(GetActiveWindow(),V_BSTR(&vm),_T("FBE Script message"),MB_ICONINFORMATION|MB_OK);
+	AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, (LPCTSTR)V_BSTR(&vm), (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_INFORMATION_ICON);
 
-  VariantClear(&vm);
+	VariantClear(&vm);
 
-  return S_OK;
+	return S_OK;
 }
 
 static HRESULT	sGetClassName(VARIANT *w,VARIANT *result) {
@@ -441,37 +442,40 @@ public:
   STDMETHOD(GetDocVersionString)(BSTR *) { return E_NOTIMPL; }
   STDMETHOD(OnScriptTerminate)(const VARIANT *,const EXCEPINFO *) { return S_OK; }
   STDMETHOD(OnStateChange)(SCRIPTSTATE) { return S_OK; }
-	STDMETHOD(OnScriptError)(IActiveScriptError *err) 
-	{
-		EXCEPINFO ei;
-		if (SUCCEEDED(err->GetExceptionInfo(&ei))) 
-		{
-			DWORD ctx;
-			ULONG line = 0;
-			LONG  column = 0;
-			wchar_t *buf = NULL;
+  STDMETHOD(OnScriptError)(IActiveScriptError *err)
+  {
+	  EXCEPINFO ei;
+	  if (SUCCEEDED(err->GetExceptionInfo(&ei)))
+	  {
+		  DWORD ctx;
+		  ULONG line = 0;
+		  LONG  column = 0;
+		  wchar_t *buf = NULL;
 
-			err->GetSourcePosition(&ctx,&line,&column);
+		  err->GetSourcePosition(&ctx, &line, &column);
 
-			if (ei.bstrDescription)
-			{
-				U::MessageBox(MB_ICONERROR|MB_OK, IDS_SCRIPT_MSG_CPT, IDS_SCRIPT_ERRD_MSG, ei.bstrDescription, line+1, column+1);			
-			}
-			else
-			{
-				U::MessageBox(MB_ICONERROR|MB_OK, IDS_SCRIPT_MSG_CPT, IDS_SCRIPT_ERRX_MSG, ei.scode, line+1, column+1);			
-			}				
-			SysFreeString(ei.bstrSource);
-			SysFreeString(ei.bstrDescription);
-			SysFreeString(ei.bstrHelpFile);
-			return S_OK;
-		} 
-		else
-		{
-			U::MessageBox(MB_ICONERROR|MB_OK, IDS_SCRIPT_MSG_CPT, IDS_SCRIPT_MSG);
-			return S_OK;
-		}
-	}
+		  CString strMessage;
+		  if (ei.bstrDescription)
+		  {
+			  strMessage.Format(IDS_SCRIPT_ERRD_MSG, ei.bstrDescription, line + 1, column + 1);
+			  AtlTaskDialog(::GetActiveWindow(), IDS_SCRIPT_MSG_CPT, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		  }
+		  else
+		  {
+			  strMessage.Format(IDS_SCRIPT_ERRX_MSG, ei.scode, line + 1, column + 1);
+			  AtlTaskDialog(::GetActiveWindow(), IDS_SCRIPT_MSG_CPT, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		  }
+		  SysFreeString(ei.bstrSource);
+		  SysFreeString(ei.bstrDescription);
+		  SysFreeString(ei.bstrHelpFile);
+		  return S_OK;
+	  }
+	  else
+	  {
+		  AtlTaskDialog(::GetActiveWindow(), IDS_SCRIPT_MSG_CPT, IDS_SCRIPT_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		  return S_OK;
+	  }
+  }
   STDMETHOD(OnEnterScript)() { return S_OK; }
   STDMETHOD(OnLeaveScript)() { return S_OK; }
 };
@@ -626,11 +630,13 @@ HRESULT	ScriptLoad(const wchar_t *filename) {
       (hFile = TryOpen(true,NULL,filename)) == INVALID_HANDLE_VALUE &&
       (hFile = TryOpen(true,L"..\\",filename)) == INVALID_HANDLE_VALUE)
   {
-    DWORD   code = GetLastError();
-    wchar_t em[256];
-    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,0,code,0,em,sizeof(em)/sizeof(em[0]),0);
-	U::MessageBox(MB_ICONERROR|MB_OK, IDS_SCRIPT_MSG_CPT, IDS_SCRIPT_LOAD_ERR_MSG, filename, em);
-    return HRESULT_FROM_WIN32(GetLastError());
+	  DWORD   code = GetLastError();
+	  wchar_t em[256];
+	  FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, em, sizeof(em) / sizeof(em[0]), 0);
+	  CString strMessage;
+	  strMessage.Format(IDS_SCRIPT_LOAD_ERR_MSG, filename, em);
+	  AtlTaskDialog(::GetActiveWindow(), IDS_SCRIPT_MSG_CPT, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+	  return HRESULT_FROM_WIN32(GetLastError());
   }
 
   DWORD length = SetFilePointer(hFile, 0, NULL, FILE_END);

@@ -45,10 +45,12 @@ static int   xgetopt(
     if (cp[1]==':')
       ++cp;
   }
-  if(!found)
+  if (!found)
   {
-	U::MessageBox(MB_OK|MB_ICONERROR, IDS_ERRMSGBOX_CAPTION, IDS_INVALID_CML_MSG, opt);
-	return -1; // error
+	  CString strMessage;
+	  strMessage.Format(IDS_INVALID_CML_MSG, opt);
+	  AtlTaskDialog(::GetActiveWindow(), IDS_ERRMSGBOX_CAPTION, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+	  return -1; // error
   }
 
   if (cp[1]==':') { // option requires an argument
@@ -63,9 +65,11 @@ static int   xgetopt(
       ++argp;
       return opt;
     }
-    // barf about missing args
-    U::MessageBox(MB_OK|MB_ICONERROR, IDS_ERRMSGBOX_CAPTION, IDS_CML_ARGS_MSG, opt);
-    return -1;
+	// barf about missing args
+	CString strMessage;
+	strMessage.Format(IDS_CML_ARGS_MSG, opt);
+	AtlTaskDialog(::GetActiveWindow(), IDS_ERRMSGBOX_CAPTION, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+	return -1;
   }
   // just return current option
   return opt;

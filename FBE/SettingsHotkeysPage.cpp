@@ -170,14 +170,7 @@ LRESULT CSettingsHotkeysPage::OnBnClickedButtonDefault(WORD wNotifyCode, WORD wI
 
 		CString collDefCmdMsg;
 		collDefCmdMsg.Format(collDefMsg, collCmdName);
-
-		wchar_t errCaption[MAX_LOAD_STRING + 1];
-		::LoadString(_Module.GetResourceInstance(),
-			IDS_ERRMSGBOX_CAPTION,
-			errCaption,
-			MAX_LOAD_STRING + 1);
-
-		if(MessageBox(collDefCmdMsg, errCaption, MB_YESNO | MB_ICONEXCLAMATION) == IDYES)
+		if (AtlTaskDialog(*this, IDS_ERRMSGBOX_CAPTION, (LPCTSTR)collDefCmdMsg, (LPCTSTR)NULL, TDCBF_YES_BUTTON | TDCBF_NO_BUTTON, TD_WARNING_ICON) == IDYES)
 		{
 			m_accel = _Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_def_accel;
 			TestAndSet();

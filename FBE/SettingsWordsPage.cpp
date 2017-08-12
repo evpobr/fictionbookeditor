@@ -294,10 +294,7 @@ bool CSettingsWordsDlg::AddNewWord(CString& word, bool test)
 		{
 			if(word.CompareNoCase(m_words[i].m_word) == 0)
 			{
-				CString errMsg[2];
-				errMsg[0].LoadString(IDS_SETTINGS_WORDS_ADD_ERR_TEXT);
-				errMsg[1].LoadString(IDS_SETTINGS_WORDS_ADD_ERR_CAP);
-				MessageBox(errMsg[0], errMsg[1], MB_OK | MB_ICONERROR);
+				AtlTaskDialog(*this, IDS_SETTINGS_WORDS_ADD_ERR_CAP, IDS_SETTINGS_WORDS_ADD_ERR_TEXT, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 
 				return false;
 			}
@@ -316,10 +313,7 @@ bool CSettingsWordsDlg::AddNewWord(CString& word, bool test)
 	}
 	else
 	{
-		CString errMsg[2];
-		errMsg[0].LoadString(IDS_SETTINGS_WORDS_ADD_ERR_SYM);
-		errMsg[1].LoadString(IDS_SETTINGS_WORDS_ADD_ERR_CAP);
-		MessageBox(errMsg[0], errMsg[1], MB_OK | MB_ICONERROR);
+		AtlTaskDialog(*this, IDS_SETTINGS_WORDS_ADD_ERR_CAP, IDS_SETTINGS_WORDS_ADD_ERR_SYM, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 
 		return false;
 	}

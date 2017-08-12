@@ -935,11 +935,22 @@ bool  Doc::SaveToFile(const CString& filename,bool fValidateOnly,
 	  ::MessageBeep(MB_ICONERROR);
 	else
 	{
-	  if(IDYES == U::MessageBox(MB_YESNO|MB_DEFBUTTON2|MB_ICONERROR, IDS_VALIDATION_FAIL_CPT, IDS_VALIDATION_FAIL_MSG, eh->m_msg))
-	  {
+		CString strMessage;
+		strMessage.Format(IDS_VALIDATION_FAIL_MSG, (LPCTSTR)eh->m_msg);
+
+		CTaskDialog dlg;
+		dlg.SetWindowTitle(IDS_VALIDATION_FAIL_CPT);
+		dlg.SetMainInstructionText(strMessage);
+		dlg.SetMainIcon(TD_ERROR_ICON);
+		dlg.SetCommonButtons(TDCBF_YES_BUTTON | TDCBF_NO_BUTTON);
+		dlg.SetDefaultButton(IDNO);
+		int nButton;
+		dlg.DoModal(::GetActiveWindow(), &nButton);
+		if (IDYES == nButton)
+		{
 			bErrSave = true;
 			goto forcesave;
-	  }
+		}
 	}
 	::SendMessage(m_frame,AU::WM_SETSTATUSTEXT,0,
 	  (LPARAM)(const TCHAR *)eh->m_msg);
@@ -1522,11 +1533,7 @@ bool  Doc::SetXMLAndValidate(HWND sci,bool fValidateOnly,int& errline,int& errco
     char    *buffer=(char *)malloc(textlen+1);
     if (!buffer) {
 nomem:
-	  wchar_t msg[MAX_LOAD_STRING + 1];
-	  wchar_t cpt[MAX_LOAD_STRING + 1];
-	  ::LoadString(_Module.GetResourceInstance(), IDS_OUT_OF_MEM_MSG, msg, MAX_LOAD_STRING);
-	  ::LoadString(_Module.GetResourceInstance(), IDR_MAINFRAME, cpt, MAX_LOAD_STRING);
-      ::MessageBox(::GetActiveWindow(), msg, cpt, MB_OK|MB_ICONERROR);
+	  AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, IDS_OUT_OF_MEM_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
      return false;
     }
     ::SendMessage(sci, SCI_GETTEXT, textlen+1, (LPARAM)buffer);

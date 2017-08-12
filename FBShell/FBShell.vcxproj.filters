@@ -70,6 +70,7 @@
     <None Include="ThumbnailHandler.rgs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColumnProvider.h">

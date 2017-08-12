@@ -454,12 +454,10 @@ ok:
   return GetFullPathName(tryname);
 }
 
-void  ReportError(HRESULT hr) 
+void  ReportError(HRESULT hr)
 {
-  CString   err(Win32ErrMsg(hr));
-  CString cpt;
-  cpt.LoadString(IDS_ERRMSGBOX_CAPTION);
-  ::MessageBox(::GetActiveWindow(), err, cpt, MB_OK|MB_ICONERROR);
+	CString err(Win32ErrMsg(hr));
+	AtlTaskDialog(::GetActiveWindow(), IDS_ERRMSGBOX_CAPTION, (LPCTSTR)err, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 }
 
 void  ReportError(_com_error& e) {
@@ -499,30 +497,8 @@ void  ReportError(_com_error& e) {
 		err+=(const wchar_t *)src;
 	  }
   }
-  CString cpt;
-  cpt.LoadString(IDS_COM_ERR_CPT);
-  ::MessageBox(::GetActiveWindow(), err, cpt, MB_OK|MB_ICONERROR);
+  AtlTaskDialog(::GetActiveWindow(), IDS_COM_ERR_CPT, (LPCTSTR)err, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
   VBErr = true;
-}
-
-UINT  MessageBox(UINT type, UINT titleID, UINT msgID, ...) {
-  CString title, msg, str;
-  title.LoadString(titleID);
-  msg.LoadString(msgID);
-  va_list   ap;
-  va_start(ap,msgID);
-  str.FormatV(msg,ap);
-  va_end(ap);
-  return ::MessageBox(::GetActiveWindow(),str,title,type);
-}
-
-UINT  MessageBox(UINT type,const TCHAR *title,const TCHAR *msg, ...) {
-  CString   str;
-  va_list   ap;
-  va_start(ap,msg);
-  str.FormatV(msg,ap);
-  va_end(ap);
-  return ::MessageBox(::GetActiveWindow(),str,title,type);
 }
 
 CString	GetWindowText(HWND hWnd)
@@ -571,14 +547,16 @@ void  ReportParseError(MSXML2::IXMLDOMDocument2Ptr doc)
     long	  col=err->linepos;
     _bstr_t	  url(err->url);
     _bstr_t	  reason(err->reason);
-    CString   msg;
+    CString msg;
     if (line && col)
 	{
-		U::MessageBox(MB_OK|MB_ICONERROR, IDS_XML_PARSE_ERR_CPT, IDS_XML_PARSE_ERR_MSG, (const TCHAR *)url,	line, col, (const TCHAR *)reason);
+		msg.Format(IDS_XML_PARSE_ERR_MSG, (LPCTSTR)url, line, col, (LPCTSTR)reason);
+		AtlTaskDialog(::GetActiveWindow(), IDS_XML_PARSE_ERR_CPT, (LPCTSTR)msg, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
     }
     else
 	{
-		U::MessageBox(MB_OK|MB_ICONERROR, IDS_XML_PARSE_ERR_CPT, IDS_XML_PARSE_ERRQ_MSG, (const TCHAR *)url,	(const TCHAR *)reason);
+		msg.Format(IDS_XML_PARSE_ERRQ_MSG, (LPCTSTR)url, (LPCTSTR)reason);
+		AtlTaskDialog(::GetActiveWindow(), IDS_XML_PARSE_ERR_CPT, (LPCTSTR)msg, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
     }
   }
   catch (_com_error& e) 

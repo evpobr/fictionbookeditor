@@ -147,11 +147,15 @@ LRESULT CAboutDlg::OnUpdate(WORD, WORD wID, HWND, BOOL&)
 					delete[] p;
 				}
 				// if checksums are equal
-				if (readMD5.CompareNoCase (m_UpdateMD5) == 0)
-					if (U::MessageBox(MB_YESNO | MB_ICONEXCLAMATION, IDR_MAINFRAME, IDS_UPDATEEXISTS, filename) == IDYES)
+				if (readMD5.CompareNoCase(m_UpdateMD5) == 0)
+				{
+					CString strMessage;
+					strMessage.Format(IDS_UPDATEEXISTS, (LPCTSTR)filename);					
+					if (AtlTaskDialog(*this, IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_YES_BUTTON | TDCBF_YES_BUTTON, TD_WARNING_ICON) == IDYES)
 					{
 						RunUpdate(filename);
 					}
+				}
 			}
 		}
 
@@ -523,7 +527,9 @@ CString CAboutDlg::GetUpdateFileName()
 
 void CAboutDlg::RunUpdate(CString filename)
 {
-	if (U::MessageBox(MB_YESNO | MB_ICONEXCLAMATION, IDR_MAINFRAME, IDS_UPDATE_CLOSE, filename) == IDYES)
+	CString strMessage;
+	strMessage.Format(IDS_UPDATE_CLOSE, (LPCTSTR)filename);
+	if (AtlTaskDialog(*this, IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_YES_BUTTON | TDCBF_YES_BUTTON, TD_WARNING_ICON) == IDYES)
 	{
 		HINSTANCE hInst = ShellExecute(0, L"open", filename, 0, 0, SW_SHOW);
 		::PostMessage(GetParent().m_hWnd, WM_CLOSE, 0, 0);

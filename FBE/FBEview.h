@@ -109,32 +109,6 @@ static void CenterChildWindow(CWindow parent, CWindow child)
 	child.MoveWindow(rcParent.left + parentW/2 - childW/2, rcParent.top + parentH/2 - childH/2, childW, childH);
 }
 
-class CAddImageDlg : public CDialogImpl<CAddImageDlg>
-{
-public:
-	enum { IDD = IDD_ADDIMAGE };
-	BEGIN_MSG_MAP(CAddImageDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
-		COMMAND_ID_HANDLER(IDYES, OnBtnClicked)
-		COMMAND_ID_HANDLER(IDCANCEL, OnBtnClicked)
-	END_MSG_MAP()
-
-	LRESULT OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
-	{
-		::CenterChildWindow(GetParent(), m_hWnd);
-		CButton btn = GetDlgItem(IDC_ADDIMAGE_ASKAGAIN);
-		btn.SetCheck(!_Settings.m_insimage_ask);
-		return 0;
-	}
-
-	LRESULT OnBtnClicked(WORD, WORD wID, HWND, BOOL&)
-	{
-		_Settings.SetIsInsClearImage(wID == IDYES ? true : false);
-		_Settings.SetInsImageAsking(!IsDlgButtonChecked(IDC_ADDIMAGE_ASKAGAIN));
-		return EndDialog(wID);
-	}
-};
-
 template<class T, int chgID>
 class ATL_NO_VTABLE CHTMLChangeSink: public MSHTML::IHTMLChangeSink
 {

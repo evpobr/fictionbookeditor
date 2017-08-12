@@ -83,6 +83,19 @@ BEGIN
     END
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_ERROR               "Error"
+    IDS_CANNOT_LOAD_SCHEMA  "Can't load FictionBook schema."
+    IDS_COM_ERROR_FORMAT    "COM Error: %x [%s]"
+END
+
 #endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 

@@ -82,8 +82,11 @@ static void LoadGenres()
   }catch(...){
   }
 
-  if(!fp){
-	  U::MessageBox(MB_OK|MB_ICONERROR, IDR_MAINFRAME, IDS_GENRES_LIST_MSG, file_name);
+  if(!fp)
+  {
+	  CString strMessage;
+	  strMessage.Format(IDS_GENRES_LIST_MSG, (LPCTSTR)file_name);
+	  AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 	  return;
   }
 

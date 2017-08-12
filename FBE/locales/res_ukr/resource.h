@@ -191,7 +191,6 @@
 #define IDB_BITMAP1                     248
 #define IDS_HOTKEY_SYMBOL_SUPERSCRIPT_TWO 248
 #define IDS_SETTINGS_WORDS_ADD_ERR_CAP  248
-#define IDD_ADDIMAGE                    249
 #define IDS_HOTKEY_SYMBOL_SUPERSCRIPT_THREE 249
 #define IDS_SETTINGS_WORDS_ADD_ERR_SYM  249
 #define IDD_SETTINGS_HOTKEYS            250
@@ -272,6 +271,7 @@
 #define ID_PANE_CHAR                    305
 #define IDS_ENCODING                    306
 #define IDS_SETTINGS                    307
+#define IDS_DONT_ASK_AGAIN              308
 #define IDC_SPELL_REPLACE               500
 #define ID_VER_ADVANCE                  550
 #define IDS_MB_OK                       600
@@ -333,7 +333,6 @@
 #define IDC_CHECK1                      1050
 #define IDC_ENCODING_NEW                1050
 #define IDC_SELECT_SCRIPTS_FOLDER_BUTTON 1050
-#define IDC_ADDIMAGE_ASKAGAIN           1050
 #define IDC_CHECK_DETECT_ONLY_HYPHENED  1050
 #define IDC_CHECK_SHOW_EXCLUSIONS       1050
 #define IDC_CHECK_SHOWHIDE_EXCLS        1050
@@ -362,7 +361,6 @@
 #define IDC_CHECK_SELALL                1063
 #define IDC_CHECK4                      1064
 #define IDC_SCRIPTS_HK_NOTIFY           1064
-#define IDC_ADDIMAGE_ICON               1065
 #define IDC_OPTIONS_CLEARIMGS           1066
 #define IDC_STATIC_AB_LINKS             1066
 #define IDC_CHANGE_KEYB                 1067

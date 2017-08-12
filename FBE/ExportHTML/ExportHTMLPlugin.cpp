@@ -7,8 +7,6 @@
 HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 {
 	HANDLE  hOut = INVALID_HANDLE_VALUE;
-	CString strTitle;
-	strTitle.LoadString(IDR_EXPORTHTML);
 	CString strMessage;
 
 	try {
@@ -54,8 +52,9 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 		hOut = ::CreateFile(dlg.m_szFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
 		if (hOut == INVALID_HANDLE_VALUE)
 		{
+			CString strMessage;
 			strMessage.Format(IDS_ERROR_OPEN_FILE, dlg.m_szFileName, (LPCTSTR)U::Win32ErrMsg(::GetLastError()));
-			MessageBox(::GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+			AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 			return S_FALSE;
 		}
 
@@ -88,7 +87,7 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 					CloseHandle(hOut);
 					::DeleteFile(dlg.m_szFileName);
 					strMessage.Format(IDS_ERROR_CREATE_DIRECTORY, (LPCTSTR)dfile, (LPCTSTR)U::Win32ErrMsg(de));
-					::MessageBox(::GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+					AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 					return S_FALSE;
 				}
 			}
@@ -138,12 +137,12 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 				if (!fWr)
 				{
 					strMessage.Format(IDS_ERROR_WRITE_FILE, dlg.m_szFileName, (LPCTSTR)U::Win32ErrMsg(::GetLastError()));
-					::MessageBox(::GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+					AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 				}
 				else
 				{
 					strMessage.Format(IDS_ERROR_WRITE_FILE2, dlg.m_szFileName);
-					::MessageBox(::GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+					AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 				}
 				::CloseHandle(hOut);
 				::DeleteFile(dlg.m_szFileName);
@@ -215,12 +214,12 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 							if (!fWr)
 							{
 								strMessage.Format(IDS_ERROR_WRITE_FILE, dlg.m_szFileName, (LPCTSTR)U::Win32ErrMsg(de));
-								::MessageBox(::GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+								AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 							}
 							else
 							{
 								strMessage.Format(IDS_ERROR_WRITE_FILE2, dlg.m_szFileName);
-								::MessageBox(::GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+								AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 							}
 							::CloseHandle(hOut);
 							::DeleteFile(dlg.m_szFileName);
@@ -243,7 +242,7 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 						if (hFile == INVALID_HANDLE_VALUE && ::GetLastError() == ERROR_FILE_EXISTS)
 						{
 							strMessage.Format(IDS_WARNING_FILE_ALREADY_EXISTS, (LPCTSTR)fname);
-							if (::MessageBox(GetActiveWindow(), strMessage, strTitle, MB_YESNO | MB_ICONEXCLAMATION) != IDYES)
+							if (AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_YES_BUTTON | TDCBF_NO_BUTTON, TD_WARNING_ICON) != IDYES)
 								goto skip;
 							hFile = ::CreateFile(fname, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
 						}
@@ -258,12 +257,12 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 								if (!fWr)
 								{
 									strMessage.Format(IDS_ERROR_WRITE_FILE, (LPCTSTR)fname, (LPCTSTR)U::Win32ErrMsg(de));
-									::MessageBox(::GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+									AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 								}
 								else
 								{
 									strMessage.Format(IDS_ERROR_WRITE_FILE2, (LPCTSTR)fname);
-									::MessageBox(::GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+									AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 								}
 								::DeleteFile(fname);
 							}
@@ -271,7 +270,7 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 						else
 						{
 							strMessage.Format(IDS_ERROR_OPEN_FILE, (LPCTSTR)fname, (LPCTSTR)U::Win32ErrMsg(::GetLastError()));
-							::MessageBox(::GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+							AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 						}
 					skip:
 						::SafeArrayUnaccessData(V_ARRAY(&data));
@@ -295,12 +294,12 @@ HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
 				if (!fWr)
 				{
 					strMessage.Format(IDS_ERROR_WRITE_FILE, dlg.m_szFileName, (LPCTSTR)U::Win32ErrMsg(::GetLastError()));
-					::MessageBox(GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+					AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 				}
 				else
 				{
 					strMessage.Format(IDS_ERROR_WRITE_FILE2, dlg.m_szFileName);
-					::MessageBox(GetActiveWindow(), strMessage, strTitle, MB_ICONERROR);
+					AtlTaskDialog(::GetActiveWindow(), IDR_EXPORTHTML, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 				}
 				::CloseHandle(hOut);
 				::DeleteFile(dlg.m_szFileName);

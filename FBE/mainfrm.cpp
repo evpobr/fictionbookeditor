@@ -260,29 +260,33 @@ bool	CMainFrame::DocChanged() {
 	return m_doc && m_doc->DocChanged() || IsSourceActive() && m_source.SendMessage(SCI_GETMODIFY);
 }
 
-bool	CMainFrame::DiscardChanges() {	
-  U::SaveFileSelectedPos(m_doc->m_filename, m_doc->GetSelectedPos());
+bool CMainFrame::DiscardChanges()
+{
+	U::SaveFileSelectedPos(m_doc->m_filename, m_doc->GetSelectedPos());
 
-  if (DocChanged())
-  {
-    switch (U::MessageBox(MB_YESNOCANCEL|MB_ICONEXCLAMATION, IDR_MAINFRAME, IDS_SAVE_DLG_MSG, m_doc->m_filename))
-    {
-    case IDYES:
+	if (DocChanged())
+	{
+		CString strMessage;
+		strMessage.Format(IDS_SAVE_DLG_MSG, (LPCTSTR)m_doc->m_filename);		
+		switch (AtlTaskDialog(*this, IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, 
+			TDCBF_YES_BUTTON | TDCBF_NO_BUTTON | TDCBF_CANCEL_BUTTON, TD_WARNING_ICON))
 		{
-			bool ret = (SaveFile(false)==OK);
-				if(!ret) _Settings.Load();
+		case IDYES:
+		{
+			bool ret = (SaveFile(false) == OK);
+			if (!ret) _Settings.Load();
 			return ret;
 		}
-    case IDNO:
-      return true;
-    case IDCANCEL:
+		case IDNO:
+			return true;
+		case IDCANCEL:
 		{
 			_Settings.Load();
 			return false;
 		}
-    }
-  }
-  return true;
+		}
+	}
+	return true;
 }
 
 void  CMainFrame::SetIsText() {
@@ -1875,18 +1879,22 @@ public:
 		m_view->m_fo.pattern=SciSelection(m_source);
 	}
 
-  virtual void DoFind() {
-    if (!m_view->SciFindNext(m_source,true,false))
+	virtual void DoFind()
 	{
-		U::MessageBox(MB_OK|MB_ICONEXCLAMATION, IDR_MAINFRAME, IDS_SEARCH_END_MSG, m_view->m_fo.pattern);	
+		if (!m_view->SciFindNext(m_source, true, false))
+		{
+			CString strMessage;
+			strMessage.Format(IDS_SEARCH_END_MSG, (LPCTSTR)m_view->m_fo.pattern);
+			AtlTaskDialog(*this, IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_WARNING_ICON);
+		}
+		else
+		{
+			SaveString();
+			SaveHistory();
+			m_selvalid = true;
+			MakeClose();
+		}
 	}
-    else {
-      SaveString();
-      SaveHistory();
-      m_selvalid=true;
-      MakeClose();
-    }
-  }
   virtual void DoReplace() {
     if (m_selvalid) { // replace
       m_source.SendMessage(SCI_TARGETFROMSELECTION);
@@ -1988,15 +1996,21 @@ public:
     free(pattern);
     free(replacement);
 
-    if (num_repl>0) {
-      SaveString();
-      SaveHistory();
-      U::MessageBox(MB_OK, IDS_REPL_ALL_CAPT, IDS_REPL_DONE_MSG, num_repl);      
-      MakeClose();
-      m_selvalid=false;
-    } else
+	CString strMessage;
+	if (num_repl > 0)
 	{
-		U::MessageBox(MB_OK|MB_ICONEXCLAMATION, IDR_MAINFRAME, IDS_SEARCH_END_MSG, m_view->m_fo.pattern);	
+		SaveString();
+		SaveHistory();
+
+		strMessage.Format(IDS_REPL_DONE_MSG, num_repl);
+		AtlTaskDialog(*this, IDS_REPL_ALL_CAPT, (LPCTSTR)strMessage, (LPCTSTR)NULL);
+		MakeClose();
+		m_selvalid = false;
+	}
+	else
+	{
+		strMessage.Format(IDS_SEARCH_END_MSG, (LPCTSTR)m_view->m_fo.pattern);
+		AtlTaskDialog(*this, IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_WARNING_ICON);
 	}
   }
 };
@@ -2357,16 +2371,16 @@ LRESULT CMainFrame::OnToolsImport(WORD, WORD wID, HWND, BOOL&) {
 		if (hr!=S_OK)
 		return 0;
 	  } 
-	  else 
+	  else
 	  {
-		U::MessageBox(MB_OK|MB_ICONERROR, IDS_IMPORT_ERR_CPT, IDS_IMPORT_ERR_MSG);
-		return 0;
-      }
+		  AtlTaskDialog(*this, IDS_IMPORT_ERR_CPT, IDS_IMPORT_ERR_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		  return 0;
+	  }
 
       MSXML2::IXMLDOMDocument2Ptr dom(obj);	 
-      if (!(bool)dom)
+	  if (!(bool)dom)
 	  {
-		U::MessageBox(MB_OK|MB_ICONERROR, IDS_ERRMSGBOX_CAPTION, IDS_IMPORT_XML_ERR_MSG);
+		  AtlTaskDialog(*this, IDS_ERRMSGBOX_CAPTION, IDS_IMPORT_XML_ERR_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 	  }
       else if (DiscardChanges()) 
 	  {
@@ -2414,7 +2428,7 @@ LRESULT CMainFrame::OnToolsImport(WORD, WORD wID, HWND, BOOL&) {
 LRESULT CMainFrame::OnToolsExport(WORD, WORD wID, HWND, BOOL&)
 {
 	wID -= ID_EXPORT_BASE;
-	if(wID<m_export_plugins.GetSize())
+	if (wID < m_export_plugins.GetSize())
 	{
 		try
 		{
@@ -2423,28 +2437,28 @@ LRESULT CMainFrame::OnToolsExport(WORD, WORD wID, HWND, BOOL&)
 
 			CComQIPtr<IFBEExportPlugin> epl(unk);
 
-			if(epl)
+			if (epl)
 			{
 				m_last_plugin = wID + ID_EXPORT_BASE;
 				MSXML2::IXMLDOMDocument2Ptr dom(m_doc->CreateDOM(m_doc->m_encoding));
 				_bstr_t filename;
-				if(m_doc->m_namevalid)
+				if (m_doc->m_namevalid)
 				{
 					CString tmp(m_doc->m_filename);
-					if(tmp.GetLength() >= 4 && tmp.Right(4).CompareNoCase(_T(".fb2")) == 0)
+					if (tmp.GetLength() >= 4 && tmp.Right(4).CompareNoCase(_T(".fb2")) == 0)
 						tmp.Delete(tmp.GetLength() - 4, 4);
-						filename = (const TCHAR*)tmp;
+					filename = (const TCHAR*)tmp;
 				}
-				if(dom)
+				if (dom)
 					CheckError(epl->Export((long)m_hWnd, filename, dom));
-				} 
-				else 
-				{
-					U::MessageBox(MB_OK|MB_ICONERROR, IDS_EXPORT_ERR_CPT, IDS_EXPORT_ERR_MSG);
+			}
+			else
+			{
+				AtlTaskDialog(*this, IDS_EXPORT_ERR_CPT, IDS_EXPORT_ERR_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 				return 0;
 			}
 		}
-		catch(_com_error& e)
+		catch (_com_error& e)
 		{
 			U::ReportError(e);
 		}
@@ -3197,14 +3211,11 @@ LRESULT CMainFrame::OnTreeViewElementSource(WORD, WORD, HWND, BOOL&)
 
 LRESULT CMainFrame::OnTreeDeleteElement(WORD, WORD, HWND, BOOL&)
 {
-	wchar_t cpt[MAX_LOAD_STRING + 1];
-	wchar_t msg[MAX_LOAD_STRING + 1];
-	::LoadString(_Module.GetResourceInstance(), IDS_DOCUMENT_TREE_CAPTION, cpt, MAX_LOAD_STRING);
-	::LoadString(_Module.GetResourceInstance(), ID_DT_DELETE, msg, MAX_LOAD_STRING);
-	CString message(msg);
+	CString message;
+	message.LoadString(ID_DT_DELETE);
 	message += L"?";
 
-	if (MessageBox(message, cpt, MB_YESNO | MB_ICONINFORMATION) == IDYES)
+	if (AtlTaskDialog(::GetActiveWindow(), IDS_DOCUMENT_TREE_CAPTION, (LPCTSTR)message, (LPCTSTR)NULL, TDCBF_YES_BUTTON | TDCBF_NO_BUTTON, TD_WARNING_ICON) == IDYES)
 	{
 		CTreeItem item = m_document_tree.m_tree.m_tree.GetLastSelectedItem();
 		m_doc->m_body.BeginUndoUnit(L"structure editing");
@@ -3780,19 +3791,19 @@ void  CMainFrame::ShowView(VIEW_TYPE vt)
 			int col,line;
 			bool fv;
 			fv=m_doc->SetXMLAndValidate(m_source,true,line,col);// Из режима Source
-			if (!fv) 
+			if (!fv)
 			{
-				U::MessageBox(MB_OK|MB_ICONERROR, IDR_MAINFRAME, IDS_BAD_XML_MSG);
+				AtlTaskDialog(*this, IDR_MAINFRAME, IDS_BAD_XML_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 				SourceGoTo(line, col);
 				return;
 			}
-			else 
+			else
 			{
 				AttachDocument(m_doc);
 				m_doc->m_filename = m_bad_filename;
 				m_file_age = FileAge(m_doc->m_filename);
 				m_doc->m_namevalid = true;
-				m_bad_xml=false;
+				m_bad_xml = false;
 			}
 	  }
 
@@ -4614,12 +4625,14 @@ unsigned __int64 CMainFrame::FileAge(LPCTSTR FileName)
 
 bool CMainFrame::CheckFileTimeStamp()
 {
-	if(m_file_age == FileAge(m_doc->m_filename))
+	if (m_file_age == FileAge(m_doc->m_filename))
 		return false;
-	
-	if(IDYES == U::MessageBox(MB_YESNO, IDS_FILE_CHANGED_CPT, IDS_FILE_CHANGED_MSG, m_doc->m_filename))
+
+	CString strMessage;
+	strMessage.Format(IDS_FILE_CHANGED_MSG, (LPCTSTR)m_doc->m_filename);
+	if (IDYES == AtlTaskDialog(*this, IDS_FILE_CHANGED_CPT, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_YES_BUTTON | TDCBF_NO_BUTTON, TD_WARNING_ICON))
 	{
-		return ReloadFile();			
+		return ReloadFile();
 	}
 	else
 	{
@@ -4798,7 +4811,7 @@ void CMainFrame::ApplyConfChanges()
 
 	delete hourglass;
 
-	if(_Settings.NeedRestart() && MessageBox(restartMsg, L"", MB_YESNO | MB_ICONINFORMATION) == IDYES)
+	if(_Settings.NeedRestart() && AtlTaskDialog(*this, IDR_MAINFRAME, (LPCTSTR)restartMsg, (LPCTSTR)NULL, TDCBF_YES_BUTTON | TDCBF_NO_BUTTON, TD_WARNING_ICON) == IDYES)
 	{
 		return RestartProgram();
 	}

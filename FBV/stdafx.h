@@ -14,7 +14,6 @@ extern CAppModule _Module;
 #include <atlframe.h>
 #include <atlctrls.h>
 #include <atldlgs.h>
-#include <atlmisc.h>
 
 #include <commctrl.h>
 #include <assert.h>

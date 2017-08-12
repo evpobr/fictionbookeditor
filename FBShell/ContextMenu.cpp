@@ -202,7 +202,7 @@ HRESULT	CContextMenu::InvokeCommand(LPCMINVOKECOMMANDINFO pici) {
       TCHAR	*vp=msg.GetBuffer(len+1024);
       int fl=::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,NULL,code,0,vp+len,1024,NULL);
       msg.ReleaseBuffer(fl+len);
-      ::MessageBox(pici->hwnd,msg,_T("Error"),MB_OK|MB_ICONERROR);
+	  AtlTaskDialog(pici->hwnd, IDS_ERROR, (LPCTSTR)msg, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
     }
   }
 
