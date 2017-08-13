@@ -13,6 +13,7 @@
 #include "Scintilla.h"
 #include "ElementDescMnr.h"
 #include "atlimageex.h"
+#include "TableDialog.h"
 
 extern CElementDescMnr _EDMnr;
 

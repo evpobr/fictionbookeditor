@@ -80,7 +80,7 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>Scintilla\include;extras;utils;wtl;./hunspell/src/hunspell;pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>HUNSPELL_STATIC;NDEBUG;WIN32;_WINDOWS;UNICODE;STRICT;USE_PCRE;_CRT_SECURE_NO_WARNINGS;_WTL_CMDBAR_VISTA_MENUS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -138,7 +138,7 @@ link.exe /OUT:"$(SolutionDir)$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENTRY /
       <AdditionalIncludeDirectories>Scintilla\include;extras;utils;wtl;./hunspell/src/hunspell;pcre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>HUNSPELL_STATIC;_DEBUG;WIN32;_WINDOWS;UNICODE;STRICT;USE_PCRE;_ATL_TRACE_LEVEL=4;_CRT_SECURE_NO_WARNINGS;_WTL_CMDBAR_VISTA_MENUS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -187,7 +187,7 @@ link.exe /OUT:"$(SolutionDir)$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENTRY /
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutBox.cpp" />
-    <ClCompile Include="apputils.cpp"/>
+    <ClCompile Include="apputils.cpp" />
     <ClCompile Include="buildstamp.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -225,6 +225,7 @@ link.exe /OUT:"$(SolutionDir)$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENTRY /
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TableDialog.cpp" />
     <ClCompile Include="TreeView.cpp" />
     <ClCompile Include="utils\Utils.cpp" />
     <ClCompile Include="Words.cpp" />
@@ -254,6 +255,7 @@ link.exe /OUT:"$(SolutionDir)$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENTRY /
     <ClInclude Include="atlimageex.h" />
     <ClInclude Include="extras\atlcrypt.h" />
     <ClInclude Include="FBE.h" />
+    <ClInclude Include="TableDialog.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ContainerWnd.h" />
     <ClInclude Include="DocumentTree.h" />
