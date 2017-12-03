@@ -256,7 +256,7 @@ nthere:
   File "..\Release\copying.txt"
   
   File "..\Release\CHANGELOG.md"
-  File "..\Release\NOWTO.md"
+  File "..\Release\HOWTO.md"
   File "..\Release\README.md"
   File "..\Release\TODO.md"
 
@@ -556,6 +556,7 @@ ${EndIf}
   Delete "$INSTDIR\res_ukr.dll"
   
   Delete "$INSTDIR\CHANGELOG.md"
+  Delete "$INSTDIR\NOWTO.md"  
   Delete "$INSTDIR\HOWTO.md"
   Delete "$INSTDIR\README.md"
   Delete "$INSTDIR\TODO.md"
