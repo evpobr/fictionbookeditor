@@ -190,7 +190,6 @@
   <ItemGroup>
     <None Include="ExportHTML.def" />
     <None Include="ExportHTMLPlugin.rgs" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CustomFileSaveDialog.h" />
@@ -223,7 +222,4 @@
     <Midl Include="ExportHTML.idl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\packages\wtl.9.1\build\native\wtl.targets" Condition="Exists('..\..\packages\wtl.9.1\build\native\wtl.targets')" />
-  </ImportGroup>
 </Project>

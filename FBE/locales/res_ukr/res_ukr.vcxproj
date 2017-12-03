@@ -124,15 +124,9 @@ muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configura
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="FBE.rc">
       <Culture Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">0x0419</Culture>
     </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\..\packages\wtl.9.1\build\native\wtl.targets" Condition="Exists('..\..\..\packages\wtl.9.1\build\native\wtl.targets')" />
-  </ImportGroup>
 </Project>

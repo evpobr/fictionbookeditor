@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Localization", "Localization", "{6C7862A8-8BAE-4B07-B1EA-9642D9122354}"
 EndProject
@@ -10,10 +10,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBShell", "FBShell\FBShell.
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBV", "FBV\FBV.vcxproj", "{700EF473-7FF9-4CD4-93FB-9C3ABF5D5C4A}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pcre", "FBE\pcre\pcre.vcxproj", "{BFBFBF2D-52FB-44A0-9D44-B3D842A9E057}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhunspell", "FBE\hunspell\src\win_api\libhunspell.vcxproj", "{53609BB3-D874-465C-AF7B-DF626DB0D89B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Russian", "FBE\locales\res_rus\res_rus.vcxproj", "{1BC3F431-9672-4191-9FC5-A8B1C9C08E36}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -55,20 +51,6 @@ Global
 		{700EF473-7FF9-4CD4-93FB-9C3ABF5D5C4A}.Release|Win32.Build.0 = Release|Win32
 		{700EF473-7FF9-4CD4-93FB-9C3ABF5D5C4A}.Release|x64.ActiveCfg = Release|x64
 		{700EF473-7FF9-4CD4-93FB-9C3ABF5D5C4A}.Release|x64.Build.0 = Release|x64
-		{BFBFBF2D-52FB-44A0-9D44-B3D842A9E057}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BFBFBF2D-52FB-44A0-9D44-B3D842A9E057}.Debug|Win32.Build.0 = Debug|Win32
-		{BFBFBF2D-52FB-44A0-9D44-B3D842A9E057}.Debug|x64.ActiveCfg = Debug|Win32
-		{BFBFBF2D-52FB-44A0-9D44-B3D842A9E057}.Release|Win32.ActiveCfg = Release|Win32
-		{BFBFBF2D-52FB-44A0-9D44-B3D842A9E057}.Release|Win32.Build.0 = Release|Win32
-		{BFBFBF2D-52FB-44A0-9D44-B3D842A9E057}.Release|x64.ActiveCfg = Release|Win32
-		{BFBFBF2D-52FB-44A0-9D44-B3D842A9E057}.Release|x64.Build.0 = Release|Win32
-		{53609BB3-D874-465C-AF7B-DF626DB0D89B}.Debug|Win32.ActiveCfg = Debug|Win32
-		{53609BB3-D874-465C-AF7B-DF626DB0D89B}.Debug|Win32.Build.0 = Debug|Win32
-		{53609BB3-D874-465C-AF7B-DF626DB0D89B}.Debug|x64.ActiveCfg = Debug|Win32
-		{53609BB3-D874-465C-AF7B-DF626DB0D89B}.Release|Win32.ActiveCfg = Release|Win32
-		{53609BB3-D874-465C-AF7B-DF626DB0D89B}.Release|Win32.Build.0 = Release|Win32
-		{53609BB3-D874-465C-AF7B-DF626DB0D89B}.Release|x64.ActiveCfg = Release|Win32
-		{53609BB3-D874-465C-AF7B-DF626DB0D89B}.Release|x64.Build.0 = Release|Win32
 		{1BC3F431-9672-4191-9FC5-A8B1C9C08E36}.Debug|Win32.ActiveCfg = Debug|Win32
 		{1BC3F431-9672-4191-9FC5-A8B1C9C08E36}.Debug|Win32.Build.0 = Debug|Win32
 		{1BC3F431-9672-4191-9FC5-A8B1C9C08E36}.Debug|x64.ActiveCfg = Debug|Win32
@@ -112,6 +94,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1BC3F431-9672-4191-9FC5-A8B1C9C08E36} = {6C7862A8-8BAE-4B07-B1EA-9642D9122354}
 		{B0D6E5EB-56C0-4DC2-A98F-98EFE5158B8B} = {6C7862A8-8BAE-4B07-B1EA-9642D9122354}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70FB96E8-95C0-43D2-B4D6-D321F6535A32}
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True

@@ -42,23 +42,23 @@
 #include <Urlmon.h>
 #include <msxml6.h>
 
-#include <atlapp.h>
+#include <wtl/atlapp.h>
 
 extern CAppModule _Module;
 
-#include <atlmisc.h>
-#include <atluser.h>
+#include <wtl/atlmisc.h>
+#include <wtl/atluser.h>
 
-#include <atlframe.h>
-#include <atlcrack.h>
-#include <atlctrls.h>
-#include <atldlgs.h>
-#include <atlctrlw.h>
-#include <atlctrlx.h>
-#include <atlsplit.h>
-#include <atlddx.h>
+#include <wtl/atlframe.h>
+#include <wtl/atlcrack.h>
+#include <wtl/atlctrls.h>
+#include <wtl/atldlgs.h>
+#include <wtl/atlctrlw.h>
+#include <wtl/atlctrlx.h>
+#include <wtl/atlsplit.h>
+#include <wtl/atlddx.h>
 
-#include <atltheme.h>
+#include <wtl/atltheme.h>
 
 // C library
 #include <stdlib.h>
@@ -90,7 +90,7 @@ extern CAppModule _Module;
 
 // PCRE
 #ifdef USE_PCRE
-#include "pcre.h"
+#include <pcre.h>
 #endif
 
 // MSXML
