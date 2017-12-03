@@ -389,7 +389,6 @@
     <None Include="res\FBE.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="packages.config" />
     <None Include="FictionBook.xsd" />
     <None Include="FictionBookGenres.xsd" />
     <None Include="FictionBookLang.xsd" />
@@ -418,9 +417,9 @@
     <None Include="contributors.txt" />
     <None Include="copying.txt" />
     <None Include="..\CHANGELOG.md" />
-    <None Include="..\NOWTO.md" />
     <None Include="..\ReadMe.md" />
     <None Include="..\ToDo.md" />
+    <None Include="..\HOWTO.md" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">
