@@ -11,7 +11,7 @@
 #include "targetver.h"
 #endif
 #define APSTUDIO_HIDDEN_SYMBOLS
-#include "wtl/atlres.h"
+#include "atlres.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -635,13 +635,13 @@ IDB_TEXT                BITMAP                  "res\\text.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,13,0
- PRODUCTVERSION 2,6,0,0
+ FILEVERSION 2,7,0,0
+ PRODUCTVERSION 2,7,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
- FILEFLAGS 0x21L
+ FILEFLAGS 0x23L
 #else
- FILEFLAGS 0x20L
+ FILEFLAGS 0x22L
 #endif
  FILEOS 0x40004L
  FILETYPE 0x1L
@@ -653,12 +653,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook Editor"
-            VALUE "FileVersion", "2.6.13.0"
+            VALUE "FileVersion", "2.7 beta1"
             VALUE "InternalName", "FBE"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBE.exe"
             VALUE "ProductName", "FictionBook Editor"
-            VALUE "ProductVersion", "2.6"
+            VALUE "ProductVersion", "2.7 beta1"
         END
     END
     BLOCK "VarFileInfo"
