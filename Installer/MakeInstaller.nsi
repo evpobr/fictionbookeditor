@@ -1,5 +1,7 @@
 Unicode true
 
+SetCompressor /SOLID lzma
+
 !define /date BUILDNUM "%d %b"
 
 !define PRODUCT_NAME "FictionBook Editor"
