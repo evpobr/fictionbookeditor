@@ -82,12 +82,14 @@ extern CAppModule _Module;
 #include <exception>
 
 // Scintilla
-#include "Scintilla.h"
-#include "SciLexer_new.h"
+#include <Scintilla.h>
+#include <SciLexer.h>
+
+#define SCE_UNIVERSAL_TAGMATCH 27
+#define SCE_UNIVERSAL_TAGATTR 26
 
 // Hunspell
-#include "hunspell.h"
-
+#include <hunspell/hunspell.h>
 // PCRE
 #ifdef USE_PCRE
 #include <pcre.h>

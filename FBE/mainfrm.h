@@ -20,8 +20,8 @@
 #include "TreeView.h"
 #include "SettingsViewPage.h"
 #include "ContainerWnd.h"
-#include "Scintilla.h"
-#include "SciLexer_new.h"
+#include <Scintilla.h>
+#include <SciLexer.h>
 #include "FBE.h"
 #include "Words.h"
 #include "SearchReplace.h"

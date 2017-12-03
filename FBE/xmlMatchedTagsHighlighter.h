@@ -43,7 +43,7 @@ public:
 	};
 
 	void getText(char *dest, int start, int end) {
-		TextRange tr;
+		Sci_TextRange tr;
 		tr.chrg.cpMin = start;
 		tr.chrg.cpMax = end;
 		tr.lpstrText = dest;
