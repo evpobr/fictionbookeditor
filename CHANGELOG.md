@@ -1,5 +1,16 @@
 # FictionBook Editor Changelog
 
+## v.2.7beta1
+
+* Drop Windows XP support
+* High DPI fixes
+* Use MUI as localization system
+* Replace NuGet package system with Vcpkg. PCRE, Hunspell, Scintilla sources removed.
+* Update Scintilla to v3.7.6
+* Update PCRE to v8.41
+* Update Hunspell to v1.6.1
+* Use dynamic VCRuntime to reduce installation size and allow CRT updates via Windows Update
+
 ## v.2.6.13
 
 * Fix v2.6.12 bug then document cannot be loaded and new images cannot be 
