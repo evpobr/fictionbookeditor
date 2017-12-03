@@ -272,10 +272,11 @@ bool CMainDlg::GetSchemaFile()
 	m_pathSchema.Append(_T("FictionBook.xsd"));
 
 
-  if (::GetFileAttributes(m_pathSchema)==INVALID_FILE_ATTRIBUTES) {
-    MessageBox(_T("Can't load FictionBook schema."),_T("Error"),MB_OK|MB_ICONERROR);
-    return false;
-  }
+	if (::GetFileAttributes(m_pathSchema) == INVALID_FILE_ATTRIBUTES)
+	{
+		AtlTaskDialog(::GetActiveWindow(), IDS_ERROR, IDS_CANNOT_LOAD_SCHEMA, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		return false;
+	}
 
   return true;
 }
@@ -581,11 +582,11 @@ void CMainDlg::ValidateFiles() {
       }
     }
   }
-  catch (_com_error& e) {
-    wchar_t	buffer[1024];
-    _snwprintf_s(buffer,_countof(buffer),L"COM Error: %x [%s]",
-	e.Error(),(const wchar_t *)e.Description());
-    MessageBox(buffer,_T("Error"),MB_OK|MB_ICONERROR);
+  catch (_com_error& e)
+  {
+	  CString strMessage;
+	  strMessage.Format(IDS_COM_ERROR_FORMAT, e.Error(), (const wchar_t *)e.Description());
+	  AtlTaskDialog(::GetActiveWindow(), IDS_ERROR, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
   }
 
   SendDlgItemMessage(IDC_STATUS,SB_SETTEXT,0,(LPARAM)_T("Done."));

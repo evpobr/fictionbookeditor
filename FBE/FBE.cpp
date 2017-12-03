@@ -114,13 +114,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 	_Module.AddMessageLoop(&theLoop);
 	CMainFrame wndMain;
 
-	resLib = ::LoadLibrary(_Settings.GetInterfaceLanguageDllName());
-	if(resLib)
-	ATL::_AtlBaseModule.SetResourceInstance(resLib);
-	else
-	ATL::_AtlBaseModule.SetResourceInstance(ATL::_AtlBaseModule.GetModuleInstance());
-
-	HookSysDialogs();
+	SetThreadUILanguage(MAKELANGID(_Settings.GetInterfaceLanguageID(), SUBLANG_DEFAULT));
 
 	U::InitKeycodes();
 	U::InitSettingsHotkeyGroups();
@@ -144,9 +138,6 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 	int nRet = theLoop.Run();
 
 	_Module.RemoveMessageLoop();
-
-	// exit CBT hook
-	UnhookSysDialogs();
 
 	return nRet;
 }
@@ -220,11 +211,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
   // load xml source editor
   if (!LoadEditor()) 
   {
-	  wchar_t msg[MAX_LOAD_STRING + 1];
-	  wchar_t cpt[MAX_LOAD_STRING + 1];
-	  ::LoadString(_Module.GetResourceInstance(), IDS_SCINTILLA_LOAD_ERR_MSG, msg, MAX_LOAD_STRING);
-	  ::LoadString(_Module.GetResourceInstance(), IDS_ERRMSGBOX_CAPTION, cpt, MAX_LOAD_STRING);      
-    ::MessageBox(NULL, msg, cpt,MB_OK|MB_ICONERROR);
+	  AtlTaskDialog(::GetActiveWindow(), IDS_ERRMSGBOX_CAPTION, IDS_SCINTILLA_LOAD_ERR_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
     goto out;
   }
 

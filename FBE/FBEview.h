@@ -2,7 +2,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#include <atlcrack.h>
+#include <wtl/atlcrack.h>
 #if !defined(AFX_FBEVIEW_H__E0C71279_419D_4273_93E3_57F6A57C7CFE__INCLUDED_)
 #define AFX_FBEVIEW_H__E0C71279_419D_4273_93E3_57F6A57C7CFE__INCLUDED_
 
@@ -18,85 +18,6 @@ extern CSettings _Settings;
 
 void BubbleUp(MSHTML::IHTMLDOMNode *node, const wchar_t *name);
 
-class CTableDlg : public CDialogImpl<CTableDlg>,
-	public CWinDataExchange<CTableDlg> {
-public:
-	enum { IDD = IDD_TABLE };
-
-	CButton	m_chekTitle;
-	CEdit m_eRows;
-	CUpDownCtrl m_udRows;
-
-	int m_nRows;		// Выбранное число строк
-	bool m_bTitle;		// Нужна ли строка заголовков таблицы (true - да)
-
-	BEGIN_MSG_MAP(CTableDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
-		COMMAND_ID_HANDLER(IDOK, OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL, OnCloseCmd)
-		COMMAND_RANGE_CODE_HANDLER_EX(IDC_EDIT_TABLE_ROWS, IDC_EDIT_TABLE_ROWS, EN_CHANGE, OnEditChange)//изменения в эдитах
-		REFLECT_NOTIFICATIONS()//Отправить обратно извещающие сообщения от контрола
-	END_MSG_MAP()
-
-	//карта DDX обмена
-	BEGIN_DDX_MAP(CTableDlg)
-		DDX_INT(IDC_EDIT_TABLE_ROWS, m_nRows)
-		//DDX_CHECK(IDC_CHECK_TABLE_TITLE, m_bTitle)
-	END_DDX_MAP()
-
-	LRESULT OnInitDialog(UINT, WPARAM, LPARAM, BOOL&) {
-		DoDataExchange(FALSE, IDC_EDIT_TABLE_ROWS);//запись значений из переменных в контрол(по FALSE)
-		//m_nRows = 1; 
-		m_bTitle = true;
-
-		m_chekTitle	= GetDlgItem(IDC_CHECK_TABLE_TITLE);
-		m_eRows		= GetDlgItem(IDC_EDIT_TABLE_ROWS);
-		m_udRows	= GetDlgItem(IDC_SPIN_TABLE_ROWS);
-
-		m_chekTitle.SetCheck(1);
-		m_eRows.SetWindowText(_T("1"));
-		m_eRows.SetSelAll(TRUE);
-		m_eRows.SetFocus();
-
-		m_udRows.SetRange(1, 1000);
-		m_udRows.SetPos(1);
-
-		return 0;
-	}
-	LRESULT OnOK(WORD, WORD wID, HWND, BOOL&) {
-		
-		m_bTitle = false;
-		if(m_chekTitle.GetCheck() == BST_CHECKED) {
-			m_bTitle = true;
-		}
-		
-		EndDialog(wID);
-		return IDOK;
-	}
-
-	LRESULT OnCloseCmd(WORD, WORD wID, HWND, BOOL&) {
-		EndDialog(wID);
-		return IDCANCEL;
-	}
-
-	//на изменения в эдите
-	LRESULT OnEditChange(UINT, int id, HWND)
-	{		
-		static BOOL bAlreadyThere = FALSE;
-
-		if(!bAlreadyThere) {
-			bAlreadyThere = TRUE;
-			DoDataExchange(TRUE, id);
-
-			static int IDs = IDC_EDIT_TABLE_ROWS;
-			if(IDs != id)
-				DoDataExchange(FALSE, IDs);
-			bAlreadyThere = FALSE;
-		}
-		return 0;
-	}
-};
-
 static void CenterChildWindow(CWindow parent, CWindow child)
 {
 	RECT rcParent, rcChild;
@@ -108,32 +29,6 @@ static void CenterChildWindow(CWindow parent, CWindow child)
 	int childH = rcChild.bottom - rcChild.top;
 	child.MoveWindow(rcParent.left + parentW/2 - childW/2, rcParent.top + parentH/2 - childH/2, childW, childH);
 }
-
-class CAddImageDlg : public CDialogImpl<CAddImageDlg>
-{
-public:
-	enum { IDD = IDD_ADDIMAGE };
-	BEGIN_MSG_MAP(CAddImageDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
-		COMMAND_ID_HANDLER(IDYES, OnBtnClicked)
-		COMMAND_ID_HANDLER(IDCANCEL, OnBtnClicked)
-	END_MSG_MAP()
-
-	LRESULT OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
-	{
-		::CenterChildWindow(GetParent(), m_hWnd);
-		CButton btn = GetDlgItem(IDC_ADDIMAGE_ASKAGAIN);
-		btn.SetCheck(!_Settings.GetInsImageAsking());
-		return 0;
-	}
-
-	LRESULT OnBtnClicked(WORD, WORD wID, HWND, BOOL&)
-	{
-		_Settings.SetIsInsClearImage(wID == IDYES ? true : false);
-		_Settings.SetInsImageAsking(!IsDlgButtonChecked(IDC_ADDIMAGE_ASKAGAIN));
-		return EndDialog(wID);
-	}
-};
 
 template<class T, int chgID>
 class ATL_NO_VTABLE CHTMLChangeSink: public MSHTML::IHTMLChangeSink

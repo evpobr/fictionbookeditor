@@ -3,37 +3,31 @@
 #pragma once
 
 #include "resource.h"
-#include "OptDlg.h"
+#include "SettingsViewPage.h"
+#include "SettingsOtherPage.h"
+#include "SettingsHotkeysPage.h"
+#include "SettingsWordsPage.h"
 
 // CSettingsDlg
 
-class CSettingsDlg : public CAxDialogImpl<CSettingsDlg>
+class CSettingsDlg : public CPropertySheetImpl<CSettingsDlg>
 {
-	CTabCtrl m_tab_ctrl;
-
 public:
-	CSettingsDlg();
-	~CSettingsDlg();
+	CSettingsDlg(_U_STRINGorID title = (LPCTSTR)NULL,
+		UINT uStartPage = 0, HWND hWndParent = NULL);
 
-	enum { IDD = IDD_TOOLS_SETTINGS };
+	BEGIN_MSG_MAP(CSettingsDlg)
+		MSG_WM_SHOWWINDOW(OnShowWindow)
+		CHAIN_MSG_MAP(CPropertySheetImpl<CSettingsDlg>)
+	END_MSG_MAP()
 
-BEGIN_MSG_MAP(CSettingsDlg)
-	MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
-	MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
-	COMMAND_HANDLER(IDOK, BN_CLICKED, OnClickedOK)
-	COMMAND_HANDLER(IDCANCEL, BN_CLICKED, OnClickedCancel)
-	NOTIFY_HANDLER(IDC_TAB_CTRL, TCN_SELCHANGE, OnSelchangeTab)
-	NOTIFY_HANDLER(IDC_TAB_CTRL, TCN_SELCHANGING, OnSelchangingTab)
-	CHAIN_MSG_MAP(CAxDialogImpl<CSettingsDlg>)
-END_MSG_MAP()
-
-	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnClickedOK(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
-	LRESULT OnClickedCancel(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
-	LRESULT OnSelchangeTab(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
-	LRESULT OnSelchangingTab(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
-	LRESULT OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	void OnShowWindow(BOOL bShowing, int nReason);
 
 private:
-	void AddTabPage(const int index, CWindow* Dialog, const CRect& rect);
+	bool m_bCentered;
+
+	CSettingsViewPage m_pgView;
+	CSettingsOtherPage m_pgOther;
+	CSettingsHotkeysPage m_pgHotkeys;
+	CSettingsWordsDlg m_pgWords;
 };

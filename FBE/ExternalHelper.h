@@ -132,17 +132,13 @@ public:
 
 	STDMETHOD(MsgBox)(BSTR message)
 	{
-		wchar_t cpt[MAX_LOAD_STRING + 1];
-		::LoadString(_Module.GetResourceInstance(), IDS_SCRIPT_MSG_CPT, cpt, MAX_LOAD_STRING);
-		MessageBoxW(GetActiveWindow(), message, cpt, MB_ICONINFORMATION|MB_OK);
+		AtlTaskDialog(::GetActiveWindow(), IDS_SCRIPT_MSG_CPT, (LPCTSTR)message, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_INFORMATION_ICON);
 		return S_OK;
 	}
 
 	STDMETHOD(AskYesNo)(BSTR message, BOOL *pVal)
 	{
-		wchar_t cpt[MAX_LOAD_STRING + 1];
-		::LoadString(_Module.GetResourceInstance(), IDS_SCRIPT_MSG_CPT, cpt, MAX_LOAD_STRING);
-		if (IDYES == MessageBoxW(GetActiveWindow(), message, cpt, MB_ICONQUESTION|MB_YESNO))
+		if (IDYES == AtlTaskDialog(::GetActiveWindow(), IDS_SCRIPT_MSG_CPT, (LPCTSTR)message, (LPCTSTR)NULL, TDCBF_YES_BUTTON | TDCBF_YES_BUTTON, TD_WARNING_ICON))
 		{
 			*pVal = true;
 		}
@@ -203,7 +199,7 @@ public:
 
   STDMETHOD(IsFastMode)(BOOL* ext)
   {
-    *ext = _Settings.FastMode();
+    *ext = _Settings.m_fast_mode;
     return S_OK;
   }
 

@@ -52,6 +52,17 @@ END
 
 IDR_THUMBNAILHANDLER    REGISTRY                "ThumbnailHandler.rgs"
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_ERROR               "Error"
+END
+
 #endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -83,13 +94,13 @@ IDR_FBSHELL             REGISTRY                "FBShell.rgs"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,13,0
- PRODUCTVERSION 2,6,0,0
+ FILEVERSION 2,7,0,0
+ PRODUCTVERSION 2,7,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
- FILEFLAGS 0x1L
+ FILEFLAGS 0x3L
 #else
- FILEFLAGS 0x0L
+ FILEFLAGS 0x2L
 #endif
  FILEOS 0x40004L
  FILETYPE 0x2L
@@ -101,12 +112,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "evpobr"
             VALUE "FileDescription", "FictionBook shell extension"
-            VALUE "FileVersion", "2.6.13.0"
+            VALUE "FileVersion", "2.7 beta1"
             VALUE "InternalName", "FBShell"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBShell.dll"
             VALUE "ProductName", "FictionBook Editor"
-            VALUE "ProductVersion", "2.6"
+            VALUE "ProductVersion", "2.7 beta1"
         END
     END
     BLOCK "VarFileInfo"

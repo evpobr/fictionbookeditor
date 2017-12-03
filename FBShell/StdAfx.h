@@ -28,6 +28,9 @@
 
 #include <atlcom.h>
 
+#include <wtl/atlapp.h>
+#include <wtl/atldlgs.h>
+
 #include <comutil.h>
 #include <comdef.h>
 #include <comdefsp.h>

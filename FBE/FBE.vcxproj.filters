@@ -55,9 +55,6 @@
     <ClCompile Include="mainfrm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OptDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="script.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -65,15 +62,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SettingsDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SettingsHotkeysDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SettingsOtherDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SettingsWordsDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Speller.cpp">
@@ -108,6 +96,21 @@
     </ClCompile>
     <ClCompile Include="FBE_i.c">
       <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsViewPage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsOtherPage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsWordsPage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsHotkeysPage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TableDialog.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,9 +161,6 @@
     <ClInclude Include="ModelessDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OptDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="res1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -177,15 +177,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SettingsDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SettingsHotkeysDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SettingsOtherDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SettingsWordsDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Speller.h">
@@ -238,6 +229,21 @@
     </ClInclude>
     <ClInclude Include="FBE.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsViewPage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsOtherPage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsWordsPage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsHotkeysPage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TableDialog.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -383,7 +389,6 @@
     <None Include="res\FBE.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="packages.config" />
     <None Include="FictionBook.xsd" />
     <None Include="FictionBookGenres.xsd" />
     <None Include="FictionBookLang.xsd" />
@@ -412,9 +417,9 @@
     <None Include="contributors.txt" />
     <None Include="copying.txt" />
     <None Include="..\CHANGELOG.md" />
-    <None Include="..\NOWTO.md" />
     <None Include="..\ReadMe.md" />
     <None Include="..\ToDo.md" />
+    <None Include="..\HOWTO.md" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="res\FBE.exe.manifest">

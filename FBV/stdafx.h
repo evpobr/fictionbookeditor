@@ -5,16 +5,15 @@
 #include <atlbase.h>
 #include <atlstr.h>
 #include <atlpath.h>
-#include <atlapp.h>
+#include <wtl/atlapp.h>
 
 extern CAppModule _Module;
 
 #include <atlwin.h>
 
-#include <atlframe.h>
-#include <atlctrls.h>
-#include <atldlgs.h>
-#include <atlmisc.h>
+#include <wtl/atlframe.h>
+#include <wtl/atlctrls.h>
+#include <wtl/atldlgs.h>
 
 #include <commctrl.h>
 #include <assert.h>

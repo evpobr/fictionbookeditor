@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "atlres.h"
+#include "wtl/atlres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -107,9 +107,9 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Dialog
 //
 
-IDD_CUSTOMSAVEDLG DIALOG 0, 0, 330, 32
-STYLE DS_SETFONT | DS_3DLOOK | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
-FONT 8, "MS Shell Dlg"
+IDD_CUSTOMSAVEDLG DIALOGEX 0, 0, 330, 32
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     LTEXT           "XSL Template:",IDC_STATIC,68,2,53,8
     EDITTEXT        IDC_TEMPLATE,130,0,164,12,ES_AUTOHSCROLL
@@ -147,6 +147,17 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_CUSTOMSAVEDLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
@@ -160,6 +171,15 @@ BEGIN
     IDS_WARNING_FILE_ALREADY_EXISTS 
                             "%s already exists.\nDo you want to replace it?"
     IDS_SAVE_FILE_FILTER    "Web Page, complete (*.html;*.htm)|*.htm;*.html|Web Archive, single file (*.mht)|*.mht|Web Page, HTML only (*.html;*.htm)|*.htm;*.html|"
+    IDS_XML_PARSE_ERROR     "XML Parse Error"
+    IDS_AT_LINE_COLUMN      "At %s, line %d, column %d: %s"
+    IDS_AT_S_S              "At %s: %s"
+    IDS_ERROR               "Error"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COM_ERROR           "COM Error"
 END
 
 #endif    // English (United States) resources

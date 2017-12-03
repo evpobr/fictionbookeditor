@@ -7,16 +7,16 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "atlres.h"
+#include "wtl/atlres.h"
 #include "..\..\res1.h"
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Russian (Russia) resources
+// Ukrainian (Ukraine) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
-LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_UKR)
+LANGUAGE LANG_UKRAINIAN, SUBLANG_DEFAULT
 #pragma code_page(1251)
 
 /////////////////////////////////////////////////////////////////////////////
@@ -25,13 +25,13 @@ LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,13,0
- PRODUCTVERSION 2,6,0,0
+ FILEVERSION 2,7,0,0
+ PRODUCTVERSION 2,7,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
- FILEFLAGS 0x1L
+ FILEFLAGS 0x9L
 #else
- FILEFLAGS 0x0L
+ FILEFLAGS 0x8L
 #endif
  FILEOS 0x40004L
  FILETYPE 0x2L
@@ -43,12 +43,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook ukrainian language support"
-            VALUE "FileVersion", "2.6.13.0"
+            VALUE "FileVersion", "2.7 beta1"
             VALUE "InternalName", "res_ukr"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
-            VALUE "OriginalFilename", "res_ukr.dll"
+            VALUE "OriginalFilename", "FBE.exe.mui"
             VALUE "ProductName", "FictionBook Editor"
-            VALUE "ProductVersion", "2.6"
+            VALUE "ProductVersion", "2.7 beta1"
         END
     END
     BLOCK "VarFileInfo"
@@ -57,16 +57,6 @@ BEGIN
     END
 END
 
-#endif    // Russian (Russia) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Ukrainian (Ukraine) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_UKR)
-LANGUAGE LANG_UKRAINIAN, SUBLANG_DEFAULT
-#pragma code_page(1251)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -232,6 +222,20 @@ BEGIN
     "\0"
 END
 
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""..\\..\\wtl\\atlres.h""\r\n"
+    "#include ""..\\..\\res1.h""\r\n"
+    "#include ""..\\..\\resource.h""\r\n"
+    "\r\n"
+    "\0"
+END
+
 #endif    // APSTUDIO_INVOKED
 
 
@@ -240,15 +244,15 @@ END
 // Dialog
 //
 
-IDD_SETTING_OTHER DIALOGEX 0, 0, 224, 242
-STYLE DS_SETFONT | WS_CHILD | WS_SYSMENU
-FONT 9, "Tahoma", 400, 0, 0xCC
+IDD_SETTINGS_OTHER DIALOGEX 0, 0, 225, 219
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0xCC
 BEGIN
-    GROUPBOX        "Параметри збереження",IDC_STATIC,7,8,129,46
-    LTEXT           "Кодування:",IDC_STATIC,11,24,60,9
-    CONTROL         "Зберігати оригінальне кодування",IDC_KEEP,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,12,37,119,15
-    COMBOBOX        IDC_DEFAULT_ENC,51,21,79,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    GROUPBOX        "Параметри відкриття",IDC_STATIC,141,8,76,47
+    GROUPBOX        "Параметри збереження",IDC_STATIC,7,8,124,46
+    LTEXT           "Кодування:",IDC_STATIC,11,24,43,9
+    CONTROL         "Зберігати оригінальне кодування",IDC_KEEP,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,12,37,99,15
+    COMBOBOX        IDC_DEFAULT_ENC,63,21,61,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Параметри відкриття",IDC_STATIC,135,8,83,47
     CONTROL         "Відновлювати позицію курсору",IDC_RESTORE_POS,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,147,23,65,24
     GROUPBOX        "Тека скриптів",IDC_STATIC,7,56,211,44
     CONTROL         "Типова тека",IDC_DEFAULT_SCRIPTS_FOLDER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,68,80,10
@@ -259,19 +263,19 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,13,113,103,17
     GROUPBOX        "Малюнки",IDC_STATIC,127,102,91,33
     CONTROL         "Вставляти порожні малюнки",IDC_OPTIONS_CLEARIMGS,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,136,112,74,18
-    GROUPBOX        "Нерозривні пробіли",IDC_STATIC,7,171,89,45
+    GROUPBOX        "Нерозривні пробіли",IDC_STATIC,7,171,89,43
     LTEXT           "Використати символ:",IDC_STATIC,13,188,43,18
     COMBOBOX        IDC_NBSP_CHAR,63,191,27,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    GROUPBOX        "Розкладка клавіатури",IDC_STATIC,101,171,116,45
+    GROUPBOX        "Розкладка клавіатури",IDC_STATIC,101,171,116,43
     CONTROL         "Змінювати при старті",IDC_CHANGE_KEYB,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,107,183,84,8
     GROUPBOX        "Вставляти малюнки, як",IDC_STATIC,7,138,211,30
     LTEXT           "Формат:",IDC_STATIC,13,152,28,8
     COMBOBOX        IDC_IMAGETYPE,60,150,40,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    EDITTEXT        IDC_JPEGQUALITY,179,149,26,13,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_JPEGQUALITY,179,149,31,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "",IDC_JPEGSPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,204,149,7,14
     LTEXT           "Якість JPEG:",IDC_STATIC,129,152,43,8
-    COMBOBOX        IDC_KEYB_LAYOUT,144,198,68,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Міняти на:",IDC_STATIC,107,200,34,8
+    COMBOBOX        IDC_KEYB_LAYOUT,144,195,68,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Міняти на:",IDC_STATIC,107,197,34,8
 END
 
 IDD_TABLE DIALOGEX 0, 0, 260, 46
@@ -286,17 +290,6 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,187,10
     EDITTEXT        IDC_EDIT_TABLE_ROWS,157,19,35,14,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "",IDC_SPIN_TABLE_ROWS,"msctls_updown32",UDS_WRAP | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,192,19,11,14
-END
-
-IDD_TOOLS_SETTINGS DIALOGEX 0, 0, 266, 282
-STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-EXSTYLE WS_EX_APPWINDOW
-CAPTION "Налаштування"
-FONT 8, "Microsoft Sans Serif", 400, 0, 0xCC
-BEGIN
-    CONTROL         "",IDC_TAB_CTRL,"SysTabControl32",0x0,0,0,266,253
-    PUSHBUTTON      "Гаразд",IDOK,142,261,55,15
-    PUSHBUTTON      "Скасувати",IDCANCEL,205,261,55,15
 END
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 266, 151
@@ -315,14 +308,14 @@ BEGIN
                     "SysLink",0x0,101,32,154,8
     EDITTEXT        IDC_CONTRIBS,70,51,189,77,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | ES_WANTRETURN | NOT WS_BORDER | WS_VSCROLL | NOT WS_TABSTOP,WS_EX_STATICEDGE
     CONTROL         "Static",IDC_TEXT_STATUS,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,24,137,180,8
-    CONTROL         IDB_UPD_CHECK1,IDC_PIC_UPDATE,"Static",SS_BITMAP,9,136,9,9
+    CONTROL         400,IDC_PIC_UPDATE,"Static",SS_BITMAP,9,136,9,9
     PUSHBUTTON      "Обновити",IDC_UPDATE,161,133,49,14,NOT WS_VISIBLE
 END
 
 IDD_INPUTBOX DIALOGEX 0, 0, 290, 70
-STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Введення"
-FONT 9, "Tahoma", 0, 0, 0x0
+FONT 8, "MS Shell Dlg", 400, 0, 0xCC
 BEGIN
     LTEXT           "Текст:",IDC_PROMPT,7,7,273,18
     EDITTEXT        IDC_INPUT,7,31,273,12,ES_AUTOHSCROLL
@@ -331,9 +324,9 @@ BEGIN
     PUSHBUTTON      "&Скасувати",IDCANCEL,241,49,39,14
 END
 
-IDD_OPTIONS DIALOGEX 0, 0, 225, 219
-STYLE DS_SETFONT | WS_CHILD | WS_SYSMENU
-FONT 9, "Tahoma", 0, 0, 0x0
+IDD_SETTINGS_VIEW DIALOGEX 0, 0, 225, 219
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0xCC
 BEGIN
     LTEXT           "Колір тексту:",IDC_STATIC,13,66,44,8
     PUSHBUTTON      "",IDC_FG,60,64,20,12
@@ -345,10 +338,10 @@ BEGIN
     GROUPBOX        "Загальне",IDC_STATIC,7,7,212,30
     GROUPBOX        "Тіло",IDC_STATIC,7,37,212,43
     GROUPBOX        "Редактор коду",IDC_STATIC,7,80,212,79
-    CONTROL         "Переноси рядків",IDC_WRAP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,109,65,10
-    CONTROL         "Підсвітка синтаксису",IDC_SYNTAXHL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,125,80,10
+    CONTROL         "Переноси рядків",IDC_WRAP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,109,87,10
+    CONTROL         "Підсвітка синтаксису",IDC_SYNTAXHL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,125,88,10
     CONTROL         "Показувати символи кінця рядків",IDC_SHOWEOL,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,13,138,86,16
-    CONTROL         "Швидкий режим",IDC_FAST_MODE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,148,66,63,10
+    CONTROL         "Швидкий режим",IDC_FAST_MODE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,146,66,65,10
     LTEXT           "Мова:",IDC_STATIC,13,22,41,8
     COMBOBOX        IDC_LANG,47,19,63,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     GROUPBOX        "Перевірка орфографії",IDC_STATIC,7,165,212,48
@@ -358,17 +351,17 @@ BEGIN
     LTEXT           "Словник користувача:",IDS_SPELL_CUSTOM_DICT,15,190,44,16
     PUSHBUTTON      "..",IDC_DICTPATH,200,194,12,12
     PUSHBUTTON      "",IDC_BG,120,64,20,12
-    CONTROL         "Показувати номери рядків",IDC_SHOWLINENUMBERS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,111,125,96,11
-    CONTROL         "Підсвітка парних тегів",IDC_TAGHL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,111,141,93,11
+    CONTROL         "Показувати номери рядків",IDC_SHOWLINENUMBERS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,106,125,104,11
+    CONTROL         "Підсвітка парних тегів",IDC_TAGHL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,106,141,93,11
     LTEXT           "Шрифт:",IDC_STATIC,13,94,41,8
     COMBOBOX        IDC_SRCFONT,47,92,165,70,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Показувати пробіли",IDC_SHOWWHITESPACE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,111,109,82,11
+    CONTROL         "Показувати пробіли",IDC_SHOWWHITESPACE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,106,109,82,11
 END
 
 IDD_REPLACE DIALOGEX 0, 0, 295, 87
-STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Пошук і заміна"
-FONT 9, "Tahoma", 0, 0, 0x0
+FONT 8, "MS Shell Dlg", 400, 0, 0xCC
 BEGIN
     LTEXT           "Знайти:",IDC_STATIC,7,9,45,8,NOT WS_GROUP
     LTEXT           "Замінити на:",IDC_STATIC,7,25,45,8,NOT WS_GROUP
@@ -387,9 +380,9 @@ BEGIN
 END
 
 IDD_FIND DIALOGEX 0, 0, 295, 76
-STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Пошук"
-FONT 9, "Tahoma", 0, 0, 0x0
+FONT 8, "MS Shell Dlg", 400, 0, 0xCC
 BEGIN
     LTEXT           "Знайти:",IDC_STATIC,7,9,40,8
     COMBOBOX        IDC_TEXT,49,7,183,62,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_GROUP | WS_TABSTOP
@@ -404,78 +397,66 @@ BEGIN
 END
 
 IDD_CUSTOMSAVEDLG DIALOGEX 0, 0, 415, 18
-STYLE DS_SETFONT | DS_3DLOOK | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
-FONT 8, "Tahoma", 0, 0, 0x0
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     LTEXT           "Кодування:",IDC_STATIC,68,2,41,10
     COMBOBOX        IDC_ENCODING,130,0,164,104,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
 
-IDD_ADDIMAGE DIALOGEX 0, 0, 147, 66
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
-CAPTION "Зробіть вибір"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "Так",IDYES,21,31,49,14
-    PUSHBUTTON      "Ні",IDCANCEL,77,31,49,14
-    CONTROL         "Більше не запитувати",IDC_ADDIMAGE_ASKAGAIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,28,53,91,10
-    LTEXT           "Вставити порожній малюнок?",IDS_ADD_CLEARIMG_TEXT,29,11,110,10
-    ICON            IDR_MAINFRAME,IDC_ADDIMAGE_ICON,3,6,20,20
-END
-
-IDD_HOTKEYS DIALOGEX 0, 0, 249, 227
-STYLE DS_SETFONT | WS_CHILD | WS_SYSMENU
-FONT 9, "Tahoma", 400, 0, 0xCC
+IDD_SETTINGS_HOTKEYS DIALOGEX 0, 0, 225, 219
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0xCC
 BEGIN
     LISTBOX         IDC_LIST_HOTKEYS_GROUPS,7,21,70,88,LBS_NOINTEGRALHEIGHT | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
-    LISTBOX         IDC_LIST_HOTKEYS,83,21,132,88,LBS_NOINTEGRALHEIGHT | NOT WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
-    GROUPBOX        "Опис",IDC_STATIC_HOTKEY_DESCRIPTION,7,180,208,33,WS_TABSTOP
+    LISTBOX         IDC_LIST_HOTKEYS,83,21,135,88,LBS_NOINTEGRALHEIGHT | NOT WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    GROUPBOX        "Опис",IDC_STATIC_HOTKEY_DESCRIPTION,7,180,211,33,WS_TABSTOP
     EDITTEXT        IDC_EDIT_HOTKEY,41,121,94,14,ES_MULTILINE | ES_AUTOHSCROLL
     LTEXT           "Гурти:",IDC_STATIC_HOTKEYS_GROUPS,9,11,27,8,WS_TABSTOP
     LTEXT           "Команди:",IDC_STATIC_HOTKEYS,85,11,32,8,WS_TABSTOP
     LTEXT           "Клавіші:",IDC_STATIC,10,124,31,8,WS_TABSTOP
     PUSHBUTTON      "Типово",IDC_BUTTON_DEFAULT,151,125,55,14
-    EDITTEXT        IDC_EDIT_HOTKEY_DESCRIPTION,9,189,202,22,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
+    EDITTEXT        IDC_EDIT_HOTKEY_DESCRIPTION,15,189,196,17,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
     PUSHBUTTON      "Видалити",IDC_BUTTON_HOTKEY_DELETE,151,143,54,14
-    GROUPBOX        "Дії",IDC_STATIC,143,114,72,65
+    GROUPBOX        "Дії",IDC_STATIC,143,114,75,65
     GROUPBOX        "Присвоєно",IDC_STATIC_HOTKEY_COLLISION,7,138,129,41
     PUSHBUTTON      "Присвоїти",IDC_BUTTON_HOTKEY_ASSIGN,151,161,54,14,WS_DISABLED
     EDITTEXT        IDC_EDIT_HOTKEY_COLLISION,14,150,115,24,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
 END
 
-IDD_SETTINGS_WORDS DIALOGEX 0, 0, 262, 227
+IDD_SETTINGS_WORDS DIALOGEX 0, 0, 225, 219
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    EDITTEXT        IDC_EDIT_NEW,16,169,165,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "Додати",IDC_BUTTON_ADD,192,169,50,14
-    GROUPBOX        "Список слів-виключень",IDC_STATIC_WORDS_CHEVRON,7,8,247,183
-    CONTROL         "",IDC_LIST_WORDS,"SysListView32",LVS_REPORT | LVS_SHOWSELALWAYS | LVS_SORTDESCENDING | LVS_OWNERDATA | WS_BORDER | WS_TABSTOP,15,25,230,115,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_EDIT_NEW,16,169,142,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Додати",IDC_BUTTON_ADD,161,170,50,14
+    GROUPBOX        "Список слів-виключень",IDC_STATIC_WORDS_CHEVRON,7,8,211,183
+    CONTROL         "",IDC_LIST_WORDS,"SysListView32",LVS_REPORT | LVS_SHOWSELALWAYS | LVS_SORTDESCENDING | LVS_OWNERDATA | WS_BORDER | WS_TABSTOP,15,25,196,115,WS_EX_CLIENTEDGE
     CONTROL         "Показувати слова-виключення у вікні «Слова»",IDC_CHECK_SHOW_EXCLUSIONS,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,201,187,10
     CONTROL         "Виділити усі",IDC_CHECK_SELALL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,151,63,10
     PUSHBUTTON      "Видалити виділене",IDC_BUTTON_REMOVESEL,104,148,78,14
-    EDITTEXT        IDC_EDIT_LV,202,7,43,14,ES_AUTOHSCROLL | NOT WS_VISIBLE | NOT WS_TABSTOP,WS_EX_CLIENTEDGE | WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_LV,175,7,43,14,ES_AUTOHSCROLL | NOT WS_VISIBLE | NOT WS_TABSTOP,WS_EX_CLIENTEDGE | WS_EX_STATICEDGE
 END
 
 IDD_WORDS DIALOGEX 0, 0, 366, 323
-STYLE DS_SETFONT | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "Слова"
-FONT 9, "Tahoma", 0, 0, 0x1
+FONT 8, "MS Shell Dlg", 400, 0, 0xCC
 BEGIN
     CONTROL         "List1",IDC_WLIST,"SysListView32",LVS_REPORT | LVS_OWNERDATA | WS_TABSTOP,7,7,354,208,WS_EX_CLIENTEDGE
-    DEFPUSHBUTTON   "Гаразд",IDOK,301,233,40,14
-    PUSHBUTTON      "Скасувати",IDCANCEL,301,253,40,14
+    DEFPUSHBUTTON   "Гаразд",IDOK,301,233,48,14
+    PUSHBUTTON      "Скасувати",IDCANCEL,301,253,48,14
     EDITTEXT        IDC_REDIT,7,270,41,12,NOT WS_VISIBLE | NOT WS_TABSTOP
     CONTROL         "Показати/Сховати виключення",IDC_CHECK_SHOWHIDE_EXCLS,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,223,110,10
     GROUPBOX        "Обробка",IDC_STATIC,287,220,70,55
     GROUPBOX        "Виділені",IDC_STATIC,14,237,250,37
-    PUSHBUTTON      "Оберн. виділ.",IDC_BUTTON_DESEL,138,251,50,14
-    PUSHBUTTON      "Не замінювати",IDC_BUTTON_REMOVEHLREPL,197,251,55,14
-    PUSHBUTTON      "До виключень",IDC_BUTTON_ADDHLTOEXCLS,21,251,51,14
+    PUSHBUTTON      "Оберн. виділ.",IDC_BUTTON_DESEL,143,250,56,14
+    PUSHBUTTON      "Не замінювати",IDC_BUTTON_REMOVEHLREPL,202,250,55,14
+    PUSHBUTTON      "До виключень",IDC_BUTTON_ADDHLTOEXCLS,21,250,56,14
     PUSHBUTTON      "Позначити усі",IDC_BUTTON_SELALL,133,221,51,14
-    PUSHBUTTON      "До замінюваних",IDC_BUTTON_SETHLREPL,77,251,53,14
+    PUSHBUTTON      "До замінюваних",IDC_BUTTON_SETHLREPL,81,250,60,14
     PUSHBUTTON      "Заміна для усіх",IDC_BUTTON_SELALLREPL,192,221,61,14
     GROUPBOX        "Поточне слово",IDC_WORDS_FR_GBOX_CURWORD,14,282,343,34
     EDITTEXT        IDC_WORDS_FR_EDIT_WORD,46,296,67,14,ES_AUTOHSCROLL | ES_READONLY
@@ -487,9 +468,9 @@ BEGIN
 END
 
 IDD_SPELL_CHECK DIALOGEX 0, 0, 273, 135
-STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Орфографія"
-FONT 8, "Tahoma", 400, 0, 0x1
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "Скасувати",IDCANCEL,216,112,50,14
     LTEXT           "Немає у словнику:",IDC_STATIC,7,14,64,8
@@ -516,12 +497,12 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO
 BEGIN
-    IDD_SETTING_OTHER, DIALOG
+    IDD_SETTINGS_OTHER, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 218
         TOPMARGIN, 7
-        BOTTOMMARGIN, 221
+        BOTTOMMARGIN, 214
     END
 
     IDD_TABLE, DIALOG
@@ -530,12 +511,6 @@ BEGIN
         RIGHTMARGIN, 253
         TOPMARGIN, 7
         BOTTOMMARGIN, 39
-    END
-
-    IDD_TOOLS_SETTINGS, DIALOG
-    BEGIN
-        RIGHTMARGIN, 225
-        BOTTOMMARGIN, 178
     END
 
     IDD_ABOUTBOX, DIALOG
@@ -553,7 +528,7 @@ BEGIN
         BOTTOMMARGIN, 39
     END
 
-    IDD_OPTIONS, DIALOG
+    IDD_SETTINGS_VIEW, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 218
@@ -577,20 +552,20 @@ BEGIN
     BEGIN
     END
 
-    IDD_HOTKEYS, DIALOG
+    IDD_SETTINGS_HOTKEYS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 242
+        RIGHTMARGIN, 218
         TOPMARGIN, 7
-        BOTTOMMARGIN, 220
+        BOTTOMMARGIN, 214
     END
 
     IDD_SETTINGS_WORDS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 254
+        RIGHTMARGIN, 218
         TOPMARGIN, 7
-        BOTTOMMARGIN, 220
+        BOTTOMMARGIN, 214
     END
 
     IDD_WORDS, DIALOG
@@ -600,222 +575,12 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 316
     END
+
+    IDD_SPELL_CHECK, DIALOG
+    BEGIN
+    END
 END
 #endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Toolbar
-//
-
-IDR_MAINFRAME TOOLBAR 24, 24
-BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    SEPARATOR
-    BUTTON      ID_FILE_VALIDATE
-    SEPARATOR
-    BUTTON      ID_VIEW_DESC
-    BUTTON      ID_VIEW_BODY
-    BUTTON      ID_VIEW_SOURCE
-    SEPARATOR
-    BUTTON      ID_EDIT_ADDBINARY
-    BUTTON      ID_EDIT_INS_IMAGE
-    BUTTON      ID_EDIT_INS_INLINEIMAGE
-    SEPARATOR
-    BUTTON      ID_EDIT_FIND
-    BUTTON      ID_EDIT_FINDNEXT
-    SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    SEPARATOR
-    BUTTON      ID_EDIT_UNDO
-    BUTTON      ID_EDIT_REDO
-    SEPARATOR
-    BUTTON      ID_EDIT_BOLD
-    BUTTON      ID_EDIT_ITALIC
-    BUTTON      ID_EDIT_SUP
-    BUTTON      ID_EDIT_SUB
-    BUTTON      ID_EDIT_STRIK
-    BUTTON      ID_EDIT_CODE
-    SEPARATOR
-    BUTTON      ID_STYLE_LINK
-    BUTTON      ID_STYLE_NOTE
-    BUTTON      ID_STYLE_NOLINK
-    BUTTON      ID_GOTO_FOOTNOTE
-    SEPARATOR
-    BUTTON      ID_STYLE_NORMAL
-    BUTTON      ID_STYLE_SUBTITLE
-    BUTTON      ID_STYLE_TEXTAUTHOR
-    SEPARATOR
-    BUTTON      ID_TOOLS_SPELLCHECK
-END
-
-IDR_MAINFRAME_SMALL TOOLBAR 16, 16
-BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    BUTTON      ID_FILE_VALIDATE
-    BUTTON      ID_VIEW_DESC
-    BUTTON      ID_VIEW_BODY
-    BUTTON      ID_VIEW_SOURCE
-    BUTTON      ID_VIEW_OPTIONS
-    BUTTON      ID_EDIT_ADDBINARY
-    BUTTON      ID_EDIT_FIND
-    BUTTON      ID_EDIT_FINDNEXT
-    BUTTON      ID_EDIT_REPLACE
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    BUTTON      ID_EDIT_UNDO
-    BUTTON      ID_EDIT_REDO
-    BUTTON      ID_EDIT_INS_IMAGE
-    BUTTON      ID_EDIT_INS_INLINEIMAGE
-    BUTTON      ID_EDIT_ADD_IMAGE
-    BUTTON      ID_STYLE_LINK
-    BUTTON      ID_STYLE_NOTE
-    BUTTON      ID_STYLE_NOLINK
-    BUTTON      ID_STYLE_NORMAL
-    BUTTON      ID_STYLE_SUBTITLE
-    BUTTON      ID_STYLE_TEXTAUTHOR
-    BUTTON      ID_GOTO_FOOTNOTE
-    BUTTON      ID_EDIT_ADD_BODY
-    BUTTON      ID_EDIT_ADD_TITLE
-    BUTTON      ID_EDIT_ADD_EPIGRAPH
-    BUTTON      ID_EDIT_ADD_ANN
-    BUTTON      ID_EDIT_INS_POEM
-    BUTTON      ID_EDIT_INS_CITE
-    BUTTON      ID_INSERT_TABLE
-    BUTTON      ID_TOOLS_SPELLCHECK
-END
-
-IDR_DOCUMENT_TREE TOOLBAR 24, 24
-BEGIN
-    BUTTON      ID_DT_RIGHT_ONE
-    BUTTON      ID_DT_RIGHT_SMART
-    BUTTON      ID_DT_LEFT
-    BUTTON      ID_DT_MERGE
-    BUTTON      ID_DT_DELETE
-END
-
-IDR_SCRIPTS TOOLBAR 16, 16
-BEGIN
-    BUTTON      ID_LAST_SCRIPT
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
-
-IDR_MAINFRAME_SMALL     BITMAP                  "res\\Toolbar_small.bmp"
-
-IDR_SCRIPTS             BITMAP                  "res\\Scripts.bmp"
-
-IDB_STRUCTURE           BITMAP                  "res\\struct.bmp"
-
-IDB_WORDSTATES          BITMAP                  "res\\wordstat.bmp"
-
-IDR_DOCUMENT_TREE       BITMAP                  "res\\document.bmp"
-
-IDB_AB_BANNER           BITMAP                  "res\\Fb2-shema.bmp"
-
-IDB_UPD_OK              BITMAP                  "res\\ok.bmp"
-
-IDB_UPD_ERR             BITMAP                  "res\\error.bmp"
-
-IDB_UPD_UPDATE          BITMAP                  "res\\update.bmp"
-
-IDB_UPD_CHECK1          BITMAP                  "res\\Icon_02.bmp"
-
-IDB_UPD_CHECK2          BITMAP                  "res\\Icon_03.bmp"
-
-IDB_UPD_CHECK3          BITMAP                  "res\\Icon_04.bmp"
-
-IDB_UPD_CHECK4          BITMAP                  "res\\Icon_05.bmp"
-
-IDB_UPD_CHECK5          BITMAP                  "res\\Icon_06.bmp"
-
-IDB_UPD_CHECK6          BITMAP                  "res\\Icon_07.bmp"
-
-IDB_UPD_CHECK7          BITMAP                  "res\\Icon_08.bmp"
-
-IDB_UPD_CHECK8          BITMAP                  "res\\Icon_09.bmp"
-
-IDB_UPD_CHECK9          BITMAP                  "res\\Icon_10.bmp"
-
-IDB_UPD_CHECK10         BITMAP                  "res\\Icon_11.bmp"
-
-IDB_UPD_CHECK11         BITMAP                  "res\\Icon_12.bmp"
-
-IDB_UPD_CHECK12         BITMAP                  "res\\Icon_13.bmp"
-
-IDB_UPD_CHECK13         BITMAP                  "res\\Icon_14.bmp"
-
-IDB_UPD_CHECK14         BITMAP                  "res\\Icon_15.bmp"
-
-IDB_UPD_CHECK15         BITMAP                  "res\\Icon_16.bmp"
-
-IDB_UPD_CHECK16         BITMAP                  "res\\Icon_17.bmp"
-
-IDB_UPD_CHECK17         BITMAP                  "res\\Icon_18.bmp"
-
-IDB_UPD_CHECK18         BITMAP                  "res\\Icon_19.bmp"
-
-IDB_UPD_CHECK19         BITMAP                  "res\\Icon_20.bmp"
-
-IDB_UPD_CHECK20         BITMAP                  "res\\Icon_21.bmp"
-
-IDB_UPD_CHECK21         BITMAP                  "res\\Icon_22.bmp"
-
-IDB_UPD_CHECK22         BITMAP                  "res\\Icon_23.bmp"
-
-IDB_UPD_CHECK23         BITMAP                  "res\\Icon_24.bmp"
-
-IDB_UPD_CHECK24         BITMAP                  "res\\Icon_25.bmp"
-
-IDB_CENTER              BITMAP                  "res\\center.bmp"
-
-IDB_ORANGE              BITMAP                  "res\\orange.bmp"
-
-IDB_GREEN               BITMAP                  "res\\green.bmp"
-
-IDB_DOC                 BITMAP                  "res\\doc.bmp"
-
-IDB_XML                 BITMAP                  "res\\xml.bmp"
-
-IDB_OTHER               BITMAP                  "res\\other.bmp"
-
-IDB_HTML                BITMAP                  "res\\html.bmp"
-
-IDB_PRC                 BITMAP                  "res\\prc.bmp"
-
-IDB_TEXT                BITMAP                  "res\\text.bmp"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\FBE2.ico"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// RT_MANIFEST
-//
-
-1                       RT_MANIFEST             "res\\FBE.exe.manifest"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1236,42 +1001,11 @@ BEGIN
     IDS_HOTKEY_EDIT_SUB     "Субскріпт"
     IDS_HOTKEY_EDIT_SUP     "Суперскріпт"
     IDS_ENCODING            "Кодування:"
+    IDS_SETTINGS            "Налаштування"
+    IDS_DONT_ASK_AGAIN      "Більше не запитувати"
 END
 
 #endif    // Ukrainian (Ukraine) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE 
-BEGIN
-    "resource.h\0"
-END
-
-2 TEXTINCLUDE 
-BEGIN
-    "#include ""..\\..\\wtl\\atlres.h""\r\n"
-    "#include ""..\\..\\res1.h""\r\n"
-    "#include ""..\\..\\resource.h""\r\n"
-    "\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

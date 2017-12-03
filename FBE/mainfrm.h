@@ -18,10 +18,10 @@
 #include "FBEView.h"
 #include "FBDoc.h"
 #include "TreeView.h"
-#include "OptDlg.h"
+#include "SettingsViewPage.h"
 #include "ContainerWnd.h"
-#include "Scintilla.h"
-#include "SciLexer_new.h"
+#include <Scintilla.h>
+#include <SciLexer.h>
 #include "FBE.h"
 #include "Words.h"
 #include "SearchReplace.h"
@@ -139,10 +139,6 @@ public:
 
   END_UPDATE_UI_MAP()
 };
-
-// for MessageBox localization
-void HookSysDialogs();
-void UnhookSysDialogs();
 
 class CMainFrame :	public CFrameWindowImpl<CMainFrame>,
 					public CCustomizableToolBarCommands<CMainFrame>,
@@ -301,7 +297,7 @@ public:
 		TCHAR prgPath[MAX_PATH];
 		DWORD pathlen = ::GetModuleFileName(_Module.GetModuleInstance(), prgPath, MAX_PATH);
 		PathRemoveFileSpec(prgPath);
-		if (_Settings.GetUseSpellChecker())
+		if (_Settings.m_usespell_check)
 		{
 			m_Speller = new CSpeller(CString(prgPath)+L"\\dict\\");
 		}
@@ -786,11 +782,10 @@ public:
 
   LRESULT OnToolCustomize(WORD /*wNotifyCode*/, WORD /*wID*/, HWND hWndCtl, BOOL& /*bHandled*/)
   {
-	  UnhookSysDialogs();
 	  if (m_selBandID == ATL_IDW_BAND_FIRST+1) m_CmdToolbar.Customize(); else
 	  if (m_selBandID == ATL_IDW_BAND_FIRST+2) m_ScriptsToolbar.Customize();
-	  HookSysDialogs();
-      return 0;
+
+	  return 0;
   }
 
 	LRESULT OnLastScript(WORD, WORD, HWND, BOOL&)
@@ -872,7 +867,7 @@ public:
 
 	// added by SeNS: do spellcheck
 	if (m_Speller && m_current_view == BODY)
-		if (m_Speller->Enabled() && _Settings.GetHighlightMisspells())
+		if (m_Speller->Enabled() && _Settings.m_highlght_check)
 			m_Speller->CheckElement(m_doc->m_body.SelectionContainer(), -1, m_doc->m_body.IsHTMLChanged());
 
 	return 0;
@@ -1001,8 +996,8 @@ public:
 	{
 		if (m_Speller && m_current_view == BODY)
 		{
-			_Settings.SetHighlightMisspells(!_Settings.GetHighlightMisspells());
-			m_Speller->SetHighlightMisspells(_Settings.GetHighlightMisspells());
+			_Settings.SetHighlightMisspells(!_Settings.m_highlght_check);
+			m_Speller->SetHighlightMisspells(_Settings.m_highlght_check);
 		}
 		return S_OK;
 	}

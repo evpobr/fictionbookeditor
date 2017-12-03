@@ -300,7 +300,9 @@ public:
 		{
 			if (!VBErr)
 			{
-				U::MessageBox(MB_OK | MB_ICONEXCLAMATION, IDR_MAINFRAME, IDS_SEARCH_FAIL_MSG, m_view->m_fo.pattern);
+				CString strMessage;
+				strMessage.Format(IDS_SEARCH_FAIL_MSG, (LPCTSTR)m_view->m_fo.pattern);
+				AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_WARNING_ICON);
 			}
 		}
 		else

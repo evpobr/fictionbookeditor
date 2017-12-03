@@ -98,7 +98,6 @@ namespace U { // place all utilities into their own namespace
   CString GetWindowText(HWND hWnd);
   void	  ReportError(HRESULT hr);
   void	  ReportError(_com_error& e);
-  UINT	  MessageBox(UINT type,const TCHAR *title,const TCHAR *msg,...);
   CString GetProgDir();
   CString GetProgDirFile(const CString& filename);
   CString GetCBString(HWND hCB,int idx);

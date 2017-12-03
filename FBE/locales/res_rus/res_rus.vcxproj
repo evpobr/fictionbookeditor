@@ -19,18 +19,17 @@
     <SccLocalPath>Svn</SccLocalPath>
     <SccProvider>SubversionScc</SccProvider>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -46,7 +45,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
@@ -57,128 +55,84 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>res_rus</TargetName>
+    <OutDir>$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>res_rus</TargetName>
+    <OutDir>$(Configuration)\</OutDir>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RES_RUS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)res_rus.pdb</ProgramDatabaseFile>
-      <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)res_rus.lib</ImportLibrary>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>
+      </ImageHasSafeExceptionHandlers>
     </Link>
+    <ResourceCompile />
+    <ResourceCompile>
+      <AdditionalOptions>/fm "$(IntDir)"\FBE.muires /q ..\..\..\mui.rcconfig</AdditionalOptions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>if not exist "$(SolutionDir)$(Configuration)" md "$(SolutionDir)$(Configuration)"
+if not exist "$(SolutionDir)$(Configuration)\ru-RU" md "$(SolutionDir)$(Configuration)\ru-RU"
+link.exe /OUT:"$(SolutionDir)$(Configuration)\ru-RU\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X86 "$(IntDir)\FBE.muires"
+muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configuration)\ru-RU\FBE.exe.mui"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RES_RUS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WarningLevel>Level3</WarningLevel>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
-      <ImportLibrary>$(OutDir)res_rus.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>if not exist "$(SolutionDir)$(Configuration)" md "$(SolutionDir)$(Configuration)"
+if not exist "$(SolutionDir)$(Configuration)\ru-RU" md "$(SolutionDir)$(Configuration)\ru-RU"
+link.exe /OUT:"$(SolutionDir)$(Configuration)\ru-RU\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X86 "$(IntDir)\FBE.muires"
+muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configuration)\ru-RU\FBE.exe.mui"
+</Command>
     </PostBuildEvent>
+    <ResourceCompile>
+      <AdditionalOptions>/fm "$(IntDir)"\FBE.muires /q ..\..\..\mui.rcconfig</AdditionalOptions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="res_rus.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="res\center.bmp" />
-    <None Include="res\doc.bmp" />
-    <None Include="res\document.bmp" />
-    <None Include="res\error.bmp" />
-    <None Include="res\Fb2-shema.bmp" />
-    <None Include="res\FBE.ico" />
-    <None Include="res\FBE2.ico" />
-    <None Include="res\green.bmp" />
-    <None Include="res\html.bmp" />
-    <None Include="res\Icon_02.bmp" />
-    <None Include="res\Icon_03.bmp" />
-    <None Include="res\Icon_04.bmp" />
-    <None Include="res\Icon_05.bmp" />
-    <None Include="res\Icon_06.bmp" />
-    <None Include="res\Icon_07.bmp" />
-    <None Include="res\Icon_08.bmp" />
-    <None Include="res\Icon_09.bmp" />
-    <None Include="res\Icon_10.bmp" />
-    <None Include="res\Icon_11.bmp" />
-    <None Include="res\Icon_12.bmp" />
-    <None Include="res\Icon_13.bmp" />
-    <None Include="res\Icon_14.bmp" />
-    <None Include="res\Icon_15.bmp" />
-    <None Include="res\Icon_16.bmp" />
-    <None Include="res\Icon_17.bmp" />
-    <None Include="res\Icon_18.bmp" />
-    <None Include="res\Icon_19.bmp" />
-    <None Include="res\Icon_20.bmp" />
-    <None Include="res\Icon_21.bmp" />
-    <None Include="res\Icon_22.bmp" />
-    <None Include="res\Icon_23.bmp" />
-    <None Include="res\Icon_24.bmp" />
-    <None Include="res\Icon_25.bmp" />
-    <None Include="res\ok.bmp" />
-    <None Include="res\orange.bmp" />
-    <None Include="res\other.bmp" />
-    <None Include="res\prc.bmp" />
-    <None Include="res\Scripts.bmp" />
-    <None Include="res\Strikthr.bmp" />
-    <None Include="res\struct.bmp" />
-    <None Include="res\text.bmp" />
-    <None Include="res\Toolbar.bmp" />
-    <None Include="res\Toolbar_small.bmp" />
-    <None Include="res\toolimg.bmp" />
-    <None Include="res\update.bmp" />
-    <None Include="res\wordstat.bmp" />
-    <None Include="res\xml.bmp" />
-    <None Include="res\imgph.png" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FBE.rc">
       <Culture Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">0x0419</Culture>
+      <Culture Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">0x0419</Culture>
     </ResourceCompile>
   </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="res\FBE.exe.manifest" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\..\packages\wtl.9.1\build\native\wtl.targets" Condition="Exists('..\..\..\packages\wtl.9.1\build\native\wtl.targets')" />
-  </ImportGroup>
 </Project>

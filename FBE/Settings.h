@@ -441,7 +441,6 @@ class CSettings : public ISerializable, public IObjectFactory
 	CRegKey		m_key;
 	CString		m_key_path;
 
-	bool		m_keep_encoding; // save with opened encoding
 	CString		m_default_encoding;
 
 	DWORD		m_search_options;
@@ -452,43 +451,25 @@ class CSettings : public ISerializable, public IObjectFactory
 	CString		m_font;
 	CString		m_srcfont;
 
-	bool		m_xml_src_wrap;
-	bool		m_xml_src_syntaxHL;
-	bool		m_xml_src_tagHL;
-	bool		m_xml_src_showEOL;
-	bool		m_xml_src_showSpace;
-
-	bool		m_fast_mode;
 	bool		m_view_status_bar;
 	bool		m_view_doc_tree;
 
 	// added by SeNS
-	bool		m_usespell_check;
-	bool		m_highlght_check;
-	CString		m_custom_dict;
 	DWORD		m_custom_dict_codepage;
 	CString		m_nbsp_char;
 	CString		m_old_nbsp;
-	bool		m_change_kbd_layout_check;
 	DWORD		m_keyb_layout;
-	bool		m_show_line_numbers;
 	DWORD		m_image_type;
-	DWORD		m_jpeg_quality;
 	///
 
 	DWORD		m_splitter_pos;
 	CString		m_toolbars_settings;
-
-	bool		m_restore_file_position;
 
 	DWORD		m_interface_lang_id;
 
 	bool		m_need_restart;
 
 	CString		m_scripts_folder;
-
-	bool		m_insimage_ask;
-	bool		m_ins_clear_image;
 
 	bool		m_show_words_excls;
 
@@ -507,6 +488,23 @@ public:
 	int keycodes; // total number of accelerators
 	std::vector<WordsItem> m_words;
 
+	bool m_xml_src_wrap;
+	bool m_xml_src_syntaxHL;
+	bool m_xml_src_showEOL;
+	bool m_xml_src_showSpace;
+	bool m_show_line_numbers;
+	bool m_xml_src_tagHL;
+	bool m_usespell_check;
+	bool m_highlght_check;
+	CString	m_custom_dict;
+	bool m_fast_mode;
+
+	bool m_keep_encoding; // save with opened encoding
+	bool m_restore_file_position;
+	bool m_insimage_ask;
+	bool m_ins_clear_image;
+	DWORD m_jpeg_quality;
+	bool m_change_kbd_layout_check;
 public:
 	CSettings();
 	~CSettings();
@@ -542,16 +540,8 @@ public:
 
 	bool NeedRestart()const;
 
-	bool KeepEncoding()const;
-	bool XmlSrcWrap()const;
-	bool XmlSrcSyntaxHL()const;
-	bool XmlSrcTagHL()const;
-	bool XmlSrcShowEOL()const;
-	bool XmlSrcShowSpace()const;
-	bool FastMode()const;
 	bool ViewStatusBar()const;
 	bool ViewDocumentTree()const;
-	bool RestoreFilePosition()const;
 
 	CString GetKeyPath()const;
 
@@ -567,17 +557,11 @@ public:
 	const CRegKey& GetKey()const;
 
 	// added by SeNS
-	bool    GetUseSpellChecker()const;
-	bool	GetHighlightMisspells()const;
-	CString GetCustomDict()const;
 	DWORD	GetCustomDictCodepage()const;
 	CString GetNBSPChar()const;
 	CString GetOldNBSPChar()const;
-	bool	GetChangeKeybLayout()const;
 	DWORD	GetKeybLayout()const;
-	bool	XMLSrcShowLineNumbers()const;
 	DWORD	GetImageType()const;
-	DWORD	GetJpegQuality()const;
 
 	bool	GetExtElementStyle(const CString& elem)const;
 	bool	GetWindowPosition(WINDOWPLACEMENT& wpl)const;
@@ -588,8 +572,6 @@ public:
 	CString GetScriptsFolder() const;
 	CString GetDefaultScriptsFolder();
 	bool	IsDefaultScriptsFolder();
-	bool	GetInsImageAsking()const;
-	bool	GetIsInsClearImage()const;
 	bool	GetShowWordsExcls()const;
 	bool	GetWordsDlgPosition(WINDOWPLACEMENT &wpl)const;
 

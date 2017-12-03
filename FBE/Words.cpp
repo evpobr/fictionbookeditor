@@ -1200,7 +1200,9 @@ bool ShowWordsDialog(FB::Doc& document, HWND parent)
 	if(nTried > 0)
 	{
 		document.m_body.EndUndoUnit();
-		U::MessageBox(MB_OK, IDS_REPL_WORDS_CPT, IDS_REPL_WORDS_MSG, nRepl);
+		CString strMessage;
+		strMessage.Format(IDS_REPL_WORDS_MSG, nRepl);
+		AtlTaskDialog(::GetActiveWindow(), IDS_REPL_WORDS_CPT, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON);
 	}
 
 	return true;

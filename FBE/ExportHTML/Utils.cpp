@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "utils.h"
+#include "resource.h"
 
 namespace U {
 
@@ -297,9 +298,10 @@ ok:
   return GetFullPathName(tryname);
 }
 
-void  ReportError(HRESULT hr) {
-  CString   err(Win32ErrMsg(hr));
-  ::MessageBox(::GetActiveWindow(),err,_T("Error"),MB_OK|MB_ICONERROR);
+void  ReportError(HRESULT hr)
+{
+	CString strMessage(Win32ErrMsg(hr));
+	AtlTaskDialog(::GetActiveWindow(), IDS_ERROR, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 }
 
 void  ReportError(_com_error& e) {
@@ -315,16 +317,7 @@ void  ReportError(_com_error& e) {
     err+=_T("\nDescription: ");
     err+=(const wchar_t *)src;
   }
-  ::MessageBox(::GetActiveWindow(),err,_T("COM Error"),MB_OK|MB_ICONERROR);
-}
-
-UINT  MessageBox(UINT type,const TCHAR *title,const TCHAR *msg,...) {
-  CString   str;
-  va_list   ap;
-  va_start(ap,msg);
-  str.FormatV(msg,ap);
-  va_end(ap);
-  return ::MessageBox(::GetActiveWindow(),str,title,type);
+  AtlTaskDialog(::GetActiveWindow(), IDS_COM_ERROR, (LPCTSTR)err, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 }
 
 CString	GetWindowText(HWND hWnd) {
@@ -367,29 +360,33 @@ IXSLTemplatePtr    CreateTemplate() {
 
 void  ReportParseError(IXMLDOMDocument2Ptr doc)
 {
-  try {
-    IXMLDOMParseErrorPtr err;
-	CheckError(doc->get_parseError(&err));
-	long	  line = 0;
-	CheckError(err->get_line(&line));
-	long	  col = 0;
-	CheckError(err->get_linepos(&col));
-    CComBSTR url;
-	CheckError(err->get_url(&url));
-    CComBSTR reason;
-	CheckError(err->get_reason(&reason));
-    CString   msg;
-    if (line && col)
-      U::MessageBox(MB_OK|MB_ICONERROR,_T("XML Parse Error"),
-	_T("At %s, line %d, column %d: %s"),(const TCHAR *)url,
-	line,col,(const TCHAR *)reason);
-    else
-      U::MessageBox(MB_OK|MB_ICONERROR,_T("XML Parse Error"),
-	_T("At %s: %s"),(const TCHAR *)url,(const TCHAR *)reason);
-  }
-  catch (_com_error& e) {
-    ReportError(e);
-  }
+	try {
+		IXMLDOMParseErrorPtr err;
+		CheckError(doc->get_parseError(&err));
+		long	  line = 0;
+		CheckError(err->get_line(&line));
+		long	  col = 0;
+		CheckError(err->get_linepos(&col));
+		CComBSTR url;
+		CheckError(err->get_url(&url));
+		CComBSTR reason;
+		CheckError(err->get_reason(&reason));
+		CString   strMessage;
+		if (line && col)
+		{
+			strMessage.Format(IDS_AT_LINE_COLUMN, (LPCTSTR)url,	line, col, (LPCTSTR)reason);
+			AtlTaskDialog(::GetActiveWindow(), IDS_XML_PARSE_ERROR, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		}
+		else
+		{
+			strMessage.Format(IDS_AT_S_S, (LPCTSTR)url, (LPCTSTR)reason);
+			AtlTaskDialog(::GetActiveWindow(), IDS_XML_PARSE_ERROR, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		}
+	}
+	catch (_com_error& e)
+	{
+		ReportError(e);
+	}
 }
 
 bool  LoadXml(IXMLDOMDocument2Ptr doc,const CString& url)
