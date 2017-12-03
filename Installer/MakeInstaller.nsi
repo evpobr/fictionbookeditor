@@ -240,15 +240,14 @@ nthere:
   File "..\Release\main_fast.css"
   File "..\Release\main.html"
   File "..\Release\main.js"
+  File "..\Release\libHunspell.dll"
   File "..\Release\SciLexer.dll"
   File "..\Release\pcre.dll"
   File "..\Release\FBV.exe"
-  File "..\Release\res_rus.dll"
-  File "..\Release\res_ukr.dll"
   File "..\Release\gdiplus.manifest"
   File "..\Release\gdiplus.dll"
   File "..\Release\gdiplus.cat"
-  
+
   File "..\Release\gpl-3.0.txt"
   File "..\Release\gpl-3.0.ru.txt"
   File "..\Release\gpl-3.0.ua.txt"
@@ -259,7 +258,18 @@ nthere:
   File "..\Release\CHANGELOG.md"
   File "..\Release\NOWTO.md"
   File "..\Release\README.md"
-  File "..\Release\TODO.md"  
+  File "..\Release\TODO.md"
+
+  SetOutPath "$INSTDIR\en-US"
+  CreateDirectory "$INSTDIR\en-US"
+  File "..\Release\en-US\FBE.exe.mui"
+  SetOutPath "$INSTDIR\ru-RU"
+  CreateDirectory "$INSTDIR\ru-RU"
+  File "..\Release\ru-RU\FBE.exe.mui"
+  SetOutPath "$INSTDIR\uk-UA"
+  CreateDirectory "$INSTDIR\uk-UA"
+  File "..\Release\uk-UA\FBE.exe.mui"
+
 
   !insertmacro InstallLib TLB NOTSHARED REBOOT_PROTECTED "..\Release\FBE.exe" "$INSTDIR\FBE.exe" "$INSTDIR"
   
@@ -498,6 +508,7 @@ ${EndIf}
   Delete "$INSTDIR\uninst.exe"
   Delete "$INSTDIR\SciLexer.dll"
   Delete "$INSTDIR\pcre.dll"
+  Delete "$INSTDIR\libHunspell.dll"  
   Delete "$INSTDIR\main.js"
   Delete "$INSTDIR\main.html"
   Delete "$INSTDIR\main.css"
@@ -548,6 +559,10 @@ ${EndIf}
   Delete "$INSTDIR\HOWTO.md"
   Delete "$INSTDIR\README.md"
   Delete "$INSTDIR\TODO.md"
+
+  RMDir /r "$INSTDIR\en-US"
+  RMDir /r "$INSTDIR\ru-RU"
+  RMDir /r "$INSTDIR\uk-UA"
 
   !insertmacro UnInstallLib TLB NOTSHARED REBOOT_PROTECTED "$INSTDIR\FBE.exe"
 

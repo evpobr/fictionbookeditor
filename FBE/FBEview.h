@@ -2,7 +2,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#include <atlcrack.h>
+#include <wtl/atlcrack.h>
 #if !defined(AFX_FBEVIEW_H__E0C71279_419D_4273_93E3_57F6A57C7CFE__INCLUDED_)
 #define AFX_FBEVIEW_H__E0C71279_419D_4273_93E3_57F6A57C7CFE__INCLUDED_
 

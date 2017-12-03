@@ -17,8 +17,8 @@
 
 #include "stdafx.h"
 #include <algorithm>
-#include "Scintilla.h"
-#include "SciLexer_new.h"
+#include <Scintilla.h>
+#include <SciLexer.h>
 #include "xmlMatchedTagsHighlighter.h"
 
 int XmlMatchedTagsHighlighter::getFirstTokenPosFrom(int targetStart, int targetEnd, const char *token, pair<int, int> & foundPos)
@@ -561,7 +561,7 @@ vector< pair<CString, int> > XmlMatchedTagsHighlighter::lookupTags()
 				int tagPos = _pEditView->execute(SCI_GETTARGETSTART);
 				pos = _pEditView->execute(SCI_GETTARGETEND);
 
-				TextRange tr;
+				Sci_TextRange tr;
 				tr.chrg.cpMin = tagPos;
 				tr.chrg.cpMax = pos;
 				tr.lpstrText = tmp;

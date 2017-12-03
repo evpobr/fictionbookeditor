@@ -11,7 +11,7 @@
 #include "targetver.h"
 #endif
 #define APSTUDIO_HIDDEN_SYMBOLS
-#include "atlres.h"
+#include "wtl/atlres.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS

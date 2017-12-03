@@ -12,7 +12,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "hunspell.h"
+#include <hunspell/hunspell.h>
 #ifdef __cplusplus
 }
 #endif
