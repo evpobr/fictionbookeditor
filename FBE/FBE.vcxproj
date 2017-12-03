@@ -295,7 +295,6 @@ link.exe /OUT:"$(SolutionDir)$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENTRY /
   </ItemGroup>
   <ItemGroup>
     <None Include="extras\atlcrypt.inl" />
-    <None Include="packages.config" />
     <None Include="res\center.bmp" />
     <None Include="res\doc.bmp" />
     <None Include="res\document.bmp" />

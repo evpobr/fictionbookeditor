@@ -13,4 +13,4 @@ FBE consists of the following components:
 
 ## System requirements
 
-You need at least Windows XP SP3 to run FictionBook Editor, Windows Vista and higher, 32-bit and 64-bit are supported as well.
+You need Windows Vista and higher, 32-bit and 64-bit are supported as well.

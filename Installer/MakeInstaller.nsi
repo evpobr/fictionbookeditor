@@ -1,11 +1,10 @@
 Unicode true
 
-!define /date BUILDNUM "%d %b"
+SetCompressor /SOLID lzma
 
 !define PRODUCT_NAME "FictionBook Editor"
 !define PRODUCT_STAGE "Release"
-!define PRODUCT_BUILD "build ${BUILDNUM}"
-!define PRODUCT_VERSION "${PRODUCT_STAGE} v2.6.13 (${PRODUCT_BUILD})"
+!define PRODUCT_VERSION "${PRODUCT_STAGE} v2.7 beta1"
 !define PRODUCT_VENDOR "FBE Team"
 !define PRODUCT_NAME_VERSION "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 !define PRODUCT_URL "http://code.google.com/p/fictionbookeditor/"
@@ -86,7 +85,6 @@ var ICONS_GROUP
 
 ; MUI end 
 
-!undef BUILDNUM
 !define /date DATE "%d_%b"
 
 ; Language files
