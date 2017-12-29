@@ -156,7 +156,6 @@
     <ClCompile Include="ContextMenu.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FBShell.cpp" />
-    <ClCompile Include="IconExtractor.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -170,7 +169,6 @@
     <None Include="ContextMenu.rgs" />
     <None Include="FBShell.def" />
     <None Include="FBShell.rgs" />
-    <None Include="IconExtractor.rgs" />
     <None Include="ThumbnailHandler.rgs" />
   </ItemGroup>
   <ItemGroup>
@@ -178,7 +176,6 @@
     <ClInclude Include="ContextMenu.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="FBShell.h" />
-    <ClInclude Include="IconExtractor.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="targetver.h" />

@@ -27,9 +27,6 @@
     <ClCompile Include="FBShell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IconExtractor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -50,9 +47,6 @@
     <None Include="FBShell.rgs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="IconExtractor.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="ThumbnailHandler.rgs">
       <Filter>Resource Files</Filter>
     </None>
@@ -68,9 +62,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FBShell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IconExtractor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
