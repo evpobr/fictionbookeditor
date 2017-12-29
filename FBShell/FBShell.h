@@ -1,5 +1,4 @@
-#ifndef FBSHELL_H
-#define FBSHELL_H
+#pragma once
 
 #include <windows.h>
 
@@ -15,22 +14,23 @@ DEFINE_GUID(CLSID_ThumbnailHandler, 0x585CFC85, 0x7939, 0x4004, 0x96, 0x93, 0xEB
 ///////////////////////////////////////////////////////////
 // Misc globals
 
-extern const wchar_t 	*FBNS;
-extern const wchar_t 	*XLINKNS;
-bool	StrEQ(const wchar_t *zstr,const wchar_t *wstr,int wlen);
-void	NormalizeInplace(CString& s);
-CString	GetAttr(ISAXAttributes *attr,const wchar_t *name,const wchar_t *ns=NULL);
+extern const wchar_t *FBNS;
+extern const wchar_t *XLINKNS;
+bool StrEQ(const wchar_t *zstr, const wchar_t *wstr, int wlen);
+void NormalizeInplace(CString& s);
+CString	GetAttr(ISAXAttributes *attr, const wchar_t *name, const wchar_t *ns = NULL);
+
 template<class T>
-extern inline HRESULT CreateObject(CComPtr<T>& ptr) {
-  T	  *obj;
-  HRESULT hr=T::CreateInstance(&obj);
-  if (FAILED(hr))
-    return hr;
-  ptr=obj;
-  return S_OK;
+extern inline HRESULT CreateObject(CComPtr<T>& ptr)
+{
+	T *obj;
+	HRESULT hr = T::CreateInstance(&obj);
+	if (FAILED(hr))
+		return hr;
+	ptr = obj;
+	return S_OK;
 }
-void	AppendText(CString& str,const TCHAR *text,int textlen);
+
+void AppendText(CString& str, const TCHAR *text, int textlen);
 
 extern CRITICAL_SECTION	g_Lock;
-
-#endif
