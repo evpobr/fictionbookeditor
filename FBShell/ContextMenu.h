@@ -59,9 +59,8 @@ public:
 
 	STDMETHODIMP InvokeCommand(_In_ CMINVOKECOMMANDINFO *pici);
 protected:
-	CSimpleArray<CString>	    m_files;
-	bool			    m_folders;
+	CSimpleArray<CString> m_files;
+	bool m_folders;
 };
 
 OBJECT_ENTRY_AUTO(CLSID_ContextMenu, CContextMenu)
-
