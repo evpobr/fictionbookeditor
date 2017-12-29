@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ColumnProvider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ContextMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -38,9 +35,6 @@
     <None Include="FBShell.def">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="ColumnProvider.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="ContextMenu.rgs">
       <Filter>Resource Files</Filter>
     </None>
@@ -52,9 +46,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ColumnProvider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ContextMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>

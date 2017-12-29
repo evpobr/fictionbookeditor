@@ -152,7 +152,6 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ColumnProvider.cpp" />
     <ClCompile Include="ContextMenu.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FBShell.cpp" />
@@ -165,14 +164,12 @@
     <ClCompile Include="ThumbnailHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ColumnProvider.rgs" />
     <None Include="ContextMenu.rgs" />
     <None Include="FBShell.def" />
     <None Include="FBShell.rgs" />
     <None Include="ThumbnailHandler.rgs" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ColumnProvider.h" />
     <ClInclude Include="ContextMenu.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="FBShell.h" />

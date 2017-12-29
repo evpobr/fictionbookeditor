@@ -79,8 +79,6 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // REGISTRY
 //
 
-IDR_COLUMNPROVIDER      REGISTRY                "ColumnProvider.rgs"
-
 IDR_CONTEXTMENU         REGISTRY                "ContextMenu.rgs"
 
 IDR_FBSHELL             REGISTRY                "FBShell.rgs"

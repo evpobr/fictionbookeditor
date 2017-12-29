@@ -2,7 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by FBSHell.rc
 //
-#define IDR_COLUMNPROVIDER              101
 #define IDI_FB2                         103
 #define IDR_CONTEXTMENU                 104
 #define IDR_NSFOLDER                    105
