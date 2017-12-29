@@ -171,7 +171,6 @@
     <None Include="FBShell.def" />
     <None Include="FBShell.rgs" />
     <None Include="IconExtractor.rgs" />
-    <None Include="NSFolder.rgs" />
     <None Include="ThumbnailHandler.rgs" />
   </ItemGroup>
   <ItemGroup>

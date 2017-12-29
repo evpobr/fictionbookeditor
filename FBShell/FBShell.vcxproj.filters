@@ -53,9 +53,6 @@
     <None Include="IconExtractor.rgs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="NSFolder.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="ThumbnailHandler.rgs">
       <Filter>Resource Files</Filter>
     </None>
