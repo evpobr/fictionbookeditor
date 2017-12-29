@@ -43,6 +43,7 @@ _COM_SMARTPTR_TYPEDEF(ISAXXMLReader, __uuidof(ISAXXMLReader));
 #include <shellapi.h>
 #include <shlobj.h>
 #include <shlguid.h>
+#include <thumbcache.h>
 
 #include <atlimage.h>
 #include <WinCrypt.h>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "resource.h"
-#include "FBShell_h.h"
+#include "FBShell.h"
 #include <InitGuid.h>
 
 #if defined(_WIN32_WCE) && !defined(_CE_DCOM) && !defined(_CE_ALLOW_SINGLE_THREADED_OBJECTS_IN_MTA)
@@ -128,5 +128,5 @@ protected:
 	typedef CComPtr<ContentHandler>		ContentHandlerPtr;
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(ColumnProvider), CColumnProvider)
+OBJECT_ENTRY_AUTO(CLSID_ColumnProvider, CColumnProvider)
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "resource.h"
-#include "FBShell_h.h"
+#include "FBShell.h"
 
 #if defined(_WIN32_WCE) && !defined(_CE_DCOM) && !defined(_CE_ALLOW_SINGLE_THREADED_OBJECTS_IN_MTA)
 #error "Single-threaded COM objects are not properly supported on Windows CE platform, such as the Windows Mobile platforms that do not include full DCOM support. Define _CE_ALLOW_SINGLE_THREADED_OBJECTS_IN_MTA to force ATL to support creating single-thread COM object's and allow use of it's single-threaded COM object implementations. The threading model in your rgs file was set to 'Free' as that is the only threading model supported in non DCOM Windows CE platforms."
@@ -14,7 +14,7 @@ using namespace ATL;
 
 class ATL_NO_VTABLE CIconExtractor :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<IconExtractor, &CLSID_IconExtractor>,
+	public CComCoClass<CIconExtractor, &CLSID_IconExtractor>,
 	public IPersistFile,
 	public IExtractImage2
 {
@@ -80,4 +80,4 @@ protected:
 		void *&data, int& datalen);
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(IconExtractor), CIconExtractor)
+OBJECT_ENTRY_AUTO(CLSID_IconExtractor, CIconExtractor)

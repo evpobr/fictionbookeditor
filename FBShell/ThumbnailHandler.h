@@ -3,7 +3,10 @@
 #pragma once
 #include "resource.h"       // main symbols
 
-#include "FBShell_h.h"
+#include <windows.h>
+#include <thumbcache.h>
+
+#include "FBShell.h"
 
 
 
@@ -69,4 +72,4 @@ public:
 
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(ThumbnailHandler), CThumbnailHandler)
+OBJECT_ENTRY_AUTO(CLSID_ThumbnailHandler, CThumbnailHandler)

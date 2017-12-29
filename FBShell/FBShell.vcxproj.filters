@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
-    <Filter Include="Generated Files">
-      <UniqueIdentifier>{1f95318e-7aef-41f7-9882-11998212c471}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ColumnProvider.cpp">
@@ -36,17 +33,9 @@
     <ClCompile Include="StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FBShell_i.c">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="ThumbnailHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Midl Include="FBShell.idl">
-      <Filter>Source Files</Filter>
-    </Midl>
   </ItemGroup>
   <ItemGroup>
     <None Include="FBShell.def">
@@ -92,9 +81,6 @@
     </ClInclude>
     <ClInclude Include="StdAfx.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FBShell_h.h">
-      <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="ThumbnailHandler.h">
       <Filter>Header Files</Filter>
