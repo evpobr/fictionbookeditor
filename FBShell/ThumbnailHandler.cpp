@@ -184,6 +184,8 @@ HRESULT CThumbnailHandler::GetBinaryBase64String(IXMLDOMNode * pNode, CString & 
 
 HRESULT CThumbnailHandler::Initialize(IStream * pstream, DWORD grfMode)
 {
+	UNREFERENCED_PARAMETER(grfMode);
+
 	HRESULT hr;
 	try
 	{
