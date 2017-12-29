@@ -18,7 +18,7 @@ extern const wchar_t *FBNS;
 extern const wchar_t *XLINKNS;
 bool StrEQ(const wchar_t *zstr, const wchar_t *wstr, int wlen);
 void NormalizeInplace(CString& s);
-CString	GetAttr(ISAXAttributes *attr, const wchar_t *name, const wchar_t *ns = NULL);
+CString GetAttr(ISAXAttributes *attr, const wchar_t *name, const wchar_t *ns = NULL);
 
 template<class T>
 extern inline HRESULT CreateObject(CComPtr<T>& ptr)
@@ -33,4 +33,4 @@ extern inline HRESULT CreateObject(CComPtr<T>& ptr)
 
 void AppendText(CString& str, const TCHAR *text, int textlen);
 
-extern CRITICAL_SECTION	g_Lock;
+extern CRITICAL_SECTION g_Lock;
