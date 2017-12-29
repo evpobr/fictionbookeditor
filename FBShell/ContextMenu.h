@@ -40,12 +40,24 @@ public:
 	}
 
 	// IShellExtInit
-	STDMETHOD(Initialize)(LPCITEMIDLIST pidlFolder, IDataObject *obj, HKEY progid);
+	STDMETHODIMP Initialize(_In_opt_ PCIDLIST_ABSOLUTE pidlFolder,
+							_In_opt_ IDataObject *pdtobj,
+							_In_opt_ HKEY hkeyProgID);
 
 	// IContextMenu
-	STDMETHOD(QueryContextMenu)(HMENU hMenu, UINT idx, UINT cmdFirst, UINT cmdLast, UINT flags);
-	STDMETHOD(GetCommandString)(UINT_PTR cmd, UINT flags, UINT *, LPSTR name, UINT namelen);
-	STDMETHOD(InvokeCommand)(LPCMINVOKECOMMANDINFO pici);
+	STDMETHODIMP QueryContextMenu(_In_ HMENU hmenu,
+								  _In_ UINT indexMenu,
+								  _In_ UINT idCmdFirst,
+								  _In_ UINT idCmdLast,
+								  _In_ UINT uFlags);
+
+	STDMETHODIMP GetCommandString(_In_ UINT_PTR idCmd,
+								  _In_ UINT uType,
+								  _Reserved_ UINT *pReserved,
+								  _Out_writes_bytes_((uType & GCS_UNICODE) ? (cchMax * sizeof(wchar_t)) : cchMax) _When_(!(uType & (GCS_VALIDATEA | GCS_VALIDATEW)), _Null_terminated_) CHAR *pszName,
+								  _In_ UINT cchMax);
+
+	STDMETHODIMP InvokeCommand(_In_ CMINVOKECOMMANDINFO *pici);
 protected:
 	CSimpleArray<CString>	    m_files;
 	bool			    m_folders;

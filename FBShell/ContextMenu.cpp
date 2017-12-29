@@ -2,14 +2,16 @@
 #include "ContextMenu.h"
 
 // IShellExtInit
-HRESULT	CContextMenu::Initialize(LPCITEMIDLIST pidlFolder,IDataObject *obj,HKEY progid)
+HRESULT	CContextMenu::Initialize(_In_opt_ PCIDLIST_ABSOLUTE pidlFolder,
+								 _In_opt_ IDataObject *pdtobj,
+								 _In_opt_ HKEY hkeyProgID)
 {
   Lock();
   m_files.RemoveAll();
   m_folders=false;
   Unlock();
 
-  if (!obj) {
+  if (!pdtobj) {
     // we call as a directory background context menu
     CString   tmp;
     TCHAR     *cp=tmp.GetBuffer(MAX_PATH);
@@ -29,7 +31,7 @@ HRESULT	CContextMenu::Initialize(LPCITEMIDLIST pidlFolder,IDataObject *obj,HKEY 
   FORMATETC etc={CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
   UINT	    count;
 
-  if (FAILED(hr = obj->GetData(&etc,&stg)))
+  if (FAILED(hr = pdtobj->GetData(&etc,&stg)))
     return hr;
 
   count = ::DragQueryFile((HDROP)stg.hGlobal, (UINT)-1, NULL, 0);
@@ -76,15 +78,18 @@ static struct {
 #define	NCOMMANDS (sizeof(g_menu_items)/sizeof(g_menu_items[0]))
 
 // IContextMenu
-HRESULT	CContextMenu::QueryContextMenu(HMENU hMenu,UINT idx,UINT cmdFirst,UINT cmdLast,
-				      UINT flags)
+HRESULT	CContextMenu::QueryContextMenu(_In_ HMENU hmenu,
+									   _In_ UINT indexMenu,
+									   _In_ UINT idCmdFirst,
+									   _In_ UINT idCmdLast,
+									   _In_ UINT uFlags)
 {
-  if (!(flags & CMF_DEFAULTONLY) && m_files.GetSize()>0) {
+  if (!(uFlags & CMF_DEFAULTONLY) && m_files.GetSize()>0) {
     UINT  cmd;
 
     Lock();
-    for (cmd=0;cmd<NCOMMANDS && cmd+cmdFirst<=cmdLast;++cmd)
-      ::InsertMenu(hMenu,idx+cmd,MF_BYPOSITION|MF_STRING,cmdFirst+cmd,
+    for (cmd=0;cmd<NCOMMANDS && cmd+ idCmdFirst <= idCmdLast;++cmd)
+      ::InsertMenu(hmenu, indexMenu +cmd,MF_BYPOSITION|MF_STRING, idCmdFirst +cmd,
 	m_folders ? g_menu_items[cmd].foldertext : g_menu_items[cmd].text);
     Unlock();
 
@@ -94,30 +99,34 @@ HRESULT	CContextMenu::QueryContextMenu(HMENU hMenu,UINT idx,UINT cmdFirst,UINT c
   return MAKE_HRESULT(SEVERITY_SUCCESS, 0, (USHORT)0);
 }
 
-HRESULT	CContextMenu::GetCommandString(UINT_PTR cmd,UINT flags,UINT *,LPSTR name,UINT namelen)
+HRESULT	CContextMenu::GetCommandString(_In_ UINT_PTR idCmd,
+									   _In_ UINT uType,
+									   _Reserved_ UINT *pReserved,
+									   _Out_writes_bytes_((uType & GCS_UNICODE) ? (cchMax * sizeof(wchar_t)) : cchMax) _When_(!(uType & (GCS_VALIDATEA | GCS_VALIDATEW)), _Null_terminated_) CHAR *pszName,
+									   _In_ UINT cchMax)
 {
-  if (cmd >= NCOMMANDS)
+  if (idCmd >= NCOMMANDS)
     return E_INVALIDARG;
 
-  switch (flags) {
+  switch (uType) {
   case GCS_HELPTEXTA:
-    ::WideCharToMultiByte(CP_ACP,0,g_menu_items[cmd].desc,-1,name,namelen,NULL,NULL);
+    ::WideCharToMultiByte(CP_ACP,0,g_menu_items[idCmd].desc,-1, pszName, cchMax,NULL,NULL);
     break;
   case GCS_HELPTEXTW:
-    lstrcpynW((wchar_t *)name,g_menu_items[cmd].desc,namelen);
+    lstrcpynW((wchar_t *)pszName,g_menu_items[idCmd].desc, cchMax);
     break;
   case GCS_VERBA:
-    ::WideCharToMultiByte(CP_ACP,0,g_menu_items[cmd].verb,-1,name,namelen,NULL,NULL);
+    ::WideCharToMultiByte(CP_ACP,0,g_menu_items[idCmd].verb,-1, pszName, cchMax,NULL,NULL);
     break;
   case GCS_VERBW:
-    lstrcpynW((wchar_t *)name,g_menu_items[cmd].verb,namelen);
+    lstrcpynW((wchar_t *)pszName,g_menu_items[idCmd].verb, cchMax);
     break;
   }
 
   return S_OK;
 }
 
-HRESULT	CContextMenu::InvokeCommand(LPCMINVOKECOMMANDINFO pici) {
+HRESULT	CContextMenu::InvokeCommand(_In_ CMINVOKECOMMANDINFO *pici) {
   bool			fEx = pici->cbSize >= sizeof(CMINVOKECOMMANDINFOEX);
   bool			fUnicode = fEx && (pici->fMask & CMIC_MASK_UNICODE);
 
