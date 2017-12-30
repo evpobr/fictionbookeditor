@@ -555,8 +555,8 @@ BOOL CMainFrame::OnIdle()
 		bool fCanCC = m_source.SendMessage(SCI_GETSELECTIONSTART) != m_source.SendMessage(SCI_GETSELECTIONEND);
 		UIEnable(ID_EDIT_COPY, fCanCC);
 		UIEnable(ID_EDIT_CUT, fCanCC);
-		UIEnable(ID_EDIT_PASTE, m_source.SendMessage(SCI_CANPASTE));
-		UIEnable(ID_EDIT_PASTE2, m_source.SendMessage(SCI_CANPASTE));
+		UIEnable(ID_EDIT_PASTE, m_source.SendMessage(SCI_CANPASTE) ? TRUE : FALSE);
+		UIEnable(ID_EDIT_PASTE2, m_source.SendMessage(SCI_CANPASTE) ? TRUE : FALSE);
 
 		UIEnable(ID_GOTO_WRONGTAG, true);
 
@@ -1817,7 +1817,7 @@ void CMainFrame::FillMenuWithHkeys(HMENU menu)
 
 // search&replace in scintilla
 CString	  SciSelection(CWindow source) {
-  int	  start=source.SendMessage(SCI_GETSELECTIONSTART);
+  int	  start= static_cast<int>(source.SendMessage(SCI_GETSELECTIONSTART));
   int	  end=source.SendMessage(SCI_GETSELECTIONEND);
 
   if (start>=end)
@@ -1975,7 +1975,7 @@ public:
 	}
 	int rlen=matchlen;
 	if (m_view->m_fo.fRegexp)
-	  rlen=m_source.SendMessage(SCI_REPLACETARGETRE,replen,(LPARAM)replacement);
+	  rlen= static_cast<int>(m_source.SendMessage(SCI_REPLACETARGETRE,replen,(LPARAM)replacement));
 	else
 	  m_source.SendMessage(SCI_REPLACETARGET,replen,(LPARAM)replacement);
 
@@ -1986,7 +1986,7 @@ public:
 	else {
 	  m_source.SendMessage(SCI_SETTARGETSTART,last_match);
 	  m_source.SendMessage(SCI_SETTARGETEND,end);
-	  pos=m_source.SendMessage(SCI_SEARCHINTARGET,patlen,(LPARAM)pattern);
+	  pos=static_cast<int>(m_source.SendMessage(SCI_SEARCHINTARGET,patlen,(LPARAM)pattern));
 	}
 	++num_repl;
       }
@@ -3363,11 +3363,11 @@ LRESULT CMainFrame::OnChar(UINT, WPARAM wParam, LPARAM lParam, BOOL&)
 bool  CMainFrame::SourceToHTML() 
 {
 	LRESULT changed = m_source.SendMessage(SCI_GETMODIFY);
-	int	    textlen = 0;
+	size_t textlen = 0;
 	char*	buffer = 0;
 
-	int begin_char = 0;
-	int end_char = 0;
+	size_t begin_char = 0;
+	size_t end_char = 0;
 	int bodies_count = 0;
 	
 	// берем текст
@@ -4058,7 +4058,7 @@ void CMainFrame::ExpandFold(int &line, bool doExpand, bool force, int visLevels,
     }
     int levelLine = level;
     if (levelLine == -1)
-      levelLine = m_source.SendMessage(SCI_GETFOLDLEVEL, line);
+      levelLine = static_cast<int>(m_source.SendMessage(SCI_GETFOLDLEVEL, line));
     if (levelLine & SC_FOLDLEVELHEADERFLAG) {
       if (force) {
 	if (visLevels > 1)
@@ -4607,7 +4607,7 @@ void CMainFrame::SourceGoTo(int line, int col)
 {
 	int	pos=m_source.SendMessage(SCI_POSITIONFROMLINE,line-1);
     while (col--)
-      pos=m_source.SendMessage(SCI_POSITIONAFTER,pos);
+      pos= static_cast<int>(m_source.SendMessage(SCI_POSITIONAFTER,pos));
     m_source.SendMessage(SCI_SETSELECTIONSTART,pos);
     m_source.SendMessage(SCI_SETSELECTIONEND,pos);
     m_source.SendMessage(SCI_SCROLLCARET);
@@ -5387,7 +5387,7 @@ void CMainFrame::DisplayCharCode()
 		buf[0] = static_cast<char>(m_source.SendMessage(SCI_GETCHARAT, pos));
 		int len = UTF8_CHAR_LEN(buf[0]);
 		for (int i=1; i<len && i<5; i++)
-			buf[i] = m_source.SendMessage(SCI_GETCHARAT, pos+i);
+			buf[i] = static_cast<char>(m_source.SendMessage(SCI_GETCHARAT, pos+i));
 		CA2W str (buf, CP_UTF8);
 		CString s;
 		s.Format(L"  U+%.4X", str[0]);

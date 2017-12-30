@@ -41,6 +41,7 @@
 #include <Wininet.h>
 #include <Urlmon.h>
 #include <msxml6.h>
+#include <windowsx.h>
 
 #include <wtl/atlapp.h>
 

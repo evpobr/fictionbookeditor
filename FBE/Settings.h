@@ -458,7 +458,7 @@ class CSettings : public ISerializable, public IObjectFactory
 	DWORD		m_custom_dict_codepage;
 	CString		m_nbsp_char;
 	CString		m_old_nbsp;
-	DWORD		m_keyb_layout;
+	DWORD_PTR	m_keyb_layout;
 	DWORD		m_image_type;
 	///
 

@@ -812,8 +812,8 @@ void InitSettingsHotkeyGroups()
 		
 		MSXML2::IXMLDOMNodePtr currentNode = root;
 		
-		int size = m_path.size();
-		for(unsigned int i = 0; i < m_path.size(); ++i)
+		size_t size = m_path.size();
+		for(size_t i = 0; i < m_path.size(); ++i)
 		{
 			currentNode = currentNode->firstChild;
 			if(!(bool)currentNode)
@@ -830,8 +830,8 @@ void InitSettingsHotkeyGroups()
 				return 0;
 			}			
 
-			int numb = m_path[i];
-			for(int j = 0; j < m_path[i]; ++j)
+			size_t numb = m_path[i];
+			for(size_t j = 0; j < m_path[i]; ++j)
 			{
 				currentNode = currentNode->nextSibling;
 				if(U::scmp(currentNode->nodeName, L"#text") == 0)
@@ -948,7 +948,7 @@ void InitSettingsHotkeyGroups()
 		return 0;
 	}
 
-	bool DomPath::CPFT(const wchar_t* xml, int pos, int* char_pos)
+	bool DomPath::CPFT(const wchar_t* xml, int pos, size_t* char_pos)
 	{
 		if(!xml)
 		{
@@ -957,7 +957,7 @@ void InitSettingsHotkeyGroups()
 
 		const wchar_t* curpos = xml;
 		const wchar_t* selpos = xml + pos;
-		int virtual_pos = pos;
+		size_t virtual_pos = pos;
 		// ищем открывающий тег
 		int id = 0;
 
@@ -1106,7 +1106,7 @@ void InitSettingsHotkeyGroups()
 	}
 
 
-	bool DomPath::CreatePathFromText(const wchar_t* xml, int pos, int* char_pos)
+	bool DomPath::CreatePathFromText(const wchar_t* xml, int pos, size_t* char_pos)
 	{
 		m_path.clear();
 
@@ -1115,7 +1115,7 @@ void InitSettingsHotkeyGroups()
 
 	int DomPath::GetNodeFromText(wchar_t* xml, int char_pos)
 	{
-		int nest_len = m_path.size(); //глубина вложенности
+		size_t nest_len = m_path.size(); //глубина вложенности
 
 		if(!nest_len)
 		{
@@ -1124,12 +1124,12 @@ void InitSettingsHotkeyGroups()
 
 		wchar_t* curpos = 0;
 		wchar_t* nested_node = xml;
-		for(int i = 0; i < nest_len; ++i)
+		for(size_t i = 0; i < nest_len; ++i)
 		{
 			curpos = nested_node;
-			int node_id = m_path[i];				
+			size_t node_id = m_path[i];				
 			
-			for (int j = 0; j < node_id; ++j)
+			for (size_t j = 0; j < node_id; ++j)
 			{
 				if(!tGetFirstXMLNodeParams(curpos, 0, 0, 0, &curpos))
 				{
@@ -1356,7 +1356,7 @@ void InitSettingsHotkeyGroups()
 		wchar_t* opene = 0;
 		wchar_t* closeb = 0;
 		wchar_t* closee = 0;
-		int count = 0;
+		size_t count = 0;
 
 		bool ok = tGetFirstXMLNodeParams(node_begin, &openb, &opene, &closeb, &closee);
 		if(!ok)

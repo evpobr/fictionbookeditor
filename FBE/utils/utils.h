@@ -176,7 +176,7 @@ namespace U // place all utilities into their own namespace
 		~DomPath(){};
 		bool CreatePathFromHTMLDOM(MSHTML::IHTMLDOMNodePtr root, MSHTML::IHTMLDOMNodePtr EndNode);
 		bool CreatePathFromXMLDOM(MSXML2::IXMLDOMNodePtr root, MSXML2::IXMLDOMNodePtr EndNode);
-		bool CreatePathFromText(const wchar_t* xml, int pos, int* char_pos);		
+		bool CreatePathFromText(const wchar_t* xml, int pos, size_t* char_pos);		
 
 		MSXML2::IXMLDOMNodePtr GetNodeFromXMLDOM(MSXML2::IXMLDOMNodePtr root);
 		MSHTML::IHTMLDOMNodePtr GetNodeFromHTMLDOM(MSHTML::IHTMLDOMNodePtr root);
@@ -197,7 +197,7 @@ namespace U // place all utilities into their own namespace
 
 
 	private:
-		bool CPFT(const wchar_t* xml, int pos, int* char_pos);
+		bool CPFT(const wchar_t* xml, int pos, size_t* char_pos);
 		
 	};
 
