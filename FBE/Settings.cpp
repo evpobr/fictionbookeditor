@@ -642,7 +642,7 @@ void CSettings::InitHotkeyGroups()
 	int valcount = ::GetPrivateProfileSection(L"symbols", vals, 32767, U::GetProgDir() + L"symbols.ini");
 
 	CSimpleMap<CString, CString> mapSymbs;
-	int k = 0;
+	size_t k = 0;
 	while(vals[k] != 0 && k < valcount)
 	{
 		CString str = &vals[k];
@@ -1858,7 +1858,7 @@ void CSettings::SetChangeKeybLayout(const bool value, bool apply)
 	if (apply) Save();
 }
 
-void CSettings::SetKeybLayout(const DWORD value, bool apply)
+void CSettings::SetKeybLayout(const DWORD_PTR value, bool apply)
 {
 	m_keyb_layout = value;
 	if (apply) Save();

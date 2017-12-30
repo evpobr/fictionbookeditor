@@ -617,7 +617,7 @@ public:
 	void	SetCustomDictCodepage(const DWORD value, bool apply = false);
 	void	SetNBSPChar(const ATL::CString &value, bool apply = false);
 	void	SetChangeKeybLayout(const bool value, bool apply = false);
-	void	SetKeybLayout(const DWORD value, bool apply = false);
+	void	SetKeybLayout(const DWORD_PTR value, bool apply = false);
 	void	SetXMLSrcShowLineNumbers(const bool value, bool apply = false);
 	void	SetImageType(const DWORD value, bool apply = false);
 	void	SetJpegQuality(const DWORD value, bool apply = false);

@@ -199,7 +199,7 @@ IMatchCollection* IRegExp2::Execute (CString sourceString)
 	int options;
 	int erroffset;
 	int ovector[OVECCOUNT];
-	int subject_length;
+	size_t subject_length;
 	int rc, offset, char_offset;
 	IMatchCollection* matches;
 	// fix for issue #145

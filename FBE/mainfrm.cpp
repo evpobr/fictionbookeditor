@@ -5091,7 +5091,7 @@ void CMainFrame::AddScriptsSubMenu(HMENU parentItem, CString refid, CSimpleArray
 			}
 
 			mi.dwTypeData = scripts[i].name.GetBuffer();
-			mi.cch = wcslen(scripts[i].name);
+			mi.cch = static_cast<UINT>(wcslen(scripts[i].name));
 
 			if(scripts[i].isFolder)
 				InsertMenuItem(parentItem, 0, true, &mi);
@@ -5384,7 +5384,7 @@ void CMainFrame::DisplayCharCode()
 		// The long complicated way to get unicode character from Scintilla!
 		char buf[5] = {0,0,0,0,0};
 		int pos = m_source.SendMessage(SCI_GETCURRENTPOS);
-		buf[0] = m_source.SendMessage(SCI_GETCHARAT, pos);
+		buf[0] = static_cast<char>(m_source.SendMessage(SCI_GETCHARAT, pos));
 		int len = UTF8_CHAR_LEN(buf[0]);
 		for (int i=1; i<len && i<5; i++)
 			buf[i] = m_source.SendMessage(SCI_GETCHARAT, pos+i);

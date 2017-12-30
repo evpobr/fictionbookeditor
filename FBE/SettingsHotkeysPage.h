@@ -32,7 +32,7 @@ public:
 		if(wParam != virtkey)
 		{
 			::SendMessage(GetParent(), WM_USER + 0x401, wParam, lParam);
-			virtkey = wParam;
+			virtkey =  wParam;
 		}
 		return 0;
 	}
