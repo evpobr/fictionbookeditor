@@ -44,6 +44,8 @@ extern CString    _SettingsPath;
 
 #include <msxml6.h>
 
+#import "fbe.tlb"
+
 _COM_SMARTPTR_TYPEDEF(IXMLDOMDocument2, __uuidof(IXMLDOMDocument2));
 _COM_SMARTPTR_TYPEDEF(IXSLTemplate, __uuidof(IXSLTemplate));
 _COM_SMARTPTR_TYPEDEF(IXSLProcessor, __uuidof(IXSLProcessor));

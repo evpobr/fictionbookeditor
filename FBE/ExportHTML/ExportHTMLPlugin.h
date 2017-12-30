@@ -1,11 +1,11 @@
 #pragma once
 #include "resource.h"
-#include "ExportHTML_i.h"
+#include "ExportHTML.h"
 
 class ATL_NO_VTABLE CExportHTMLPlugin :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CExportHTMLPlugin, &CLSID_ExportHTMLPlugin>,
-	public IFBEExportPlugin
+	public FBELib::IFBEExportPlugin
 {
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_EXPORTHTML)
@@ -18,7 +18,7 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	// IFBEExportPlugin
-	STDMETHODIMP Export(long hWnd,BSTR filename,IDispatch *doc);
+	STDMETHODIMP raw_Export(long hWnd,BSTR filename,IDispatch *doc);
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(ExportHTMLPlugin), CExportHTMLPlugin)
+OBJECT_ENTRY_AUTO(CLSID_ExportHTMLPlugin, CExportHTMLPlugin)

@@ -4,7 +4,7 @@
 #include "utils.h"
 #include "CustomFileSaveDialog.h"
 
-HRESULT	CExportHTMLPlugin::Export(long hWnd, BSTR filename, IDispatch *doc)
+HRESULT	CExportHTMLPlugin::raw_Export(long hWnd, BSTR filename, IDispatch *doc)
 {
 	HANDLE  hOut = INVALID_HANDLE_VALUE;
 	CString strMessage;
