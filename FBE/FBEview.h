@@ -465,7 +465,7 @@ public:
 	}
 
   // searching in scintilla
-  bool SciFindNext(HWND src,bool fFwdOnly,bool fBarf);
+  bool SciFindNext(CScintillaWindow &src,bool fFwdOnly,bool fBarf);
 
   // utilities
   CString		    SelPath();

@@ -7,6 +7,7 @@
 #include "AboutBox.h"
 #include "SettingsDlg.h"
 #include "xmlMatchedTagsHighlighter.h"
+#include "AtlScintilla.h"
 
 // Vista file dialogs client GUIDs
 // {CF7C097D-0A2D-47EF-939D-1760BF4D0154}
@@ -257,7 +258,7 @@ CString	CMainFrame::GetSaveFileName(CString& encoding)
 }
 
 bool	CMainFrame::DocChanged() {
-	return m_doc && m_doc->DocChanged() || IsSourceActive() && m_source.SendMessage(SCI_GETMODIFY);
+	return m_doc && m_doc->DocChanged() || IsSourceActive() && m_source.GetModify();
 }
 
 bool CMainFrame::DiscardChanges()
@@ -329,7 +330,7 @@ CMainFrame::FILE_OP_STATUS CMainFrame::SaveFile(bool askname) {
       m_doc->m_namevalid=true;	 
 	  m_file_age = FileAge(m_doc->m_filename);
 	  if(IsSourceActive())
-		  m_source.SendMessage(SCI_SETSAVEPOINT);
+		  m_source.SetSavePoint();
       return OK;
     }
     return FAIL;
@@ -339,8 +340,8 @@ CMainFrame::FILE_OP_STATUS CMainFrame::SaveFile(bool askname) {
   if(saved)
   {
 	  m_file_age = FileAge(m_doc->m_filename);
-	  if(IsSourceActive())
-		  m_source.SendMessage(SCI_SETSAVEPOINT);
+	  if (IsSourceActive())
+		  m_source.SetSavePoint();
 	  return OK;
   }
   else
@@ -552,15 +553,15 @@ BOOL CMainFrame::OnIdle()
 		m_th_allign_caption.SetEnabled(false);
 		m_valign_caption.SetEnabled(false);	
 
-		bool fCanCC = m_source.SendMessage(SCI_GETSELECTIONSTART) != m_source.SendMessage(SCI_GETSELECTIONEND);
+		bool fCanCC = m_source.GetSelectionStart() != m_source.GetSelectionEnd();
 		UIEnable(ID_EDIT_COPY, fCanCC);
 		UIEnable(ID_EDIT_CUT, fCanCC);
-		UIEnable(ID_EDIT_PASTE, m_source.SendMessage(SCI_CANPASTE) ? TRUE : FALSE);
-		UIEnable(ID_EDIT_PASTE2, m_source.SendMessage(SCI_CANPASTE) ? TRUE : FALSE);
+		UIEnable(ID_EDIT_PASTE, m_source.CanPaste() ? TRUE : FALSE);
+		UIEnable(ID_EDIT_PASTE2, m_source.CanPaste() ? TRUE : FALSE);
 
 		UIEnable(ID_GOTO_WRONGTAG, true);
 
-		if(m_source.SendMessage(SCI_CANUNDO))
+		if(m_source.CanUndo())
 		{
 			UISetText(ID_EDIT_UNDO, L"&Undo");
 			UIEnable(ID_EDIT_UNDO, 1);
@@ -571,7 +572,7 @@ BOOL CMainFrame::OnIdle()
 			UIEnable(ID_EDIT_UNDO, 0);
 		}
 
-		if(m_source.SendMessage(SCI_CANREDO))
+		if(m_source.CanRedo())
 		{
 			UISetText(ID_EDIT_REDO, L"&Redo");
 			UIEnable(ID_EDIT_REDO, 1);
@@ -679,7 +680,7 @@ BOOL CMainFrame::OnIdle()
 		UIEnable(ID_GOTO_WRONGTAG, false);
 
 		// Added by SeNS: process bitmap paste
-		UIEnable(ID_EDIT_PASTE, m_source.SendMessage(SCI_CANPASTE) || BitmapInClipboard());
+		UIEnable(ID_EDIT_PASTE, m_source.CanPaste() || BitmapInClipboard());
 
 		if (m_sel_changed && /*GetCurView()*/m_current_view != DESC)
 		{
@@ -1816,38 +1817,27 @@ void CMainFrame::FillMenuWithHkeys(HMENU menu)
 }
 
 // search&replace in scintilla
-CString	  SciSelection(CWindow source) {
-  int	  start= static_cast<int>(source.SendMessage(SCI_GETSELECTIONSTART));
-  int	  end=source.SendMessage(SCI_GETSELECTIONEND);
+CString SciSelection(CScintillaWindow &source)
+{
+	int start = source.GetSelectionStart();
+	int end = source.GetSelectionEnd();
 
-  if (start>=end)
-    return CString();
+	if (start >= end)
+		return CString();
 
-  char	  *buffer=(char*)malloc(end-start+1);
-  if (buffer==NULL)
-    return CString();
-  source.SendMessage(SCI_GETSELTEXT,0,(LPARAM)buffer);
-
-  char	  *p=buffer;
-  while (*p && *p!='\r' && *p!='\n')
-    ++p;
-
-  int	  wlen=::MultiByteToWideChar(CP_UTF8,0,buffer,p-buffer,NULL,0);
-  CString ret;
-  wchar_t *wp=ret.GetBuffer(wlen);
-  if (wp)
-    ::MultiByteToWideChar(CP_UTF8, 0, buffer ,p-buffer, wp, wlen);
-  free(buffer);
-  if (wp)
-    ret.ReleaseBuffer(wlen);
-  return ret;
+	CStringA strBufferUTF8;
+	source.GetSelText(strBufferUTF8);
+	int nLength = strBufferUTF8.FindOneOf("\r\n");
+	if (nLength != -1)
+		strBufferUTF8 = strBufferUTF8.Left(nLength);
+	return CA2W(strBufferUTF8, CP_UTF8);
 }
 
 class CSciFindDlg : public CFindDlgBase {
 public:
-  CWindow	m_source;
+  CScintillaWindow	m_source;
 
-  CSciFindDlg(CFBEView *view,HWND src) :
+  CSciFindDlg(CFBEView *view,CScintillaWindow &src) :
     CFindDlgBase(view), m_source(src)
   {    
   }
@@ -1867,9 +1857,9 @@ public:
 
 class CSciReplaceDlg : public CReplaceDlgBase {
 public:
-  CWindow	m_source;
+  CScintillaWindow m_source;
 
-  CSciReplaceDlg(CFBEView *view,HWND src) : 
+  CSciReplaceDlg(CFBEView *view,CScintillaWindow &src) : 
     CReplaceDlgBase(view), m_source(src)
   {    
   }
@@ -2061,7 +2051,7 @@ LRESULT CMainFrame::OnUnhandledCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 						m_source.SendMessage(SCI_UNDO);
 						break;*/
 					case ID_EDIT_REDO:
-						m_source.SendMessage(SCI_REDO);
+						m_source.Redo();
 						break;
 					/*case ID_EDIT_CUT:
 						m_source.SendMessage(SCI_CUT);
@@ -3360,138 +3350,132 @@ LRESULT CMainFrame::OnChar(UINT, WPARAM wParam, LPARAM lParam, BOOL&)
   return 0;
 }
 
-bool  CMainFrame::SourceToHTML() 
+bool CMainFrame::SourceToHTML()
 {
-	LRESULT changed = m_source.SendMessage(SCI_GETMODIFY);
+	LRESULT changed = m_source.GetModify();
 	size_t textlen = 0;
-	char*	buffer = 0;
+	CStringA buffer = 0;
 
 	size_t begin_char = 0;
 	size_t end_char = 0;
 	int bodies_count = 0;
-	
-	// берем текст
-	textlen = m_source.SendMessage(SCI_GETLENGTH);
-	buffer = new char[textlen + 1];
-	m_source.SendMessage(SCI_GETTEXT, textlen+1, (LPARAM)buffer);
-	// конвертим в UTF16
-	DWORD   ulen=::MultiByteToWideChar(CP_UTF8,0,buffer,textlen,NULL,0);
 
-	BSTR    ustr=::SysAllocStringLen(NULL,ulen);
-	::MultiByteToWideChar(CP_UTF8,0,buffer,textlen,ustr,ulen);
-	
+	// берем текст
+	textlen = m_source.GetTextLength();
+	m_source.GetText(buffer);
+	// конвертим в UTF16
+	DWORD   ulen = ::MultiByteToWideChar(CP_UTF8, 0, buffer, textlen, NULL, 0);
+
+	CComBSTR ustr = CA2W(buffer, CP_UTF8);
+
 	//	смотрим выделенную позицию	
-	int	  selectedPosBegin = m_source.SendMessage(SCI_GETSELECTIONSTART);    
-	int	  selectedPosEnd = m_source.SendMessage(SCI_GETSELECTIONEND);    
+	int	  selectedPosBegin = m_source.GetSelectionStart();
+	int	  selectedPosEnd = m_source.GetSelectionEnd();
 	bool one_pos = selectedPosEnd == selectedPosBegin;
-	if(one_pos)
+	if (one_pos)
 	{
-		selectedPosEnd = selectedPosBegin = MultiByteToWideChar(CP_UTF8,0,buffer,selectedPosBegin,NULL,0);
+		selectedPosEnd = selectedPosBegin = MultiByteToWideChar(CP_UTF8, 0, buffer, selectedPosBegin, NULL, 0);
 	}
 	else
 	{
-		selectedPosBegin = MultiByteToWideChar(CP_UTF8,0,buffer,selectedPosBegin,NULL,0);
-		selectedPosEnd = MultiByteToWideChar(CP_UTF8,0,buffer,selectedPosEnd,NULL,0);
-	}	
+		selectedPosBegin = MultiByteToWideChar(CP_UTF8, 0, buffer, selectedPosBegin, NULL, 0);
+		selectedPosEnd = MultiByteToWideChar(CP_UTF8, 0, buffer, selectedPosEnd, NULL, 0);
+	}
 
 	//	перегоняем в XML
 	U::DomPath path_begin;
 	U::DomPath path_end;
 
 	path_begin.CreatePathFromText(ustr, selectedPosBegin, &begin_char);
-	
-	if(one_pos)
+
+	if (one_pos)
 	{
 		path_end = path_begin;
 		end_char = begin_char;
 	}
 	else
-	{	
+	{
 		path_end.CreatePathFromText(ustr, selectedPosEnd, &end_char);
 	}
-		
-	if(changed)
+
+	if (changed)
 	{
-		if((bool)m_saved_xml)
+		if ((bool)m_saved_xml)
 		{
 			m_saved_xml.Release();
 			m_saved_xml = 0;
 		}
-		
-		if(!m_doc->TextToXML(ustr, (MSXML2::IXMLDOMDocument2Ptr*)(&m_saved_xml)))
+
+		if (!m_doc->TextToXML(ustr, (MSXML2::IXMLDOMDocument2Ptr*)(&m_saved_xml)))
 		{
 			CComDispatchDriver	body(m_doc->m_body.Script());
 			CComVariant		    args[1];
 			CComVariant		    ret;
-			args[0]=ustr;
-			CheckError(body.Invoke1(L"XmlFromText",&args[0], &ret));
-			if(ret.vt == VT_DISPATCH)
+			args[0] = ustr;
+			CheckError(body.Invoke1(L"XmlFromText", &args[0], &ret));
+			if (ret.vt == VT_DISPATCH)
 			{
 				m_saved_xml = ret.pdispVal;
 				// если вернулся не xml, значит вернулась ошибка
-				if(!(bool)m_saved_xml)
+				if (!(bool)m_saved_xml)
 				{
 					MSXML2::IXMLDOMParseErrorPtr err = ret.pdispVal;
-					if(!(bool)err)
+					if (!(bool)err)
 					{
 						return false;
 					}
 					bstr_t msg = err->reason;
 					int line = err->line;
 					int linepos = err->linepos;
-					::SendMessage(m_doc->m_frame,AU::WM_SETSTATUSTEXT,0,(LPARAM)(const TCHAR *)msg);
+					::SendMessage(m_doc->m_frame, AU::WM_SETSTATUSTEXT, 0, (LPARAM)(const TCHAR *)msg);
 					SourceGoTo(line, linepos);
 					return false;
 				}
 			}
 			else
 			{
-				SysFreeString(ustr);
 				return false;
-			}			
+			}
 		}
 	}
 
-	SysFreeString(ustr);
-	
-	
 	MSXML2::IXMLDOMNodeListPtr ChildNodes = m_saved_xml->documentElement->childNodes;
 	MSXML2::IXMLDOMNodePtr body;
 
 	MSXML2::IXMLDOMElementPtr selectedElementBegin = path_begin.GetNodeFromXMLDOM(m_saved_xml);
-	for(int i = 0; i < ChildNodes->length; i++)
+	for (int i = 0; i < ChildNodes->length; i++)
 	{
 		bstr_t name = ChildNodes->item[i]->nodeName;
-		if(U::scmp(ChildNodes->item[i]->nodeName, L"body") == 0)
+		if (U::scmp(ChildNodes->item[i]->nodeName, L"body") == 0)
 		{
-			if(U::IsParentElement(selectedElementBegin, ChildNodes->item[i]))
+			if (U::IsParentElement(selectedElementBegin, ChildNodes->item[i]))
 			{
 				body = ChildNodes->item[i];
 				break;
 			}
 			else
 			{
-				++bodies_count;				
-			}			
+				++bodies_count;
+			}
 		}
 	}
-	
+
 	// строим относительный путь. Относительно секции body
 	path_begin.CreatePathFromXMLDOM(body, selectedElementBegin);
 	MSXML2::IXMLDOMElementPtr selectedElementEnd;
-	if(one_pos)
+	if (one_pos)
 	{
 		path_end = path_begin;
 	}
 	else
 	{
-		selectedElementEnd  = path_end.GetNodeFromXMLDOM(m_saved_xml);
+		selectedElementEnd = path_end.GetNodeFromXMLDOM(m_saved_xml);
 		path_end.CreatePathFromXMLDOM(body, selectedElementEnd);
-	}	
-	
+	}
+
 
 	// если документ был изменен, то перегоняем его в HTML
-	if(changed)
+	if (changed)
 	{
 		// перегоняем в HTML
 		CComDispatchDriver	body(m_doc->m_body.Script());
@@ -3502,31 +3486,31 @@ bool  CMainFrame::SourceToHTML()
 		m_doc->m_body.Init();
 		// у нас совершенно новый HTML и указатели на элшементы старого теперь невалидны.
 		ClearSelection();
-		
-        //m_saved_xml.Release();
+
+		//m_saved_xml.Release();
 		//m_saved_xml = 0;		
 	}
 
 	//	В HTML по пути находим нужный элемент
-	MSHTML::IHTMLElementPtr selectedHTMLElementBegin;	
-	MSHTML::IHTMLElementPtr selectedHTMLElementEnd;	
-	
+	MSHTML::IHTMLElementPtr selectedHTMLElementBegin;
+	MSHTML::IHTMLElementPtr selectedHTMLElementEnd;
+
 	MSHTML::IHTMLDOMNodePtr root = m_doc->m_body.Document()->body;
 	root = root->firstChild; // <DIV id = fbw_desc>
 	root = root->nextSibling; // <DIV id = fbw_body>
 	root = root->firstChild;// <DIV clss = ...>
 	do
 	{
-		if(U::scmp(MSHTML::IHTMLElementPtr(root)->className, L"body") == 0)
+		if (U::scmp(MSHTML::IHTMLElementPtr(root)->className, L"body") == 0)
 		{
-			if(bodies_count)
+			if (bodies_count)
 			{
 				--bodies_count;
 			}
 			else
 			{
 				selectedHTMLElementBegin = path_begin.GetNodeFromHTMLDOM(root);
-				if(one_pos)
+				if (one_pos)
 				{
 					selectedHTMLElementEnd = selectedHTMLElementBegin;
 				}
@@ -3537,15 +3521,14 @@ bool  CMainFrame::SourceToHTML()
 				break;
 			}
 		}
-	}while(root = root->nextSibling);
-	
-	delete buffer;
-	m_doc->m_body.GoTo(selectedHTMLElementBegin);		
-	m_body_selection =  m_doc->m_body.SetSelection(selectedHTMLElementBegin, selectedHTMLElementEnd, begin_char, end_char);	
+	} while (root = root->nextSibling);
+
+	m_doc->m_body.GoTo(selectedHTMLElementBegin);
+	m_body_selection = m_doc->m_body.SetSelection(selectedHTMLElementBegin, selectedHTMLElementEnd, begin_char, end_char);
 	m_doc->MarkDocCP(); // document is in sync with source
-	if(_Settings.ViewDocumentTree())
+	if (_Settings.ViewDocumentTree())
 	{
-		m_document_tree.GetDocumentStructure(m_doc->m_body.Document());	
+		m_document_tree.GetDocumentStructure(m_doc->m_body.Document());
 	}
 	return true;
 	//m_document_tree.HighlightItemAtPos(m_doc->m_body.SelectionContainer());  
@@ -3564,14 +3547,14 @@ bool CMainFrame::ShowSource(bool saveSelection)
 	int bodies_count = 0;
 	// берем HTML
 	// запоминаем путь до выделенного элемента
-	if(saveSelection)
+	if (saveSelection)
 	{
 		MSHTML::IHTMLElementPtr selectedBeginElement;
 		MSHTML::IHTMLElementPtr selectedEndElement;
 
-		if(saveSelection)
+		if (saveSelection)
 			m_doc->m_body.GetSelectionInfo((MSHTML::IHTMLElementPtr*)(&selectedBeginElement), (MSHTML::IHTMLElementPtr*)(&selectedEndElement), &selection_begin_char, &selection_end_char, 0);
-		else if(m_body_selection)
+		else if (m_body_selection)
 			m_doc->m_body.GetSelectionInfo((MSHTML::IHTMLElementPtr*)(&selectedBeginElement), (MSHTML::IHTMLElementPtr*)(&selectedEndElement), &selection_begin_char, &selection_end_char, m_body_selection);
 
 
@@ -3582,9 +3565,9 @@ bool CMainFrame::ShowSource(bool saveSelection)
 		root = root->firstChild;// <DIV clss = ...>
 		if (root) do
 		{
-			if(U::scmp(MSHTML::IHTMLElementPtr(root)->className, L"body") == 0)
+			if (U::scmp(MSHTML::IHTMLElementPtr(root)->className, L"body") == 0)
 			{
-				if(!U::IsParentElement(selectedEndElement, root))
+				if (!U::IsParentElement(selectedEndElement, root))
 				{
 					++bodies_count;
 				}
@@ -3593,7 +3576,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 					bool res = selection_begin_path.CreatePathFromHTMLDOM(root, selectedBeginElement);
 					path = selection_begin_path;
 					one_element = selectedBeginElement == selectedEndElement;
-					if(one_element)
+					if (one_element)
 					{
 						selection_end_path = selection_begin_path;
 					}
@@ -3605,64 +3588,64 @@ bool CMainFrame::ShowSource(bool saveSelection)
 					break;
 				}
 			}
-		}while(root = root->nextSibling);
+		} while (root = root->nextSibling);
 	}
 
 	// если документ изменился, то заново строим XMLDOM
 	{
-		if(m_doc->DocRelChanged() || !(bool)m_saved_xml)
+		if (m_doc->DocRelChanged() || !(bool)m_saved_xml)
 		{
-			if((bool)m_saved_xml)
+			if ((bool)m_saved_xml)
 			{
-				m_saved_xml.Release();			
+				m_saved_xml.Release();
 			}
 			m_saved_xml = m_doc->CreateDOM(_T(""));
-			if(!(bool)m_saved_xml)
+			if (!(bool)m_saved_xml)
 			{
 				return false;
 			}
 		}
 	}
 
-/*	std::ofstream save;
-	CString s = m_saved_xml->xml;
-	CT2A str (s, 1251);
-	save.open(L"1.xml", std::ios_base::out | std::ios_base::trunc);
-	if (save.is_open())
-		save << str << '\n';
-	save.close();
+	/*	std::ofstream save;
+		CString s = m_saved_xml->xml;
+		CT2A str (s, 1251);
+		save.open(L"1.xml", std::ios_base::out | std::ios_base::trunc);
+		if (save.is_open())
+			save << str << '\n';
+		save.close();
 
-	MSHTML::IHTMLElementPtr body = (MSHTML::IHTMLElementPtr)m_doc->m_body.Document()->body;
-	s.SetString(body->innerHTML);
-	CT2A str2 (s, 1251);
-	save.open(L"1.htm", std::ios_base::out | std::ios_base::trunc);
-	if (save.is_open())
-		save << str2 << '\n';
-	save.close(); */
+		MSHTML::IHTMLElementPtr body = (MSHTML::IHTMLElementPtr)m_doc->m_body.Document()->body;
+		s.SetString(body->innerHTML);
+		CT2A str2 (s, 1251);
+		save.open(L"1.htm", std::ios_base::out | std::ios_base::trunc);
+		if (save.is_open())
+			save << str2 << '\n';
+		save.close(); */
 
 	MSXML2::IXMLDOMNodePtr xml_selected_begin;
 	MSXML2::IXMLDOMNodePtr xml_selected_end;
 	//	по пути находим нужный элемент в XML
 	//if(saveSelection)
 	{
-		MSXML2::IXMLDOMNodePtr xml_body = m_saved_xml->firstChild->firstChild;		
-		while(xml_body)
+		MSXML2::IXMLDOMNodePtr xml_body = m_saved_xml->firstChild->firstChild;
+		while (xml_body)
 		{
-			if(U::scmp(xml_body->nodeName, L"body") == 0)
+			if (U::scmp(xml_body->nodeName, L"body") == 0)
 			{
-				if(bodies_count)
+				if (bodies_count)
 				{
 					--bodies_count;
 					xml_body = xml_body->nextSibling;
 					continue;
 				}
 				xml_selected_begin = selection_begin_path.GetNodeFromXMLDOM(xml_body);
-				
+
 				// строим абсолютный путь до него.
 				selection_begin_path.CreatePathFromXMLDOM(m_saved_xml, xml_selected_begin);
 				path = selection_begin_path;
 
-				if(one_element)
+				if (one_element)
 				{
 					selection_end_path = selection_begin_path;
 				}
@@ -3671,10 +3654,10 @@ bool CMainFrame::ShowSource(bool saveSelection)
 					xml_selected_end = selection_end_path.GetNodeFromXMLDOM(xml_body);
 					selection_end_path.CreatePathFromXMLDOM(m_saved_xml, xml_selected_end);
 				}
-				
+
 				break;
 			}
-			xml_body = xml_body->nextSibling;			
+			xml_body = xml_body->nextSibling;
 		}
 	}
 
@@ -3687,42 +3670,34 @@ bool CMainFrame::ShowSource(bool saveSelection)
 	{
 		savedPosBegin = selection_begin_path.GetNodeFromText(src, selection_begin_char);
 		savedPosEnd = 0;
-		if(savedPosBegin)
+		if (savedPosBegin)
 		{
 			savedPosEnd = selection_end_path.GetNodeFromText(src, selection_end_char);
-			if(!savedPosEnd)
+			if (!savedPosEnd)
 			{
 				savedPosEnd = savedPosBegin;
-			}		
-			savedPosBegin =::WideCharToMultiByte(CP_UTF8,0,src,savedPosBegin,	NULL,0,NULL,NULL);
-			savedPosEnd =::WideCharToMultiByte(CP_UTF8,0,src,savedPosEnd,	NULL,0,NULL,NULL);
+			}
+			savedPosBegin = ::WideCharToMultiByte(CP_UTF8, 0, src, savedPosBegin, NULL, 0, NULL, NULL);
+			savedPosEnd = ::WideCharToMultiByte(CP_UTF8, 0, src, savedPosEnd, NULL, 0, NULL, NULL);
 		}
 	}
 
-	DWORD nch=::WideCharToMultiByte(CP_UTF8,0,src,src.length(),	NULL,0,NULL,NULL);
-
 	//	загоняем текст в сцинтиллу
-	if(m_doc->DocRelChanged())
+	if (m_doc->DocRelChanged())
 	{
-		m_source.SendMessage(SCI_CLEARALL);
-		char      *buffer=(char*)malloc(nch);
-		if (buffer!=NULL) 
-		{
-			::WideCharToMultiByte(CP_UTF8,0,src,src.length(),
-									buffer,nch,NULL,NULL);
-			m_source.SendMessage(SCI_APPENDTEXT,nch,(LPARAM)buffer);
-			free(buffer);
-		}
+		m_source.ClearAll();
+		CStringA strBufferUTF8 = CW2A(src, CP_UTF8);
+		m_source.AppendText(strBufferUTF8, strBufferUTF8.GetLength());
 	}
 
 	//	переходим на позицию
-	m_source.SendMessage(SCI_SETSELECTIONSTART,savedPosBegin);
-	m_source.SendMessage(SCI_SETSELECTIONEND,savedPosEnd);
-	m_source.SendMessage(SCI_SCROLLCARET);	
+	m_source.SetSelectionStart(savedPosBegin);
+	m_source.SetSelectionEnd(savedPosEnd);
+	m_source.ScrollCaret();
 
-	m_source.SendMessage(SCI_EMPTYUNDOBUFFER);
+	m_source.EmptyUndoBuffer();
 	m_doc->MarkDocCP();
-	return true;	
+	return true;
 }
 
 
@@ -3954,50 +3929,45 @@ void  CMainFrame::ShowView(VIEW_TYPE vt)
   return SOURCE;
 }*/
 
-void  CMainFrame::SetSciStyles() {
-  m_source.SendMessage(SCI_STYLERESETDEFAULT);
+void CMainFrame::SetSciStyles()
+{
+	m_source.StyleResetDefault();
 
-  /// Set source font
-  CT2A srcFont(_Settings.GetSrcFont());
-  m_source.SendMessage(SCI_STYLESETFONT,STYLE_DEFAULT,(LPARAM) srcFont.m_psz);
-  m_source.SendMessage(SCI_STYLESETSIZE,STYLE_DEFAULT, _Settings.GetFontSize());
+	/// Set source font
+	CT2A srcFont(_Settings.GetSrcFont());
+	m_source.StyleSetFont(STYLE_DEFAULT, srcFont.m_psz);
+	m_source.StyleSetSize(STYLE_DEFAULT, _Settings.GetFontSize());
 
-/*  DWORD fs = _Settings.GetColorFG();
-  if (fs!=CLR_DEFAULT)
-    m_source.SendMessage(SCI_STYLESETFORE,STYLE_DEFAULT,fs);
+	m_source.StyleClearAll();
 
-  fs = _Settings.GetColorBG();
-  if (fs!=CLR_DEFAULT)
-    m_source.SendMessage(SCI_STYLESETBACK,STYLE_DEFAULT,fs);*/
-
-  m_source.SendMessage(SCI_STYLECLEARALL);
-
-  // set XML specific styles
-  static struct {
-    char    style;
-    int	    color;
-  }   styles[]={
-    { 0, RGB(0,0,0) },	    // default text
-    { 1, RGB(128,0,0) },    // tags
-    { 2, RGB(128,0,0) },    // unknown tags
-    { 3, RGB(128,128,0) },  // attributes
-    { 4, RGB(255,0,0) },    // unknown attributes
-    { 5, RGB(0,128,96) },   // numbers
-    { 6, RGB(0,128,0) },    // double quoted strings
-    { 7, RGB(0,128,0) },    // single quoted strings
-    { 8, RGB(128,0,128) },  // other inside tag
-    { 9, RGB(0,128,128) },  // comments
-    { 10, RGB(128,0,128) }, // entities
-    { 11, RGB(128,0,0) },   // tag ends
-    { 12, RGB(128,0,128) }, // xml decl start
-    { 13, RGB(128,0,128) }, // xml decl end
-    { 17, RGB(128,0,0) },   // cdata
-    { 18, RGB(128,0,0) },   // question
-    { 19, RGB(96,128,96) }, // unquoted value
-  };
-  if (_Settings.m_xml_src_syntaxHL)
-    for (int i=0;i<sizeof(styles)/sizeof(styles[0]);++i)
-      m_source.SendMessage(SCI_STYLESETFORE,styles[i].style,styles[i].color);
+	// set XML specific styles
+	static struct
+	{
+		char style;
+		int color;
+	} styles[] =
+	{
+	  { 0, RGB(0,0,0) },      // default text
+	  { 1, RGB(128,0,0) },    // tags
+	  { 2, RGB(128,0,0) },    // unknown tags
+	  { 3, RGB(128,128,0) },  // attributes
+	  { 4, RGB(255,0,0) },    // unknown attributes
+	  { 5, RGB(0,128,96) },   // numbers
+	  { 6, RGB(0,128,0) },    // double quoted strings
+	  { 7, RGB(0,128,0) },    // single quoted strings
+	  { 8, RGB(128,0,128) },  // other inside tag
+	  { 9, RGB(0,128,128) },  // comments
+	  { 10, RGB(128,0,128) }, // entities
+	  { 11, RGB(128,0,0) },   // tag ends
+	  { 12, RGB(128,0,128) }, // xml decl start
+	  { 13, RGB(128,0,128) }, // xml decl end
+	  { 17, RGB(128,0,0) },   // cdata
+	  { 18, RGB(128,0,0) },   // question
+	  { 19, RGB(96,128,96) }, // unquoted value
+	};
+	if (_Settings.m_xml_src_syntaxHL)
+		for (int i = 0; i < sizeof(styles) / sizeof(styles[0]); ++i)
+			m_source.StyleSetFore(styles[i].style, styles[i].color);
 }
 
 LRESULT CMainFrame::OnFileValidate(WORD, WORD, HWND, BOOL&) {
@@ -4043,128 +4013,167 @@ void  CMainFrame::FoldAll() {
   }
 }
 
-void CMainFrame::ExpandFold(int &line, bool doExpand, bool force, int visLevels, int level) {
-  int lineMaxSubord = m_source.SendMessage(SCI_GETLASTCHILD, line, level & SC_FOLDLEVELNUMBERMASK);
-  line++;
-  while (line <= lineMaxSubord) {
-    if (force) {
-      if (visLevels > 0)
-	m_source.SendMessage(SCI_SHOWLINES, line, line);
-      else
-	m_source.SendMessage(SCI_HIDELINES, line, line);
-    } else {
-      if (doExpand)
-	m_source.SendMessage(SCI_SHOWLINES, line, line);
-    }
-    int levelLine = level;
-    if (levelLine == -1)
-      levelLine = static_cast<int>(m_source.SendMessage(SCI_GETFOLDLEVEL, line));
-    if (levelLine & SC_FOLDLEVELHEADERFLAG) {
-      if (force) {
-	if (visLevels > 1)
-	  m_source.SendMessage(SCI_SETFOLDEXPANDED, line, 1);
-	else
-	  m_source.SendMessage(SCI_SETFOLDEXPANDED, line, 0);
-	ExpandFold(line, doExpand, force, visLevels - 1);
-      } else {
-	if (doExpand) {
-	  if (!m_source.SendMessage(SCI_GETFOLDEXPANDED, line))
-	    m_source.SendMessage(SCI_SETFOLDEXPANDED, line, 1);
-	  ExpandFold(line, true, force, visLevels - 1);
-	} else {
-	  ExpandFold(line, false, force, visLevels - 1);
-	}
-      }
-    } else {
-      line++;
-    }
-  }
-}
-
-void  CMainFrame::DefineMarker(int marker, int markerType, COLORREF fore,COLORREF back) {
-  m_source.SendMessage(SCI_MARKERDEFINE, marker, markerType);
-  m_source.SendMessage(SCI_MARKERSETFORE, marker, fore);
-  m_source.SendMessage(SCI_MARKERSETBACK, marker, back);
-}
-
-void  CMainFrame::SetupSci() 
+void CMainFrame::ExpandFold(int &line, bool doExpand, bool force, int visLevels, int level)
 {
-  m_source.SendMessage(SCI_SETCODEPAGE,SC_CP_UTF8);
-  m_source.SendMessage(SCI_SETEOLMODE,SC_EOL_CRLF);
-  m_source.SendMessage(SCI_SETVIEWEOL, _Settings.m_xml_src_showEOL);
-  m_source.SendMessage(SCI_SETVIEWWS, _Settings.m_xml_src_showSpace);
-  m_source.SendMessage(SCI_SETWRAPMODE, _Settings.m_xml_src_wrap ? SC_WRAP_WORD : SC_WRAP_NONE);
-  // added by SeNS: try to speed-up wrap mode
-  m_source.SendMessage(SCI_SETLAYOUTCACHE,SC_CACHE_DOCUMENT);
-  m_source.SendMessage(SCI_SETXCARETPOLICY,CARET_SLOP|CARET_EVEN,50);
-  m_source.SendMessage(SCI_SETYCARETPOLICY,CARET_SLOP|CARET_EVEN,50);
-  // added by SeNS: display line numbers
-  if (_Settings.m_show_line_numbers) m_source.SendMessage(SCI_SETMARGINWIDTHN,0,64);
-  else m_source.SendMessage(SCI_SETMARGINWIDTHN,0,0);
-  m_source.SendMessage(SCI_SETMARGINWIDTHN,1,0);
-  m_source.SendMessage(SCI_SETFOLDFLAGS, 16);
-  m_source.SendMessage(SCI_SETPROPERTY,(WPARAM)"fold",(WPARAM)"1");
-  m_source.SendMessage(SCI_SETPROPERTY,(WPARAM)"fold.html",(WPARAM)"1");
-  m_source.SendMessage(SCI_SETPROPERTY,(WPARAM)"fold.compact",(WPARAM)"1");
-  m_source.SendMessage(SCI_SETPROPERTY,(WPARAM)"fold.flags",(WPARAM)"16");
-  m_source.SendMessage(SCI_SETSTYLEBITS,7);
-  // added by SeNS: disable Scintilla's control characters
-  char sciCtrlChars[] = {'Q','E','R','S','K',':'};
-  for (int i=0; i<sizeof(sciCtrlChars); i++)
-	m_source.SendMessage(SCI_ASSIGNCMDKEY, sciCtrlChars[i]+(SCMOD_CTRL << 16), SCI_NULL);
-  char sciCtrlShiftChars[] = {'Q','W','E','R','Y','O','P','A','S','D','F','G','H','K','Z','X','C','V','B','N',':'};
-  for (int i=0; i<sizeof(sciCtrlShiftChars); i++)
-    m_source.SendMessage(SCI_ASSIGNCMDKEY, sciCtrlShiftChars[i]+((SCMOD_CTRL+SCMOD_SHIFT) << 16), SCI_NULL);
-  ///
-  if (_Settings.m_xml_src_syntaxHL)
-  {
-    m_source.SendMessage(SCI_SETLEXER, SCLEX_XML);
-    m_source.SendMessage(SCI_SETMARGINTYPEN, 2, SC_MARGIN_SYMBOL);
-    m_source.SendMessage(SCI_SETMARGINWIDTHN, 2, 16);
-    m_source.SendMessage(SCI_SETMARGINMASKN, 2, SC_MASK_FOLDERS);
-    m_source.SendMessage(SCI_SETMARGINSENSITIVEN, 2, 1);
-    DefineMarker(SC_MARKNUM_FOLDEROPEN, SC_MARK_MINUS, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
-    DefineMarker(SC_MARKNUM_FOLDER, SC_MARK_PLUS, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
-    DefineMarker(SC_MARKNUM_FOLDERSUB, SC_MARK_EMPTY, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
-    DefineMarker(SC_MARKNUM_FOLDERTAIL, SC_MARK_EMPTY, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
-    DefineMarker(SC_MARKNUM_FOLDEREND, SC_MARK_EMPTY, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
-    DefineMarker(SC_MARKNUM_FOLDEROPENMID, SC_MARK_EMPTY, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
-    DefineMarker(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_EMPTY, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
+	int lineMaxSubord = m_source.SendMessage(SCI_GETLASTCHILD, line, level & SC_FOLDLEVELNUMBERMASK);
+	line++;
+	while (line <= lineMaxSubord)
+	{
+		if (force)
+		{
+			if (visLevels > 0)
+			{
+				m_source.ShowLines(line, line);
+			}
+			else
+			{
+				m_source.SendMessage(SCI_HIDELINES, line, line);
+			}
+		}
+		else
+		{
+			if (doExpand)
+			{
+				m_source.SendMessage(SCI_SHOWLINES, line, line);
+			}
+		}
 
-	// indicator for tag match
-	m_source.SendMessage(SCI_INDICSETSTYLE, SCE_UNIVERSAL_TAGMATCH, INDIC_ROUNDBOX);
-	m_source.SendMessage(SCI_INDICSETALPHA, SCE_UNIVERSAL_TAGMATCH, 100);
-	m_source.SendMessage(SCI_INDICSETUNDER, SCE_UNIVERSAL_TAGMATCH, TRUE);
-	m_source.SendMessage(SCI_INDICSETFORE,  SCE_UNIVERSAL_TAGMATCH, RGB(128, 128, 255));
+		int levelLine = level;
+		if (levelLine == -1)
+			levelLine = static_cast<int>(m_source.SendMessage(SCI_GETFOLDLEVEL, line));
 
-	m_source.SendMessage(SCI_INDICSETSTYLE, SCE_UNIVERSAL_TAGATTR, INDIC_ROUNDBOX);
-	m_source.SendMessage(SCI_INDICSETALPHA, SCE_UNIVERSAL_TAGATTR, 100);
-	m_source.SendMessage(SCI_INDICSETUNDER, SCE_UNIVERSAL_TAGATTR, TRUE);
-	m_source.SendMessage(SCI_INDICSETFORE,  SCE_UNIVERSAL_TAGATTR, RGB(128, 128, 255));
-
-	m_source.SendMessage(SCI_COLOURISE,0,-1);
-  } 
-  else 
-  {
-    m_source.SendMessage(SCI_SETLEXER, SCLEX_NULL);
-    m_source.SendMessage(SCI_SETMARGINWIDTHN, 2, 0);
-  }
+		if (levelLine & SC_FOLDLEVELHEADERFLAG)
+		{
+			if (force)
+			{
+				if (visLevels > 1)
+				{
+					m_source.SendMessage(SCI_SETFOLDEXPANDED, line, 1);
+				}
+				else
+				{
+					m_source.SendMessage(SCI_SETFOLDEXPANDED, line, 0);
+				}
+				ExpandFold(line, doExpand, force, visLevels - 1);
+			}
+			else
+			{
+				if (doExpand)
+				{
+					if (!m_source.SendMessage(SCI_GETFOLDEXPANDED, line))
+					{
+						m_source.SendMessage(SCI_SETFOLDEXPANDED, line, 1);
+					}
+					ExpandFold(line, true, force, visLevels - 1);
+				}
+				else
+				{
+					ExpandFold(line, false, force, visLevels - 1);
+				}
+			}
+		}
+		else
+		{
+			line++;
+		}
+	}
 }
 
-void  CMainFrame::SciModified(const SCNotification& scn) {
-  if (scn.modificationType & SC_MOD_CHANGEFOLD) {
-    if (scn.foldLevelNow & SC_FOLDLEVELHEADERFLAG) {
-      if (!(scn.foldLevelPrev & SC_FOLDLEVELHEADERFLAG))
-	m_source.SendMessage(SCI_SETFOLDEXPANDED, scn.line, 1);
-    } else if (scn.foldLevelPrev & SC_FOLDLEVELHEADERFLAG) {
-      if (!m_source.SendMessage(SCI_GETFOLDEXPANDED, scn.line)) {
-	// Removing the fold from one that has been contracted so should expand
-	// otherwise lines are left invisible with no way to make them visible
-	int tmpline=scn.line;
-	ExpandFold(tmpline, true, false, 0, scn.foldLevelPrev);
-      }
-    }
-  }
+void  CMainFrame::DefineMarker(int marker, int markerType, COLORREF fore, COLORREF back)
+{
+	m_source.MarkerDefine(marker, markerType);
+	m_source.MarkerSetFore(marker, fore);
+	m_source.MarkerSetBack(marker, back);
+}
+
+void  CMainFrame::SetupSci()
+{
+	m_source.SetCodePage(SC_CP_UTF8);
+	m_source.SetEOLMode(SC_EOL_CRLF);
+	m_source.SetViewEOL(_Settings.m_xml_src_showEOL);
+	m_source.SetViewWS(_Settings.m_xml_src_showSpace);
+	m_source.SetWrapMode(_Settings.m_xml_src_wrap ? SC_WRAP_WORD : SC_WRAP_NONE);
+	// added by SeNS: try to speed-up wrap mode
+	m_source.SetLayoutCache(SC_CACHE_DOCUMENT);
+	//m_source.SetCaretPolicy(CARET_SLOP | CARET_EVEN, 50);
+	m_source.SetYCaretPolicy(CARET_SLOP | CARET_EVEN, 50);
+	// added by SeNS: display line numbers
+	if (_Settings.m_show_line_numbers)
+		m_source.SetMarginWidthN(0, 64);
+	else
+		m_source.SetMarginWidthN(0, 0);
+	m_source.SetMarginWidthN(1, 0);
+	m_source.SetFoldFlags(SC_FOLDFLAG_LINEAFTER_CONTRACTED);
+	m_source.SetProperty("fold", "1");
+	m_source.SetProperty("fold.html", "1");
+	m_source.SetProperty("fold.compact", "1");
+	m_source.SetProperty("fold.flags", "16");
+	m_source.SetStyleBits(7);
+	// added by SeNS: disable Scintilla's control characters
+	char sciCtrlChars[] = { 'Q','E','R','S','K',':' };
+	for (int i = 0; i < sizeof(sciCtrlChars); i++)
+		m_source.AssignCmdKey(sciCtrlChars[i] + (SCMOD_CTRL << 16), SCI_NULL);
+	char sciCtrlShiftChars[] = { 'Q','W','E','R','Y','O','P','A','S','D','F','G','H','K','Z','X','C','V','B','N',':' };
+	for (int i = 0; i < sizeof(sciCtrlShiftChars); i++)
+		m_source.AssignCmdKey(sciCtrlShiftChars[i] + ((SCMOD_CTRL + SCMOD_SHIFT) << 16), SCI_NULL);
+	///
+	if (_Settings.m_xml_src_syntaxHL)
+	{
+		m_source.SetLexer(SCLEX_XML);
+		m_source.SetMarginTypeN(2, SC_MARGIN_SYMBOL);
+		m_source.SetMarginWidthN(2, SC_FOLDFLAG_LINEAFTER_CONTRACTED);
+		m_source.SetMarginMaskN(2, SC_MASK_FOLDERS);
+		m_source.SetMarginSensitiveN(2, true);
+		DefineMarker(SC_MARKNUM_FOLDEROPEN, SC_MARK_MINUS, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
+		DefineMarker(SC_MARKNUM_FOLDER, SC_MARK_PLUS, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
+		DefineMarker(SC_MARKNUM_FOLDERSUB, SC_MARK_EMPTY, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
+		DefineMarker(SC_MARKNUM_FOLDERTAIL, SC_MARK_EMPTY, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
+		DefineMarker(SC_MARKNUM_FOLDEREND, SC_MARK_EMPTY, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
+		DefineMarker(SC_MARKNUM_FOLDEROPENMID, SC_MARK_EMPTY, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
+		DefineMarker(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_EMPTY, RGB(0xff, 0xff, 0xff), RGB(0, 0, 0));
+
+		// indicator for tag match
+		m_source.IndicSetStyle(SCE_UNIVERSAL_TAGMATCH, INDIC_ROUNDBOX);
+		m_source.SendMessage(SCI_INDICSETALPHA, SCE_UNIVERSAL_TAGMATCH, 100);
+		m_source.SendMessage(SCI_INDICSETUNDER, SCE_UNIVERSAL_TAGMATCH, TRUE);
+		m_source.IndicSetFore(SCE_UNIVERSAL_TAGMATCH, RGB(128, 128, 255));
+
+		m_source.IndicSetStyle(SCE_UNIVERSAL_TAGATTR, INDIC_ROUNDBOX);
+		m_source.SendMessage(SCI_INDICSETALPHA, SCE_UNIVERSAL_TAGATTR, 100);
+		m_source.SendMessage(SCI_INDICSETUNDER, SCE_UNIVERSAL_TAGATTR, TRUE);
+		m_source.IndicSetFore(SCE_UNIVERSAL_TAGATTR, RGB(128, 128, 255));
+
+		m_source.Colourise(0, -1);
+	}
+	else
+	{
+		m_source.SetLexer(SCLEX_NULL);
+		m_source.SetMarginWidthN(2, 0);
+	}
+}
+
+void  CMainFrame::SciModified(const SCNotification& scn)
+{
+	if (scn.modificationType & SC_MOD_CHANGEFOLD)
+	{
+		if (scn.foldLevelNow & SC_FOLDLEVELHEADERFLAG)
+		{
+			if (!(scn.foldLevelPrev & SC_FOLDLEVELHEADERFLAG))
+			{
+				m_source.SetFoldExpanded(scn.line, true);
+			}
+		}
+		else if (scn.foldLevelPrev & SC_FOLDLEVELHEADERFLAG)
+		{
+			if (!m_source.GetFoldExpanded(scn.line))
+			{
+				// Removing the fold from one that has been contracted so should expand
+				// otherwise lines are left invisible with no way to make them visible
+				int tmpline = scn.line;
+				ExpandFold(tmpline, true, false, 0, scn.foldLevelPrev);
+			}
+		}
+	}
 }
 
 bool CMainFrame::SciUpdateUI(bool gotoTag)
@@ -4186,34 +4195,46 @@ void CMainFrame::SciGotoWrongTag()
 	delete hourglass;
 }
 
-void  CMainFrame::SciMarginClicked(const SCNotification& scn) 
+void  CMainFrame::SciMarginClicked(const SCNotification& scn)
 {
-  int lineClick = m_source.SendMessage(SCI_LINEFROMPOSITION, scn.position);
-  if ((scn.modifiers & SCMOD_SHIFT) && (scn.modifiers & SCMOD_CTRL)) {
-    FoldAll();
-  } else {
-    int levelClick = m_source.SendMessage(SCI_GETFOLDLEVEL, lineClick);
-    if (levelClick & SC_FOLDLEVELHEADERFLAG) {
-      if (scn.modifiers & SCMOD_SHIFT) {
-	// Ensure all children visible
-	m_source.SendMessage(SCI_SETFOLDEXPANDED, lineClick, 1);
-	ExpandFold(lineClick, true, true, 100, levelClick);
-      } else if (scn.modifiers & SCMOD_CTRL) {
-	if (m_source.SendMessage(SCI_GETFOLDEXPANDED, lineClick)) {
-	  // Contract this line and all children
-	  m_source.SendMessage(SCI_SETFOLDEXPANDED, lineClick, 0);
-	  ExpandFold(lineClick, false, true, 0, levelClick);
-	} else {
-	  // Expand this line and all children
-	  m_source.SendMessage(SCI_SETFOLDEXPANDED, lineClick, 1);
-	  ExpandFold(lineClick, true, true, 100, levelClick);
+	int lineClick = m_source.LineFromPosition(scn.position);
+	if ((scn.modifiers & SCMOD_SHIFT) && (scn.modifiers & SCMOD_CTRL))
+	{
+		FoldAll();
 	}
-      } else {
-	// Toggle this line
-	m_source.SendMessage(SCI_TOGGLEFOLD, lineClick);
-      }
-    }
-  }
+	else
+	{
+		int levelClick = m_source.GetFoldLevel(lineClick);
+		if (levelClick & SC_FOLDLEVELHEADERFLAG)
+		{
+			if (scn.modifiers & SCMOD_SHIFT)
+			{
+				// Ensure all children visible
+				m_source.SetFoldExpanded(lineClick, true);
+				ExpandFold(lineClick, true, true, 100, levelClick);
+			}
+			else if (scn.modifiers & SCMOD_CTRL)
+			{
+				if (m_source.GetFoldExpanded(lineClick))
+				{
+					// Contract this line and all children
+					m_source.SetFoldExpanded(lineClick, false);
+					ExpandFold(lineClick, false, true, 0, levelClick);
+				}
+				else
+				{
+					// Expand this line and all children
+					m_source.SetFoldExpanded(lineClick, true);
+					ExpandFold(lineClick, true, true, 100, levelClick);
+				}
+			}
+			else
+			{
+				// Toggle this line
+				m_source.ToggleFold(lineClick);
+			}
+		}
+	}
 }
 
 
@@ -4232,18 +4253,18 @@ void CMainFrame::GoToSelectedTreeItem()
 
 void CMainFrame::SciCollapse(int level2Collapse, bool mode)
 {
-	m_source.SendMessage(SCI_COLOURISE, 0, -1);
-	int maxLine = m_source.SendMessage(SCI_GETLINECOUNT);
+	m_source.Colourise(0, -1);
+	int maxLine = m_source.GetLineCount();
 
 	for (int line = 0; line < maxLine; line++) 
 	{
-		int level = m_source.SendMessage(SCI_GETFOLDLEVEL, line);
+		int level = m_source.GetFoldLevel(line);
 		if (level & SC_FOLDLEVELHEADERFLAG) 
 		{
 			level -= SC_FOLDLEVELBASE;
 			if (level2Collapse == (level & SC_FOLDLEVELNUMBERMASK))
-				if ((m_source.SendMessage(SCI_GETFOLDEXPANDED, line) != 0) != mode)
-					m_source.SendMessage(SCI_TOGGLEFOLD, line);
+				if ((m_source.GetFoldExpanded(line) != false) != mode)
+					m_source.ToggleFold(line);
 		}
 	}
 }
@@ -4605,12 +4626,12 @@ void CMainFrame::ClearSelection()
 
 void CMainFrame::SourceGoTo(int line, int col)
 {
-	int	pos=m_source.SendMessage(SCI_POSITIONFROMLINE,line-1);
+	int	pos=m_source.PositionFromLine(line-1);
     while (col--)
-      pos= static_cast<int>(m_source.SendMessage(SCI_POSITIONAFTER,pos));
-    m_source.SendMessage(SCI_SETSELECTIONSTART,pos);
-    m_source.SendMessage(SCI_SETSELECTIONEND,pos);
-    m_source.SendMessage(SCI_SCROLLCARET);
+      pos= m_source.PositionAfter(pos);
+    m_source.SetSelectionStart(pos);
+    m_source.SetSelectionEnd(pos);
+    m_source.ScrollCaret();
 }
 
 unsigned __int64 CMainFrame::FileAge(LPCTSTR FileName)
@@ -4712,9 +4733,9 @@ void CMainFrame::ApplyConfChanges()
 
 	// added by SeNS: display line numbers
 	if (_Settings.m_show_line_numbers)
-		m_source.SendMessage(SCI_SETMARGINWIDTHN,0,64);
+		m_source.SetMarginWidthN(0, 64);
 	else
-		m_source.SendMessage(SCI_SETMARGINWIDTHN,0,0);
+		m_source.SetMarginWidthN(0, 0);
 
 	XmlMatchedTagsHighlighter xmlTagMatchHiliter(&m_source);
 	xmlTagMatchHiliter.tagMatch(_Settings.m_xml_src_tagHL, false, false);
@@ -5350,19 +5371,19 @@ bool CMainFrame::LoadToScintilla(CString filename)
 		free(buffer);
 
 		// send document to Scintilla
-		m_source.SendMessage(SCI_CLEARALL);
+		m_source.ClearAll();
 		if (isUTF8)
 		{
 			CT2A s (src, 1251); 
-			m_source.SendMessage(SCI_APPENDTEXT, strlen(s),(LPARAM)(LPSTR)s);
+			m_source.AppendText(s, strlen(s));
 		}
 		else
 		{
 			CT2A s (src, CP_UTF8);
-			m_source.SendMessage(SCI_APPENDTEXT, strlen(s),(LPARAM)(LPSTR)s);
+			m_source.AppendText(s, strlen(s));
 		}
-		m_source.SendMessage(SCI_EMPTYUNDOBUFFER);
-		m_source.SendMessage(SCI_SETSAVEPOINT);
+		m_source.EmptyUndoBuffer();
+		m_source.SetSavePoint();
 
 		SciGotoWrongTag();
 

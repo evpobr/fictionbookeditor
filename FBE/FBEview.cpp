@@ -3201,7 +3201,7 @@ void  CFBEView::OnFocusIn(IDispatch *evt) {
 }
 
 // find/replace support for scintilla
-bool CFBEView::SciFindNext(HWND src,bool fFwdOnly,bool fBarf) {
+bool CFBEView::SciFindNext(CScintillaWindow &src,bool fFwdOnly,bool fBarf) {
   if (m_fo.pattern.IsEmpty())
     return true;
 
@@ -3224,27 +3224,27 @@ bool CFBEView::SciFindNext(HWND src,bool fFwdOnly,bool fBarf) {
   {
     ::WideCharToMultiByte(CP_UTF8,0, m_fo.pattern,m_fo.pattern.GetLength(), tmp,len,NULL,NULL);
     tmp[len]='\0';
-    int p1=::SendMessage(src,SCI_GETSELECTIONSTART,0,0);
-    int p2=::SendMessage(src,SCI_GETSELECTIONEND,0,0);
+    int p1= src.GetSelectionStart();
+    int p2= src.GetSelectionEnd();
 	if (p2>p1 && !rev) p1=p2;
 //   if (p1!=p2 && !rev) ++p1;
     if (rev) --p1;
     if (p1<0) p1=0;
-    p2=rev ? 0 : ::SendMessage(src,SCI_GETLENGTH,0,0);
-    int p3=p2==0 ? ::SendMessage(src,SCI_GETLENGTH,0,0) : 0;
-    ::SendMessage(src,SCI_SETTARGETSTART,p1,0);
-    ::SendMessage(src,SCI_SETTARGETEND,p2,0);
-    ::SendMessage(src,SCI_SETSEARCHFLAGS,flags,0);
+    p2=rev ? 0 : src.GetLength();
+    int p3=p2==0 ? src.GetLength() : 0;
+    src.SetTargetStart(p1);
+    src.SetTargetEnd(p2);
+    src.SetSearchFlags(flags);
     // this sometimes hangs in reverse search :)
-    int ret=::SendMessage(src,SCI_SEARCHINTARGET,len,(LPARAM)tmp);
+    int ret= src.SearchInTarget(tmp, len);
     if (ret==-1) 
 	{ // try wrap
 		if (p1!=p3) 
 		{
-			::SendMessage(src,SCI_SETTARGETSTART,p3,0);
-			::SendMessage(src,SCI_SETTARGETEND,p1,0);
-			::SendMessage(src,SCI_SETSEARCHFLAGS,flags,0);
-			ret=::SendMessage(src,SCI_SEARCHINTARGET,len,(LPARAM)tmp);
+			src.SetTargetStart(p3);
+			src.SetTargetEnd(p1);
+			src.SetSearchFlags(flags);
+			ret= src.SearchInTarget(tmp, len);
 		}
 		if (ret==-1) 
 		{
@@ -3260,11 +3260,11 @@ bool CFBEView::SciFindNext(HWND src,bool fFwdOnly,bool fBarf) {
 		::MessageBeep(MB_ICONASTERISK);
     }
     free(tmp);
-    p1=::SendMessage(src,SCI_GETTARGETSTART,0,0);
-    p2=::SendMessage(src,SCI_GETTARGETEND,0,0);
-    ::SendMessage(src,SCI_SETSELECTIONSTART,p1,0);
-    ::SendMessage(src,SCI_SETSELECTIONEND,p2,0);
-    ::SendMessage(src,SCI_SCROLLCARET,0,0);
+    p1= src.GetTargetStart();
+    p2= src.GetTargetEnd();
+    src.SetSelectionStart(p1);
+    src.SetSelectionEnd(p2);
+    src.ScrollCaret();
     return true;
   }
   else

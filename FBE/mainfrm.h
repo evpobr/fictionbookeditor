@@ -181,7 +181,7 @@ public:
 	CCustomEdit		m_image_title; // paragraph ID
 	CCustomEdit		m_id; // paragraph ID
 	CCustomEdit		m_href; // link's href
-	CWindow			m_source; // source editor
+	CScintillaWindow m_source; // source editor
 	//bool			m_save_sp_mode;
 
   CComboBox		  m_section_box;

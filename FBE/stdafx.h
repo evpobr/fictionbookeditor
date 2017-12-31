@@ -36,6 +36,7 @@
 #include <atlimage.h>
 #include <atlutil.h>
 #include "atlimageex.h"
+#include "AtlScintilla.h"
 
 #include <shellapi.h>
 #include <Wininet.h>

@@ -142,22 +142,6 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 	return nRet;
 }
 
-bool LoadEditor()
-{
-	HINSTANCE hLib = ::LoadLibrary(L"SciLexer.dll");
-	if(hLib == NULL)
-		return false;
-	#if 0
-		bool (*scireg)(void *hinst) = (bool (*)(void*)) ::GetProcAddress(hLib,"Scintilla_RegisterClasses");
-		if(scireg == NULL || !scireg(_Module.GetModuleInstance()))
-		{
-			::FreeLibrary(hLib);
-			return false;
-		}
-	#endif
-		return true;
-}
-
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {
 	int nRet=1;
@@ -203,18 +187,19 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
   // initialize registry settings
   U::InitSettings();
 
+  // load xml source editor
+  CScintillaAutoRegister sc;
+  if (!sc.m_IsLoaded)
+  {
+	  AtlTaskDialog(::GetActiveWindow(), IDS_ERRMSGBOX_CAPTION, IDS_SCINTILLA_LOAD_ERR_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+	  goto out;
+  }
+
   // parse command line
   ParseCommandLine(lpstrCmdLine,_ARGV);
   if (!AU::ParseCmdLineArgs())
     goto out;
   
-  // load xml source editor
-  if (!LoadEditor()) 
-  {
-	  AtlTaskDialog(::GetActiveWindow(), IDS_ERRMSGBOX_CAPTION, IDS_SCINTILLA_LOAD_ERR_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
-    goto out;
-  }
-
   // register our protocol handler
   IInternetSession *isess;
   if (SUCCEEDED(::CoInternetGetSession(0, &isess, 0))) {

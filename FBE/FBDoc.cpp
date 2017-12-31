@@ -1529,28 +1529,25 @@ bool  Doc::SetXMLAndValidate(HWND sci,bool fValidateOnly,int& errline,int& errco
 
     // now parse it!
     // oh well, let's waste more memory
-    int	    textlen=::SendMessage(sci, SCI_GETLENGTH, 0, 0);
-    char    *buffer=(char *)malloc(textlen+1);
-    if (!buffer) {
-nomem:
-	  AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, IDS_OUT_OF_MEM_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
-     return false;
-    }
-    ::SendMessage(sci, SCI_GETTEXT, textlen+1, (LPARAM)buffer);
-    DWORD   ulen=::MultiByteToWideChar(CP_UTF8,0,buffer,textlen,NULL,0);
-    BSTR    ustr=::SysAllocStringLen(NULL,ulen);
-    if (!ustr) {
-      free(buffer);
-      goto nomem;
-    }
-    ::MultiByteToWideChar(CP_UTF8,0,buffer,textlen,ustr,ulen);
-    free(buffer);
+	CComBSTR ustr;
+	int textlen=::SendMessage(sci, SCI_GETLENGTH, 0, 0);
+	try
+	{
+		CStringA buffer;
 
-    VARIANT vt;
-    V_VT(&vt)=VT_BSTR;
-    V_BSTR(&vt)=ustr;
+		::SendMessage(sci, SCI_GETTEXT, textlen + 1, reinterpret_cast<LPARAM>(buffer.GetBuffer(textlen + 1)));
+		buffer.ReleaseBuffer();
+		ustr = CA2W(buffer, CP_UTF8);
+	}
+	catch (CAtlException &ex)
+	{
+		AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, IDS_OUT_OF_MEM_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		return false;
+	}
+
+    CComVariant vt(ustr);
     HRESULT hr=rdr->raw_parse(vt);
-    ::VariantClear(&vt);
+	vt.Clear();
 
 	if (FAILED(hr)) {
       if (!eh->m_msg.IsEmpty()) {
@@ -1567,9 +1564,9 @@ nomem:
 
     if (fValidateOnly) 
 	{
-		wchar_t buf[MAX_LOAD_STRING + 1];
-		::LoadString(_Module.GetResourceInstance(), IDS_SB_NO_ERR, buf, MAX_LOAD_STRING);
-		::SendMessage(m_frame,AU::WM_SETSTATUSTEXT, 0, (LPARAM)buf);
+		CString buf;
+		buf.LoadString(IDS_SB_NO_ERR);
+		::SendMessage(m_frame,AU::WM_SETSTATUSTEXT, 0, reinterpret_cast<LPARAM>(static_cast<LPCTSTR>(buf)));
 		::MessageBeep(MB_OK);
 		return true;
     }
@@ -1624,7 +1621,8 @@ nomem:
     // mark unchanged
     MarkSavePoint();
   }
-  catch (_com_error& e) {
+  catch (_com_error& e)
+  {
     U::ReportError(e);
     return false;
   }
