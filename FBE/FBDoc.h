@@ -154,10 +154,10 @@ private:
 		return ret;
 	}
 
-	CString MyURL(const wchar_t *part)
+	LPCWSTR MyURL(_In_z_ LPCWSTR pszPart) const
 	{
 		CString ret;
-		ret.Format(_T("fbw-internal:%lu:%s"), reinterpret_cast<unsigned long>(this), part);
+		ret.Format(_T("fbw-internal:%lu:%s"), reinterpret_cast<unsigned long>(this), pszPart);
 		return ret;
 	}
 
