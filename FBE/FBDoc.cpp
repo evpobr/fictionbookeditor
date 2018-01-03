@@ -1744,7 +1744,7 @@ void Doc::SetFastMode(bool fast)
 		FastMode();
 }
 
-bool Doc::GetFastMode()
+bool Doc::GetFastMode() const
 {
 	return m_fast_mode;
 }

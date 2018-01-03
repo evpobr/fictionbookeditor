@@ -166,7 +166,7 @@ private:
 public:
 	MSHTML::IHTMLDOMNodePtr MoveNode(MSHTML::IHTMLDOMNodePtr from, MSHTML::IHTMLDOMNodePtr to, MSHTML::IHTMLDOMNodePtr insertBefore);
 	void SetFastMode(bool fast);
-	bool GetFastMode();
+	bool GetFastMode() const;
 	int GetSelectedPos();
 
 	CString GetOpenFileName()const;
