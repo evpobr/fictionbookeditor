@@ -209,7 +209,7 @@ public:
 		return S_OK;
 	}
 
-	STDMETHOD(SetStyleEx)(IDispatch* doc, IDispatch* elem, BSTR style)
+	STDMETHOD(SetStyleEx)(IDispatch* /*doc*/, IDispatch* elem, BSTR style)
 	{
 		MSHTML::IHTMLElementPtr el = elem;
 		U::ChangeAttribute(el, L"class", style);

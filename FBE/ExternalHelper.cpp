@@ -137,7 +137,7 @@ static CMenu MakeGenresMenu()
 			g = g_genres[i].groupid;
 			cur.Detach();
 			cur.CreatePopupMenu();
-			ret.AppendMenu(MF_POPUP | MF_STRING, (UINT)(HMENU)cur, g_genre_groups[g]);
+			ret.AppendMenu(MF_POPUP | MF_STRING, (UINT_PTR)(HMENU)cur, g_genre_groups[g]);
 		}
 	cur.AppendMenu(MF_STRING, i + MENU_BASE, g_genres[i].text);
 	}
@@ -194,7 +194,7 @@ static CMenu MakeDescComponentsMenu()
 	return ret.Detach();
 }
 
-HRESULT ExternalHelper::GenrePopup(IDispatch *obj,LONG x,LONG y,BSTR *name)
+HRESULT ExternalHelper::GenrePopup(IDispatch * /*obj*/,LONG x,LONG y,BSTR *name)
 {
 	LoadGenres();
 	CMenu popup = MakeGenresMenu();
@@ -355,7 +355,7 @@ HRESULT	ExternalHelper::STISrcLangPopup(IDispatch *obj,LONG x,LONG y,BSTR *name)
 	return S_OK;
 }*/
 
-HRESULT ExternalHelper::DescShowMenu(IDispatch *obj, LONG x,LONG y, BSTR* element_id)
+HRESULT ExternalHelper::DescShowMenu(IDispatch * /*obj*/, LONG x,LONG y, BSTR* element_id)
 {
 	FillDescElements();
 	CMenu popup = MakeDescComponentsMenu();

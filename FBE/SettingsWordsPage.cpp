@@ -73,7 +73,7 @@ CSettingsWordsDlg::CSettingsWordsDlg() : m_sort(0), m_sel_all(false), m_ct(0)
 	}
 }
 
-LRESULT CSettingsWordsDlg::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CSettingsWordsDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	m_list_words = GetDlgItem(IDC_LIST_WORDS);
 	m_list_words.SetExtendedListViewStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
@@ -109,7 +109,7 @@ LRESULT CSettingsWordsDlg::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam,
 	return 0;
 }
 
-LRESULT CSettingsWordsDlg::OnListDispInfo(int id, NMHDR *hdr, BOOL&)
+LRESULT CSettingsWordsDlg::OnListDispInfo(int /*id*/, NMHDR *hdr, BOOL&)
 {
 	NMLVDISPINFO *ni = (NMLVDISPINFO*)hdr;
 
@@ -186,7 +186,7 @@ void CSettingsWordsDlg::CreateStatBitmaps()
 	m_list_words.SetImageList(m_stat_images.Detach(), LVSIL_SMALL);
 } */
 
-LRESULT CSettingsWordsDlg::OnListSort(int id, NMHDR *hdr, BOOL&)
+LRESULT CSettingsWordsDlg::OnListSort(int /*id*/, NMHDR *hdr, BOOL&)
 {
 	NMLISTVIEW*lv = (NMLISTVIEW*)hdr;
 
@@ -202,7 +202,7 @@ LRESULT CSettingsWordsDlg::OnListSort(int id, NMHDR *hdr, BOOL&)
 	return 0;
 }
 
-LRESULT CSettingsWordsDlg::OnListClick(int id, NMHDR *hdr, BOOL&)
+LRESULT CSettingsWordsDlg::OnListClick(int /*id*/, NMHDR *hdr, BOOL&)
 {
 	NMITEMACTIVATE *ai = (NMITEMACTIVATE*) hdr;
 
@@ -229,14 +229,14 @@ LRESULT CSettingsWordsDlg::OnListClick(int id, NMHDR *hdr, BOOL&)
 	return 0;
 }
 
-LRESULT CSettingsWordsDlg::OnEditLVDefocused(int id, NMHDR *hdr, BOOL&)
+LRESULT CSettingsWordsDlg::OnEditLVDefocused(int /*id*/, NMHDR * /*hdr*/, BOOL&)
 {	
 	m_edit.ShowWindow(SW_HIDE);
 
 	return 0;
 }
 
-LRESULT CSettingsWordsDlg::OnListChanged(int id, NMHDR *hdr, BOOL&)
+LRESULT CSettingsWordsDlg::OnListChanged(int /*id*/, NMHDR * /*hdr*/, BOOL&)
 {
 	m_ct = ::GetTickCount();
 
@@ -319,7 +319,7 @@ bool CSettingsWordsDlg::AddNewWord(CString& word, bool test)
 	}
 }
 
-LRESULT CSettingsWordsDlg::OnCustomDraw(int id, NMHDR *hdr, BOOL&)
+LRESULT CSettingsWordsDlg::OnCustomDraw(int /*id*/, NMHDR *hdr, BOOL&)
 {
 	if(hdr->hwndFrom == m_list_words.GetHeader())
 	{

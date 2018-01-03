@@ -1724,12 +1724,12 @@ void CSettings::SetExtElementStyle(const CString& elem, bool ext, bool apply)
 		Save();
 }
 
-void CSettings::SetWindowPosition(const WINDOWPLACEMENT &wpl, bool apply)
+void CSettings::SetWindowPosition(const WINDOWPLACEMENT &wpl, bool /*apply*/)
 {
 	m_wnd_placement = wpl;
 }
 
-void CSettings::SetWordsDlgPosition(const WINDOWPLACEMENT &wpl, bool apply)
+void CSettings::SetWordsDlgPosition(const WINDOWPLACEMENT &wpl, bool /*apply*/)
 {
 	m_words_dlg_placement = wpl;
 }

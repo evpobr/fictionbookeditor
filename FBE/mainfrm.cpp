@@ -125,7 +125,7 @@ public:
     CHAIN_MSG_MAP(CFileDialogImpl<CCustomSaveDialog>)
   END_MSG_MAP()
 
-  LRESULT OnInitDialog(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam) {
+  LRESULT OnInitDialog(HWND hWnd,UINT /*msg*/,WPARAM /*wParam*/,LPARAM /*lParam*/) {
     m_hDlg=hWnd;
 
     TCHAR   buf[1024];
@@ -149,7 +149,7 @@ public:
 	return TRUE;
   }
 
-  LRESULT OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL& bHandled) {
+  LRESULT OnSize(UINT /*uMsg*/,WPARAM /*wParam*/,LPARAM /*lParam*/,BOOL& /*bHandled*/) {
     // make combobox the same size as std controls
     RECT    rc_std,rc_my,rc_static, rc_static_my;
     HWND    hCB=::GetDlgItem(m_hDlg,IDC_ENCODING);
@@ -171,7 +171,7 @@ public:
     return 0;
   }
   
-  BOOL OnFileOK(LPOFNOTIFY on) {
+  BOOL OnFileOK(LPOFNOTIFY /*on*/) {
     m_encoding=U::GetWindowText(::GetDlgItem(m_hDlg,IDC_ENCODING));    
     return TRUE;
   }
@@ -184,7 +184,7 @@ CString	CMainFrame::GetSaveFileName(CString& encoding)
 	if (!filename || (filename == bstr_t(L"Untitled.fb2")))
 		filename = L"";
 
-	if (RunTimeHelper::IsVista)
+	if (RunTimeHelper::IsVista())
 	{
 		const COMDLG_FILTERSPEC arrFilterSpec[] =
 		{
@@ -1697,7 +1697,7 @@ LRESULT CMainFrame::OnCreate(UINT, WPARAM, LPARAM, BOOL&)
   return 0;
 }
 
-LRESULT CMainFrame::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
   DestroyAcceleratorTable(m_hAccel);
   bHandled=FALSE;
@@ -1919,12 +1919,12 @@ public:
       flags|=SCFIND_MATCHCASE;
     if (m_view->m_fo.fRegexp)
       flags|=SCFIND_REGEXP;
-    m_source.SendMessage(SCI_SETSEARCHFLAGS,flags,0);
+    m_source.SetSearchFlags(flags);
 
     // setup target range
-    int	  end=m_source.SendMessage(SCI_GETLENGTH);
-    m_source.SendMessage(SCI_SETTARGETSTART,0);
-    m_source.SendMessage(SCI_SETTARGETEND,end);
+    int	  end=m_source.GetLength();
+    m_source.GetTargetStart();
+    m_source.SetTargetEnd(end);
 
     // convert search pattern and replacement to utf8
     int	  patlen, num_pat_nbsp, num_rep_nbsp;
@@ -1945,42 +1945,42 @@ public:
     }
 
     // find first match
-    int pos=m_source.SendMessage(SCI_SEARCHINTARGET,patlen,(LPARAM)pattern);
+    int pos=m_source.SearchInTarget(pattern, patlen);
 
     int   num_repl=0;
 
     if (pos!=-1 && pos<=end) {
       int   last_match=pos;
 
-      m_source.SendMessage(SCI_BEGINUNDOACTION);
+      m_source.BeginUndoAction();
       while (pos!=-1) {
-	int matchlen=m_source.SendMessage(SCI_GETTARGETEND)-m_source.SendMessage(SCI_GETTARGETSTART);
+	int matchlen=m_source.GetTargetEnd()-m_source.GetTargetStart();
 	matchlen -= num_pat_nbsp*2;
 
 	int mvp=0;
 	if (matchlen<=0) {
-	  char	ch=(char)m_source.SendMessage(SCI_GETCHARAT,m_source.SendMessage(SCI_GETTARGETEND));
+	  char	ch=m_source.GetCharAt(m_source.GetTargetEnd());
 	  if (ch=='\r' || ch=='\n')
 	    mvp=1;
 	}
 	int rlen=matchlen;
 	if (m_view->m_fo.fRegexp)
-	  rlen= static_cast<int>(m_source.SendMessage(SCI_REPLACETARGETRE,replen,(LPARAM)replacement));
+	  rlen= m_source.ReplaceTargetRE(replacement, replen);
 	else
-	  m_source.SendMessage(SCI_REPLACETARGET,replen,(LPARAM)replacement);
+	  m_source.ReplaceTarget(replacement, replen);
 
 	end += rlen-matchlen;
 	last_match=pos+rlen+mvp+num_rep_nbsp*2;
 	if (last_match>=end)
 	  pos=-1;
 	else {
-	  m_source.SendMessage(SCI_SETTARGETSTART,last_match);
-	  m_source.SendMessage(SCI_SETTARGETEND,end);
-	  pos=static_cast<int>(m_source.SendMessage(SCI_SEARCHINTARGET,patlen,(LPARAM)pattern));
+	  m_source.SetTargetStart(last_match);
+	  m_source.SetTargetEnd(end);
+	  pos=m_source.SearchInTarget(pattern, patlen);
 	}
 	++num_repl;
       }
-      m_source.SendMessage(SCI_ENDUNDOACTION);
+      m_source.EndUndoAction();
     }
 
     free(pattern);
@@ -2018,7 +2018,7 @@ CMainFrame::~CMainFrame()
 	}
 }
 
-LRESULT CMainFrame::OnUnhandledCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CMainFrame::OnUnhandledCommand(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 {
 	HWND hFocus = ::GetFocus();
 	UINT idCtl = HIWORD(wParam);
@@ -2127,7 +2127,7 @@ LRESULT CMainFrame::OnUnhandledCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 	return 0;
 }
 
-LRESULT CMainFrame::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
   HDROP	  hDrop=(HDROP)wParam;
   UINT	  nf=::DragQueryFile(hDrop,0xFFFFFFFF,NULL,0);
@@ -2203,7 +2203,7 @@ LRESULT CMainFrame::OnFileNew(WORD, WORD, HWND, BOOL&)
   return 0;
 }
 
-LRESULT CMainFrame::OnFileOpen(WORD, WORD, HWND, BOOL& bHandled)
+LRESULT CMainFrame::OnFileOpen(WORD, WORD, HWND, BOOL& /*bHandled*/)
 {
   if (LoadFile()==OK)
   {
@@ -2217,7 +2217,7 @@ LRESULT CMainFrame::OnFileOpen(WORD, WORD, HWND, BOOL& bHandled)
   return 0;
 }
 
-LRESULT CMainFrame::OnFileOpenMRU(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CMainFrame::OnFileOpenMRU(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	CString filename;
 	m_mru.GetFromList(wID, filename);
@@ -2456,7 +2456,7 @@ LRESULT CMainFrame::OnToolsExport(WORD, WORD wID, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CMainFrame::OnLastPlugin(WORD, WORD wID, HWND, BOOL&)
+LRESULT CMainFrame::OnLastPlugin(WORD, WORD /*wID*/, HWND, BOOL&)
 {
 	if(m_last_plugin)
 		::SendMessage(m_hWnd, WM_COMMAND, m_last_plugin, NULL);
@@ -2513,7 +2513,7 @@ LRESULT CMainFrame::OnToolsOptions(WORD, WORD, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CMainFrame::OnToolsScript(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CMainFrame::OnToolsScript(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	wID -= ID_SCRIPT_BASE;
 
@@ -2585,12 +2585,12 @@ LRESULT CMainFrame::OnToolsScript(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL
   return 0;
 }
 
-LRESULT CMainFrame::OnEditInsSymbol(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CMainFrame::OnEditInsSymbol(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	static int symHkGroup = -1;
+	static size_t symHkGroup = -1;
 	if(symHkGroup == -1)
 	{
-		for(unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
+		for(size_t i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
 		{
 			if(_Settings.m_hotkey_groups[i].m_reg_name == L"Symbols")
 			{
@@ -2613,7 +2613,6 @@ LRESULT CMainFrame::OnEditInsSymbol(WORD wNotifyCode, WORD wID, HWND hWndCtl, BO
 
 	if(c)
 	{
-		HWND aw = ::GetFocus();
 		::SendMessage(::GetFocus(), WM_CHAR, c, NULL);
 
 		/*IServiceProviderPtr ServiceProvider;
@@ -2645,7 +2644,7 @@ LRESULT CMainFrame::OnAppAbout(WORD, WORD, HWND, BOOL&)
 }
 
 // Navigation
-LRESULT CMainFrame::OnSelectCtl(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CMainFrame::OnSelectCtl(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& bHandled)
 {
 	switch(wID)
 	{
@@ -2726,14 +2725,14 @@ LRESULT CMainFrame::OnSelectCtl(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& 
 	return 0;
 }
 
-LRESULT CMainFrame::OnNextItem(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CMainFrame::OnNextItem(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
   ShowView(NEXT);
   return 1;
 }
 
 // editor notifications
-LRESULT CMainFrame::OnCbEdChange(WORD code, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CMainFrame::OnCbEdChange(WORD /*code*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
   if (m_ignore_cb_changes)
     return 0;
@@ -2943,7 +2942,7 @@ LRESULT CMainFrame::OnTreeUpdate(WORD, WORD, HWND, BOOL&)
   return 0;
 }
 
-LRESULT CMainFrame::OnTreeRestore(WORD, WORD, HWND, BOOL& b)
+LRESULT CMainFrame::OnTreeRestore(WORD, WORD, HWND, BOOL& /*b*/)
 {
   m_document_tree.GetDocumentStructure(m_doc->m_body.Document());
   return 0;
@@ -3249,7 +3248,7 @@ LRESULT CMainFrame::OnTreeMerge(WORD, WORD, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CMainFrame::OnTreeClick(WORD, WORD, HWND hWndCtl, BOOL&)
+LRESULT CMainFrame::OnTreeClick(WORD, WORD, HWND /*hWndCtl*/, BOOL&)
 {
   GoToSelectedTreeItem();
   return 0;
@@ -3353,7 +3352,7 @@ LRESULT CMainFrame::OnChar(UINT, WPARAM wParam, LPARAM lParam, BOOL&)
 bool CMainFrame::SourceToHTML()
 {
 	LRESULT changed = m_source.GetModify();
-	size_t textlen = 0;
+	int textlen = 0;
 	CStringA buffer = 0;
 
 	size_t begin_char = 0;
@@ -3364,7 +3363,7 @@ bool CMainFrame::SourceToHTML()
 	textlen = m_source.GetTextLength();
 	m_source.GetText(buffer);
 	// конвертим в UTF16
-	DWORD   ulen = ::MultiByteToWideChar(CP_UTF8, 0, buffer, textlen, NULL, 0);
+	::MultiByteToWideChar(CP_UTF8, 0, buffer, textlen, NULL, 0);
 
 	CComBSTR ustr = CA2W(buffer, CP_UTF8);
 
@@ -3573,7 +3572,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 				}
 				else
 				{
-					bool res = selection_begin_path.CreatePathFromHTMLDOM(root, selectedBeginElement);
+					selection_begin_path.CreatePathFromHTMLDOM(root, selectedBeginElement);
 					path = selection_begin_path;
 					one_element = selectedBeginElement == selectedEndElement;
 					if (one_element)
@@ -3986,28 +3985,28 @@ LRESULT CMainFrame::OnFileValidate(WORD, WORD, HWND, BOOL&) {
 }
 
 void  CMainFrame::FoldAll() {
-  m_source.SendMessage(SCI_COLOURISE, 0, -1);
-  int maxLine = m_source.SendMessage(SCI_GETLINECOUNT);
+  m_source.Colourise(0, -1);
+  int maxLine = m_source.GetLineCount();
   bool expanding = true;
   for (int lineSeek = 0; lineSeek < maxLine; lineSeek++) {
-    if (m_source.SendMessage(SCI_GETFOLDLEVEL, lineSeek) & SC_FOLDLEVELHEADERFLAG) {
-      expanding = !m_source.SendMessage(SCI_GETFOLDEXPANDED, lineSeek);
+    if (m_source.GetFoldLevel(lineSeek) & SC_FOLDLEVELHEADERFLAG) {
+      expanding = !m_source.GetFoldExpanded(lineSeek);
       break;
     }
   }
   for (int line = 0; line < maxLine; line++) {
-    int level = m_source.SendMessage(SCI_GETFOLDLEVEL, line);
+    int level = m_source.GetFoldLevel(line);
     if ((level & SC_FOLDLEVELHEADERFLAG) &&
       (SC_FOLDLEVELBASE == (level & SC_FOLDLEVELNUMBERMASK))) {
       if (expanding) {
-	m_source.SendMessage(SCI_SETFOLDEXPANDED, line, 1);
+	m_source.SetFoldExpanded(line, true);
 	ExpandFold(line, true, false, 0, level);
 	line--;
       } else {
-	int lineMaxSubord = m_source.SendMessage(SCI_GETLASTCHILD, line, -1);
-	m_source.SendMessage(SCI_SETFOLDEXPANDED, line, 0);
+	int lineMaxSubord = m_source.GetLastChild(line, -1);
+	m_source.SetFoldExpanded(line, false);
 	if (lineMaxSubord > line)
-	  m_source.SendMessage(SCI_HIDELINES, line + 1, lineMaxSubord);
+	  m_source.HideLines(line + 1, lineMaxSubord);
       }
     }
   }
@@ -4015,7 +4014,7 @@ void  CMainFrame::FoldAll() {
 
 void CMainFrame::ExpandFold(int &line, bool doExpand, bool force, int visLevels, int level)
 {
-	int lineMaxSubord = m_source.SendMessage(SCI_GETLASTCHILD, line, level & SC_FOLDLEVELNUMBERMASK);
+	int lineMaxSubord = m_source.GetLastChild(line, level & SC_FOLDLEVELNUMBERMASK);
 	line++;
 	while (line <= lineMaxSubord)
 	{
@@ -4459,7 +4458,7 @@ MSHTML::IHTMLDOMNodePtr CMainFrame::GetLastChildSection(MSHTML::IHTMLDOMNodePtr 
 	return GetPrevSiblingSection(child);	
 }
 
-LRESULT CMainFrame::OnSciCollapse(WORD cose, WORD wID, HWND, BOOL&)
+LRESULT CMainFrame::OnSciCollapse(WORD /*code*/, WORD wID, HWND, BOOL&)
 {
 	if(m_current_view == SOURCE)
 		SciCollapse(wID - ID_SCI_COLLAPSE_BASE, false);
@@ -4470,7 +4469,7 @@ LRESULT CMainFrame::OnSciCollapse(WORD cose, WORD wID, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CMainFrame::OnSciExpand(WORD cose, WORD wID, HWND, BOOL&)
+LRESULT CMainFrame::OnSciExpand(WORD /*code*/, WORD wID, HWND, BOOL&)
 {
 	if(m_current_view == SOURCE)
 		SciCollapse(wID - ID_SCI_EXPAND_BASE, true);
@@ -4747,7 +4746,7 @@ void CMainFrame::ApplyConfChanges()
 		if (!m_Speller)
 		{
 			TCHAR prgPath[MAX_PATH];
-			DWORD pathlen = ::GetModuleFileName(_Module.GetModuleInstance(), prgPath, MAX_PATH);
+			GetModuleFileName(_Module.GetModuleInstance(), prgPath, MAX_PATH);
 			PathRemoveFileSpec(prgPath);
 			m_Speller = new CSpeller(CString(prgPath)+L"\\dict\\");
 			m_Speller->SetEnabled(false);
@@ -4847,8 +4846,8 @@ void CMainFrame::RestartProgram()
 		::GetModuleFileName(_Module.GetModuleInstance(), filename, MAX_PATH);
 		CString ofn = m_doc->GetOpenFileName();
 //		if(wcschr(filename, L' '))
-		ofn.Format(L"\"%s\"", m_doc->GetOpenFileName());
-		HINSTANCE hInst = ShellExecute(0, L"open", filename, ofn, 0, SW_SHOW);
+		ofn.Format(L"\"%s\"", static_cast<LPCTSTR>(m_doc->GetOpenFileName()));
+		ShellExecuteW(0, L"open", filename, ofn, 0, SW_SHOW);
 	}
 }
 
@@ -5404,11 +5403,11 @@ void CMainFrame::DisplayCharCode()
 	{
 		// The long complicated way to get unicode character from Scintilla!
 		char buf[5] = {0,0,0,0,0};
-		int pos = m_source.SendMessage(SCI_GETCURRENTPOS);
-		buf[0] = static_cast<char>(m_source.SendMessage(SCI_GETCHARAT, pos));
+		int pos = m_source.GetCurrentPos();
+		buf[0] = m_source.GetCharAt(pos);
 		int len = UTF8_CHAR_LEN(buf[0]);
 		for (int i=1; i<len && i<5; i++)
-			buf[i] = static_cast<char>(m_source.SendMessage(SCI_GETCHARAT, pos+i));
+			buf[i] = static_cast<char>(m_source.GetCharAt(pos+i));
 		CA2W str (buf, CP_UTF8);
 		CString s;
 		s.Format(L"  U+%.4X", str[0]);

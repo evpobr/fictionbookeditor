@@ -25,7 +25,7 @@ CSettingsDlg::CSettingsDlg(_U_STRINGorID title, UINT uStartPage, HWND hWndParent
 	AddPage(m_pgWords);
 }
 
-void CSettingsDlg::OnShowWindow(BOOL bShowing, int nReason)
+void CSettingsDlg::OnShowWindow(BOOL bShowing, int /*nReason*/)
 {
 	if (bShowing && !m_bCentered)
 	{

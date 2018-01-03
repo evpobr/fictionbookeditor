@@ -92,10 +92,11 @@ public:
   LRESULT OnMerge(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 
   
-  LRESULT OnDeleteItem(int idCtrl, LPNMHDR pnmh, BOOL& bHandled) {
+  LRESULT OnDeleteItem(int /*idCtrl*/, LPNMHDR pnmh, BOOL& bHandled) {
     NMTREEVIEW	  *tvn=(NMTREEVIEW*)pnmh;
     if (tvn->itemOld.lParam)
       ((MSHTML::IHTMLElement*)tvn->itemOld.lParam)->Release();
+	bHandled = TRUE;
     return 0;
   }
 

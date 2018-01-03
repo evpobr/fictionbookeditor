@@ -251,7 +251,7 @@ void  CTreeView::GetDocumentStructure(MSHTML::IHTMLDocument2Ptr& view) {
 
 void CTreeView::UpdateAll()
 {
-	::SendMessage(m_main_window, WM_COMMAND, MAKELONG(0,IDN_TREE_UPDATE_ME), (LPARAM)m_hWnd);
+	::SendMessage(m_main_window, WM_COMMAND, MAKEWPARAM(0,IDN_TREE_UPDATE_ME), (LPARAM)m_hWnd);
 }
 
 void  CTreeView::UpdateDocumentStructure(MSHTML::IHTMLDocument2Ptr& v,MSHTML::IHTMLDOMNodePtr node) {
@@ -347,7 +347,7 @@ LRESULT CTreeView::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
   return lRet;
 }
 
-LRESULT CTreeView::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CTreeView::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
   SetImageList(NULL,TVSIL_NORMAL);
   m_ImageList.Destroy();
@@ -362,9 +362,9 @@ LRESULT CTreeView::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
   return 0;
 }
 
-LRESULT CTreeView::OnClick(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CTreeView::OnClick(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	bHandled = SetMultiSelection(wParam, lParam);
+	bHandled = SetMultiSelection(static_cast<UINT>(wParam), lParam);
   // check if we are going to hit an item
   /*UINT	  flags=0;
   CTreeItem ii(HitTest(CPoint(LOWORD(lParam),HIWORD(lParam)),&flags));
@@ -380,13 +380,13 @@ LRESULT CTreeView::OnClick(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
   return 0;
 }
 
-LRESULT CTreeView::OnDblClick(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CTreeView::OnDblClick(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/)
 {
   // check if we double-clicked an already selected item item
   UINT	  flags=0;
-  CTreeItem ii(HitTest(CPoint(LOWORD(lParam),HIWORD(lParam)),&flags));
+  CTreeItem ii(HitTest(CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)),&flags));
   if (flags&TVHT_ONITEM && !ii.IsNull() && ii==GetSelectedItem())
-    ::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_CLICK),(LPARAM)m_hWnd);
+    ::SendMessage(m_main_window,WM_COMMAND,MAKEWPARAM(0,IDN_TREE_CLICK),(LPARAM)m_hWnd);
   return 0;
 }
 
@@ -405,7 +405,7 @@ static void RecursiveExpand(CTreeItem n,bool *fEnable) {
   }
 }
 
-LRESULT CTreeView::OnChar(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CTreeView::OnChar(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 {
   switch (wParam) {
   case VK_RETURN: // swallow
@@ -425,10 +425,10 @@ LRESULT CTreeView::OnChar(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandle
   return 0;
 }
 
-LRESULT CTreeView::OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CTreeView::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 {  
   if (wParam==VK_RETURN)
-    ::PostMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_RETURN),(LPARAM)m_hWnd);
+    ::PostMessage(m_main_window,WM_COMMAND,MAKEWPARAM(0,IDN_TREE_RETURN),(LPARAM)m_hWnd);
 
   if ( (wParam==VK_UP || wParam==VK_DOWN) && GetKeyState( VK_SHIFT )&0x8000)
 	{
@@ -475,7 +475,7 @@ LRESULT CTreeView::OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
   return 0;
 }
 
-LRESULT CTreeView::OnBegindrag(int idCtrl, LPNMHDR mhdr, BOOL& bHandled)
+LRESULT CTreeView::OnBegindrag(int /*idCtrl*/, LPNMHDR mhdr, BOOL& bHandled)
 {
 	LPNMTREEVIEW pnmtv = (LPNMTREEVIEW) mhdr;
 	
@@ -495,7 +495,7 @@ LRESULT CTreeView::OnLButtonUp(UINT, WPARAM, LPARAM, BOOL& bHandled)
 	if(m_drag)
 	{
 		EndDrag();
-		::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_MOVE_ELEMENT),(LPARAM)m_hWnd);
+		::SendMessage(m_main_window,WM_COMMAND,MAKEWPARAM(0,IDN_TREE_MOVE_ELEMENT),(LPARAM)m_hWnd);
 	}
 	bHandled = false;
 	return 0;
@@ -579,7 +579,7 @@ LRESULT CTreeView::OnRClick(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOO
     return 0;
  }
 
-LRESULT CTreeView::OnContextMenu(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+LRESULT CTreeView::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/)
 {
 	CPoint ptMousePos = (CPoint)lParam;
 		
@@ -606,8 +606,8 @@ LRESULT CTreeView::OnContextMenu(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BO
 	menu = ::LoadMenu(_Module.GetResourceInstance(), MAKEINTRESOURCEW(IDR_DOCUMENT_TREE));
 	pPopup = ::GetSubMenu(menu, 0);
 	ClientToScreen(&ptMousePos);
-	BOOL res = ::TrackPopupMenu(pPopup, TPM_LEFTALIGN, ptMousePos.x, ptMousePos.y, 0, *this, 0);
-	int err = GetLastError();
+	::TrackPopupMenu(pPopup, TPM_LEFTALIGN, ptMousePos.x, ptMousePos.y, 0, *this, 0);
+	GetLastError();
 
 	return 1;
 }
@@ -687,7 +687,7 @@ void CTreeView::EndDrag()
 	m_drag = false;	        			
 }
 
-LRESULT CTreeView::OnCut(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnCut(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	// remove last selection
 	SetItemState(m_move_from, 0, TVIS_CUT);
@@ -696,34 +696,34 @@ LRESULT CTreeView::OnCut(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandle
 	SetItemState(hitem, TVIS_CUT, TVIS_CUT);	
 	return 0;	
 }
-LRESULT CTreeView::OnPaste(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnPaste(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	// remove selection
 	SetItemState(m_move_from, 0, TVIS_CUT);
 	m_move_to = GetSelectedItem();
 	m_insert_type = CTreeView::child;
-	::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_MOVE_ELEMENT),(LPARAM)m_hWnd);
+	::SendMessage(m_main_window,WM_COMMAND,MAKEWPARAM(0,IDN_TREE_MOVE_ELEMENT),(LPARAM)m_hWnd);
 	return 0;
 }
-LRESULT CTreeView::OnView(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnView(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {	
-	::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_VIEW_ELEMENT),(LPARAM)m_hWnd);
+	::SendMessage(m_main_window,WM_COMMAND,MAKEWPARAM(0,IDN_TREE_VIEW_ELEMENT),(LPARAM)m_hWnd);
 	return 0;
 }
 
-LRESULT CTreeView::OnViewSource(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnViewSource(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_VIEW_ELEMENT_SOURCE),(LPARAM)m_hWnd);
+	::SendMessage(m_main_window,WM_COMMAND, MAKEWPARAM(0,IDN_TREE_VIEW_ELEMENT_SOURCE),(LPARAM)m_hWnd);
 	return 0;
 }
 
-LRESULT CTreeView::OnDelete(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnDelete(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_DELETE_ELEMENT),(LPARAM)m_hWnd);
+	::SendMessage(m_main_window,WM_COMMAND, MAKEWPARAM(0,IDN_TREE_DELETE_ELEMENT),(LPARAM)m_hWnd);
 	return 0;
 }
 
-LRESULT CTreeView::OnRight(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnRight(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	//m_move_from = GetSelectedItem();
 	
@@ -746,7 +746,7 @@ LRESULT CTreeView::OnRight(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHand
 			break;
 
 		m_move_from = prevItem;
-		::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_MOVE_ELEMENT),(LPARAM)m_hWnd);
+		::SendMessage(m_main_window,WM_COMMAND, MAKEWPARAM(0,IDN_TREE_MOVE_ELEMENT),(LPARAM)m_hWnd);
 		prevItem = item;
 	}
 
@@ -780,13 +780,13 @@ LRESULT CTreeView::OnRight(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHand
 
 	}
 	
-	::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_MOVE_ELEMENT),(LPARAM)m_hWnd);
+	::SendMessage(m_main_window,WM_COMMAND, MAKEWPARAM(0,IDN_TREE_MOVE_ELEMENT),(LPARAM)m_hWnd);
 	return 0;
 }
 
-LRESULT CTreeView::OnRightOne(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnRightOne(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {	
-	::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_MOVE_ELEMENT_ONE),(LPARAM)m_hWnd);
+	::SendMessage(m_main_window,WM_COMMAND, MAKEWPARAM(0,IDN_TREE_MOVE_ELEMENT_ONE),(LPARAM)m_hWnd);
 	/*HTREEITEM item = GetFirstSelectedItem();
 	if(!item)
 		return 0;
@@ -800,32 +800,32 @@ LRESULT CTreeView::OnRightOne(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bH
 }
 
 
-LRESULT CTreeView::OnRightSmart(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnRightSmart(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_MOVE_ELEMENT_SMART),(LPARAM)m_hWnd);
+	::SendMessage(m_main_window,WM_COMMAND, MAKEWPARAM(0,IDN_TREE_MOVE_ELEMENT_SMART),(LPARAM)m_hWnd);
 	return 0;
 }
 
-LRESULT CTreeView::OnLeftOne(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnLeftOne(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_MOVE_LEFT_ONE),(LPARAM)m_hWnd);
+	::SendMessage(m_main_window,WM_COMMAND, MAKEWPARAM(0,IDN_TREE_MOVE_LEFT_ONE),(LPARAM)m_hWnd);
 	return 0;
 }
 
-LRESULT CTreeView::OnLeftWithChildren(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnLeftWithChildren(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_MOVE_LEFT),(LPARAM)m_hWnd);
+	::SendMessage(m_main_window,WM_COMMAND, MAKEWPARAM(0,IDN_TREE_MOVE_LEFT),(LPARAM)m_hWnd);
 	return 0;
 }
-LRESULT CTreeView::OnMerge(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnMerge(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	::SendMessage(m_main_window, WM_COMMAND, MAKELONG(0, IDN_TREE_MERGE), (LPARAM)m_hWnd);
+	::SendMessage(m_main_window, WM_COMMAND, MAKEWPARAM(0, IDN_TREE_MERGE), (LPARAM)m_hWnd);
 	return 0;
 }
 
-LRESULT CTreeView::OnLeft(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CTreeView::OnLeft(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	::SendMessage(m_main_window,WM_COMMAND,MAKELONG(0,IDN_TREE_MOVE_LEFT),(LPARAM)m_hWnd);
+	::SendMessage(m_main_window,WM_COMMAND, MAKEWPARAM(0,IDN_TREE_MOVE_LEFT),(LPARAM)m_hWnd);
 	/*m_move_from = GetSelectedItem();
 	m_move_to = TreeView_GetParent(*this, m_move_from);
 	m_insert_type = InsertType::sibling;

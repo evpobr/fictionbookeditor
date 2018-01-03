@@ -19,8 +19,8 @@ extern CSettings _Settings;
 
 
 static int __stdcall EnumFontProc(const ENUMLOGFONTEX *lfe,
-				 const NEWTEXTMETRICEX *ntm,
-				 DWORD type,
+				 const NEWTEXTMETRICEX * /*ntm*/,
+				 DWORD /*type*/,
 				 LPARAM data)
 {
   CSimpleArray<CString>	*stringList=(CSimpleArray<CString>*)data;

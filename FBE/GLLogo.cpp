@@ -475,7 +475,7 @@ BOOL CGLLogoView::SubclassWindow (HWND hWnd)
 	return TRUE;
 }
 
-LRESULT CGLLogoView::OnKeyDown(UINT, WPARAM wParam, LPARAM lParam, BOOL&)
+LRESULT CGLLogoView::OnKeyDown(UINT, WPARAM wParam, LPARAM /*lParam*/, BOOL&)
 {
 	switch (wParam)
 	{

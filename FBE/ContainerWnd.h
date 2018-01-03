@@ -32,21 +32,21 @@ public:
     return TRUE;
   }
 
-  LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&) {
+  LRESULT OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL&) {
     RECT  rc;
     GetClientRect(&rc);
     ::EnumChildWindows(*this,SizeProc,(LPARAM)&rc);
     return 0;
   }
 
-  LRESULT OnFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&) {
+  LRESULT OnFocus(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL&) {
     HWND  hWnd=GetActiveWnd();
     if (hWnd!=NULL)
       ::SetFocus(hWnd);
     return 0;
   }
 
-  LRESULT OnErase(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&) {
+  LRESULT OnErase(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL&) {
     return 1;
   }
 

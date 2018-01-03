@@ -28,11 +28,11 @@ public:
   END_COM_MAP()
 
   // IInternetProtocolRoot
-  STDMETHOD(Abort)(HRESULT hrReason,DWORD dwOptions) { return E_NOTIMPL; }
+  STDMETHOD(Abort)(HRESULT /*hrReason*/,DWORD /*dwOptions*/) { return E_NOTIMPL; }
   STDMETHOD(Continue)(PROTOCOLDATA *pd) { return E_NOTIMPL; }
   STDMETHOD(Resume)() { return E_NOTIMPL; }
   STDMETHOD(Start)(const wchar_t *url, IInternetProtocolSink *sink,
-		   IInternetBindInfo *bi,DWORD flags,HANDLE_PTR dwReserved)
+		   IInternetBindInfo* /*bi*/,DWORD /*flags*/,HANDLE_PTR /*dwReserved*/)
   {
     // check if this an embedded image
     const wchar_t   *col=wcschr(url,L':');
@@ -75,7 +75,7 @@ okreport:
     return hr;
   }
   STDMETHOD(Suspend)() { return E_NOTIMPL; }
-  STDMETHOD(Terminate)(DWORD dwOptions) {
+  STDMETHOD(Terminate)(DWORD /*dwOptions*/) {
     if (m_unaccess) {
       ::SafeArrayUnaccessData(V_ARRAY(&m_data));
       m_unaccess=false;
@@ -87,7 +87,11 @@ okreport:
   }
 
   // IInternetProtocol
-  STDMETHOD(LockRequest)(DWORD dwOptions) { return S_OK; }
+  STDMETHOD(LockRequest)(DWORD /*dwOptions*/)
+  {
+	  return S_OK;
+  }
+
   STDMETHOD(Read)(void *pv,ULONG cb,ULONG *cbRead) {
     if (m_bytes==0)
       return S_FALSE;
@@ -99,7 +103,7 @@ okreport:
     m_bytes-=cb;
     return S_OK;
   }
-  STDMETHOD(Seek)(LARGE_INTEGER off,DWORD org,ULARGE_INTEGER *newoff) { return E_FAIL; }
+  STDMETHOD(Seek)(LARGE_INTEGER off,DWORD /*org*/,ULARGE_INTEGER * /*newoff*/) { return E_FAIL; }
   STDMETHOD(UnlockRequest)() { return S_OK; }
 };
 

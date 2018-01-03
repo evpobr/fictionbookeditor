@@ -147,10 +147,10 @@ public:
   }
 };
 
-int	InputBox(CString& result, const wchar_t *title, const wchar_t *prompt) {
+INT_PTR InputBox(CString& result, const wchar_t *title, const wchar_t *prompt) {
   CInputBox   dlg(title,prompt);
   dlg.m_text=result;
-  int dlgResult = dlg.DoModal();
+  INT_PTR dlgResult = dlg.DoModal();
   if (dlgResult == IDYES) result=dlg.m_text;
   return dlgResult;
 }
@@ -199,7 +199,7 @@ IMatchCollection* IRegExp2::Execute (CString sourceString)
 	int options;
 	int erroffset;
 	int ovector[OVECCOUNT];
-	size_t subject_length;
+	int subject_length;
 	int rc, offset, char_offset;
 	IMatchCollection* matches;
 	// fix for issue #145
@@ -224,7 +224,7 @@ IMatchCollection* IRegExp2::Execute (CString sourceString)
 	{
 		is_error = false;
 		CT2A subj(sourceString, CP_UTF8);
-		subject_length = strlen(subj);
+		subject_length = static_cast<int>(strlen(subj));
 
 		offset = char_offset = 0;
 

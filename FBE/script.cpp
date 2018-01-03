@@ -118,7 +118,6 @@ public:
 		  DWORD ctx;
 		  ULONG line = 0;
 		  LONG  column = 0;
-		  wchar_t *buf = NULL;
 
 		  err->GetSourcePosition(&ctx, &line, &column);
 

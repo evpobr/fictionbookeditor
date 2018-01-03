@@ -130,7 +130,7 @@ namespace U
 		else elem->className = value;
 		// send message to main window
 #ifndef NO_EXTRN_SETTINGS
-		::SendMessage(_Settings.GetMainWindow(), WM_COMMAND, MAKELONG(0,IDN_TREE_RESTORE), 0);
+		::SendMessage(_Settings.GetMainWindow(), WM_COMMAND, MAKEWPARAM(0,IDN_TREE_RESTORE), 0);
 #endif
 	}
 
@@ -510,12 +510,12 @@ CString	GetWindowText(HWND hWnd)
 }
 
 CString	GetCBString(HWND hWnd,int idx) {
-  LRESULT len=::SendMessage(hWnd,CB_GETLBTEXTLEN,idx,0);
+  int len=ComboBox_GetLBTextLen(hWnd,idx);
   if (len==CB_ERR)
     return CString();
   CString ret;
   TCHAR	  *cp=ret.GetBuffer(len+1);
-  len=::SendMessage(hWnd,CB_GETLBTEXT,idx,(LPARAM)cp);
+  len=ComboBox_GetLBText(hWnd,idx,cp);
   if (len==CB_ERR)
     ret.ReleaseBuffer(0);
   else
@@ -955,7 +955,6 @@ void InitSettingsHotkeyGroups()
 			return false;
 		}
 
-		const wchar_t* curpos = xml;
 		const wchar_t* selpos = xml + pos;
 		size_t virtual_pos = pos;
 		// ищем открывающий тег

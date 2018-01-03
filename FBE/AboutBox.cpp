@@ -87,6 +87,7 @@ LRESULT CAboutDlg::OnCtlColor(UINT, WPARAM wParam, LPARAM lParam, BOOL& bHandled
 		::SetBkColor(hdc, RGB(255,255,255));
 		return (LRESULT) ::GetStockObject(WHITE_BRUSH);
 	}
+	bHandled = TRUE;
 	return 0;
 }
 
@@ -121,6 +122,8 @@ void CAboutDlg::CheckUpdate()
 
 LRESULT CAboutDlg::OnUpdate(WORD, WORD wID, HWND, BOOL&)
 {
+	UNREFERENCED_PARAMETER(wID);
+
 	if (!m_UpdateURL.IsEmpty())
 	{
 		m_UpdateButton.ShowWindow(SW_HIDE);
@@ -212,6 +215,8 @@ void CAboutDlg::AcceptReceivedData (FCHttpDownload* pTask)
 
 LRESULT CAboutDlg::OnUpdateProgressUI (UINT, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
     if (!m_monitor.get())
         return 0;
 
@@ -252,6 +257,9 @@ LRESULT CAboutDlg::OnUpdateProgressUI (UINT, WPARAM wParam, LPARAM lParam, BOOL&
     // average speed
     avgSpeed.Format(L"%d Kb / S", (int)ceil(p->GetAverageSpeed()/1024.0));
 #endif
+
+	bHandled = TRUE;
+
     return 0;
 }
 
@@ -531,7 +539,7 @@ void CAboutDlg::RunUpdate(CString filename)
 	strMessage.Format(IDS_UPDATE_CLOSE, (LPCTSTR)filename);
 	if (AtlTaskDialog(*this, IDR_MAINFRAME, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_YES_BUTTON | TDCBF_YES_BUTTON, TD_WARNING_ICON) == IDYES)
 	{
-		HINSTANCE hInst = ShellExecute(0, L"open", filename, 0, 0, SW_SHOW);
+		ShellExecute(0, L"open", filename, 0, 0, SW_SHOW);
 		::PostMessage(GetParent().m_hWnd, WM_CLOSE, 0, 0);
 	}
 }

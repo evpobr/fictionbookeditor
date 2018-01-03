@@ -122,7 +122,7 @@ public:
 		return 0;
 	}
 
-	LRESULT OnTextChanged(WORD, WORD wID, HWND, BOOL&)
+	LRESULT OnTextChanged(WORD, WORD /*wID*/, HWND, BOOL&)
 	{
 		CheckInput();
 		return 0;
@@ -142,15 +142,15 @@ public:
 		if(cur.IsEmpty())
 			return;
 
-		LRESULT Idx = ::SendMessage(hCB, CB_FINDSTRINGEXACT, -1, (LPARAM)(const TCHAR*)cur);
+		int Idx = ComboBox_FindStringExact(hCB, -1, cur);
 		if(Idx == 0)
 			return;
 		if(Idx != CB_ERR)
-			::SendMessage(hCB, CB_DELETESTRING, Idx, 0);
+			ComboBox_DeleteString(hCB, Idx);
 
-		::SendMessage(hCB, CB_INSERTSTRING, 0,(LPARAM)(const TCHAR*)cur);
+		ComboBox_InsertString(hCB, 0, cur);
 		// fix for issue #136
-		::SendMessage(hCB, CB_SETCURSEL, 0, 0);
+		ComboBox_SetCurSel(hCB, 0);
 	}
 
 	void SaveString()
@@ -164,7 +164,7 @@ public:
 		if(!rk && !hCB)
 			return;
 
-		LRESULT lCount = ::SendMessage(hCB, CB_GETCOUNT, 0, 0);
+		int lCount = ComboBox_GetCount(hCB);
 		if(lCount > 100)
 			lCount = 100;
 
@@ -203,7 +203,7 @@ public:
 	END_MSG_MAP()
 
 
-	LRESULT OnCancel(WORD, WORD wID, HWND, BOOL&)
+	LRESULT OnCancel(WORD, WORD /*wID*/, HWND, BOOL&)
 	{
 		m_view->CloseFindDialog(this);
 		return 0;
@@ -244,7 +244,7 @@ public:
   END_MSG_MAP()
 
 
-  LRESULT OnCancel(WORD, WORD wID, HWND, BOOL&) {
+  LRESULT OnCancel(WORD, WORD /*wID*/, HWND, BOOL&) {
 	  m_view->CloseFindDialog(this);
     return 0;
   }
@@ -267,12 +267,12 @@ public:
     return 0;
   }
 
-  LRESULT OnTextChanged(WORD, WORD wID, HWND, BOOL& bHandled) {
+  LRESULT OnTextChanged(WORD, WORD /*wID*/, HWND, BOOL& bHandled) {
     SendMessage(DM_SETDEFID,IDOK);
     bHandled=FALSE;
     return 0;
   }
-  LRESULT OnReplChanged(WORD, WORD wID, HWND, BOOL& bHandled) {
+  LRESULT OnReplChanged(WORD, WORD /*wID*/, HWND, BOOL& bHandled) {
     SendMessage(DM_SETDEFID,IDC_REPLACE_ONE);
     bHandled=FALSE;
     return 0;

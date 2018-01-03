@@ -7,7 +7,7 @@
 #include "Speller.h"
 
 // spell check dialog initialisation
-LRESULT CSpellDialog::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CSpellDialog::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	m_BadWord = GetDlgItem(IDC_SPELL_BEDWORD);
 	m_Replacement = GetDlgItem(IDC_SPELL_REPLACEMENT);
@@ -60,7 +60,7 @@ LRESULT CSpellDialog::UpdateData()
 	return 1;
 }
 
-LRESULT CSpellDialog::OnSelChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CSpellDialog::OnSelChange(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	CString strText;
 	if (m_Suggestions.GetText(m_Suggestions.GetCurSel(),strText))
@@ -69,7 +69,7 @@ LRESULT CSpellDialog::OnSelChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL
 }
 
 // change text to suggested word on doubleclick
-LRESULT CSpellDialog::OnSelDblClick(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CSpellDialog::OnSelDblClick(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& bHandled)
 {
 	CString strText;
 	if (m_Suggestions.GetText(m_Suggestions.GetCurSel(),strText))
@@ -80,20 +80,20 @@ LRESULT CSpellDialog::OnSelDblClick(WORD wNotifyCode, WORD wID, HWND hWndCtl, BO
 	return 0;
 }
 
-LRESULT CSpellDialog::OnEditChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+LRESULT CSpellDialog::OnEditChange(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	m_Replacement.GetWindowText(m_sReplacement);
 	return 0;
 }
 
-LRESULT CSpellDialog::OnCancel(WORD, WORD wID, HWND, BOOL&) 
+LRESULT CSpellDialog::OnCancel(WORD, WORD /*wID*/, HWND, BOOL&) 
 { 
 	ATLASSERT(m_Speller!=NULL);
 	m_Speller->EndDocumentCheck();
 	return 0;
 }
 
-LRESULT CSpellDialog::OnIgnore(WORD, WORD wID, HWND, BOOL&)
+LRESULT CSpellDialog::OnIgnore(WORD, WORD /*wID*/, HWND, BOOL&)
 {
 	ATLASSERT(m_Speller!=NULL);
 	if (m_WasSuspended)
@@ -119,7 +119,7 @@ LRESULT CSpellDialog::OnIgnore(WORD, WORD wID, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CSpellDialog::OnIgnoreAll(WORD, WORD wID, HWND, BOOL&)
+LRESULT CSpellDialog::OnIgnoreAll(WORD, WORD /*wID*/, HWND, BOOL&)
 {
 	ATLASSERT(m_Speller!=NULL);
 	m_Speller->IgnoreAll(m_sBadWord);
@@ -127,7 +127,7 @@ LRESULT CSpellDialog::OnIgnoreAll(WORD, WORD wID, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CSpellDialog::OnChange(WORD, WORD wID, HWND, BOOL&)
+LRESULT CSpellDialog::OnChange(WORD, WORD /*wID*/, HWND, BOOL&)
 {
 	ATLASSERT(m_Speller!=NULL);
 	m_Speller->BeginUndoUnit(L"replace word");
@@ -137,7 +137,7 @@ LRESULT CSpellDialog::OnChange(WORD, WORD wID, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CSpellDialog::OnChangeAll(WORD, WORD wID, HWND, BOOL&)
+LRESULT CSpellDialog::OnChangeAll(WORD, WORD /*wID*/, HWND, BOOL&)
 {
 	ATLASSERT(m_Speller!=NULL);
 	m_Speller->AddReplacement(m_sBadWord,m_sReplacement);
@@ -148,7 +148,7 @@ LRESULT CSpellDialog::OnChangeAll(WORD, WORD wID, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CSpellDialog::OnAdd(WORD, WORD wID, HWND, BOOL&)
+LRESULT CSpellDialog::OnAdd(WORD, WORD /*wID*/, HWND, BOOL&)
 {
 	ATLASSERT(m_Speller!=NULL);
 	m_Speller->AddToDictionary(m_sBadWord);
@@ -156,7 +156,7 @@ LRESULT CSpellDialog::OnAdd(WORD, WORD wID, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CSpellDialog::OnUndo(WORD, WORD wID, HWND, BOOL&)
+LRESULT CSpellDialog::OnUndo(WORD, WORD /*wID*/, HWND, BOOL&)
 {
 	ATLASSERT(m_Speller!=NULL);
 	m_Speller->Undo();
@@ -716,9 +716,9 @@ void CSpeller::CheckCurrentPage()
 	if (nEndElem == -1) nEndElem = nStartElem+20;
 	else if (nEndElem+1 < paras->length) nEndElem++;
 
-	for (int i=nStartElem; i<nEndElem; i++)
+	for (int m=nStartElem; m<nEndElem; m++)
 	{
-		elem = paras->item(i);
+		elem = paras->item(m);
 		// get element unique number
 		if (elem)
 		{
@@ -736,11 +736,11 @@ void CSpeller::CheckCurrentPage()
 				// remove underline
 				ClearMarks(currNum);
 				splitter->Split(&innerText, &words);
-				for (int i=0; i<words.GetSize(); i++)
+				for (int n=0; n<words.GetSize(); n++)
 				{
-					CString wrd = words.GetValueAt(i);
+					CString wrd = words.GetValueAt(n);
 					if (SpellCheck(wrd) == SPELL_MISSPELL)
-						MarkElement(elem, currNum, wrd, words.GetKeyAt(i));
+						MarkElement(elem, currNum, wrd, words.GetKeyAt(n));
 				}
 			}
 		}

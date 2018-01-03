@@ -284,8 +284,7 @@ BOOL CColorButton::SubclassWindow (HWND hWnd)
 //
 //-----------------------------------------------------------------------------
 
-LRESULT CColorButton::OnClicked (WORD wNotifyCode, 
-	WORD wID, HWND hWndCtl, BOOL &bHandled) 
+LRESULT CColorButton::OnClicked (WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/) 
 {
 
 	//
@@ -294,12 +293,6 @@ LRESULT CColorButton::OnClicked (WORD wNotifyCode,
 
 	m_fPopupActive = TRUE;
 	InvalidateRect (NULL);
-
-	//
-	// Get the parent window
-	//
-
-	HWND hWndParent = GetParent ();
 
 	//
 	// Send the drop down notification to the parent
@@ -381,8 +374,8 @@ LRESULT CColorButton::OnClicked (WORD wNotifyCode,
 //
 //-----------------------------------------------------------------------------
 
-LRESULT CColorButton::OnMouseMove (UINT uMsg, WPARAM wParam, 
-	LPARAM lParam, BOOL &bHandled) 
+LRESULT CColorButton::OnMouseMove (UINT /*uMsg*/, WPARAM /*wParam*/, 
+	LPARAM /*lParam*/, BOOL &bHandled) 
 {
 	if (!m_fMouseOver)
 	{
@@ -414,8 +407,8 @@ LRESULT CColorButton::OnMouseMove (UINT uMsg, WPARAM wParam,
 //
 //-----------------------------------------------------------------------------
 
-LRESULT CColorButton::OnMouseLeave (UINT uMsg, WPARAM wParam, 
-	LPARAM lParam, BOOL &bHandled) 
+LRESULT CColorButton::OnMouseLeave (UINT /*uMsg*/, WPARAM /*wParam*/, 
+	LPARAM /*lParam*/, BOOL &bHandled) 
 {
 	if (m_fMouseOver)
 	{
@@ -442,8 +435,8 @@ LRESULT CColorButton::OnMouseLeave (UINT uMsg, WPARAM wParam,
 //
 //-----------------------------------------------------------------------------
 
-LRESULT CColorButton::OnDrawItem (UINT uMsg, WPARAM wParam, 
-	LPARAM lParam, BOOL &bHandled) 
+LRESULT CColorButton::OnDrawItem (UINT /*uMsg*/, WPARAM /*wParam*/, 
+	LPARAM lParam, BOOL& /*bHandled*/) 
 {
 	LPDRAWITEMSTRUCT lpItem = (LPDRAWITEMSTRUCT) lParam;
 	CDC dc (lpItem ->hDC);
@@ -855,7 +848,7 @@ BOOL CColorButton::Picker ()
 			MSG msg;
 			if (!::GetMessage(&msg, NULL, 0, 0))
 			{
-				::PostQuitMessage (msg .wParam);
+				::PostQuitMessage (static_cast<int>(msg .wParam));
 				break;
 			}
 
@@ -976,7 +969,7 @@ void CColorButton::SetPickerWindowSize ()
 		if (HasCustomText ())
 		{
 			dc .GetTextExtent (m_pszCustomText, 
-				_tcslen (m_pszCustomText), &szText);
+				static_cast<int>(_tcslen (m_pszCustomText)), &szText);
 		}
 
 		//
@@ -987,7 +980,7 @@ void CColorButton::SetPickerWindowSize ()
         {
 			SIZE szDefault;
 			dc .GetTextExtent (m_pszDefaultText, 
-				_tcslen (m_pszDefaultText), &szDefault);
+				static_cast<int>(_tcslen (m_pszDefaultText)), &szDefault);
 			if (szDefault .cx > szText .cx)
 				szText .cx = szDefault .cx;
 			if (szDefault .cy > szText .cy)
@@ -1505,7 +1498,7 @@ void CColorButton::DrawPickerCell (CDC &dc, int nIndex)
 		HFONT hfontOld = dc .SelectFont (m_font);
 		dc .SetTextColor (clrText);
 		dc .SetBkMode (TRANSPARENT);
-		dc .DrawText (pszText, _tcslen (pszText), 
+		dc .DrawText (pszText, static_cast<int>(_tcslen (pszText)), 
 			&rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 		dc .SelectFont (hfontOld);
     }        
@@ -1554,8 +1547,8 @@ void CColorButton::DrawPickerCell (CDC &dc, int nIndex)
 //
 //-----------------------------------------------------------------------------
 
-LRESULT CColorButton::OnPickerKeyDown (UINT uMsg, 
-	WPARAM wParam, LPARAM lParam, BOOL &bHandled) 
+LRESULT CColorButton::OnPickerKeyDown (UINT /*uMsg*/, 
+	WPARAM wParam, LPARAM /*lParam*/, BOOL &bHandled) 
 {
 
 	//
@@ -1670,8 +1663,8 @@ LRESULT CColorButton::OnPickerKeyDown (UINT uMsg,
 //
 //-----------------------------------------------------------------------------
 
-LRESULT CColorButton::OnPickerLButtonUp (UINT uMsg, 
-	WPARAM wParam, LPARAM lParam, BOOL &bHandled) 
+LRESULT CColorButton::OnPickerLButtonUp (UINT /*uMsg*/, 
+	WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) 
 {
 
 	//
@@ -1707,8 +1700,8 @@ LRESULT CColorButton::OnPickerLButtonUp (UINT uMsg,
 //
 //-----------------------------------------------------------------------------
 
-LRESULT CColorButton::OnPickerMouseMove (UINT uMsg, WPARAM wParam, 
-	LPARAM lParam, BOOL &bHandled) 
+LRESULT CColorButton::OnPickerMouseMove (UINT /*uMsg*/, WPARAM /*wParam*/, 
+	LPARAM lParam, BOOL& /*bHandled*/) 
 {
 
 	//
@@ -1745,8 +1738,8 @@ LRESULT CColorButton::OnPickerMouseMove (UINT uMsg, WPARAM wParam,
 //
 //-----------------------------------------------------------------------------
 
-LRESULT CColorButton::OnPickerPaint (UINT uMsg, 
-	WPARAM wParam, LPARAM lParam, BOOL &bHandled) 
+LRESULT CColorButton::OnPickerPaint (UINT /*uMsg*/, 
+	WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) 
 {
 	CPaintDC dc (m_wndPicker);
 
@@ -1810,7 +1803,7 @@ LRESULT CColorButton::OnPickerPaint (UINT uMsg,
 //-----------------------------------------------------------------------------
 
 LRESULT CColorButton::OnPickerQueryNewPalette (UINT uMsg, 
-	WPARAM wParam, LPARAM lParam, BOOL &bHandled) 
+	WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) 
 {
     Invalidate ();
     return DefWindowProc (uMsg, wParam, lParam);
@@ -1833,7 +1826,7 @@ LRESULT CColorButton::OnPickerQueryNewPalette (UINT uMsg,
 //-----------------------------------------------------------------------------
 
 LRESULT CColorButton::OnPickerPaletteChanged (UINT uMsg, 
-	WPARAM wParam, LPARAM lParam, BOOL &bHandled) 
+	WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) 
 {
     LRESULT lResult = DefWindowProc (uMsg, wParam, lParam);
 	if ((HWND) wParam != m_hWnd)

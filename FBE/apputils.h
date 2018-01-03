@@ -34,7 +34,7 @@ namespace AU
 	};
 
 	// a generic inputbox
-	int InputBox(CString& result, const wchar_t* title, const wchar_t* prompt);
+	INT_PTR InputBox(CString& result, const wchar_t* title, const wchar_t* prompt);
 	// html
 	CString GetAttrCS(MSHTML::IHTMLElement* elem, const wchar_t* attr);
 	_bstr_t GetAttrB(MSHTML::IHTMLElement* elem, const wchar_t* attr);

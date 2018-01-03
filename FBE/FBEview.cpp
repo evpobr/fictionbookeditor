@@ -44,7 +44,7 @@ _ATL_FUNC_INFO CFBEView::EventInfo=
 _ATL_FUNC_INFO CFBEView::VoidEventInfo=
   { CC_STDCALL, VT_EMPTY, 1, { VT_DISPATCH } };
 
-LRESULT CFBEView::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CFBEView::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 {
   if (DefWindowProc(uMsg,wParam,lParam))
     return 1;
@@ -2670,7 +2670,6 @@ int CFBEView::ToolWordsGlobalReplace(	MSHTML::IHTMLElementPtr fbw_body,
 					// SeNS: fix for issue #148
 					found->moveStart(L"character", matchIdx+TextOffset (found, cur));
 					found->collapse(TRUE);
-					int diff = last - first;
 					found->moveEnd(L"character", matchLen);
 					found->select();
 
@@ -2684,7 +2683,6 @@ int CFBEView::ToolWordsGlobalReplace(	MSHTML::IHTMLElementPtr fbw_body,
 					// SeNS: fix for issue #148
 					found->moveStart(L"character", matchIdx+TextOffset (found, cur));
 					found->collapse(TRUE);
-					int diff = last - first;
 					found->moveEnd(L"character", matchLen);
 					found->select();
 					CString strRepl;
@@ -2866,7 +2864,7 @@ void	CFBEView::EditorChanged(int id) {
 }
 
 // DWebBrowserEvents2
-void  CFBEView::OnDocumentComplete(IDispatch *pDisp,VARIANT *vtUrl) {
+void  CFBEView::OnDocumentComplete(IDispatch * /*pDisp*/,VARIANT * /*vtUrl*/) {
   m_complete=true;
 }
 
@@ -2930,15 +2928,15 @@ void  CFBEView::Init() {
   m_elementsNum = Document()->all->length;
 
   // turn off browser's d&d
-  HRESULT hr = m_browser->put_RegisterAsDropTarget(VARIANT_FALSE);
+  m_browser->put_RegisterAsDropTarget(VARIANT_FALSE);
 //  m_browser->RegisterAsDropTarget = VARIANT_TRUE;
 
   m_initialized=true;
 }
 
-void  CFBEView::OnBeforeNavigate(IDispatch *pDisp,VARIANT *vtUrl,VARIANT *vtFlags,
-				 VARIANT *vtTargetFrame,VARIANT *vtPostData,
-				 VARIANT *vtHeaders,VARIANT_BOOL *fCancel)
+void  CFBEView::OnBeforeNavigate(IDispatch * /*pDisp*/,VARIANT *vtUrl,VARIANT * /*vtFlags*/,
+				 VARIANT * /*vtTargetFrame*/,VARIANT * /*vtPostData*/,
+				 VARIANT * /*vtHeaders*/,VARIANT_BOOL *fCancel)
 {
   if (!m_initialized)
     return;
@@ -2959,7 +2957,7 @@ void  CFBEView::OnBeforeNavigate(IDispatch *pDisp,VARIANT *vtUrl,VARIANT *vtFlag
 }
 
 // HTMLDocumentEvents
-void  CFBEView::OnSelChange(IDispatch *evt) {
+void  CFBEView::OnSelChange(IDispatch * /*evt*/) {
   if (!m_ignore_changes)
     ::SendMessage(m_frame,WM_COMMAND,MAKELONG(0,IDN_SEL_CHANGE),(LPARAM)m_hWnd);
   if (m_cur_sel)
@@ -3476,7 +3474,7 @@ bool CFBEView::GoToReference(bool fCheck)
 	return false;
 }
 
-LRESULT CFBEView::OnEditInsertTable(WORD wNotifyCode, WORD wID, HWND hWndCtl)
+LRESULT CFBEView::OnEditInsertTable(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/)
 {
 	CTableDlg dlg;
 	if(dlg.DoModal()==IDOK) {
@@ -3692,7 +3690,6 @@ long CFBEView::InsertCode()
 				while(U::scmp(elEnd->tagName, L"P")) elEnd = elEnd->parentElement;
 
 				MSHTML::IHTMLDOMNodePtr bNode = elBegin, eNode = elEnd;
-				int last = 0;
 				while(bNode)
 				{
 					CString elBeginHTML = elBegin->innerHTML;
@@ -3950,7 +3947,7 @@ MSHTML::IHTMLTxtRangePtr CFBEView::SetSelection(MSHTML::IHTMLElementPtr begin, M
 	if(begin == end)
 	{
 		rng_begin->moveEnd(L"character", end_pos - begin_pos);
-		HRESULT hr = rng_begin->select();		
+		rng_begin->select();		
 		
 		return rng_begin;
 	}
@@ -4121,7 +4118,7 @@ bool CFBEView::ExpandTxtRangeToParagraphs(MSHTML::IHTMLTxtRangePtr& rng,
 	return true;
 }
 
-LRESULT CFBEView::OnCode(WORD wCode, WORD wID, HWND hWnd, BOOL& bHandled)
+LRESULT CFBEView::OnCode(WORD /*wCode*/, WORD /*wID*/, HWND /*hWnd*/, BOOL& /*bHandled*/)
 {
 	return InsertCode();
 }

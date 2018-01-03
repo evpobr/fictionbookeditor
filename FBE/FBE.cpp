@@ -55,7 +55,7 @@ IDispatchPtr  CFBEView::CreateHelper()
 static void ParseCommandLine(LPTSTR cmd, CSimpleArray<CString>& args)
 {
 	TCHAR* p=cmd;
-	int len= _tcslen(p);
+	size_t len= _tcslen(p);
 	TCHAR* e = p + len;
 
 	for (;;)

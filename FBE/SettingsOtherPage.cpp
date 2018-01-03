@@ -19,7 +19,7 @@ CSettingsOtherPage::CSettingsOtherPage()
 	m_scripts_fld_dlg_msg.GetBufferSetLength(MAX_LOAD_STRING + 1);
 }
 
-LRESULT CSettingsOtherPage::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CSettingsOtherPage::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	m_def_enc = GetDlgItem(IDC_DEFAULT_ENC);
 	m_def_scripts_fld = GetDlgItem(IDC_DEFAULT_SCRIPTS_FOLDER);

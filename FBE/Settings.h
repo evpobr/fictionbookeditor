@@ -30,7 +30,7 @@ public:
 	{
 		properties.push_back(L"Value");
 		properties.push_back(L"Counted");
-		return properties.size();
+		return static_cast<int>(properties.size());
 	}
 
 	bool GetPropertyValue(const CString& sProperty, CProperty& property)
@@ -179,7 +179,7 @@ public:
 		properties.push_back(L"Name");
 		properties.push_back(L"Accel");
 
-		return properties.size();
+		return static_cast<int>(properties.size());
 	}
 
 	bool GetPropertyValue(const CString& sProperty, CProperty& property)
@@ -297,7 +297,7 @@ public:
 		properties.push_back(L"GroupName");
 		properties.push_back(L"Hotkey");
 
-		return properties.size();
+		return static_cast<int>(properties.size());
 	}
 
 	bool GetPropertyValue(const CString& sProperty, CProperty& property)

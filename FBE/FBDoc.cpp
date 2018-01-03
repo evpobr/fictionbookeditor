@@ -371,7 +371,7 @@ bool Doc::Load(HWND hWndParent,const CString& filename) {
     if (!LoadFromDOM(hWndParent,dom))
       return false;*/
 	
-	CWaitCursor *hourglass = new CWaitCursor();
+	 CAutoPtr<CWaitCursor> spHourGlass(new CWaitCursor());
 	if(!LoadFromHTML(hWndParent, filename))
 	{
 		return false;
@@ -773,7 +773,7 @@ public:
 
   SAXErrorHandler() : m_line(0),m_col(0) { }
 
-  void	SetMsg(MSXML2::ISAXLocator *loc, const wchar_t *msg, HRESULT hr) {
+  void	SetMsg(MSXML2::ISAXLocator *loc, const wchar_t *msg, HRESULT /*hr*/) {
     if (!m_msg.IsEmpty())
       return;
     m_msg=msg;
@@ -1127,7 +1127,6 @@ void  Doc::BinIDsToComboBox(CComboBox& box) {
 		CString value = elem->getAttribute(L"value", 0);
 		if (!value.IsEmpty()) 
 		{
-			const wchar_t* hash = AddHash(tmp, value.AllocSysString());
 			box.AddString(AddHash(tmp,value.AllocSysString()));
 		}
 	  }
@@ -1539,7 +1538,7 @@ bool  Doc::SetXMLAndValidate(HWND sci,bool fValidateOnly,int& errline,int& errco
 		buffer.ReleaseBuffer();
 		ustr = CA2W(buffer, CP_UTF8);
 	}
-	catch (CAtlException &ex)
+	catch (...)
 	{
 		AtlTaskDialog(::GetActiveWindow(), IDR_MAINFRAME, IDS_OUT_OF_MEM_MSG, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
 		return false;
@@ -1799,8 +1798,6 @@ bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2Ptr* xml)
       if (!eh->m_msg.IsEmpty()) 
 	  {
 		// record error position
-		int errline = eh->m_line;
-		int errcol = eh->m_col;
 		::MessageBeep(MB_ICONERROR);
 		::SendMessage(m_frame,AU::WM_SETSTATUSTEXT,0,
 		(LPARAM)(const TCHAR *)eh->m_msg);

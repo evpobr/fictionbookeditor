@@ -27,25 +27,27 @@ public:
 		CHAIN_MSG_MAP(CEditCommands<CAccelEdit>)
 	END_MSG_MAP()
 
-	LRESULT OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	LRESULT OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
 		if(wParam != virtkey)
 		{
 			::SendMessage(GetParent(), WM_USER + 0x401, wParam, lParam);
 			virtkey =  wParam;
 		}
+
 		return 0;
 	}
 
-	LRESULT OnKeyUp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	LRESULT OnKeyUp(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		::SendMessage(GetParent(), WM_USER + 0x402, wParam, lParam);
 		virtkey = ~virtkey;
 
+		bHandled = TRUE;
 		return 0;
 	}
 
-	LRESULT OnSkip(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	LRESULT OnSkip(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
 		return 0;
 	}

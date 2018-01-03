@@ -54,7 +54,7 @@ LRESULT CTreeWithToolBar::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	RECT rect;
 	SetRect(&rect, 0, 0, 500, 20);
 	this->ModifyStyle(0, WS_POPUP, 0);
-	HWND hWndCmdBar = m_view_bar.Create(*this, rect, NULL, ATL_SIMPLE_TOOLBAR_PANE_STYLE);	
+	m_view_bar.Create(*this, rect, NULL, ATL_SIMPLE_TOOLBAR_PANE_STYLE);	
 	m_view_bar.SetStyle(ATL_SIMPLE_TOOLBAR_PANE_STYLE);
 	FillViewBar();
 	this->ModifyStyle(WS_POPUP, 0, 0);
@@ -68,18 +68,7 @@ LRESULT CTreeWithToolBar::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 }
 
 
-LRESULT CTreeWithToolBar::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	bHandled=FALSE;
-	return 0;
-}
-
-LRESULT CTreeWithToolBar::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{    
-	return 0;
-}
-
-LRESULT CTreeWithToolBar::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CTreeWithToolBar::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
 	RECT clientRect = {0, 0, 0, 0};
 	RECT rebarRect = {0, 0, 0, 0};
@@ -135,6 +124,8 @@ LRESULT CTreeWithToolBar::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	
 	::MoveWindow(m_tree, treeRect.left, treeRect.top, treeRect.right - treeRect.left, treeRect.bottom - treeRect.top, true);	
 
+	bHandled = TRUE;
+
 	return 0;
 }
 
@@ -160,8 +151,9 @@ CTreeItem CTreeWithToolBar::GetSelectedItem()
 
 LRESULT CTreeWithToolBar::ForwardWMCommand(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
-	DWORD wParam = MAKELONG(wID, wNotifyCode);
-	DWORD lParam = (LPARAM)hWndCtl;
+	WPARAM wParam = MAKEWPARAM(wID, wNotifyCode);
+	LPARAM lParam = MAKELPARAM(hWndCtl, 0);
+	bHandled = TRUE;
 	return ::SendMessage(m_tree, WM_COMMAND, wParam, lParam);
 }
 
@@ -181,8 +173,8 @@ void CTreeWithToolBar::FillViewBar()
 	::LoadString(_Module.GetResourceInstance(), IDS_DOCTREE_MENU_ELEMENTS, elsMenuItem, MAX_LOAD_STRING);
 	::LoadString(_Module.GetResourceInstance(), IDS_DOCTREE_MENU_SCRIPTS, scriptsMenuItem, MAX_LOAD_STRING);
 
-	::AppendMenu(bar, MF_POPUP|MF_STRING, (UINT)(HMENU)m_st_menu, elsMenuItem);
-	::AppendMenu(bar, MF_POPUP|MF_STRING, (UINT)(HMENU)menu, scriptsMenuItem);
+	::AppendMenuW(bar, MF_POPUP|MF_STRING, reinterpret_cast<UINT_PTR>(static_cast<HMENU>(m_st_menu)), elsMenuItem);
+	::AppendMenuW(bar, MF_POPUP|MF_STRING, reinterpret_cast<UINT_PTR>(static_cast<HMENU>(menu)), scriptsMenuItem);
 
 	int picType = 0;
 	HANDLE picHandle = 0;
@@ -284,9 +276,10 @@ LRESULT CTreeWithToolBar::OnMenuStCommand(WORD, WORD wID, HWND, BOOL&)
 	return 0;
 }
 
-LRESULT CTreeWithToolBar::OnMenuClear(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL &bHandled)
+LRESULT CTreeWithToolBar::OnMenuClear(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL &bHandled)
 {
 	_EDMnr.CleanUpAll();
+	bHandled = TRUE;
 	return 0;
 }
 
@@ -314,17 +307,6 @@ LRESULT CDocumentTree::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 
 
 //WS_DLGFRAME  | WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CCS_NODIVIDER | CCS_NOPARENTALIGN | TBSTYLE_TOOLTIPS | TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE
-
-LRESULT CDocumentTree::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	bHandled=FALSE;
-	return 0;
-}
-
-LRESULT CDocumentTree::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	return 0;
-}
 
 void CDocumentTree::GetDocumentStructure(MSHTML::IHTMLDocument2Ptr& v)
 {

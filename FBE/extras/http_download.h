@@ -222,7 +222,7 @@ private:
     }
 
     // global timer callback, to dispatch event to timer object.
-    static VOID CALLBACK uistone_TimerProc (HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
+    static VOID CALLBACK uistone_TimerProc (HWND /*hwnd*/, UINT /*uMsg*/, UINT_PTR idEvent, DWORD /*dwTime*/)
     {
         if (!g_timer_list)
             return ;
@@ -663,7 +663,7 @@ public:
         if (task_info.m_proxy_ip.GetLength())
         {
             CString   s ;
-            s.Format(_T("%s:%d"), task_info.m_proxy_ip, task_info.m_proxy_port) ;
+            s.Format(_T("%s:%d"), static_cast<LPCTSTR>(task_info.m_proxy_ip), task_info.m_proxy_port) ;
             m_session = InternetOpen (task_info.m_user_agent, INTERNET_OPEN_TYPE_PROXY, s, NULL, 0) ;
         }
         else
@@ -820,12 +820,12 @@ protected:
     /**
         Callback on after connected to server.
     */
-    virtual void OnAfterDownloadConnected (FCHttpDownload* pTask) {}
+    virtual void OnAfterDownloadConnected (FCHttpDownload* /*pTask*/) {}
     /**
         Callback on after download finish \n
         after this callback, system will delete this download task.
     */
-    virtual void OnAfterDownloadFinish (FCHttpDownload* pTask) {}
+    virtual void OnAfterDownloadFinish (FCHttpDownload* /*pTask*/) {}
     //@}
 
 public:

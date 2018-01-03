@@ -79,7 +79,6 @@ public:
 	  Rectangle(dc, rc.left, rc.top, rc.right, rc.bottom);
 	  SelectObject(dc, oldBrush);
 	  SelectObject(dc, oldPen);*/
-      DWORD dwStyle = GetStyle();
 	  HFONT oldFont = (HFONT)SelectObject(dc, m_font);
 
       UINT iFlags = DT_SINGLELINE | DT_CENTER | DT_VCENTER;      
@@ -295,7 +294,7 @@ public:
 	// added by SeNS
 	{ 
 		TCHAR prgPath[MAX_PATH];
-		DWORD pathlen = ::GetModuleFileName(_Module.GetModuleInstance(), prgPath, MAX_PATH);
+		GetModuleFileName(_Module.GetModuleInstance(), prgPath, MAX_PATH);
 		PathRemoveFileSpec(prgPath);
 		if (_Settings.m_usespell_check)
 		{
@@ -631,7 +630,7 @@ public:
     return 0;
   }
 
-  int m_selBandID;
+  UINT m_selBandID;
 
   LRESULT OnContextMenu(UINT, WPARAM, LPARAM lParam, BOOL&) 
   {
@@ -688,7 +687,7 @@ public:
 	}
 
 	LRESULT OnChar(UINT, WPARAM, LPARAM, BOOL&);
-	LRESULT OnPreCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	LRESULT OnPreCommand(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 	{
 		bHandled = FALSE;
 		if((HIWORD(wParam) == 0 || HIWORD(wParam) == 1) && LOWORD(wParam) != ID_EDIT_INCSEARCH)
@@ -726,7 +725,7 @@ public:
 	LRESULT OnEditInsSymbol(WORD, WORD, HWND, BOOL&);
 
 	// added by SeNS
-	LRESULT OnSpellReplace(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+	LRESULT OnSpellReplace(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{ 
 		if (m_Speller)
 		{
@@ -780,10 +779,12 @@ public:
 	  return OnViewToolBar(wNotifyCode, m_selBandID, hWndCtl, bHandled);
   }
 
-  LRESULT OnToolCustomize(WORD /*wNotifyCode*/, WORD /*wID*/, HWND hWndCtl, BOOL& /*bHandled*/)
+  LRESULT OnToolCustomize(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
   {
-	  if (m_selBandID == ATL_IDW_BAND_FIRST+1) m_CmdToolbar.Customize(); else
-	  if (m_selBandID == ATL_IDW_BAND_FIRST+2) m_ScriptsToolbar.Customize();
+	  if (m_selBandID == ATL_IDW_BAND_FIRST+1)
+		  m_CmdToolbar.Customize();
+	  else if (m_selBandID == ATL_IDW_BAND_FIRST+2)
+		  m_ScriptsToolbar.Customize();
 
 	  return 0;
   }
@@ -802,13 +803,13 @@ public:
   LRESULT OnSelectCtl(WORD, WORD, HWND, BOOL&);
   LRESULT OnNextItem(WORD, WORD, HWND, BOOL&);
 
-  LRESULT OnEdSelChange(WORD, WORD, HWND hWndCtl, BOOL&) {
+  LRESULT OnEdSelChange(WORD, WORD, HWND /*hWndCtl*/, BOOL&) {
     m_sel_changed=true;
     StopIncSearch(true);
 	DisplayCharCode();
     return 0;
   }
-  LRESULT OnFastModeChange(WORD, WORD mode, HWND hWndCtl, BOOL&) 
+  LRESULT OnFastModeChange(WORD, WORD mode, HWND /*hWndCtl*/, BOOL&) 
   {
 	  UISetCheck(ID_VIEW_FASTMODE, mode);
 	  return 0;
@@ -854,7 +855,7 @@ public:
   void ChangeNBSP(MSHTML::IHTMLElementPtr elem);
   void RemoveLastUndo();
 
-  LRESULT OnEdChange(WORD, WORD, HWND hWnd, BOOL& b) {
+  LRESULT OnEdChange(WORD, WORD, HWND /*hWnd*/, BOOL& /*b*/) {
     StopIncSearch(true);
 	m_doc_changed=true;
     m_cb_updated=false;
@@ -873,7 +874,7 @@ public:
 	return 0;
   }
   LRESULT OnCbEdChange(WORD, WORD, HWND, BOOL&);
-  LRESULT OnCbSelEndOk(WORD code, WORD wID, HWND hWnd, BOOL&) {
+  LRESULT OnCbSelEndOk(WORD /*code*/, WORD wID, HWND hWnd, BOOL&) {
     PostMessage(WM_COMMAND,MAKELONG(wID,CBN_EDITCHANGE),(LPARAM)hWnd);
     return 0;
   }
@@ -898,21 +899,22 @@ public:
   LRESULT OnTreeUpdate(WORD, WORD, HWND, BOOL&);
   LRESULT OnTreeRestore(WORD, WORD, HWND, BOOL&);
 
-  LRESULT OnGoToFootnote(WORD wNotifyCode, WORD wID, HWND hWndCtl)
+  LRESULT OnGoToFootnote(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/)
   {
 	  if (!m_doc->m_body.GoToFootnote(false))
 		m_doc->m_body.GoToReference(false);
 	  return 0;
   }
 
-  LRESULT OnGoToReference(WORD wNotifyCode, WORD wID, HWND hWndCtl)
+  LRESULT OnGoToReference(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/)
   {
 	  m_doc->m_body.GoToReference(false);
 	  return 0;
   }
 
-  LRESULT OnSciModified(int id,NMHDR *hdr,BOOL& bHandled) {
-    if (hdr->hwndFrom!=m_source) {
+  LRESULT OnSciModified(int /*id*/,NMHDR *hdr,BOOL& bHandled) {
+    if (hdr->hwndFrom!=m_source)
+	{
       bHandled=FALSE;
       return 0;
     }
@@ -920,8 +922,10 @@ public:
     return 0;
   }
 
-  LRESULT OnSciMarginClick(int id,NMHDR *hdr,BOOL& bHandled) {
-    if (hdr->hwndFrom!=m_source) {
+  LRESULT OnSciMarginClick(int /*id*/,NMHDR *hdr,BOOL& bHandled)
+  {
+    if (hdr->hwndFrom!=m_source)
+	{
       bHandled=FALSE;
       return 0;
     }
@@ -929,21 +933,21 @@ public:
     return 0;
   }
 
-  LRESULT OnSciUpdateUI(int id,NMHDR *hdr,BOOL& bHandled) 
+  LRESULT OnSciUpdateUI(int /*id*/,NMHDR * /*hdr*/,BOOL& /*bHandled*/) 
   {
     if (m_current_view == SOURCE)
 		SciUpdateUI(false);
 	return 0;
   }
 
-  LRESULT OnGoToMatchTag(WORD wNotifyCode, WORD wID, HWND hWndCtl)
+  LRESULT OnGoToMatchTag(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/)
   {
     if (m_current_view == SOURCE)
 		SciUpdateUI(true);
 	return 0;
   }
 
-  LRESULT OnGoToWrongTag(WORD wNotifyCode, WORD wID, HWND hWndCtl)
+  LRESULT OnGoToWrongTag(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/)
   {
     if (m_current_view == SOURCE)
 		SciGotoWrongTag();
@@ -985,7 +989,7 @@ public:
 
 	// added by SeNS
     CSpeller *m_Speller;
-	LRESULT OnSpellCheck(WORD, WORD, HWND, BOOL& b)
+	LRESULT OnSpellCheck(WORD, WORD, HWND, BOOL& /*b*/)
 	{
 		if (m_Speller && m_current_view == BODY)
 			m_Speller->StartDocumentCheck(m_doc->m_body.m_mk_srv);

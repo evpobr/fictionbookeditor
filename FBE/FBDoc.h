@@ -146,8 +146,8 @@ private:
   // loading support
   void	  TransformXML(MSXML2::IXSLTemplatePtr tp,MSXML2::IXMLDOMDocument2Ptr doc,
 		       CFBEView& dest);
-  CString MyID() { CString ret; ret.Format(_T("%lu"),(unsigned long)this); return ret; }
-  CString MyURL(const wchar_t *part) { CString ret; ret.Format(_T("fbw-internal:%lu:%s"),(unsigned long)this,part); return ret; }
+  CString MyID() { CString ret; ret.Format(_T("%lu"),reinterpret_cast<unsigned long>(this)); return ret; }
+  CString MyURL(const wchar_t *part) { CString ret; ret.Format(_T("fbw-internal:%lu:%s"), reinterpret_cast<unsigned long>(this),part); return ret; }
 
   static CSimpleMap<Doc*,Doc*>	m_active_docs;  
 

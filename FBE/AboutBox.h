@@ -34,6 +34,9 @@ public:
 
 	LRESULT OnPaint(UINT, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
 		RECT rect;
 		GetClientRect(&rect);
 		HBITMAP bmp = GetBitmap(), oldbmp;
@@ -47,6 +50,7 @@ public:
 		dc.TransparentBlt(0, 0, rect.right, rect.bottom, memdc, 0, 0, rect.right, rect.bottom, m_transparentColor);
 
 		memdc.SelectBitmap(oldbmp);
+		bHandled = TRUE;
 		return 0;
 	}
 

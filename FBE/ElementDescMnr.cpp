@@ -288,7 +288,6 @@ bool CElementDescMnr::InitScriptEDs()
 	CElementDescriptor* ED;
 
 	WIN32_FIND_DATA fd;
-	int newid = 1;
 	CString fff = U::GetDocTReeScriptsDir();
 	HANDLE found = FindFirstFile(U::GetDocTReeScriptsDir() + L"\\*.js", &fd);
 	if(INVALID_HANDLE_VALUE != found)

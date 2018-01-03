@@ -626,7 +626,6 @@ public:
 
 			qsort(idxs.GetData(), idxs.GetSize(), sizeof(int), compare_indexes);
 
-			int count = m_words.GetSize();
 			for(int i = idxs.GetSize() - 1; i >= 0 ; --i)
 			{
 				int idx = idxs[i];
@@ -985,7 +984,7 @@ public:
 		return TRUE;
 	}
 
-	LRESULT OnSize(UINT, WPARAM wParam, LPARAM lParam, BOOL&)
+	LRESULT OnSize(UINT, WPARAM /*wParam*/, LPARAM lParam, BOOL&)
 	{
 		RECT newRect, newClientRect;
 		GetWindowRect(&newRect);
