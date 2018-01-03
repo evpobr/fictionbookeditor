@@ -1752,20 +1752,33 @@ bool Doc::GetFastMode()
 // TODO (by SeNS): should be fixed!
 int Doc::GetSelectedPos()
 {
-	const int delta = -100000;
-	MSHTML::IHTMLTxtRangePtr rng(m_body.Document()->selection->createRange());
-	if (!bool(rng))
-		return 0;
-
 	int len = 0;
-	while (1)
+	const long delta = -100000;
+	CComPtr<IDispatch> spDisp;
+	HRESULT hr = m_body.Document()->selection->raw_createRange(&spDisp);
+	if (SUCCEEDED(hr))
 	{
-		int moved = rng->move(L"character", delta);
-		len -= moved;
-		if (moved != delta)
+		CComPtr<MSHTML::IHTMLTxtRange> spRange;
+		hr = spDisp.QueryInterface(&spRange);
+		if (SUCCEEDED(hr))
 		{
-			//bstr_t text(rng->text);
-			return len - 21;
+			while (1)
+			{
+				long moved = 0;
+				hr = spRange->raw_move(CComBSTR(L"character"), delta, &moved);
+				if (SUCCEEDED(hr))
+				{
+					len -= moved;
+					if (moved != delta)
+					{
+						return len - 21;
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
 		}
 	}
 
