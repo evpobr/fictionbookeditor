@@ -147,7 +147,7 @@ private:
 
 	// loading support
 	void TransformXML(MSXML2::IXSLTemplatePtr tp, MSXML2::IXMLDOMDocument2Ptr doc, CFBEView& dest);
-	CString MyID()
+	LPCWSTR MyID() const
 	{
 		CString ret;
 		ret.Format(_T("%lu"), reinterpret_cast<unsigned long>(this));
