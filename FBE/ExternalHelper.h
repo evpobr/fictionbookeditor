@@ -9,12 +9,6 @@ extern CSettings _Settings;
 
 static int modalResultCode;
 
-extern "C"
-{
-	extern const char* build_timestamp;
-	extern const char* build_name;
-};
-
 class ExternalHelper :
   public CComObjectRoot,
   public IDispatchImpl<IExternalHelper, &IID_IExternalHelper>
@@ -263,7 +257,7 @@ public:
 
 	STDMETHOD(GetProgramVersion)(BSTR* ver)
 	{
-		CString version(build_name);
+		CString version(L"Fiction Book Editor");
 		*ver = version.AllocSysString();
 		return S_OK;
 	}

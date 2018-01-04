@@ -8,12 +8,6 @@ LRESULT CAboutDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
 
 	SetIcon(LoadIcon(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDR_MAINFRAME)));
 
-	CString stamp(build_timestamp);
-	::SetWindowText(GetDlgItem(IDC_BUILDSTAMP), stamp);
-
-	CString bname(build_name);
-	::SetWindowText(GetDlgItem(IDC_STATIC_AB_APPNAMEVER), bname);
-
 	m_Contributors = GetDlgItem(IDC_CONTRIBS);
 	HRSRC hres = ::FindResource(NULL, L"ABOUT_FILE", L"ABOUT_FILE");
 	HGLOBAL hbytes = ::LoadResource(NULL, hres);

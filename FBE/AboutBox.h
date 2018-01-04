@@ -3,12 +3,6 @@
 #include "resource.h"
 #include "GLLogo.h"
 
-extern "C"
-{
-	extern const char* build_timestamp;
-	extern const char* build_name;
-};
-
 class CAboutDlg : public CDialogImpl<CAboutDlg>
 {
 public:
