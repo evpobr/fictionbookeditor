@@ -91,9 +91,6 @@
     <ClCompile Include="extras\ColorButton.cpp">
       <Filter>extras</Filter>
     </ClCompile>
-    <ClCompile Include="buildstamp.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FBE_i.c">
       <Filter>Generated Files</Filter>
     </ClCompile>
@@ -210,12 +207,6 @@
       <Filter>extras</Filter>
     </ClInclude>
     <ClInclude Include="extras\ColorButton.h">
-      <Filter>extras</Filter>
-    </ClInclude>
-    <ClInclude Include="extras\http_download.h">
-      <Filter>extras</Filter>
-    </ClInclude>
-    <ClInclude Include="extras\MD5.h">
       <Filter>extras</Filter>
     </ClInclude>
     <ClInclude Include="extras\atlcrypt.h">

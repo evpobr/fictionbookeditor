@@ -350,12 +350,6 @@ link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENT
   <ItemGroup>
     <ClCompile Include="AboutBox.cpp" />
     <ClCompile Include="apputils.cpp" />
-    <ClCompile Include="buildstamp.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="DocumentTree.cpp" />
     <ClCompile Include="ElementDescMnr.cpp" />
     <ClCompile Include="ElementDescriptor.cpp" />
@@ -475,8 +469,6 @@ link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENT
     <ClInclude Include="extras\atlctrlsext.h" />
     <ClInclude Include="extras\atlgdix.h" />
     <ClInclude Include="extras\ColorButton.h" />
-    <ClInclude Include="extras\http_download.h" />
-    <ClInclude Include="extras\MD5.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="extras\atlcrypt.inl" />
