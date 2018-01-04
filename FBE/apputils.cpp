@@ -191,14 +191,12 @@ char	*ToUtf8(const CString& s,int& patlen) {
 // Regexp constructor
 IMatchCollection* IRegExp2::Execute (CString sourceString)
 {
-#define OVECCOUNT 300
-
-	pcre *re;
-	const char *error;
+	pcre2_code *re;
+	int error;
 	bool is_error = true;
 	int options;
-	int erroffset;
-	int ovector[OVECCOUNT];
+	PCRE2_SIZE erroffset;
+	PCRE2_SIZE *ovector;
 	int subject_length;
 	int rc, offset, char_offset;
 	IMatchCollection* matches;
@@ -207,14 +205,15 @@ IMatchCollection* IRegExp2::Execute (CString sourceString)
 
 	matches = new IMatchCollection();
 
-	options = IgnoreCase?PCRE_CASELESS:0;
-	options |= PCRE_UTF8;
+	options = IgnoreCase?PCRE2_CASELESS:0;
+	options |= PCRE2_UTF;
 
-	// convert pattern to UTF-8
-	CT2A pat(m_pattern, CP_UTF8);
+	CStringA strPatternUTF8 = CT2A(m_pattern, CP_UTF8);
+	PCRE2_SPTR pat = (PCRE2_SPTR)(LPCSTR)strPatternUTF8;
 
-	re = pcre_compile(
+	re = pcre2_compile(
 	pat,				  /* the pattern */
+	PCRE2_ZERO_TERMINATED,
 	options,              /* default options */
 	&error,               /* for error message */
 	&erroffset,           /* for error offset */
@@ -223,32 +222,38 @@ IMatchCollection* IRegExp2::Execute (CString sourceString)
 	if (re)
 	{
 		is_error = false;
-		CT2A subj(sourceString, CP_UTF8);
-		subject_length = static_cast<int>(strlen(subj));
+		CStringA strSubjectUTF8 = CT2A(sourceString, CP_UTF8);
+		PCRE2_SPTR subj =  (PCRE2_SPTR)(LPCSTR)strSubjectUTF8;
+		subject_length = strSubjectUTF8.GetLength();
 
 		offset = char_offset = 0;
 
-		do
+		pcre2_match_data *match_data;
+
+		match_data = pcre2_match_data_create_from_pattern(re, NULL);
+
+		if (match_data)
 		{
-			rc = pcre_exec(
+			rc = pcre2_match(
 			  re,                   /* the compiled pattern */
-			  NULL,                 /* no extra data - we didn't study the pattern */
 			  subj,					/* the subject string */
 			  subject_length,       /* the length of the subject */
-			  offset,                /* start at offset 0 in the subject */
+			  offset,               /* start at offset 0 in the subject */
 			  0,					/* default options */
-			  ovector,              /* output vector for substring information */
-			  OVECCOUNT);           /* number of elements in the output vector */
+			  match_data,           /* output vector for substring information */
+			  NULL);                /* number of elements in the output vector */
 
 			if (rc > 0)
 			{
+				ovector = pcre2_get_ovector_pointer(match_data);
+
 				// add match
-				char *substring_start = subj + ovector[0];
+				PCRE2_SPTR substring_start = subj + ovector[0];
 				int substring_length = ovector[1] - ovector[0];
 				if (substring_length < sizeof(dst))
 				{
 					// convert substring to Unicode
-					strncpy(dst, substring_start, substring_length);
+					strncpy(dst, (char *)substring_start, substring_length);
 					dst[substring_length] = '\0';
 					// calculate character position
 					while (offset < ovector[0])
@@ -268,7 +273,7 @@ IMatchCollection* IRegExp2::Execute (CString sourceString)
 						if (substring_length < sizeof(dst))
 						{
 							// convert substring to Unicode
-							strncpy(dst, substring_start, substring_length);
+							strncpy(dst, (char *)substring_start, substring_length);
 							dst[substring_length] = '\0';
 							item->AddSubMatch(CString(CA2T(dst, CP_UTF8)));
 						}
@@ -284,10 +289,10 @@ IMatchCollection* IRegExp2::Execute (CString sourceString)
 					}
 				}
 			}
-		} while (rc > 0);
-
-		pcre_free(re);     /* Release memory used for the compiled pattern */
+			pcre2_match_data_free(match_data);
+		}
 	}
+	pcre2_code_free(re);     /* Release memory used for the compiled pattern */
 
 	if (is_error)
 	{
@@ -295,7 +300,11 @@ IMatchCollection* IRegExp2::Execute (CString sourceString)
 		ICreateErrorInfoPtr cerrinf = 0;
 		if (::CreateErrorInfo(&cerrinf) == S_OK)
 		{
-			cerrinf->SetDescription(CString(error).AllocSysString());
+			PCRE2_UCHAR buffer[256];
+			pcre2_get_error_message(error, buffer, sizeof(buffer));
+			CString strError = CA2W((LPCSTR)buffer, CP_UTF8);
+
+			cerrinf->SetDescription(strError.AllocSysString());
 			cerrinf->SetSource(L"Perl Compatible Regular Expressions");
 			cerrinf->SetGUID(GUID_NULL);
 			IErrorInfoPtr ei = cerrinf;

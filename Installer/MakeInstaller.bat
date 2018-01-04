@@ -12,7 +12,7 @@ copy ..\Release\FBE.exe .\Input\
 copy ..\Release\en-US\FBE.exe.mui .\Input\en-US\
 copy ..\Release\ru-RU\FBE.exe.mui .\Input\ru-RU\
 copy ..\Release\uk-UA\FBE.exe.mui .\Input\uk-UA\
-copy ..\Release\pcre.dll .\Input\
+copy ..\Release\pcre2-8.dll .\Input\
 copy ..\Release\libhunspell.dll .\Input\
 copy ..\Release\FBSHell.dll .\Input\
 copy ..\Release\ExportHTML.dll .\Input\
