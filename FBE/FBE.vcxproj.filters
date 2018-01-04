@@ -203,9 +203,6 @@
     <ClInclude Include="extras\atlctrlsext.h">
       <Filter>extras</Filter>
     </ClInclude>
-    <ClInclude Include="extras\atlgdix.h">
-      <Filter>extras</Filter>
-    </ClInclude>
     <ClInclude Include="extras\ColorButton.h">
       <Filter>extras</Filter>
     </ClInclude>

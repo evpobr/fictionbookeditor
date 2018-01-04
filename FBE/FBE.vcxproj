@@ -467,7 +467,6 @@ link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENT
     <ClInclude Include="xmlMatchedTagsHighlighter.h" />
     <ClInclude Include="XMLSerializer\XMLSerializer.h" />
     <ClInclude Include="extras\atlctrlsext.h" />
-    <ClInclude Include="extras\atlgdix.h" />
     <ClInclude Include="extras\ColorButton.h" />
   </ItemGroup>
   <ItemGroup>
