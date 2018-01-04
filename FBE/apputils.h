@@ -10,7 +10,7 @@ extern CSimpleArray<CString> _ARGV;
 #include <atltypes.h>
 #include <atlstr.h>
 #include <atlcoll.h>
-#include "pcre.h"
+#include <pcre2.h>
 #endif
 
 #define UTF8_CHAR_LEN( byte ) (( 0xE5000000 >> (( byte >> 3 ) & 0x1e )) & 3 ) + 1
