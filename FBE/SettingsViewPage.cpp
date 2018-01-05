@@ -173,6 +173,8 @@ int CSettingsViewPage::OnApply()
 	case 0: new_lang = LANG_ENGLISH; break;
 	case 1: new_lang = LANG_RUSSIAN; break;
 	case 2: new_lang = LANG_UKRAINIAN; break;
+	default:
+		new_lang = LANG_ENGLISH; break;
 	}
 
 	// если пользователь сменил язык интерфейса....

@@ -1927,7 +1927,7 @@ public:
     m_source.SetTargetEnd(end);
 
     // convert search pattern and replacement to utf8
-    int	  patlen, num_pat_nbsp, num_rep_nbsp;
+    int	  patlen, num_pat_nbsp = 0, num_rep_nbsp = 0;
 	// added by SeNS
 	if (_Settings.GetNBSPChar().Compare(L"\u00A0") != 0)
 		num_pat_nbsp = m_view->m_fo.pattern.Replace( L"\u00A0", _Settings.GetNBSPChar());

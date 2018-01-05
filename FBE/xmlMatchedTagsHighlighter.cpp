@@ -262,9 +262,6 @@ bool XmlMatchedTagsHighlighter::getXmlMatchedTagsPos(XmlMatchedTagsPos & tagsPos
 	
 	// if the tag is found in non html zone (include comment zone), then quit
 //	const NppGUI & nppGUI = (NppParameters::getInstance())->getNppGUI();
-	int idStyle = _pEditView->execute(SCI_GETSTYLEAT, caretPos);
-//	if (!nppGUI._enableHiliteNonHTMLZone && (idStyle >= SCE_HJ_START || idStyle == SCE_H_COMMENT))
-//		return false;
 
 	int docLen = _pEditView->getCurrentDocLen();
 

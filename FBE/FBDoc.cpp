@@ -223,7 +223,8 @@ bool Doc::LoadFromHTML(HWND hWndParent, const CString & filename)
 	GetModuleFileName(0, path, MAX_PATH);
 	PathRemoveFileSpec(path);
 	wcscat(path, L"\\main.html");
-	m_body.Create(hWndParent, CRect(0, 0, 500, 500), _T("{8856F961-340A-11D0-A96B-00C04FD705A2}"));
+	CRect rcBody(0, 0, 500, 500);
+	m_body.Create(hWndParent, &rcBody, _T("{8856F961-340A-11D0-A96B-00C04FD705A2}"));
 	hr = m_body.Browser()->Navigate(path);
 	MSG msg;
 	while (!m_body.Loaded() && ::GetMessage(&msg, NULL, 0, 0))
@@ -1010,9 +1011,9 @@ bool Doc::SaveToFile(const CString& filename, bool fValidateOnly, int *errline, 
 			}
 			else
 			{
-				wchar_t buf[MAX_LOAD_STRING + 1];
-				::LoadString(_Module.GetResourceInstance(), IDS_SB_SAVED_NO_ERR, buf, MAX_LOAD_STRING);
-				::SendMessage(m_frame, AU::WM_SETSTATUSTEXT, 0, (LPARAM)buf);
+				CString strStatusText;
+				strStatusText.LoadString(IDS_SB_SAVED_NO_ERR);
+				::SendMessage(m_frame, AU::WM_SETSTATUSTEXT, 0, reinterpret_cast<LPARAM>(static_cast<LPCTSTR>(buf)));
 				::MessageBeep(MB_OK);
 			}
 		}
@@ -1691,16 +1692,16 @@ bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2Ptr* xml)
 MSHTML::IHTMLDOMNodePtr Doc::MoveNode(MSHTML::IHTMLDOMNodePtr from, MSHTML::IHTMLDOMNodePtr to, MSHTML::IHTMLDOMNodePtr insertBefore)
 {
 	VARIANT disp;
-	MSHTML::IHTMLElementPtr elem = (MSHTML::IHTMLElementPtr)to;
-	bstr_t text = elem->innerHTML;
+	MSHTML::IHTMLElementPtr to_elem = (MSHTML::IHTMLElementPtr)to;
+	bstr_t text = to_elem->innerHTML;
 
 	//  title
 	if ((bool)insertBefore)
 	{
 		while (1)
 		{
-			MSHTML::IHTMLElementPtr elem = (MSHTML::IHTMLElementPtr)insertBefore;
-			_bstr_t class_name(elem->className);
+			MSHTML::IHTMLElementPtr before_elem = (MSHTML::IHTMLElementPtr)insertBefore;
+			_bstr_t class_name(before_elem->className);
 			if ((0 == U::scmp(class_name, L"title")) ||
 			    (0 == U::scmp(class_name, L"epigraph")) ||
 			    (0 == U::scmp(class_name, L"annotation")) ||

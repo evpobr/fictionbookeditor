@@ -1,10 +1,11 @@
 #pragma once
+
 #include "stdafx.h"
 #include "resource.h"
 #include <gl\gl.h>
 #include <gl\glu.h>
 
-enum TEXTURES_TYPES	{ CENTER, ORANGE, GREEN, DOC, XML, OTHER, HTML, PRC, TEXT};
+enum TEXTURES_TYPES { CENTER, ORANGE, GREEN, DOC, XML, OTHER, HTML, PRC, TEXT };
 
 class CGLLogoView : public CWindowImpl <CGLLogoView, CStatic>
 {
@@ -21,77 +22,80 @@ public:
 
 	CGLLogoView()
 	{
-		hRC = NULL;
+		m_hRC = NULL;
 
 		// initialize variables
-		z=-8.0f;			// Scene depth 
-		y=4.0f;				// Height 
-		dr=0.01f;			// Rotation increment
-		ds=0.001f;			// Rotation auto decrement
-		alpha=0.0f;			// Alpha value for info panel
-		alpha_inc=0.01f;	// Alpha increment
-		glColorOp=GL_XOR;
+		m_z = -8.0f;          // Scene depth 
+		m_y = 4.0f;           // Height 
+		m_dr = 0.01f;         // Rotation increment
+		m_ds = 0.001f;        // Rotation auto decrement
+		m_alpha = 0.0f;       // Alpha value for info panel
+		m_alpha_inc = 0.01f;  // Alpha increment
+		m_glColorOp = GL_XOR;
 
-		xrot = yrot = zrot = 0.0f;
+		m_xrot = m_yrot = m_zrot = 0.0f;
 
-		xspeed = 0.5f;
-		yspeed = 0.3f;
-		zspeed = 0.2f;
-		ds=0.0f;
+		m_xspeed = 0.5f;
+		m_yspeed = 0.3f;
+		m_zspeed = 0.2f;
+		m_ds = 0.0f;
 
-		bDrawInfo=false;
-		bShadow=true;		// Draw shadow
-		bReflection=true;	// Draw reflection
-		bFloor=true;		// Draw floor
-		bWireFrame=false;	// Draw mesh
-		bCrystallize=false;
+		m_bDrawInfo = false;
+		m_bShadow = true;     // Draw shadow
+		m_bReflection = true; // Draw reflection
+		m_bFloor = true;      // Draw floor
+		m_bWireFrame = false; // Draw mesh
+		m_bCrystallize = false;
 
 		m_Timer = 0;
 	}
 
-	~CGLLogoView() 
-	{ 
+	~CGLLogoView()
+	{
 		KillGLWindow();
 	}
 
-	BOOL SubclassWindow (HWND hWnd);
-	BOOL OpenGLError() { return !(hDC && hRC); }
+	BOOL SubclassWindow(HWND hWnd);
+	BOOL OpenGLError()
+	{
+		return !(m_hDC && m_hRC);
+	}
 
 private:
-	HDC		hDC;
-	HGLRC	hRC;
+	HDC m_hDC;
+	HGLRC m_hRC;
 
 	UINT_PTR m_Timer;
 
-	GLYPHMETRICSFLOAT gmf[96];
-	GLuint	font_base;
-	GLuint	logo;
-	GLUquadricObj   *quadric;
+	GLYPHMETRICSFLOAT m_gmf[96];
+	GLuint m_font_base;
+	GLuint m_logo;
+	GLUquadricObj *m_quadric;
 
-	GLfloat	xrot;				// X rotation
-	GLfloat	yrot;				// Y rotation
-	GLfloat	zrot;				// Z rotation
-	GLfloat xspeed;				// X rotation speed
-	GLfloat yspeed;				// Y rotation speed
-	GLfloat zspeed;				// Z rotation speed
-	GLfloat	z;					// Scene depth 
-	GLfloat	y;					// Height 
-	GLfloat	dr;					// Rotation increment
-	GLfloat	ds;					// Rotation auto decrement
-	GLfloat	alpha;				// Alpha value for info panel
-	GLfloat	alpha_inc;			// Alpha increment
-	GLint	glColorOp;
+	GLfloat m_xrot;       // X rotation
+	GLfloat m_yrot;       // Y rotation
+	GLfloat m_zrot;       // Z rotation
+	GLfloat m_xspeed;     // X rotation speed
+	GLfloat m_yspeed;     // Y rotation speed
+	GLfloat m_zspeed;     // Z rotation speed
+	GLfloat m_z;          // Scene depth 
+	GLfloat m_y;          // Height 
+	GLfloat m_dr;         // Rotation increment
+	GLfloat m_ds;         // Rotation auto decrement
+	GLfloat m_alpha;      // Alpha value for info panel
+	GLfloat m_alpha_inc;  // Alpha increment
+	GLint m_glColorOp;
 
-	bool	bDrawInfo;
-	bool	bShadow;			// Draw shadow
-	bool	bReflection;		// Draw reflection
-	bool	bFloor;				// Draw floor
-	bool	bWireFrame;			// Draw mesh
-	bool	bCrystallize;		// Special effect
-	POINT	lastPos;			// Mouse position
-	GLuint	texture[9];			// Storage for textures
+	bool m_bDrawInfo;
+	bool m_bShadow;         // Draw shadow
+	bool m_bReflection;     // Draw reflection
+	bool m_bFloor;          // Draw floor
+	bool m_bWireFrame;      // Draw mesh
+	bool m_bCrystallize;    // Special effect
+	POINT m_lastPos;        // Mouse position
+	GLuint m_texture[9];    // Storage for textures
 
-	GLfloat fShadowMatrix[16];
+	GLfloat m_fShadowMatrix[16];
 
 	LRESULT OnKeyDown(UINT, WPARAM wParam, LPARAM lParam, BOOL&);
 	LRESULT OnSize(UINT, WPARAM, LPARAM lParam, BOOL&);
@@ -104,7 +108,7 @@ private:
 	bool CreateGLWindow();
 	bool KillGLWindow();
 	bool InitGL();
-	void SetShadowMatrix(float fDestMat[16],float fLightPos[4],float fPlane[4]);
+	void SetShadowMatrix(float fDestMat[16], float fLightPos[4], float fPlane[4]);
 	void CreateGLFont();
 	void Print(const char *fmt, ...);
 	bool LoadTextures();

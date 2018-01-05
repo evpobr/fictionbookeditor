@@ -731,7 +731,7 @@ LRESULT CTreeView::OnRight(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/,
 	HTREEITEM from = GetSelectedItem();
 	HTREEITEM item = GetSelectedItem();// = TreeView_GetNextSibling(*this, m_move_from);
 	HTREEITEM prevItem = 0;
-	while(item = TreeView_GetNextSibling(*this, item))
+	while((item = TreeView_GetNextSibling(*this, item)) != nullptr)
 	{
 		prevItem = item;
 	}
@@ -740,7 +740,7 @@ LRESULT CTreeView::OnRight(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/,
 
 	m_move_to = GetSelectedItem();
 	m_insert_type = CTreeView::child;
-	while(item = TreeView_GetPrevSibling(*this, item))
+	while((item = TreeView_GetPrevSibling(*this, item)) != nullptr)
 	{
 		if(prevItem == from)
 			break;

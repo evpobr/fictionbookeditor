@@ -197,8 +197,9 @@ IMatchCollection* IRegExp2::Execute (CString sourceString)
 	int options;
 	PCRE2_SIZE erroffset;
 	PCRE2_SIZE *ovector;
+	PCRE2_SIZE offset;
 	int subject_length;
-	int rc, offset, char_offset;
+	int rc, char_offset;
 	IMatchCollection* matches;
 	// fix for issue #145
 	char dst[0xFFFF];

@@ -643,7 +643,7 @@ public:
 	ZeroMemory((void*)&rbi, sizeof(rbi));
 	rbi.cbSize = sizeof(REBARBANDINFO);
 	rbi.fMask = RBBIM_ID;
-	m_selBandID = -1;
+	m_selBandID = 0;
 	for (unsigned int i=0; i< m_rebar.GetBandCount(); i++)
 	{
 		m_rebar.GetRect(i, &rect);

@@ -15,7 +15,7 @@ DEFINE_GUID(CLSID_JScript, 0xf414c260, 0x6ac0, 0x11cf, 0xb6, 0xd1, 0x00,
    0xaa, 0x00, 0xbb, 0xbb, 0x58);
 
 static void	strlcatW(wchar_t *d, const wchar_t *s, int dl) {
-  size_t l;
+  int l;
 
   if (dl<=0)
     return;

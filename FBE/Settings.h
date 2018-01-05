@@ -109,7 +109,7 @@ public:
 
 	CHotkey() {}
 
-	CHotkey(CString reg_name, int IDS_CMD_NAME, WORD fVirt, WORD cmd, WORD key, CString descr = L"")
+	CHotkey(CString reg_name, int IDS_CMD_NAME, BYTE fVirt, WORD cmd, WORD key, CString descr = L"")
 	{
 		m_reg_name = reg_name;
 		m_name.LoadString(IDS_CMD_NAME);
@@ -123,7 +123,7 @@ public:
 		m_desc = descr;
 	}
 
-	CHotkey(CString reg_name, int IDS_CMD_NAME, CString uchar,  WORD fVirt, WORD cmd, WORD key, CString descr = L"")
+	CHotkey(CString reg_name, int IDS_CMD_NAME, CString uchar, BYTE fVirt, WORD cmd, WORD key, CString descr = L"")
 	{
 		m_reg_name = reg_name;
 		m_name.LoadString(IDS_CMD_NAME);
@@ -138,7 +138,7 @@ public:
 		m_desc = descr;
 	}
 
-	CHotkey(CString reg_name, CString name, wchar_t symbol,  WORD fVirt, WORD cmd, WORD key, CString descr = L"")
+	CHotkey(CString reg_name, CString name, wchar_t symbol, BYTE fVirt, WORD cmd, WORD key, CString descr = L"")
 	{
 		m_reg_name = reg_name;
 		m_name = name;
@@ -154,7 +154,7 @@ public:
 		m_desc = descr;
 	}
 
-	CHotkey(CString reg_name, CString cmd_name, WORD fVirt, WORD cmd, WORD key, CString descr = L"")
+	CHotkey(CString reg_name, CString cmd_name, BYTE fVirt, WORD cmd, WORD key, CString descr = L"")
 	{
 		m_reg_name = reg_name;
 		m_name = cmd_name;
@@ -228,8 +228,8 @@ public:
 
 			if(n == 2)
 			{
-				m_accel.fVirt = StrToInt(tokens[0]);
-				m_accel.key = StrToInt(tokens[1]);
+				m_accel.fVirt = static_cast<BYTE>(StrToInt(tokens[0]));
+				m_accel.key = static_cast<BYTE>(StrToInt(tokens[1]));
 			}
 
 			delete[] tokens;

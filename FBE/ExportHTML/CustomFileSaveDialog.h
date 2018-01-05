@@ -31,7 +31,7 @@ public:
 	CHAIN_MSG_MAP(CFileDialogImpl<CCustomSaveDialog>)
 	END_MSG_MAP()
 
-	LRESULT OnInitDialog(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	LRESULT OnInitDialog(HWND hWnd, UINT /*msg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) {
 		// save window handles
 		m_hDlg = hWnd;
 
@@ -46,7 +46,7 @@ public:
 		return TRUE;
 	}
 
-	LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+	LRESULT OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 		// make combobox the same size as std controls
 		RECT    rc_std, rc_my;
 		HWND    hCB = ::GetDlgItem(m_hDlg, IDC_TEMPLATE);
@@ -79,7 +79,7 @@ public:
 		return 0;
 	}
 
-	BOOL OnFileOK(LPOFNOTIFY on) {
+	BOOL OnFileOK(LPOFNOTIFY /*on*/) {
 		m_template = U::GetWindowText(::GetDlgItem(m_hDlg, IDC_TEMPLATE));
 		_Settings.SetStringValue(_T("Template"), m_template);
 		m_includedesc = ::SendDlgItemMessage(m_hDlg, IDC_DOCINFO, BM_GETCHECK, 0, 0) == BST_CHECKED;

@@ -246,6 +246,7 @@ LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT /*uMsg*/, WPARAM wParam, LPARAM 
 {
 	CString wndText;
 	m_editHotkey.GetWindowText(wndText);
+	WORD vkey = static_cast<WORD>(wParam);
 
 	switch(m_count)
 	{
@@ -256,20 +257,20 @@ LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT /*uMsg*/, WPARAM wParam, LPARAM 
 				m_accel.fVirt = FVIRTKEY;
 				m_accel.cmd = _Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_accel.cmd;
 
-				if(wParam == VK_CONTROL || wParam == U::StringToKeycode(L"Alt") || wParam == VK_SHIFT)
+				if(vkey == VK_CONTROL || vkey == U::StringToKeycode(L"Alt") || vkey == VK_SHIFT)
 				{
-					wndText = U::KeycodeToString(wParam);
+					wndText = U::KeycodeToString(vkey);
 					m_editHotkey.SetWindowText(wndText);
 
-					m_accel.fVirt |= U::VKToFVirt(wParam);
+					m_accel.fVirt |= U::VKToFVirt(vkey);
 					m_count++;
 				}
 				else if (wParam >= VK_F1 && wParam <= VK_F12)
 				{
-					wndText += U::KeycodeToString(wParam);
+					wndText += U::KeycodeToString(vkey);
 					m_editHotkey.SetWindowText(wndText);
 
-					m_accel.key = wParam;
+					m_accel.key = vkey;
 					m_count = 0;
 					Test();
 					::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);
@@ -286,16 +287,16 @@ LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT /*uMsg*/, WPARAM wParam, LPARAM 
 			}
 		case 1:
 		{
-			if(wParam == VK_CONTROL || wParam == U::StringToKeycode(L"Alt") || wParam == VK_SHIFT)
+			if(vkey == VK_CONTROL || vkey == U::StringToKeycode(L"Alt") || vkey == VK_SHIFT)
 			{
 				wndText += L" + ";
-				wndText += U::KeycodeToString(wParam);
+				wndText += U::KeycodeToString(vkey);
 				m_editHotkey.SetWindowText(wndText);
 
-				m_accel.fVirt |= U::VKToFVirt(wParam);
+				m_accel.fVirt |= U::VKToFVirt(vkey);
 				m_count++;
 			}
-			else if(U::KeycodeToString(wParam) != L"")
+			else if(U::KeycodeToString(vkey) != L"")
 			{
 /*				if(m_accel.fVirt & FSHIFT)
 				{
@@ -307,10 +308,10 @@ LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT /*uMsg*/, WPARAM wParam, LPARAM 
 				else */
 				{ 
 					wndText += L" + ";
-					wndText += U::KeycodeToString(wParam);
+					wndText += U::KeycodeToString(vkey);
 					m_editHotkey.SetWindowText(wndText);
 
-					m_accel.key = wParam;
+					m_accel.key = vkey;
 					m_count = 0;
 					Test();
 					::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);
@@ -321,22 +322,22 @@ LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT /*uMsg*/, WPARAM wParam, LPARAM 
 		}
 		case 2:
 		{
-			if(wParam == VK_CONTROL || wParam == U::StringToKeycode(L"Alt") || wParam == VK_SHIFT)
+			if(vkey == VK_CONTROL || vkey == U::StringToKeycode(L"Alt") || vkey == VK_SHIFT)
 			{
 				wndText += L" + ";
-				wndText += U::KeycodeToString(wParam);
+				wndText += U::KeycodeToString(vkey);
 				m_editHotkey.SetWindowText(wndText);
 
-				m_accel.fVirt |= U::VKToFVirt(wParam);
+				m_accel.fVirt |= U::VKToFVirt(vkey);
 				m_count++;
 			}
-			else if(U::KeycodeToString(wParam) != L"")
+			else if(U::KeycodeToString(vkey) != L"")
 			{
 				wndText += L" + ";
-				wndText += U::KeycodeToString(wParam);
+				wndText += U::KeycodeToString(vkey);
 				m_editHotkey.SetWindowText(wndText);
 
-				m_accel.key = wParam;
+				m_accel.key = vkey;
 				m_count = 0;
 				Test();
 				::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);
@@ -346,16 +347,16 @@ LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT /*uMsg*/, WPARAM wParam, LPARAM 
 		}
 		case 3:
 		{
-			if(U::KeycodeToString(wParam) != L""
-				&& wParam != VK_CONTROL
-				&& wParam != U::StringToKeycode(L"Alt")
-				&& wParam != VK_SHIFT)
+			if(U::KeycodeToString(vkey) != L""
+				&& vkey != VK_CONTROL
+				&& vkey != U::StringToKeycode(L"Alt")
+				&& vkey != VK_SHIFT)
 			{
 				wndText += L" + ";
-				wndText += U::KeycodeToString(wParam);
+				wndText += U::KeycodeToString(vkey);
 				m_editHotkey.SetWindowText(wndText);
 
-				m_accel.key = wParam;
+				m_accel.key = vkey;
 				m_count = 0;
 				Test();
 				::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);

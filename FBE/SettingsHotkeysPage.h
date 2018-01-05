@@ -73,8 +73,8 @@ public:
 	int		m_count;
 	ACCEL	m_accel;
 	CString	m_wrongHkMsg;
-	int		m_selGr;
-	int		m_selHk;
+	size_t m_selGr;
+	size_t m_selHk;
 
 	CSettingsHotkeysPage();
 

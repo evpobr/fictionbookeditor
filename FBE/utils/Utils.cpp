@@ -662,7 +662,7 @@ bool GetImageDimsByPath(const wchar_t* pszFileName, int* nWidth, int* nHeight)
 	return result;
 }
 
-bool GetImageDimsByData(SAFEARRAY* data, ULONG length, int* nWidth, int* nHeight)
+bool GetImageDimsByData(SAFEARRAY* data, ULONG /*length*/, int* nWidth, int* nHeight)
 {
 	CImage image;
 	bool result = false;
@@ -781,7 +781,6 @@ void InitSettingsHotkeyGroups()
 		
 		while(currentNode)
 		{
-			BSTR name = currentNode->nodeName;
 			if(currentNode == root)
 			{
 				return true;
@@ -813,7 +812,7 @@ void InitSettingsHotkeyGroups()
 		MSXML2::IXMLDOMNodePtr currentNode = root;
 		
 		size_t size = m_path.size();
-		for(size_t i = 0; i < m_path.size(); ++i)
+		for(size_t i = 0; i < size; ++i)
 		{
 			currentNode = currentNode->firstChild;
 			if(!(bool)currentNode)
@@ -830,8 +829,8 @@ void InitSettingsHotkeyGroups()
 				return 0;
 			}			
 
-			size_t numb = m_path[i];
-			for(size_t j = 0; j < m_path[i]; ++j)
+			int numb = m_path[i];
+			for(int j = 0; j < numb; ++j)
 			{
 				currentNode = currentNode->nextSibling;
 				if(U::scmp(currentNode->nodeName, L"#text") == 0)
@@ -1439,9 +1438,6 @@ void InitSettingsHotkeyGroups()
 	MSHTML::IHTMLElementPtr	FindTitleNode(MSHTML::IHTMLDOMNodePtr elem) 
 	{
 		MSHTML::IHTMLDOMNodePtr node(elem->firstChild);
-
-
-		_bstr_t   cls(MSHTML::IHTMLElementPtr(elem)->className);
 
 		if ((bool)node && node->nodeType==1 && U::scmp(node->nodeName,L"DIV")==0) {
 			_bstr_t   cls(MSHTML::IHTMLElementPtr(node)->className);

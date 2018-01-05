@@ -2800,7 +2800,7 @@ public:
 		::SendMessage( m_hWnd, SCI_LOADLEXERLIBRARY, 0, ( LPARAM )path );
 	}
 
-	void Colourise( unsigned int start, unsigned int end )
+	void Colourise( int start, int end )
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 		::SendMessage( m_hWnd, SCI_COLOURISE, start, end );
