@@ -82,9 +82,9 @@ public:
 
 	CString m_sBadWord;
 	CString m_sReplacement;
-	CStrings* m_strSuggestions;
+	CStrings m_strSuggestions;
 
-	CSpellDialog(CSpeller* parent): m_Speller(parent), m_strSuggestions(NULL) {}
+	CSpellDialog(CSpeller* parent): m_Speller(parent) {}
 
 	BEGIN_MSG_MAP(CSpellDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
@@ -208,7 +208,7 @@ public:
 	void CheckCurrentPage();
 	// main function
 	SPELL_RESULT SpellCheck(CString word);
-	CStrings* GetSuggestions(CString word);
+	CStrings GetSuggestions(CString word);
 	void MarkElement(MSHTML::IHTMLElementPtr elem, long uniqID, CString word, int pos);
 	void ClearMarks(int elemID);
 	void ClearAllMarks();
@@ -276,7 +276,7 @@ protected:
 	CStrings m_ChangeWords;
 	CStrings m_ChangeWordsTo;
 	CStrings m_CustomDict;
-	CStrings* m_menuSuggestions;
+	CStrings m_menuSuggestions;
 	std::set<long> m_uniqIDs;
 	HIGHLIGHTS m_ElementHighlights;
 

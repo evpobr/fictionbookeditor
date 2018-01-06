@@ -43,16 +43,15 @@ LRESULT CSpellDialog::OnActivate(UINT, WPARAM wParam, LPARAM, BOOL&)
 
 LRESULT CSpellDialog::UpdateData()
 {
-	m_BadWord.SetWindowText (m_sBadWord);
+	m_BadWord.SetWindowText(m_sBadWord);
 	m_Suggestions.ResetContent();
-	if (m_strSuggestions)
-		for (int i=0; i<m_strSuggestions->GetSize(); i++)
-		{
-			m_Suggestions.AddString((*m_strSuggestions)[i]);
-			if (!i) m_Replacement.SetWindowText ((*m_strSuggestions)[i]);
-		}
+	for (int i = 0; i < m_strSuggestions.GetSize(); i++)
+	{
+		m_Suggestions.AddString(m_strSuggestions[i]);
+		if (!i) m_Replacement.SetWindowText(m_strSuggestions[i]);
+	}
 
-	if(m_Speller->GetUndoState())
+	if (m_Speller->GetUndoState())
 		GetDlgItem(IDC_SPELL_UNDO).EnableWindow(TRUE);
 	else
 		GetDlgItem(IDC_SPELL_UNDO).EnableWindow(FALSE);
@@ -341,13 +340,13 @@ void CSpeller::AppendSpellMenu (HMENU menu)
 	if (SpellCheck(word) != SPELL_OK)
 	{
 		m_menuSuggestions = GetSuggestions(word);
-		int numSuggestions = m_menuSuggestions->GetSize();
+		int numSuggestions = m_menuSuggestions.GetSize();
 		// limit up to 8 suggestion
 		if (numSuggestions > 8) numSuggestions = 8;
 
 		::AppendMenu(menu, MF_SEPARATOR, 0, NULL);
 		for (int i=0; i<numSuggestions; i++)
-			::AppendMenu(menu, MF_STRING, IDC_SPELL_REPLACE+i, (*m_menuSuggestions)[i]);
+			::AppendMenu(menu, MF_STRING, IDC_SPELL_REPLACE+i, m_menuSuggestions[i]);
 		if (numSuggestions > 0)
 			::AppendMenu(menu, MF_SEPARATOR, 0, NULL);
 
@@ -370,7 +369,7 @@ void CSpeller::Replace(int nIndex)
 	if (addSpace.Right(1) == L" ") addSpace.SetString(L" "); else addSpace.SetString(L"");
 	try
 	{ 
-		CString replace = (*m_menuSuggestions)[nIndex];
+		CString replace = m_menuSuggestions[nIndex];
 		if (m_numAphChanged) replace.Replace(L"'", L"’");
 		 replace = replace + addSpace; 
 		_bstr_t b = replace.AllocSysString();
@@ -464,7 +463,7 @@ Hunhandle* CSpeller::GetDictionary(CString word)
 //
 // Return suggestions for misspell word
 //
-CStrings* CSpeller::GetSuggestions(CString word)
+CStrings CSpeller::GetSuggestions(CString word)
 {
 	// remove all soft hyphens
 	word.Replace(L"\u00AD", L"");
@@ -474,14 +473,13 @@ CStrings* CSpeller::GetSuggestions(CString word)
 	CW2A str (word, CP_UTF8);
 	char **list;
 	int listLength = Hunspell_suggest(currDict, &list, str);
-	CStrings* suggestions;
-	suggestions = new CStrings();
+	CStrings suggestions;
 
 	char** p = list;
 	for (int i=0; i<listLength; i++)
 	{
 		CString s( CA2CT (*p, CP_UTF8));
-		suggestions->Add(s);
+		suggestions.Add(s);
 		p++;
 	}
 	Hunspell_free_list(currDict, &list, listLength);
@@ -907,8 +905,7 @@ void CSpeller::ContinueDocumentCheck()
 			case SPELL_MISSPELL:
 			{
 				m_spell_dlg->m_sBadWord = word;
-				if (m_spell_dlg->m_strSuggestions)
-					delete m_spell_dlg->m_strSuggestions;
+				m_spell_dlg->m_strSuggestions.RemoveAll();
 				m_spell_dlg->m_strSuggestions = GetSuggestions(word);
 				m_spell_dlg->UpdateData();
 				break;
