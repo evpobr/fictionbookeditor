@@ -176,11 +176,19 @@ Hunhandle* CSpeller::LoadDictionary(CString dictPath, CString dictName)
 	USES_CONVERSION;
 	Hunhandle* dict = NULL;
 
-	if ( ATLPath::FileExists(dictPath+dictName+L".aff") && ATLPath::FileExists(dictPath+dictName+L".dic"))
+	CPath pathAff;	
+	pathAff.Combine(dictPath, dictName);
+	pathAff.AddExtension(L".aff");
+	CPath pathDic;
+	pathDic.Combine(dictPath, dictName);
+	pathDic.AddExtension(L".dic");
+
+
+	if ( ATLPath::FileExists(pathAff) && ATLPath::FileExists(pathDic))
 	{
 		// create dictionary from file
-		CW2A affpath(dictPath + dictName + L".aff", CP_UTF8);
-		CW2A dpath(dictPath + dictName + L".dic", CP_UTF8);
+		CW2A affpath(pathAff, CP_UTF8);
+		CW2A dpath(pathDic, CP_UTF8);
 		dict = Hunspell_create(affpath, dpath);
 	}
 	return dict;
