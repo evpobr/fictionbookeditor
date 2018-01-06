@@ -2,10 +2,8 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_MAINFRM_H__38D356D4_C28B_47B0_A7AD_8C6B70F7F283__INCLUDED_)
-#define AFX_MAINFRM_H__38D356D4_C28B_47B0_A7AD_8C6B70F7F283__INCLUDED_
+#pragma once
 
-#include "stdafx.h"
 #include <dlgs.h>
 #include "resource.h"
 #include "res1.h"
@@ -22,122 +20,13 @@
 #include "ContainerWnd.h"
 #include <Scintilla.h>
 #include <SciLexer.h>
-#include "FBE.h"
-#include "Words.h"
 #include "SearchReplace.h"
 #include "DocumentTree.h"
 #include "Speller.h"
-
-#if _MSC_VER >= 1000
-#pragma once
-#pragma warning(disable : 4996)
-#endif // _MSC_VER >= 1000
+#include "fbectrls.h"
 
 #define MSGFLT_ADD 1
 #define MSGFLT_REMOVE 2
-
-typedef CWinTraits<WS_CHILD|WS_VISIBLE|ES_AUTOHSCROLL|ES_LEFT,WS_EX_CLIENTEDGE> CCustomEditWinTraits;
-
-class CCustomEdit : public CWindowImpl<CCustomEdit,CEdit,CCustomEditWinTraits>, public CEditCommands<CCustomEdit>
-{
-public:
-	DECLARE_WND_SUPERCLASS(NULL, CEdit::GetWndClassName())
-
-	CCustomEdit() { }
-
-	BEGIN_MSG_MAP(CCustomEdit)
-		MESSAGE_HANDLER(WM_CHAR, OnChar)
-		CHAIN_MSG_MAP_ALT(CEditCommands<CCustomEdit>, 1)
-	END_MSG_MAP()
-
-	LRESULT OnChar(UINT, WPARAM wParam, LPARAM, BOOL& bHandled)
-	{
-		if(wParam == VK_RETURN)
-			::PostMessage(::GetParent(GetParent()), WM_COMMAND,MAKELONG(GetDlgCtrlID(), IDN_ED_RETURN), (LPARAM)m_hWnd);
-
-		bHandled = FALSE;
-		return 0;
-	}
-};
-
-class CCustomStatic : public CWindowImpl<CCustomStatic,CStatic/*,CCustomStaticWinTraits*/>
-{
-private:
-	HFONT m_font;
-	bool m_enabled;
-public:
-	CCustomStatic():m_font(0), m_enabled(0){}
-
-	void DoPaint(CDCHandle dc)
-    {		
-      RECT rc;
-      GetClientRect(&rc);
-	  /*HBRUSH hBr = GetSysColorBrush(COLOR_3DFACE);
-	  HPEN pen = CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DFACE));
-	  HBRUSH oldBrush = (HBRUSH)SelectObject(dc, hBr);
-	  HPEN oldPen = (HPEN)SelectObject(dc, pen);
-	  Rectangle(dc, rc.left, rc.top, rc.right, rc.bottom);
-	  SelectObject(dc, oldBrush);
-	  SelectObject(dc, oldPen);*/
-	  HFONT oldFont = (HFONT)SelectObject(dc, m_font);
-
-      UINT iFlags = DT_SINGLELINE | DT_CENTER | DT_VCENTER;      
-
-      int len = GetWindowTextLength();
-      wchar_t* text = new wchar_t[len+1];
-      GetWindowText(text, len+1);
-
-      dc.SetBkMode(TRANSPARENT);
-	  if(m_enabled)
-	  {
-		  dc.SetTextColor(GetSysColor(COLOR_BTNTEXT));
-	  }
-	  else
-	  {
-		  dc.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-	  }
-	  dc.DrawText(text, -1, &rc, iFlags);      
-	  SelectObject(dc, oldFont);
-	  delete []text;
-    }
-
-	LRESULT OnPaint(UINT, WPARAM wParam, LPARAM, BOOL&)
-	{
-		if(wParam != NULL) {
-         DoPaint((HDC)wParam);
-      }
-      else {
-         CPaintDC dc(m_hWnd);
-         DoPaint(dc.m_hDC);
-      }
-      return 0;
-	}
-	
-	void SetFont(HFONT pFont)
-	{
-		m_font = pFont;
-	}
-
-	void SetEnabled(bool Enabled = true)
-	{
-		m_enabled = Enabled;
-		Invalidate();
-	}
-
-	BEGIN_MSG_MAP(CCustomStatic)
-		//MESSAGE_HANDLER(WM_CREATE, OnCreate)
-		MESSAGE_HANDLER(WM_PAINT, OnPaint)
-	END_MSG_MAP()
-};	
-
-class CTableToolbarsWindow: public CFrameWindowImpl<CTableToolbarsWindow>,
-		   public CUpdateUI<CTableToolbarsWindow>
-{
-public:
-	  BEGIN_UPDATE_UI_MAP(CTableToolbarsWindow)
-
-  END_UPDATE_UI_MAP()
-};
 
 class CMainFrame :	public CFrameWindowImpl<CMainFrame>,
 					public CCustomizableToolBarCommands<CMainFrame>,
@@ -161,14 +50,11 @@ public:
 	// Child windows
 	CSplitterWindow		m_splitter; // doc tree and views
 	CContainerWnd		m_view; // document, description and source
-	//CPaneContainer	m_tree_pane; // left pane with a tree
-	//CSplitterWindow		m_dummy_pane; // frame around the tree
-	//CTreeView			m_tree; // treeview itself
 	CDocumentTree		m_document_tree;
 
   CMultiPaneStatusBarCtrl m_status; // status bar
-  wchar_t strINS[MAX_LOAD_STRING + 1];
-  wchar_t strOVR[MAX_LOAD_STRING + 1];
+  CString strINS;
+  CString strOVR;
 
 	CCommandBarCtrl	m_MenuBar;			// menu bar
 	CToolBarCtrl	m_CmdToolbar;		// commands toolbar
@@ -185,7 +71,6 @@ public:
 
   CComboBox		  m_section_box;
   CCustomEdit	  m_section;	// ID ??? <section>
-  // ???????? ?????? ??????
   CComboBox		  m_id_table_id_box;
   CCustomEdit	  m_id_table_id;	  // Table ID
   CComboBox		  m_id_table_box;
@@ -328,13 +213,12 @@ public:
   void	  GoTo(int selected_pos);
 
   // loading/saving support
-  CString GetOpenFileName();
-  CString GetSaveFileName(CString& encoding);
-  bool	  SaveToFile(const CString& filename);
+  CString DoOpenFileDialog();
+  CString DoSaveFileDialog(CString& encoding);
   bool	  DiscardChanges();
 
   FILE_OP_STATUS	  SaveFile(bool askname);
-  FILE_OP_STATUS	  LoadFile(const wchar_t *initfilename=NULL);
+  FILE_OP_STATUS LoadFile(_In_z_ LPCWSTR pszFileName = nullptr);
 
   // show a specific view
   enum VIEW_TYPE { BODY, DESC, SOURCE, NEXT };
@@ -363,10 +247,6 @@ public:
 	void InitPluginsType(HMENU hMenu, const TCHAR* type, UINT cmdbase, CSimpleArray<CLSID>& plist);
 	void InitPluginHotkey(CString guid, UINT cmd, CString name);
 	UINT m_last_plugin;
-
-  void AddTbButton(HWND hWnd, const TCHAR *text, const int idCommand = 0, const BYTE bState = 0, const HICON icon = 0);
-  void		AddStaticText(CCustomStatic &st, HWND toolbarHwnd, int id, const TCHAR *text, HFONT hFont);
-
 
   // ui updating
   void	  UIUpdateViewCmd(CFBEView& view,WORD wID,OLECMD& oc,const TCHAR *hk);
@@ -620,137 +500,48 @@ public:
 		CHAIN_MSG_MAP(CCustomizableToolBarCommands<CMainFrame>)
 	END_MSG_MAP()
 
-  LRESULT OnCreate(UINT, WPARAM, LPARAM, BOOL&);
-  LRESULT OnClose(UINT, WPARAM, LPARAM, BOOL&);
-  LRESULT OnDestroy(UINT, WPARAM, LPARAM, BOOL&);
-  LRESULT OnPostCreate(UINT, WPARAM, LPARAM, BOOL&);
-  LRESULT OnSettingChange(UINT, WPARAM, LPARAM, BOOL&) {
-    if (m_doc)
-      m_doc->ApplyConfChanges();
-    return 0;
-  }
+  LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnPostCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnSettingChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnContextMenu(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnUnhandledCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnSetStatusText(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnTrackPopupMenu(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnChar(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+  LRESULT OnPreCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
-  UINT m_selBandID;
+#pragma region File commands
 
-  LRESULT OnContextMenu(UINT, WPARAM, LPARAM lParam, BOOL&) 
-  {
-	HMENU menu, popup;
-	RECT rect;
-	CPoint ptMousePos = (CPoint)lParam;
-	ScreenToClient(&ptMousePos);
-	// find clicked toolbar
-	REBARBANDINFO rbi;
-	ZeroMemory((void*)&rbi, sizeof(rbi));
-	rbi.cbSize = sizeof(REBARBANDINFO);
-	rbi.fMask = RBBIM_ID;
-	m_selBandID = 0;
-	for (unsigned int i=0; i< m_rebar.GetBandCount(); i++)
-	{
-		m_rebar.GetRect(i, &rect);
-		if (PtInRect(&rect,ptMousePos))
-		{
-			m_rebar.GetBandInfo(i, &rbi);
-			m_selBandID = rbi.wID;
-			break;
-		}
-	}
-	// display context menu for command & script toolbars only
-	if ((m_selBandID == ATL_IDW_BAND_FIRST+1) || (m_selBandID == ATL_IDW_BAND_FIRST+2))
-	{
-		menu = ::LoadMenu(_Module.GetResourceInstance(), MAKEINTRESOURCEW(IDR_TOOLBAR_MENU));
-		popup = ::GetSubMenu(menu, 0);
-		ClientToScreen(&ptMousePos);
-		::TrackPopupMenu(popup, TPM_LEFTALIGN, ptMousePos.x, ptMousePos.y, 0, *this, 0);
-	}
-	return 0;
-  }
-
-  LRESULT OnUnhandledCommand(UINT, WPARAM, LPARAM, BOOL&);
-  LRESULT OnSetFocus(UINT, WPARAM, LPARAM, BOOL&) {
-    m_view.SetFocus();
-	UpdateViewSizeInfo();
-    return 0;
-  }
-  LRESULT OnDropFiles(UINT, WPARAM, LPARAM, BOOL&);
-  LRESULT OnSetStatusText(UINT, WPARAM, LPARAM lParam, BOOL&) {
-    m_status_msg=(const TCHAR *)lParam;
-    return 0;
-  }
-
-	LRESULT OnTrackPopupMenu(UINT, WPARAM, LPARAM lParam, BOOL&)
-	{
-		AU::TRACKPARAMS* tp = (AU::TRACKPARAMS*)lParam;
-		// added by SeNS
-		if (m_Speller) m_Speller->AppendSpellMenu(tp->hMenu);
-		m_MenuBar.TrackPopupMenu(tp->hMenu, tp->uFlags, tp->x, tp->y);
-		return 0;
-	}
-
-	LRESULT OnChar(UINT, WPARAM, LPARAM, BOOL&);
-	LRESULT OnPreCommand(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
-	{
-		bHandled = FALSE;
-		if((HIWORD(wParam) == 0 || HIWORD(wParam) == 1) && LOWORD(wParam) != ID_EDIT_INCSEARCH)
-		StopIncSearch(true);
-		return 0;
-	}
-
-	LRESULT OnFileExit(WORD, WORD, HWND, BOOL&)
-	{
-		// close (possible) opened in script modeless dialogs
-		PostMessage(WM_CLOSEDIALOG);
-		PostMessage(WM_CLOSE);
-		return 0;
-	}
 	LRESULT OnFileNew(WORD, WORD, HWND, BOOL&);
 	LRESULT OnFileOpen(WORD, WORD, HWND, BOOL&);
 	LRESULT OnFileOpenMRU(WORD, WORD, HWND, BOOL&);
 	LRESULT OnFileSave(WORD, WORD, HWND, BOOL&);
 	LRESULT OnFileSaveAs(WORD, WORD, HWND, BOOL&);
 	LRESULT OnFileValidate(WORD, WORD, HWND, BOOL&);
+	LRESULT OnFileExit(WORD, WORD, HWND, BOOL&);
+
+#pragma endregion File commands
+
 	LRESULT OnToolsImport(WORD, WORD, HWND, BOOL&);
 	LRESULT OnToolsExport(WORD, WORD, HWND, BOOL&);
 	LRESULT OnLastPlugin(WORD, WORD, HWND, BOOL&);
 
 	LRESULT OnEditIncSearch(WORD, WORD, HWND, BOOL&);
 	LRESULT OnEditAddBinary(WORD, WORD, HWND, BOOL&);
-	LRESULT OnEditFind(WORD, WORD, HWND, BOOL& bHandled)
-	{
-		if(m_current_view == DESC)
-			ShowView(BODY);
-
-		bHandled = FALSE;
-		return 0;
-	}
+	LRESULT OnEditFind(WORD, WORD, HWND, BOOL& bHandled);
 	LRESULT OnEditInsSymbol(WORD, WORD, HWND, BOOL&);
 
 	// added by SeNS
-	LRESULT OnSpellReplace(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-	{ 
-		if (m_Speller)
-		{
-			m_doc->m_body.BeginUndoUnit(L"replace word");
-			m_Speller->Replace (wID - IDC_SPELL_REPLACE);
-			m_doc->m_body.EndUndoUnit();
-		}
-		return 0; 
-	}
-	LRESULT OnSpellIgnoreAll(WORD, WORD, HWND, BOOL&) 
-	{ 
-		if (m_Speller) m_Speller->IgnoreAll();
-		return 0; 
-	}
-	LRESULT OnSpellAddToDict(WORD, WORD, HWND, BOOL&) 
-	{ 
-		if (m_Speller) m_Speller->AddToDictionary();
-		return 0; 
-	}
+	LRESULT OnSpellReplace(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnSpellIgnoreAll(WORD, WORD, HWND, BOOL&);
+	LRESULT OnSpellAddToDict(WORD, WORD, HWND, BOOL&);
 
-	LRESULT OnVersionAdvance(WORD delta, WORD, HWND, BOOL&)
-	{
-		m_doc->AdvanceDocVersion(delta);
-		return 0;
-	}
+	LRESULT OnVersionAdvance(WORD delta, WORD, HWND, BOOL&);
 
   LRESULT OnViewToolBar(WORD, WORD, HWND, BOOL&);
   LRESULT OnViewStatusBar(WORD, WORD, HWND, BOOL&);
@@ -985,10 +776,7 @@ public:
 	bool ShowSettingsDialog(HWND parent = ::GetActiveWindow());
 	void ApplyConfChanges();
 	void RestartProgram();
-	void FillMenuWithHkeys(HMENU);
 
-	// added by SeNS
-    CSpeller *m_Speller;
 	LRESULT OnSpellCheck(WORD, WORD, HWND, BOOL& /*b*/)
 	{
 		if (m_Speller && m_current_view == BODY)
@@ -1006,48 +794,33 @@ public:
 		return S_OK;
 	}
 
-	// added by SeNS - paste pictures
-	bool BitmapInClipboard()
-	{
-		bool result = false;
-		if (OpenClipboard())
-		{
-			if ( IsClipboardFormatAvailable(CF_BITMAP)) result = true;
-			CloseClipboard();
-		}
-		return result;
-	}
+	private:
+		// Selected Toolbar ID
+		UINT m_selBandID;
 
-    // added by SeNS
-	void UpdateViewSizeInfo()
-	{
-		if (m_doc && m_doc->m_body)
-			if (m_doc->m_body.Document())
-			{
-				MSHTML::IHTMLElement2Ptr m_scrollElement = MSHTML::IHTMLDocument3Ptr(m_doc->m_body.Document())->documentElement;
-				if (m_scrollElement)
-				{
-					_Settings.SetViewWidth (m_scrollElement->clientWidth);
-					_Settings.SetViewHeight(m_scrollElement->clientHeight);
-					_Settings.SetMainWindow(m_hWnd);
-				}
-			}
-	}
+		// added by SeNS
+		CSpeller * m_Speller;
 
-	LRESULT OnSize(UINT, WPARAM, LPARAM, BOOL& bHandled)
-	{
-		UpdateViewSizeInfo();
-		bHandled = FALSE;
-		return 0;
-	}
+		// added by SeNS: incorrect XML file flag
+		bool m_bad_xml;
+		CString m_bad_filename;
 
-	// added by SeNS: incorrect XML file flag
-	bool m_bad_xml;
-	CString m_bad_filename;
-	bool LoadToScintilla(CString filename);
+		void FillMenuWithHkeys(HMENU);
 
-	// added by SeNS: issue #127
-	void DisplayCharCode();
+		// added by SeNS - paste pictures
+		bool BitmapInClipboard();
+
+		// added by SeNS
+		void UpdateViewSizeInfo();
+
+		bool LoadToScintilla(CString filename);
+
+		// added by SeNS: issue #127
+		void DisplayCharCode();
+
+		void AddTbButton(HWND hWnd, const TCHAR *text, const int idCommand = 0, const BYTE bState = 0, const HICON icon = 0);
+		void SubclassBox(HWND hWnd, RECT& rc, const int pos, CComboBox& box, DWORD dwStyle, CCustomEdit& custedit, const int resID, HFONT& hFont);
+		void AddStaticText(CCustomStatic &st, HWND toolbarHwnd, int id, const TCHAR *text, HFONT hFont);
 };
 
 int	StartScript(CMainFrame* mainframe);
@@ -1055,10 +828,3 @@ void	StopScript(void);
 HRESULT	ScriptLoad(const wchar_t *filename);
 HRESULT	ScriptCall(const wchar_t *func,VARIANT *arg, int argnum, VARIANT *ret);
 bool	ScriptFindFunc(const wchar_t *func);
-
-/////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // !defined(AFX_MAINFRM_H__38D356D4_C28B_47B0_A7AD_8C6B70F7F283__INCLUDED_)

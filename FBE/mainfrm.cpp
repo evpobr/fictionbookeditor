@@ -4,10 +4,12 @@
 #include "stdafx.h"
 
 #include "MainFrm.h"
+#include "FBE.h"
 #include "AboutBox.h"
 #include "SettingsDlg.h"
 #include "xmlMatchedTagsHighlighter.h"
 #include "AtlScintilla.h"
+#include "Words.h"
 
 // Vista file dialogs client GUIDs
 // {CF7C097D-0A2D-47EF-939D-1760BF4D0154}
@@ -65,7 +67,7 @@ void  CMainFrame::AttachDocument(FB::Doc *doc)
 	m_view.ActivateWnd(doc->m_body);
 }
 
-CString	CMainFrame::GetOpenFileName() 
+CString	CMainFrame::DoOpenFileDialog()
 {
 	CString strFileName;
 	if (RunTimeHelper::IsVista())
@@ -96,164 +98,68 @@ CString	CMainFrame::GetOpenFileName()
 	return strFileName;
 }
 
-class CCustomSaveDialog : public CFileDialogImpl<CCustomSaveDialog>
-{
-public:
-  HWND	      m_hDlg;
-  CString     m_encoding;
-
-  CCustomSaveDialog(BOOL bOpenFileDialog, // TRUE for FileOpen, FALSE for FileSaveAs
-    const CString& encoding,
-    LPCTSTR lpszDefExt = NULL,
-    LPCTSTR lpszFileName = NULL,
-    DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-    LPCTSTR lpszFilter = NULL,
-    HWND hWndParent = NULL)
-    : CFileDialogImpl<CCustomSaveDialog>(bOpenFileDialog, lpszDefExt, lpszFileName, dwFlags, lpszFilter, hWndParent),
-      m_hDlg(NULL)
-  {
-    m_ofn.lpTemplateName=MAKEINTRESOURCE(IDD_CUSTOMSAVEDLG);
-	m_encoding = encoding;
-  }
-
-  BEGIN_MSG_MAP(CCustomSaveDialog)
-    if (uMsg==WM_INITDIALOG)
-      return OnInitDialog(hWnd,uMsg,wParam,lParam);
-
-    MESSAGE_HANDLER(WM_SIZE, OnSize);
-
-    CHAIN_MSG_MAP(CFileDialogImpl<CCustomSaveDialog>)
-  END_MSG_MAP()
-
-  LRESULT OnInitDialog(HWND hWnd,UINT /*msg*/,WPARAM /*wParam*/,LPARAM /*lParam*/) {
-    m_hDlg=hWnd;
-
-    TCHAR   buf[1024];
-
-    if (::LoadString(_Module.GetResourceInstance(),IDS_ENCODINGS,buf,sizeof(buf)/sizeof(buf[0]))==0)
-      return TRUE;
-
-    TCHAR   *cp=buf;
-    while (*cp) {
-      size_t len=_tcscspn(cp,L",");
-      if (cp[len])
-	cp[len++]= L'\0';
-      if (*cp)
-	::SendDlgItemMessage(hWnd,IDC_ENCODING,CB_ADDSTRING,0,(LPARAM)cp);
-      cp+=len;
-    }
-
-    //::SetDlgItemText(hWnd,IDC_ENCODING,m_encoding);
-	::SendMessage(::GetDlgItem(hWnd, IDC_ENCODING), CB_SELECTSTRING, 0, (LPARAM)m_encoding.GetBuffer());	
-
-	return TRUE;
-  }
-
-  LRESULT OnSize(UINT /*uMsg*/,WPARAM /*wParam*/,LPARAM /*lParam*/,BOOL& /*bHandled*/) {
-    // make combobox the same size as std controls
-    RECT    rc_std,rc_my,rc_static, rc_static_my;
-    HWND    hCB=::GetDlgItem(m_hDlg,IDC_ENCODING);
-	HWND    hST=::GetDlgItem(m_hDlg,IDC_STATIC);
-    ::GetWindowRect(hCB,&rc_my);
-    ::GetWindowRect(GetFileDialogWindow().GetDlgItem(cmb1),&rc_std);
-
-	::GetWindowRect(hST,&rc_static_my);
-	::GetWindowRect(GetFileDialogWindow().GetDlgItem(stc2),&rc_static);
-
-    POINT   pt={rc_std.left,rc_my.top};
-	POINT   pt1={rc_static.left,rc_static_my.top};
-    ::ScreenToClient(m_hDlg,&pt);
-	::ScreenToClient(m_hDlg,&pt1);
-
-	::MoveWindow(hST,pt1.x,pt1.y,rc_static_my.right-rc_static_my.left,rc_my.bottom-rc_my.top,TRUE);
-    ::MoveWindow(hCB,pt.x,pt.y,rc_std.right-rc_std.left,rc_my.bottom-rc_my.top,TRUE);
-
-    return 0;
-  }
-  
-  BOOL OnFileOK(LPOFNOTIFY /*on*/) {
-    m_encoding=U::GetWindowText(::GetDlgItem(m_hDlg,IDC_ENCODING));    
-    return TRUE;
-  }
-};
-
-CString	CMainFrame::GetSaveFileName(CString& encoding)
+CString	CMainFrame::DoSaveFileDialog(CString& encoding)
 {
 	CString strFileName;
 	bstr_t filename = m_doc->m_filename;
 	if (!filename || (filename == bstr_t(L"Untitled.fb2")))
 		filename = L"";
 
-	if (RunTimeHelper::IsVista())
+	const COMDLG_FILTERSPEC arrFilterSpec[] =
 	{
-		const COMDLG_FILTERSPEC arrFilterSpec[] =
+		{ L"FictionBook files", L"*.fb2" },
+		{ L"All files", L"*.*" }
+	};
+
+	CShellFileSaveDialog dlg(NULL, FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_OVERWRITEPROMPT,
+							 L"fb2", arrFilterSpec, ARRAYSIZE(arrFilterSpec));
+	dlg.GetPtr()->SetClientGuid(GUID_FB2Dialog);
+	CComPtr<IFileDialogCustomize> spFileDialogCustomize;
+	HRESULT hr = dlg.GetPtr()->QueryInterface(&spFileDialogCustomize);
+	if (SUCCEEDED(hr))
+	{
+		CString strTitle;
+		strTitle.LoadString(IDS_ENCODING);
+		spFileDialogCustomize->StartVisualGroup(1000, strTitle);
+		spFileDialogCustomize->AddComboBox(1001);
+
+		CString strEncodings;
+		strEncodings.LoadString(IDS_ENCODINGS);
+		CSimpleArray<CString> lstEncodings;
+		CString strEncoding;
+		int iStart = 0;
+		do
 		{
-			{ L"FictionBook files", L"*.fb2" },
-			{ L"All files", L"*.*" }
-		};
+			strEncoding = strEncodings.Tokenize(L",", iStart);
+			if (strEncoding.IsEmpty())
+				break;
+			lstEncodings.Add(strEncoding);
+		} while (true);
 
-		CShellFileSaveDialog dlg(NULL, FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_OVERWRITEPROMPT,
-			L"fb2", arrFilterSpec, ARRAYSIZE(arrFilterSpec));
-		dlg.GetPtr()->SetClientGuid(GUID_FB2Dialog);
-		CComPtr<IFileDialogCustomize> spFileDialogCustomize;
-		HRESULT hr = dlg.GetPtr()->QueryInterface(&spFileDialogCustomize);
-		if (SUCCEEDED(hr))
+		for (int i = 0; i < lstEncodings.GetSize(); i++)
 		{
-			CString strTitle;
-			strTitle.LoadString(IDS_ENCODING);
-			spFileDialogCustomize->StartVisualGroup(1000, strTitle);
-			spFileDialogCustomize->AddComboBox(1001);
-			
-			CString strEncodings;
-			strEncodings.LoadString(IDS_ENCODINGS);
-			CSimpleArray<CString> lstEncodings;	
-			CString strEncoding;
-			int iStart = 0;
-			do
-			{
-				strEncoding = strEncodings.Tokenize(L",", iStart);
-				if (strEncoding.IsEmpty())
-					break;
-				lstEncodings.Add(strEncoding);
-			} while (true);
+			spFileDialogCustomize->AddControlItem(1001, 1100 + i, lstEncodings[i]);
+		}
 
-			for (int i = 0; i < lstEncodings.GetSize(); i++)
-			{
-				spFileDialogCustomize->AddControlItem(1001, 1100 + i, lstEncodings[i]);
-			}
-			
-			CString strSelectedEncodding = _Settings.m_keep_encoding ? m_doc->m_encoding : _Settings.GetDefaultEncoding();
-			int nEncodingIndex = lstEncodings.Find(strSelectedEncodding.MakeLower());
-			spFileDialogCustomize->SetSelectedControlItem(1001, 1100 + nEncodingIndex);
+		CString strSelectedEncodding = _Settings.m_keep_encoding ? m_doc->m_encoding : _Settings.GetDefaultEncoding();
+		int nEncodingIndex = lstEncodings.Find(strSelectedEncodding.MakeLower());
+		spFileDialogCustomize->SetSelectedControlItem(1001, 1100 + nEncodingIndex);
 
-			spFileDialogCustomize->EndVisualGroup();
+		spFileDialogCustomize->EndVisualGroup();
 
-			hr = dlg.GetPtr()->SetSaveAsItem(m_spShellItem);
-			if (dlg.DoModal() == IDOK)
-			{
-				dlg.GetFilePath(strFileName);
-				m_spShellItem.Release();
-				dlg.GetPtr()->GetResult(&m_spShellItem);
-				CComHeapPtr<WCHAR> szSelectedEncoding;
-				DWORD dwItem;
-				spFileDialogCustomize->GetSelectedControlItem(1001, &dwItem);
-				encoding = lstEncodings[dwItem - 1100];
-			}
+		hr = dlg.GetPtr()->SetSaveAsItem(m_spShellItem);
+		if (dlg.DoModal() == IDOK)
+		{
+			dlg.GetFilePath(strFileName);
+			m_spShellItem.Release();
+			dlg.GetPtr()->GetResult(&m_spShellItem);
+			CComHeapPtr<WCHAR> szSelectedEncoding;
+			DWORD dwItem;
+			spFileDialogCustomize->GetSelectedControlItem(1001, &dwItem);
+			encoding = lstEncodings[dwItem - 1100];
 		}
 	}
-	else
-	{
-		CCustomSaveDialog	dlg(FALSE,
-			_Settings.m_keep_encoding ? m_doc->m_encoding : _Settings.GetDefaultEncoding(), L"fb2", filename,
-			OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT | OFN_ENABLETEMPLATE,
-			L"FictionBook files (*.fb2)\0*.fb2\0All files (*.*)\0*.*\0\0");
-		if (dlg.DoModal(*this) == IDOK)
-		{
-			encoding = dlg.m_encoding;
-			strFileName = dlg.m_szFileName;
-		}
-	}
-	
+
 	return strFileName;
 }
 
@@ -317,7 +223,7 @@ CMainFrame::FILE_OP_STATUS CMainFrame::SaveFile(bool askname) {
 
   if (askname || !m_doc->m_namevalid) { // ask user about save file name
     CString encoding;
-    CString filename(GetSaveFileName(encoding));
+    CString filename(DoSaveFileDialog(encoding));
     if (filename.IsEmpty())
       return CANCELLED;
     m_doc->m_encoding=encoding;
@@ -350,14 +256,14 @@ CMainFrame::FILE_OP_STATUS CMainFrame::SaveFile(bool askname) {
   }
 }
 
-CMainFrame::FILE_OP_STATUS  CMainFrame::LoadFile(const wchar_t *initfilename)
+CMainFrame::FILE_OP_STATUS CMainFrame::LoadFile(_In_z_ LPCWSTR pszFileName)
 {
   if (!DiscardChanges())
     return CANCELLED; 
   
-  CString filename(initfilename);
+  CString filename(pszFileName);
   if (filename.IsEmpty())
-    filename = GetOpenFileName();
+    filename = DoOpenFileDialog();
   if (filename.IsEmpty())
     return CANCELLED;
   
@@ -1127,52 +1033,6 @@ BOOL CMainFrame::OnIdle()
 	return FALSE;
 }
 
-void CMainFrame::AddTbButton(HWND hWnd, const TCHAR *text, const int idCommand, const BYTE bState, const HICON icon)
-{
-    CToolBarCtrl tb = hWnd;
-	int iImage = I_IMAGENONE;
-	BYTE bStyle = BTNS_BUTTON | BTNS_AUTOSIZE;
-	if (icon)
-	{
-		CImageList iList = tb.GetImageList();
-		if (iList) iImage = iList.AddIcon(icon);
-	}
-
-	tb.AddButton(idCommand, bStyle, bState, iImage, text, 0); 
-	// custom added command
-	if (icon)
-	{
-		int idx = tb.CommandToIndex(idCommand);
-		TBBUTTON tbButton;
-		tb.GetButton(idx, &tbButton);
-		AddToolbarButton(tb,tbButton, text);
-		// move button to unassigned
-		tb.DeleteButton(idx);
-	}
-	tb.AutoSize();
-}
-
-static void SubclassBox(HWND hWnd, RECT& rc, const int pos, CComboBox& box, DWORD dwStyle, CCustomEdit& custedit, const int resID, HFONT& hFont)
-{
-	  ::SendMessage(hWnd, TB_GETITEMRECT, pos, (LPARAM)&rc);
-	  rc.bottom--;
-	  box.Create(hWnd, rc, NULL, dwStyle, WS_EX_CLIENTEDGE, resID);
-	  box.SetFont(hFont);
-	  custedit.SubclassWindow(box.ChildWindowFromPoint(CPoint(3,3)));
-}
-
-void CMainFrame::AddStaticText(CCustomStatic &st, HWND toolbarHwnd, int id, const TCHAR *text, HFONT hFont)
-{
-	RECT rect;
-	SendMessage(toolbarHwnd, TB_GETITEMRECT, id, (LPARAM)&rect);  
-	rect.bottom--; 
-
-	st.Create(toolbarHwnd, rect, NULL, WS_CHILD|WS_VISIBLE, WS_EX_TRANSPARENT, IDC_ID);
-	st.SetFont(hFont);
-	st.SetWindowText(text);
-	st.SetEnabled(true);
-}
-
 void CMainFrame::InitPluginsType(HMENU hMenu, const TCHAR* type, UINT cmdbase, CSimpleArray<CLSID>& plist)
 {
 	CRegKey rk;
@@ -1322,497 +1182,6 @@ void CMainFrame::InitPlugins()
 		wchar_t buf[MAX_LOAD_STRING + 1];
 		::LoadString(_Module.GetResourceInstance(), IDS_NO_SCRIPTS, buf, MAX_LOAD_STRING);
 		AppendMenu(scripts, MF_STRING | MF_DISABLED | MF_GRAYED, IDCANCEL, buf);
-	}
-}
-
-LRESULT CMainFrame::OnCreate(UINT, WPARAM, LPARAM, BOOL&)
-{
-  m_ctrl_tab = false;
-
-  // create command bar window
-  m_MenuBar.SetAlphaImages(true);
-  HWND hWndCmdBar = m_MenuBar.Create(m_hWnd, rcDefault, NULL, ATL_SIMPLE_CMDBAR_PANE_STYLE);
-  // attach menu
-  m_MenuBar.AttachMenu(GetMenu());
-  // remove old menu
-  SetMenu(NULL);
-  // load command bar images
-  m_MenuBar.LoadImages(IDR_MAINFRAME_SMALL);
-
-  m_CmdToolbar = CreateSimpleToolBarCtrl(m_hWnd, IDR_MAINFRAME, FALSE,  ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST | CCS_ADJUSTABLE);
-  m_CmdToolbar.SetExtendedStyle(TBSTYLE_EX_MIXEDBUTTONS);
-  InitToolBar(m_CmdToolbar, IDR_MAINFRAME);
-  // Restore commands toolbar layout and position
-  m_CmdToolbar.RestoreState(HKEY_CURRENT_USER, L"SOFTWARE\\FBETeam\\FictionBook Editor\\Toolbars", L"CommandToolbar");
-  UIAddToolBar(m_CmdToolbar);
-
-  m_ScriptsToolbar = CreateSimpleToolBarCtrl(m_hWnd, IDR_SCRIPTS, FALSE,  ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST | CCS_ADJUSTABLE);
-  m_ScriptsToolbar.SetExtendedStyle(TBSTYLE_EX_MIXEDBUTTONS);
-  InitToolBar(m_ScriptsToolbar, IDR_SCRIPTS);
-  UIAddToolBar(m_ScriptsToolbar);
-
-  HWND hWndLinksBar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST, 0, 0, 100, 100, 
-	  m_hWnd, NULL, _Module.GetModuleInstance(), NULL);
-   
-  HWND hWndTableBar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST , 0, 0, 100, 100, 
-	  m_hWnd, NULL, _Module.GetModuleInstance(), NULL);
-  HWND hWndTableBar2 = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST, 0, 0, 100, 100,
-	  m_hWnd, NULL, _Module.GetModuleInstance(), NULL);
-  
-  wchar_t buf[MAX_LOAD_STRING + 1];
-  HFONT hFont = (HFONT)::SendMessage(hWndLinksBar, WM_GETFONT, 0, 0);
-
-  // Links toolbar preparation
-  ::SendMessage(hWndLinksBar, TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
-  // Next line provides empty drawing of text
-  ::SendMessage(hWndLinksBar,TB_SETDRAWTEXTFLAGS, (WPARAM)DT_CALCRECT, (LPARAM)DT_CALCRECT);
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_ID, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndLinksBar, buf);
-  AddStaticText(m_id_caption, hWndLinksBar, 0, buf, hFont);
-  AddTbButton(hWndLinksBar, L"123456789012345678901234567890");
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_HREF, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndLinksBar, buf);
-  AddStaticText(m_href_caption,	hWndLinksBar, 2, buf, hFont);
-  AddTbButton(hWndLinksBar, L"123456789012345678901234567890");
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_SECTION_ID, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndLinksBar, buf);
-  AddStaticText(m_section_id_caption, hWndLinksBar, 4, buf, hFont);
-  AddTbButton(hWndLinksBar, L"123456789012345678901234567890");
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_IMAGE_TITLE, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndLinksBar, buf);
-  AddStaticText(m_image_title_caption, hWndLinksBar, 6, buf, hFont);
-  AddTbButton(hWndLinksBar, L"123456789012345678901234567890");
-
-  // Table's first toolbar preparation
-  ::SendMessage(hWndTableBar, TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
-  ::SendMessage(hWndTableBar, TB_SETDRAWTEXTFLAGS, (WPARAM)DT_CALCRECT, (LPARAM)DT_CALCRECT);
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_TABLE_ID, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndTableBar, buf);
-  AddStaticText(m_table_id_caption,	hWndTableBar, 0, buf, hFont);
-  AddTbButton(hWndTableBar, L"12345678901234567890");
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_TABLE_STYLE, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndTableBar, buf);
-  AddStaticText(m_table_style_caption, hWndTableBar, 2, buf, hFont);
-  AddTbButton(hWndTableBar, L"123456789012345");
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_ID, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndTableBar, buf);
-  AddStaticText(m_id_table_caption,	hWndTableBar, 4, buf, hFont);
-  AddTbButton(hWndTableBar, L"12345678901234567890");
-  
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_STYLE, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndTableBar, buf);
-  AddStaticText(m_style_caption, hWndTableBar, 6, buf, hFont);
-  AddTbButton(hWndTableBar, L"123456789012345");
-
-  // Table's second toolbar preparation
-  ::SendMessage(hWndTableBar2, TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON),0);
-  ::SendMessage(hWndTableBar2, TB_SETDRAWTEXTFLAGS, (WPARAM)DT_CALCRECT, (LPARAM)DT_CALCRECT);
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_COLSPAN, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndTableBar2, buf);
-  AddStaticText(m_colspan_caption, hWndTableBar2, 0, buf, hFont);
-  AddTbButton(hWndTableBar2, L"12345");
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_ROWSPAN, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndTableBar2, buf);
-  AddStaticText(m_rowspan_caption, hWndTableBar2, 2, buf, hFont);
-  AddTbButton(hWndTableBar2, L"12345");
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_TR_ALIGN, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndTableBar2, buf);
-  AddStaticText(m_tr_allign_caption, hWndTableBar2, 4, buf, hFont);
-  AddTbButton(hWndTableBar2, L"12345678");
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_TD_ALIGN, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndTableBar2, buf);
-  AddStaticText(m_th_allign_caption, hWndTableBar2, 6, buf, hFont);
-  AddTbButton(hWndTableBar2, L"12345678");
-
-  ::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_TD_VALIGN, buf, MAX_LOAD_STRING);
-  AddTbButton(hWndTableBar2, buf);
-  AddStaticText(m_valign_caption, hWndTableBar2, 8, buf, hFont);
-  AddTbButton(hWndTableBar2, L"12345678");
-
-  CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
-  
-  AddSimpleReBarBand(hWndCmdBar, 0, TRUE, 0);
-  AddSimpleReBarBand(m_CmdToolbar, 0, TRUE, 0, FALSE);
-  AddSimpleReBarBand(m_ScriptsToolbar, 0, TRUE, 0, FALSE);
-  AddSimpleReBarBand(hWndLinksBar, 0, TRUE, 0, TRUE);
-  AddSimpleReBarBand(hWndTableBar, 0, TRUE, 0, TRUE) ;
-  AddSimpleReBarBand(hWndTableBar2, 0, TRUE, 0, TRUE);
-  m_rebar = m_hWndToolBar;
-
-  // add editor controls  
-  RECT rc;    
-  
-  // m_id_caption.SetParent(this->m_hWnd);
-
-  /*HDC hdc = ::GetDC(hWndLinksBar);
-  COLORREF bkCollor = GetBkColor(hdc);*/
-  HDC hdc1 = ::GetDC(m_id_caption);
-  SetBkColor(hdc1, RGB(0,0,0));
-  //ReleaseDC(hdc);
-  ReleaseDC(hdc1);
-
-  DWORD CBS_COMMON_STYLE =  WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL;
-
-  SubclassBox(hWndLinksBar, rc, 1, m_id_box, CBS_COMMON_STYLE, m_id, IDC_ID, hFont);
-  SubclassBox(hWndLinksBar, rc, 3, m_href_box, CBS_COMMON_STYLE | WS_VSCROLL | CBS_DROPDOWN | CBS_SORT, m_href, IDC_HREF, hFont);
-  SubclassBox(hWndLinksBar, rc, 5, m_section_box, CBS_COMMON_STYLE, m_section, IDC_SECTION, hFont);
-  SubclassBox(hWndLinksBar, rc, 7, m_image_title_box, CBS_COMMON_STYLE, m_image_title, IDC_IMAGE_TITLE, hFont);
-  
-  // add editor-table controls
-  HFONT hFontT = (HFONT)::SendMessage(hWndTableBar, WM_GETFONT, 0, 0);
-  RECT rcT;
-
-  SubclassBox(hWndTableBar, rcT, 1, m_id_table_id_box, CBS_COMMON_STYLE, m_id_table_id, IDC_IDT, hFontT);
-  SubclassBox(hWndTableBar, rcT, 3, m_styleT_table_box, CBS_COMMON_STYLE, m_styleT_table, IDC_STYLET, hFontT);
-  SubclassBox(hWndTableBar, rcT, 5, m_id_table_box, CBS_COMMON_STYLE, m_id_table, IDC_ID, hFontT);
-  SubclassBox(hWndTableBar, rcT, 7, m_style_table_box, CBS_COMMON_STYLE, m_style_table, IDC_STYLE, hFontT);
-
-  SubclassBox(hWndTableBar2, rcT, 1, m_colspan_table_box, CBS_COMMON_STYLE, m_colspan_table, IDC_COLSPAN, hFontT);
-  SubclassBox(hWndTableBar2, rcT, 3, m_rowspan_table_box, CBS_COMMON_STYLE, m_rowspan_table, IDC_ROWSPAN, hFontT);
-  SubclassBox(hWndTableBar2, rcT, 5, m_alignTR_table_box, CBS_COMMON_STYLE | WS_VSCROLL | CBS_DROPDOWNLIST, m_alignTR_table, IDC_ALIGNTR, hFontT);
-  SubclassBox(hWndTableBar2, rcT, 7, m_align_table_box, CBS_COMMON_STYLE | WS_VSCROLL | CBS_DROPDOWNLIST, m_align_table, IDC_ALIGN, hFontT);
-  SubclassBox(hWndTableBar2, rcT, 9, m_valign_table_box, CBS_COMMON_STYLE | WS_VSCROLL | CBS_DROPDOWNLIST, m_valign_table, IDC_VALIGN, hFontT);
-
-  m_align_table_box.InsertString(0,_T(""));
-  m_align_table_box.InsertString(1,_T("left"));
-  m_align_table_box.InsertString(2,_T("right"));
-  m_align_table_box.InsertString(3,_T("center"));
-
-  m_alignTR_table_box.InsertString(0,_T(""));
-  m_alignTR_table_box.InsertString(1,_T("left"));
-  m_alignTR_table_box.InsertString(2,_T("right"));
-  m_alignTR_table_box.InsertString(3,_T("center"));
-
-  m_valign_table_box.InsertString(0,_T(""));
-  m_valign_table_box.InsertString(1,_T("top"));
-  m_valign_table_box.InsertString(2,_T("middle"));
-  m_valign_table_box.InsertString(3,_T("bottom"));
-
-  // create status bar
-  CreateSimpleStatusBar();
-  m_status.SubclassWindow(m_hWndStatusBar);
-  int panes[] =
-  {
-	  ID_DEFAULT_PANE,
-	  ID_PANE_CHAR,
-	  399,
-	  ID_PANE_INS
-  };
-  m_status.SetPanes(panes, sizeof(panes)/sizeof(panes[0]));
-  m_status.SetPaneWidth (ID_PANE_CHAR, 60);
-  m_status.SetPaneText(ID_PANE_CHAR, L"");
-  m_status.SetPaneWidth (399, 20);
-  m_status.SetPaneWidth (ID_PANE_INS, 30);
-
-	// load insert/overwrite abbreviations  
-	::LoadString(_Module.GetResourceInstance(), IDS_PANE_INS, strINS, MAX_LOAD_STRING);
-	::LoadString(_Module.GetResourceInstance(), IDS_PANE_OVR, strOVR, MAX_LOAD_STRING);
-
-  // create splitter
-  m_hWndClient = m_splitter.Create(m_hWnd,rcDefault,NULL,WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS|WS_CLIPCHILDREN);
-  m_splitter.SetSplitterExtendedStyle(0);
-
-  // create splitter contents
-//  m_document_tree.Create(m_splitter);
-//  m_document_tree.SetTitle(L"Document Tree");
-  m_view.Create(m_splitter,rcDefault,NULL,WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS|WS_CLIPCHILDREN);
-
-  // create a tree
-  /*m_dummy_pane.Create(m_document_tree,rcDefault,NULL,WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,WS_EX_CLIENTEDGE);
-  m_document_tree.SetClient(m_dummy_pane);
-  m_document_tree.Create(m_dummy_pane, rcDefault);
-  m_document_tree.SetBkColor(::GetSysColor(COLOR_WINDOW));
-  m_dummy_pane.SetSplitterPane(0,m_document_tree);
-  m_dummy_pane.SetSinglePaneMode(SPLIT_PANE_LEFT);*/
-
-  // create a source view
-  m_source.Create(_T("Scintilla"),m_view,rcDefault,NULL,WS_CHILD|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,0);
-  m_view.AttachWnd(m_source);
-  SetupSci();
-  SetSciStyles();
-
-  // initialize a new blank document
-  m_doc=new FB::Doc(*this);
-  FB::Doc::m_active_doc = m_doc;
-  bool start_with_params = false;
-  // load a command line arg if it was provided
-  if (_ARGV.GetSize()>0 && !_ARGV[0].IsEmpty()) 
-  { 
-    if (m_doc->Load(m_view,_ARGV[0]))
-	{
-      start_with_params = true;
-	  m_file_age = FileAge(_ARGV[0]);
-	}
-    else
-	{
-		// added by SeNS: create blank document, and load incorrect XML to Scintilla
-		delete m_doc;
-		m_doc=new FB::Doc(*this);
-		FB::Doc::m_active_doc = m_doc;
-		m_doc->CreateBlank(m_view);
-		m_file_age = ~0;
-		m_bad_xml = true;
-	}
-  } else 
-  {
-	m_doc->CreateBlank(m_view);
-	m_file_age = ~0;
-  }
-
-  if (_Settings.m_fast_mode) {
-		m_doc->SetFastMode(true);
-		UISetCheck(ID_VIEW_FASTMODE, TRUE);
-  } else
-    m_doc->SetFastMode(false);
-
-  AttachDocument(m_doc);
-  UISetCheck(ID_VIEW_BODY,1);
-
-  m_document_tree.Create(m_splitter);
-  
-  if (AU::_ARGS.start_in_desc_mode) 
-	ShowView(DESC);
-
-  // init plugins&MRU list
-  InitPlugins();  
-
-  // setup splitter
-  m_splitter.SetSplitterPanes(m_document_tree, m_view);
-
-  // hide elements
-  if (_Settings.ViewStatusBar()) 
-  {
-	  UISetCheck(ID_VIEW_STATUS_BAR, 1);
-  } 
-  else
-  {
-	  m_status.ShowWindow(SW_HIDE);
-	  UISetCheck(ID_VIEW_STATUS_BAR, FALSE);
-  }
-
-  if (_Settings.ViewDocumentTree()) 
-  {
-	  UISetCheck(ID_VIEW_TREE, 1);  
-  } 
-  else
-  {
-	  m_document_tree.ShowWindow(SW_HIDE);
-	  UISetCheck(ID_VIEW_TREE, FALSE);
-      m_splitter.SetSinglePaneMode(SPLIT_PANE_RIGHT);  
-  }    
-
-  // load toolbar settings
-  for (int j=ATL_IDW_BAND_FIRST;j<ATL_IDW_BAND_FIRST+5;++j)
-    UISetCheck(j,TRUE);
-  REBARBANDINFO   rbi;
-  memset(&rbi,0,sizeof(rbi));
-  rbi.cbSize=sizeof(rbi);
-  rbi.fMask=RBBIM_SIZE|RBBIM_STYLE;
-  CString     tbs(_Settings.GetToolbarsSettings());
-  const TCHAR *cp=tbs;
-  for (int bn=0;;++bn) {
-    const TCHAR	  *ce=_tcschr(cp,_T(';'));
-    if (!ce)
-      break;
-    int	      id,style,cx;
-    if (_stscanf(cp,_T("%d,%d,%d;"),&id,&style,&cx)!=3)
-      break;
-    cp=ce+1;
-    int	      idx=m_rebar.IdToIndex(id);
-    m_rebar.GetBandInfo(idx,&rbi);
-    rbi.fStyle &= ~(RBBS_BREAK|RBBS_HIDDEN);
-    style &= RBBS_BREAK|RBBS_HIDDEN;
-    rbi.fStyle |= style;
-    rbi.cx=cx;
-    m_rebar.SetBandInfo(idx,&rbi);
-    if (idx!=bn)
-      m_rebar.MoveBand(idx,bn);
-    UISetCheck(id,style & RBBS_HIDDEN ? FALSE : TRUE);
-  }
-
-  // delay resizing
-  PostMessage(AU::WM_POSTCREATE);
-
-  // register object for message filtering and idle updates
-  CMessageLoop* pLoop = _Module.GetMessageLoop();
-  ATLASSERT(pLoop != NULL);
-  pLoop->AddMessageFilter(this);
-  pLoop->AddIdleHandler(this);
-
-  // accept dropped files
-  ::DragAcceptFiles(*this,TRUE);
-
-  // Modification by Pilgrim
-  BOOL bVisible = _Settings.ViewDocumentTree();
-  m_document_tree.ShowWindow(bVisible ? SW_SHOWNOACTIVATE : SW_HIDE);
-  UISetCheck(ID_VIEW_TREE, bVisible);
-  m_splitter.SetSinglePaneMode(bVisible ? SPLIT_PANE_NONE : SPLIT_PANE_RIGHT);
-
-  if(start_with_params)
-  {
-	  m_mru.AddToList(_ARGV[0]);
-  	  if(_Settings.m_restore_file_position)
-	  {
-			m_restore_pos_cmdline = true;
-	  }
-  }
-
-  // Change keyboard layout
-  if (_Settings.m_change_kbd_layout_check)
-  {
-	  CString layout;
-	  layout.Format(L"%08x", _Settings.GetKeybLayout());
-	  LoadKeyboardLayout(layout,KLF_ACTIVATE);
-  }
-  
-  // added by SeNS: create blank document, and load incorrect XML to Scintilla
-  if (m_bad_xml)
-	if (!LoadToScintilla(_ARGV[0])) return -1;
-
-  // Added by SeNS
-  if (m_Speller && m_Speller->Enabled())
-  {
-	if (!m_Speller->Available())
-		UIEnable(ID_TOOLS_SPELLCHECK, false, true);
-	else
-		UIEnable(ID_TOOLS_SPELLCHECK, true, true);
-	m_Speller->SetHighlightMisspells(_Settings.m_highlght_check);
-  }
-  else UIEnable(ID_TOOLS_SPELLCHECK, false, true);
-
-  // Restore scripts toolbar layout and position
-  m_ScriptsToolbar.RestoreState(HKEY_CURRENT_USER, L"SOFTWARE\\FBETeam\\FictionBook Editor\\Toolbars", L"ScriptsToolbar");
-
-  return 0;
-}
-
-LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
-{
-  DestroyAcceleratorTable(m_hAccel);
-  bHandled=FALSE;
-  return 0;
-}
-
-LRESULT CMainFrame::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-{
-  if (DiscardChanges()) 
-  {
-	// added by SeNS
-	if (m_Speller) 
-	{
-		m_Speller->EndDocumentCheck();
-		m_Speller->SetEnabled(false);
-	}
-	_Settings.SetViewStatusBar(m_status.IsWindowVisible() != 0);
-	//_Settings.SetViewDocumentTree(IsSourceActive() ? m_document_tree.IsWindowVisible()==0 : !m_save_sp_mode);
-    _Settings.SetSplitterPos(m_splitter.GetSplitterPos());	
-    WINDOWPLACEMENT wpl;
-    wpl.length=sizeof(wpl);
-    GetWindowPlacement(&wpl);
-	_Settings.SetWindowPosition(wpl);
-    m_mru.WriteToRegistry(_Settings.GetKeyPath());
-    // save toolbars state
-    CString tbs;
-    REBARBANDINFO  rbi;
-    memset(&rbi,0,sizeof(rbi));
-    rbi.cbSize=sizeof(rbi);
-    rbi.fMask=RBBIM_ID|RBBIM_SIZE|RBBIM_STYLE;
-    int	  num_bands=m_rebar.GetBandCount();
-    for (int i=0;i<num_bands;++i) {
-      m_rebar.GetBandInfo(i,&rbi);
-      CString	bi;
-      bi.Format(_T("%d,%d,%d;"),rbi.wID,rbi.fStyle,rbi.cx);
-      tbs+=bi;
-    }
-
-	// Save toolbar layout
-    m_CmdToolbar.SaveState(HKEY_CURRENT_USER, L"SOFTWARE\\FBETeam\\FictionBook Editor\\Toolbars", L"CommandToolbar");
-    m_ScriptsToolbar.SaveState(HKEY_CURRENT_USER, L"SOFTWARE\\FBETeam\\FictionBook Editor\\Toolbars", L"ScriptsToolbar");
-
-    _Settings.SetToolbarsSettings(tbs);
-	_Settings.SaveHotkeyGroups();
-	_Settings.Save();
-	_Settings.SaveWords();
-	_Settings.Close();
-
-	DefWindowProc(WM_CLOSE,0,0);
-	return 1;
-  }
-  return 0;
-}
-
-LRESULT CMainFrame::OnPostCreate(UINT, WPARAM, LPARAM, BOOL&)
-{
-	//SetSplitterPos works best after the default WM_CREATE has been handled
-	m_splitter.SetSplitterPos(_Settings.GetSplitterPos());
-
-	_Settings.LoadHotkeyGroups();
-	DestroyAcceleratorTable(m_hAccel);
-
-	LPACCEL lpaccelNew = new ACCEL[_Settings.keycodes];
-	int HKentries = _Settings.keycodes;
-	for(unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
-	{
-		for(unsigned int j = 0; j < _Settings.m_hotkey_groups.at(i).m_hotkeys.size(); ++j)
-		{
-			ACCEL accel = _Settings.m_hotkey_groups.at(i).m_hotkeys.at(j).m_accel;
-			if(accel.fVirt != NULL && accel.key != NULL && accel.cmd != NULL)
-			{
-				lpaccelNew[--HKentries] = accel;
-			}
-		}
-	}
-
-	m_hAccel = CreateAcceleratorTable(lpaccelNew, _Settings.keycodes);
-	delete[] lpaccelNew;
-
-	FillMenuWithHkeys(m_MenuBar.GetMenu());
-	return 0;
-}
-
-// Fill current menu with accelerators' text
-void CMainFrame::FillMenuWithHkeys(HMENU menu)
-{
-	for(unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
-	{
-		std::vector<CHotkey>::iterator begin = _Settings.m_hotkey_groups.at(i).m_hotkeys.begin();
-		if(_Settings.m_hotkey_groups.at(i).m_reg_name == L"Scripts"
-			|| _Settings.m_hotkey_groups.at(i).m_reg_name == L"Plugins")
-			begin++;
-
-		std::sort(begin, _Settings.m_hotkey_groups.at(i).m_hotkeys.end());
-		for(unsigned int j = 0; j < _Settings.m_hotkey_groups.at(i).m_hotkeys.size(); ++j)
-		{
-			CString text;
-			WORD cmd = _Settings.m_hotkey_groups.at(i).m_hotkeys.at(j).m_accel.cmd;
-
-			if(::GetMenuString(menu, cmd, text.GetBufferSetLength(MAX_LOAD_STRING + 1), MAX_LOAD_STRING + 1,
-				MF_BYCOMMAND))
-			{
-				text.ReleaseBuffer();
-				text += L"\t";
-				text += U::AccelToString(_Settings.m_hotkey_groups.at(i).m_hotkeys.at(j).m_accel);
-
-				MENUITEMINFO miim;
-				ZeroMemory(&miim, sizeof(MENUITEMINFO));
-				miim.cbSize = sizeof(MENUITEMINFO);
-				miim.fMask = MIIM_STRING;
-				miim.dwTypeData = text.GetBuffer();
-				miim.cch = text.GetLength();
-				::SetMenuItemInfo(menu, cmd, FALSE, &miim);
-			}
-		}
 	}
 }
 
@@ -2016,154 +1385,6 @@ CMainFrame::~CMainFrame()
 	{		  
 		delete m_sci_find_dlg;
 	}
-}
-
-LRESULT CMainFrame::OnUnhandledCommand(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
-{
-	HWND hFocus = ::GetFocus();
-	UINT idCtl = HIWORD(wParam);
-
-	// only pass messages to the editors
-	if (idCtl == 0 || idCtl == 1)
-	{
-		if (
-			hFocus == m_id || hFocus == m_href || hFocus == m_section || ::IsChild(m_id, hFocus)
-			|| ::IsChild(m_href, hFocus) || ::IsChild(m_section, hFocus) || hFocus == m_styleT_table
-			|| hFocus == m_id_table_id || hFocus == m_id_table || hFocus == m_style_table
-			|| hFocus == m_colspan_table || hFocus == m_rowspan_table || hFocus == m_align_table
-			|| hFocus == m_valign_table || hFocus == m_alignTR_table || hFocus==m_image_title
-			|| ::IsChild(m_id_table_id,hFocus) || ::IsChild(m_id_table, hFocus)
-			|| ::IsChild(m_style_table,hFocus) || ::IsChild(m_styleT_table, hFocus)
-			|| ::IsChild(m_colspan_table,hFocus) ||::IsChild(m_rowspan_table, hFocus)
-			|| ::IsChild(m_alignTR_table,hFocus) || ::IsChild(m_align_table, hFocus)
-			|| ::IsChild(m_valign_table,hFocus)|| ::IsChild(m_image_title, hFocus)
-			)
-				return ::SendMessage(hFocus, WM_COMMAND, wParam, lParam);
-
-		// We need to check that the focused window is a web browser indeed
-		if(hFocus == m_view.GetActiveWnd() || ::IsChild(m_view.GetActiveWnd(), hFocus))
-		{
-			if(IsSourceActive())
-			{
-				switch (LOWORD(wParam))
-				{
-					/*case ID_EDIT_UNDO:
-						m_source.SendMessage(SCI_UNDO);
-						break;*/
-					case ID_EDIT_REDO:
-						m_source.Redo();
-						break;
-					/*case ID_EDIT_CUT:
-						m_source.SendMessage(SCI_CUT);
-						break;
-					case ID_EDIT_COPY:
-						m_source.SendMessage(SCI_COPY);
-						break;
-					case ID_EDIT_PASTE:
-						m_source.SendMessage(SCI_PASTE);
-						break;*/
-					case ID_EDIT_FIND:
-						{
-						if(!m_sci_find_dlg)
-							m_sci_find_dlg = new CSciFindDlg(&m_doc->m_body, m_source);
-
-						if(m_sci_find_dlg->IsValid())
-							break;
-
-						m_sci_find_dlg->UpdatePattern();
-
-						m_sci_find_dlg->ShowDialog();
-						break;
-						}
-					case ID_EDIT_FINDNEXT:
-						m_doc->m_body.SciFindNext(m_source, false, true);
-						break;
-					case ID_EDIT_REPLACE:
-						{
-							if(!m_sci_replace_dlg)
-								m_sci_replace_dlg = new CSciReplaceDlg(&m_doc->m_body, m_source);
-
-							if(m_sci_replace_dlg->IsValid())
-							break;
-
-							m_sci_replace_dlg->UpdatePattern();
-
-							m_sci_replace_dlg->ShowDialog();
-							break;
-						}
-				}
-			}
-			else
-				return ActiveView().SendMessage(WM_COMMAND, wParam, 0);
-		}
-
-		if(hFocus == m_document_tree.m_hWnd || ::IsChild(m_document_tree.m_hWnd, hFocus))
-			return m_doc->m_body.SendMessage(WM_COMMAND,wParam,0);
-	}
-
-	// Last chance to send common commands to any focused window
-	switch (LOWORD(wParam))
-	{
-	case ID_EDIT_UNDO:
-		::SendMessage(hFocus, WM_UNDO, 0, 0);
-		break;
-	case ID_EDIT_REDO:
-		::SendMessage(hFocus, EM_REDO, 0, 0);
-		break;
-	case ID_EDIT_CUT:
-		::SendMessage(hFocus, WM_CUT, 0, 0);
-		break;
-	case ID_EDIT_COPY:
-		::SendMessage(hFocus, WM_COPY, 0, 0);
-		break;
-	case ID_EDIT_PASTE:
-		::SendMessage(hFocus, WM_PASTE, 0, 0);
-		break;
-	case ID_EDIT_INS_SYMBOL:
-		::SendMessage(hFocus, WM_CHAR, wParam, 0);
-		break;
-	}
-
-	return 0;
-}
-
-LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-{
-  HDROP	  hDrop=(HDROP)wParam;
-  UINT	  nf=::DragQueryFile(hDrop,0xFFFFFFFF,NULL,0);
-  CString buf, ext;
-  if (nf>0) {
-    UINT    len=::DragQueryFile(hDrop,0,NULL,0);
-    TCHAR   *cp=buf.GetBuffer(len+1);
-    len=::DragQueryFile(hDrop,0,cp,len+1);
-    buf.ReleaseBuffer(len);
-  }
-  ::DragFinish(hDrop);
-  if (!buf.IsEmpty())
-  {
-	  ext.SetString(ATLPath::FindExtension(buf));
-	  if (ext.CompareNoCase(L".FB2") == 0 )
-	  {
-		  if (LoadFile(buf) == OK)
-		  {
-			  m_mru.AddToList(m_doc->m_filename);
-			  PIDLIST_ABSOLUTE pidl = { 0 };
-			  HRESULT hr = SHParseDisplayName(m_doc->m_filename, NULL, &pidl, 0, NULL);
-			  if (SUCCEEDED(hr))
-			  {
-				  m_spShellItem.Release();
-				  SHCreateShellItem(NULL, NULL, pidl, &m_spShellItem);
-				  ILFree(pidl);
-			  }
-		  }
-	  }
-	  else if ((ext.CompareNoCase(L".JPG") == 0) || (ext.CompareNoCase(L".JPEG") == 0) || (ext.CompareNoCase(L".PNG") == 0))
-	  {
-		  m_doc->m_body.SetFocus();
-		  m_doc->m_body.AddImage(buf, false);
-	  }
-  }
-  return 0;
 }
 
 // drag & drop to the BODY window
@@ -2633,6 +1854,36 @@ LRESULT CMainFrame::OnEditInsSymbol(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndC
 		}*/
 	}
 
+	return 0;
+}
+
+// added by SeNS
+LRESULT CMainFrame::OnSpellReplace(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	if (m_Speller)
+	{
+		m_doc->m_body.BeginUndoUnit(L"replace word");
+		m_Speller->Replace(wID - IDC_SPELL_REPLACE);
+		m_doc->m_body.EndUndoUnit();
+	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnSpellIgnoreAll(WORD, WORD, HWND, BOOL&)
+{
+	if (m_Speller) m_Speller->IgnoreAll();
+	return 0;
+}
+
+LRESULT CMainFrame::OnSpellAddToDict(WORD, WORD, HWND, BOOL&)
+{
+	if (m_Speller) m_Speller->AddToDictionary();
+	return 0;
+}
+
+LRESULT CMainFrame::OnVersionAdvance(WORD delta, WORD, HWND, BOOL&)
+{
+	m_doc->AdvanceDocVersion(delta);
 	return 0;
 }
 
@@ -3292,6 +2543,15 @@ LRESULT CMainFrame::OnEditAddBinary(WORD, WORD, HWND, BOOL&) {
   return 0;
 }
 
+LRESULT CMainFrame::OnEditFind(WORD, WORD, HWND, BOOL& bHandled)
+{
+	if (m_current_view == DESC)
+		ShowView(BODY);
+
+	bHandled = FALSE;
+	return 0;
+}
+
 // incremental search
 LRESULT CMainFrame::OnEditIncSearch(WORD, WORD, HWND, BOOL&) {
   if (IsSourceActive())
@@ -3313,6 +2573,681 @@ LRESULT CMainFrame::OnEditIncSearch(WORD, WORD, HWND, BOOL&) {
   } else if (!m_is_fail)
     m_doc->m_body.DoIncSearch(m_is_str,true);
   return 0;
+}
+
+LRESULT CMainFrame::OnCreate(UINT, WPARAM, LPARAM, BOOL&)
+{
+	m_ctrl_tab = false;
+
+	// create command bar window
+	m_MenuBar.SetAlphaImages(true);
+	HWND hWndCmdBar = m_MenuBar.Create(m_hWnd, rcDefault, NULL, ATL_SIMPLE_CMDBAR_PANE_STYLE);
+	// attach menu
+	m_MenuBar.AttachMenu(GetMenu());
+	// remove old menu
+	SetMenu(NULL);
+	// load command bar images
+	m_MenuBar.LoadImages(IDR_MAINFRAME_SMALL);
+
+	m_CmdToolbar = CreateSimpleToolBarCtrl(m_hWnd, IDR_MAINFRAME, FALSE, ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST | CCS_ADJUSTABLE);
+	m_CmdToolbar.SetExtendedStyle(TBSTYLE_EX_MIXEDBUTTONS);
+	InitToolBar(m_CmdToolbar, IDR_MAINFRAME);
+	// Restore commands toolbar layout and position
+	m_CmdToolbar.RestoreState(HKEY_CURRENT_USER, L"SOFTWARE\\FBETeam\\FictionBook Editor\\Toolbars", L"CommandToolbar");
+	UIAddToolBar(m_CmdToolbar);
+
+	m_ScriptsToolbar = CreateSimpleToolBarCtrl(m_hWnd, IDR_SCRIPTS, FALSE, ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST | CCS_ADJUSTABLE);
+	m_ScriptsToolbar.SetExtendedStyle(TBSTYLE_EX_MIXEDBUTTONS);
+	InitToolBar(m_ScriptsToolbar, IDR_SCRIPTS);
+	UIAddToolBar(m_ScriptsToolbar);
+
+	HWND hWndLinksBar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST, 0, 0, 100, 100,
+									   m_hWnd, NULL, _Module.GetModuleInstance(), NULL);
+
+	HWND hWndTableBar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST, 0, 0, 100, 100,
+									   m_hWnd, NULL, _Module.GetModuleInstance(), NULL);
+	HWND hWndTableBar2 = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, ATL_SIMPLE_TOOLBAR_PANE_STYLE | TBSTYLE_LIST, 0, 0, 100, 100,
+										m_hWnd, NULL, _Module.GetModuleInstance(), NULL);
+
+	wchar_t buf[MAX_LOAD_STRING + 1];
+	HFONT hFont = (HFONT)::SendMessage(hWndLinksBar, WM_GETFONT, 0, 0);
+
+	// Links toolbar preparation
+	::SendMessage(hWndLinksBar, TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
+	// Next line provides empty drawing of text
+	::SendMessage(hWndLinksBar, TB_SETDRAWTEXTFLAGS, (WPARAM)DT_CALCRECT, (LPARAM)DT_CALCRECT);
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_ID, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndLinksBar, buf);
+	AddStaticText(m_id_caption, hWndLinksBar, 0, buf, hFont);
+	AddTbButton(hWndLinksBar, L"123456789012345678901234567890");
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_HREF, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndLinksBar, buf);
+	AddStaticText(m_href_caption, hWndLinksBar, 2, buf, hFont);
+	AddTbButton(hWndLinksBar, L"123456789012345678901234567890");
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_SECTION_ID, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndLinksBar, buf);
+	AddStaticText(m_section_id_caption, hWndLinksBar, 4, buf, hFont);
+	AddTbButton(hWndLinksBar, L"123456789012345678901234567890");
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_IMAGE_TITLE, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndLinksBar, buf);
+	AddStaticText(m_image_title_caption, hWndLinksBar, 6, buf, hFont);
+	AddTbButton(hWndLinksBar, L"123456789012345678901234567890");
+
+	// Table's first toolbar preparation
+	::SendMessage(hWndTableBar, TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
+	::SendMessage(hWndTableBar, TB_SETDRAWTEXTFLAGS, (WPARAM)DT_CALCRECT, (LPARAM)DT_CALCRECT);
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_TABLE_ID, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndTableBar, buf);
+	AddStaticText(m_table_id_caption, hWndTableBar, 0, buf, hFont);
+	AddTbButton(hWndTableBar, L"12345678901234567890");
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_TABLE_STYLE, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndTableBar, buf);
+	AddStaticText(m_table_style_caption, hWndTableBar, 2, buf, hFont);
+	AddTbButton(hWndTableBar, L"123456789012345");
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_ID, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndTableBar, buf);
+	AddStaticText(m_id_table_caption, hWndTableBar, 4, buf, hFont);
+	AddTbButton(hWndTableBar, L"12345678901234567890");
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_STYLE, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndTableBar, buf);
+	AddStaticText(m_style_caption, hWndTableBar, 6, buf, hFont);
+	AddTbButton(hWndTableBar, L"123456789012345");
+
+	// Table's second toolbar preparation
+	::SendMessage(hWndTableBar2, TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
+	::SendMessage(hWndTableBar2, TB_SETDRAWTEXTFLAGS, (WPARAM)DT_CALCRECT, (LPARAM)DT_CALCRECT);
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_COLSPAN, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndTableBar2, buf);
+	AddStaticText(m_colspan_caption, hWndTableBar2, 0, buf, hFont);
+	AddTbButton(hWndTableBar2, L"12345");
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_ROWSPAN, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndTableBar2, buf);
+	AddStaticText(m_rowspan_caption, hWndTableBar2, 2, buf, hFont);
+	AddTbButton(hWndTableBar2, L"12345");
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_TR_ALIGN, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndTableBar2, buf);
+	AddStaticText(m_tr_allign_caption, hWndTableBar2, 4, buf, hFont);
+	AddTbButton(hWndTableBar2, L"12345678");
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_TD_ALIGN, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndTableBar2, buf);
+	AddStaticText(m_th_allign_caption, hWndTableBar2, 6, buf, hFont);
+	AddTbButton(hWndTableBar2, L"12345678");
+
+	::LoadString(_Module.GetResourceInstance(), IDS_TB_CAPT_TD_VALIGN, buf, MAX_LOAD_STRING);
+	AddTbButton(hWndTableBar2, buf);
+	AddStaticText(m_valign_caption, hWndTableBar2, 8, buf, hFont);
+	AddTbButton(hWndTableBar2, L"12345678");
+
+	CreateSimpleReBar(ATL_SIMPLE_REBAR_NOBORDER_STYLE);
+
+	AddSimpleReBarBand(hWndCmdBar, 0, TRUE, 0);
+	AddSimpleReBarBand(m_CmdToolbar, 0, TRUE, 0, FALSE);
+	AddSimpleReBarBand(m_ScriptsToolbar, 0, TRUE, 0, FALSE);
+	AddSimpleReBarBand(hWndLinksBar, 0, TRUE, 0, TRUE);
+	AddSimpleReBarBand(hWndTableBar, 0, TRUE, 0, TRUE);
+	AddSimpleReBarBand(hWndTableBar2, 0, TRUE, 0, TRUE);
+	m_rebar = m_hWndToolBar;
+
+	// add editor controls  
+	RECT rc;
+
+	// m_id_caption.SetParent(this->m_hWnd);
+
+	/*HDC hdc = ::GetDC(hWndLinksBar);
+	COLORREF bkCollor = GetBkColor(hdc);*/
+	HDC hdc1 = ::GetDC(m_id_caption);
+	SetBkColor(hdc1, RGB(0, 0, 0));
+	//ReleaseDC(hdc);
+	ReleaseDC(hdc1);
+
+	DWORD CBS_COMMON_STYLE = WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL;
+
+	SubclassBox(hWndLinksBar, rc, 1, m_id_box, CBS_COMMON_STYLE, m_id, IDC_ID, hFont);
+	SubclassBox(hWndLinksBar, rc, 3, m_href_box, CBS_COMMON_STYLE | WS_VSCROLL | CBS_DROPDOWN | CBS_SORT, m_href, IDC_HREF, hFont);
+	SubclassBox(hWndLinksBar, rc, 5, m_section_box, CBS_COMMON_STYLE, m_section, IDC_SECTION, hFont);
+	SubclassBox(hWndLinksBar, rc, 7, m_image_title_box, CBS_COMMON_STYLE, m_image_title, IDC_IMAGE_TITLE, hFont);
+
+	// add editor-table controls
+	HFONT hFontT = (HFONT)::SendMessage(hWndTableBar, WM_GETFONT, 0, 0);
+	RECT rcT;
+
+	SubclassBox(hWndTableBar, rcT, 1, m_id_table_id_box, CBS_COMMON_STYLE, m_id_table_id, IDC_IDT, hFontT);
+	SubclassBox(hWndTableBar, rcT, 3, m_styleT_table_box, CBS_COMMON_STYLE, m_styleT_table, IDC_STYLET, hFontT);
+	SubclassBox(hWndTableBar, rcT, 5, m_id_table_box, CBS_COMMON_STYLE, m_id_table, IDC_ID, hFontT);
+	SubclassBox(hWndTableBar, rcT, 7, m_style_table_box, CBS_COMMON_STYLE, m_style_table, IDC_STYLE, hFontT);
+
+	SubclassBox(hWndTableBar2, rcT, 1, m_colspan_table_box, CBS_COMMON_STYLE, m_colspan_table, IDC_COLSPAN, hFontT);
+	SubclassBox(hWndTableBar2, rcT, 3, m_rowspan_table_box, CBS_COMMON_STYLE, m_rowspan_table, IDC_ROWSPAN, hFontT);
+	SubclassBox(hWndTableBar2, rcT, 5, m_alignTR_table_box, CBS_COMMON_STYLE | WS_VSCROLL | CBS_DROPDOWNLIST, m_alignTR_table, IDC_ALIGNTR, hFontT);
+	SubclassBox(hWndTableBar2, rcT, 7, m_align_table_box, CBS_COMMON_STYLE | WS_VSCROLL | CBS_DROPDOWNLIST, m_align_table, IDC_ALIGN, hFontT);
+	SubclassBox(hWndTableBar2, rcT, 9, m_valign_table_box, CBS_COMMON_STYLE | WS_VSCROLL | CBS_DROPDOWNLIST, m_valign_table, IDC_VALIGN, hFontT);
+
+	m_align_table_box.InsertString(0, _T(""));
+	m_align_table_box.InsertString(1, _T("left"));
+	m_align_table_box.InsertString(2, _T("right"));
+	m_align_table_box.InsertString(3, _T("center"));
+
+	m_alignTR_table_box.InsertString(0, _T(""));
+	m_alignTR_table_box.InsertString(1, _T("left"));
+	m_alignTR_table_box.InsertString(2, _T("right"));
+	m_alignTR_table_box.InsertString(3, _T("center"));
+
+	m_valign_table_box.InsertString(0, _T(""));
+	m_valign_table_box.InsertString(1, _T("top"));
+	m_valign_table_box.InsertString(2, _T("middle"));
+	m_valign_table_box.InsertString(3, _T("bottom"));
+
+	// create status bar
+	CreateSimpleStatusBar();
+	m_status.SubclassWindow(m_hWndStatusBar);
+	int panes[] =
+	{
+		ID_DEFAULT_PANE,
+		ID_PANE_CHAR,
+		399,
+		ID_PANE_INS
+	};
+	m_status.SetPanes(panes, sizeof(panes) / sizeof(panes[0]));
+	m_status.SetPaneWidth(ID_PANE_CHAR, 60);
+	m_status.SetPaneText(ID_PANE_CHAR, L"");
+	m_status.SetPaneWidth(399, 20);
+	m_status.SetPaneWidth(ID_PANE_INS, 30);
+
+	// load insert/overwrite abbreviations  
+	strINS.LoadString(IDS_PANE_INS);
+	strOVR.LoadString(IDS_PANE_OVR);
+
+	// create splitter
+	m_hWndClient = m_splitter.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+	m_splitter.SetSplitterExtendedStyle(0);
+
+	// create splitter contents
+	//  m_document_tree.Create(m_splitter);
+	//  m_document_tree.SetTitle(L"Document Tree");
+	m_view.Create(m_splitter, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+
+	// create a tree
+	/*m_dummy_pane.Create(m_document_tree,rcDefault,NULL,WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,WS_EX_CLIENTEDGE);
+	m_document_tree.SetClient(m_dummy_pane);
+	m_document_tree.Create(m_dummy_pane, rcDefault);
+	m_document_tree.SetBkColor(::GetSysColor(COLOR_WINDOW));
+	m_dummy_pane.SetSplitterPane(0,m_document_tree);
+	m_dummy_pane.SetSinglePaneMode(SPLIT_PANE_LEFT);*/
+
+	// create a source view
+	m_source.Create(_T("Scintilla"), m_view, rcDefault, NULL, WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0);
+	m_view.AttachWnd(m_source);
+	SetupSci();
+	SetSciStyles();
+
+	// initialize a new blank document
+	m_doc = new FB::Doc(*this);
+	FB::Doc::m_active_doc = m_doc;
+	bool start_with_params = false;
+	// load a command line arg if it was provided
+	if (_ARGV.GetSize()>0 && !_ARGV[0].IsEmpty())
+	{
+		if (m_doc->Load(m_view, _ARGV[0]))
+		{
+			start_with_params = true;
+			m_file_age = FileAge(_ARGV[0]);
+		}
+		else
+		{
+			// added by SeNS: create blank document, and load incorrect XML to Scintilla
+			delete m_doc;
+			m_doc = new FB::Doc(*this);
+			FB::Doc::m_active_doc = m_doc;
+			m_doc->CreateBlank(m_view);
+			m_file_age = ~0;
+			m_bad_xml = true;
+		}
+	}
+	else
+	{
+		m_doc->CreateBlank(m_view);
+		m_file_age = ~0;
+	}
+
+	if (_Settings.m_fast_mode) {
+		m_doc->SetFastMode(true);
+		UISetCheck(ID_VIEW_FASTMODE, TRUE);
+	}
+	else
+		m_doc->SetFastMode(false);
+
+	AttachDocument(m_doc);
+	UISetCheck(ID_VIEW_BODY, 1);
+
+	m_document_tree.Create(m_splitter);
+
+	if (AU::_ARGS.start_in_desc_mode)
+		ShowView(DESC);
+
+	// init plugins&MRU list
+	InitPlugins();
+
+	// setup splitter
+	m_splitter.SetSplitterPanes(m_document_tree, m_view);
+
+	// hide elements
+	if (_Settings.ViewStatusBar())
+	{
+		UISetCheck(ID_VIEW_STATUS_BAR, 1);
+	}
+	else
+	{
+		m_status.ShowWindow(SW_HIDE);
+		UISetCheck(ID_VIEW_STATUS_BAR, FALSE);
+	}
+
+	if (_Settings.ViewDocumentTree())
+	{
+		UISetCheck(ID_VIEW_TREE, 1);
+	}
+	else
+	{
+		m_document_tree.ShowWindow(SW_HIDE);
+		UISetCheck(ID_VIEW_TREE, FALSE);
+		m_splitter.SetSinglePaneMode(SPLIT_PANE_RIGHT);
+	}
+
+	// load toolbar settings
+	for (int j = ATL_IDW_BAND_FIRST; j<ATL_IDW_BAND_FIRST + 5; ++j)
+		UISetCheck(j, TRUE);
+	REBARBANDINFO   rbi;
+	memset(&rbi, 0, sizeof(rbi));
+	rbi.cbSize = sizeof(rbi);
+	rbi.fMask = RBBIM_SIZE | RBBIM_STYLE;
+	CString     tbs(_Settings.GetToolbarsSettings());
+	const TCHAR *cp = tbs;
+	for (int bn = 0;; ++bn) {
+		const TCHAR	  *ce = _tcschr(cp, _T(';'));
+		if (!ce)
+			break;
+		int	      id, style, cx;
+		if (_stscanf(cp, _T("%d,%d,%d;"), &id, &style, &cx) != 3)
+			break;
+		cp = ce + 1;
+		int	      idx = m_rebar.IdToIndex(id);
+		m_rebar.GetBandInfo(idx, &rbi);
+		rbi.fStyle &= ~(RBBS_BREAK | RBBS_HIDDEN);
+		style &= RBBS_BREAK | RBBS_HIDDEN;
+		rbi.fStyle |= style;
+		rbi.cx = cx;
+		m_rebar.SetBandInfo(idx, &rbi);
+		if (idx != bn)
+			m_rebar.MoveBand(idx, bn);
+		UISetCheck(id, style & RBBS_HIDDEN ? FALSE : TRUE);
+	}
+
+	// delay resizing
+	PostMessage(AU::WM_POSTCREATE);
+
+	// register object for message filtering and idle updates
+	CMessageLoop* pLoop = _Module.GetMessageLoop();
+	ATLASSERT(pLoop != NULL);
+	pLoop->AddMessageFilter(this);
+	pLoop->AddIdleHandler(this);
+
+	// accept dropped files
+	::DragAcceptFiles(*this, TRUE);
+
+	// Modification by Pilgrim
+	BOOL bVisible = _Settings.ViewDocumentTree();
+	m_document_tree.ShowWindow(bVisible ? SW_SHOWNOACTIVATE : SW_HIDE);
+	UISetCheck(ID_VIEW_TREE, bVisible);
+	m_splitter.SetSinglePaneMode(bVisible ? SPLIT_PANE_NONE : SPLIT_PANE_RIGHT);
+
+	if (start_with_params)
+	{
+		m_mru.AddToList(_ARGV[0]);
+		if (_Settings.m_restore_file_position)
+		{
+			m_restore_pos_cmdline = true;
+		}
+	}
+
+	// Change keyboard layout
+	if (_Settings.m_change_kbd_layout_check)
+	{
+		CString layout;
+		layout.Format(L"%08x", _Settings.GetKeybLayout());
+		LoadKeyboardLayout(layout, KLF_ACTIVATE);
+	}
+
+	// added by SeNS: create blank document, and load incorrect XML to Scintilla
+	if (m_bad_xml)
+		if (!LoadToScintilla(_ARGV[0])) return -1;
+
+	// Added by SeNS
+	if (m_Speller && m_Speller->Enabled())
+	{
+		if (!m_Speller->Available())
+			UIEnable(ID_TOOLS_SPELLCHECK, false, true);
+		else
+			UIEnable(ID_TOOLS_SPELLCHECK, true, true);
+		m_Speller->SetHighlightMisspells(_Settings.m_highlght_check);
+	}
+	else UIEnable(ID_TOOLS_SPELLCHECK, false, true);
+
+	// Restore scripts toolbar layout and position
+	m_ScriptsToolbar.RestoreState(HKEY_CURRENT_USER, L"SOFTWARE\\FBETeam\\FictionBook Editor\\Toolbars", L"ScriptsToolbar");
+
+	return 0;
+}
+
+LRESULT CMainFrame::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+{
+	if (DiscardChanges())
+	{
+		// added by SeNS
+		if (m_Speller)
+		{
+			m_Speller->EndDocumentCheck();
+			m_Speller->SetEnabled(false);
+		}
+		_Settings.SetViewStatusBar(m_status.IsWindowVisible() != 0);
+		//_Settings.SetViewDocumentTree(IsSourceActive() ? m_document_tree.IsWindowVisible()==0 : !m_save_sp_mode);
+		_Settings.SetSplitterPos(m_splitter.GetSplitterPos());
+		WINDOWPLACEMENT wpl;
+		wpl.length = sizeof(wpl);
+		GetWindowPlacement(&wpl);
+		_Settings.SetWindowPosition(wpl);
+		m_mru.WriteToRegistry(_Settings.GetKeyPath());
+		// save toolbars state
+		CString tbs;
+		REBARBANDINFO  rbi;
+		memset(&rbi, 0, sizeof(rbi));
+		rbi.cbSize = sizeof(rbi);
+		rbi.fMask = RBBIM_ID | RBBIM_SIZE | RBBIM_STYLE;
+		int	  num_bands = m_rebar.GetBandCount();
+		for (int i = 0; i<num_bands; ++i) {
+			m_rebar.GetBandInfo(i, &rbi);
+			CString	bi;
+			bi.Format(_T("%d,%d,%d;"), rbi.wID, rbi.fStyle, rbi.cx);
+			tbs += bi;
+		}
+
+		// Save toolbar layout
+		m_CmdToolbar.SaveState(HKEY_CURRENT_USER, L"SOFTWARE\\FBETeam\\FictionBook Editor\\Toolbars", L"CommandToolbar");
+		m_ScriptsToolbar.SaveState(HKEY_CURRENT_USER, L"SOFTWARE\\FBETeam\\FictionBook Editor\\Toolbars", L"ScriptsToolbar");
+
+		_Settings.SetToolbarsSettings(tbs);
+		_Settings.SaveHotkeyGroups();
+		_Settings.Save();
+		_Settings.SaveWords();
+		_Settings.Close();
+
+		DefWindowProc(WM_CLOSE, 0, 0);
+		return 1;
+	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	DestroyAcceleratorTable(m_hAccel);
+	bHandled = FALSE;
+	return 0;
+}
+
+LRESULT CMainFrame::OnPostCreate(UINT, WPARAM, LPARAM, BOOL&)
+{
+	//SetSplitterPos works best after the default WM_CREATE has been handled
+	m_splitter.SetSplitterPos(_Settings.GetSplitterPos());
+
+	_Settings.LoadHotkeyGroups();
+	DestroyAcceleratorTable(m_hAccel);
+
+	LPACCEL lpaccelNew = new ACCEL[_Settings.keycodes];
+	int HKentries = _Settings.keycodes;
+	for (unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
+	{
+		for (unsigned int j = 0; j < _Settings.m_hotkey_groups.at(i).m_hotkeys.size(); ++j)
+		{
+			ACCEL accel = _Settings.m_hotkey_groups.at(i).m_hotkeys.at(j).m_accel;
+			if (accel.fVirt != NULL && accel.key != NULL && accel.cmd != NULL)
+			{
+				lpaccelNew[--HKentries] = accel;
+			}
+		}
+	}
+
+	m_hAccel = CreateAcceleratorTable(lpaccelNew, _Settings.keycodes);
+	delete[] lpaccelNew;
+
+	FillMenuWithHkeys(m_MenuBar.GetMenu());
+	return 0;
+}
+
+LRESULT CMainFrame::OnSettingChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	if (m_doc)
+		m_doc->ApplyConfChanges();
+	return 0;
+}
+
+LRESULT CMainFrame::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	UpdateViewSizeInfo();
+	bHandled = FALSE;
+	return 0;
+}
+
+LRESULT CMainFrame::OnContextMenu(UINT, WPARAM, LPARAM lParam, BOOL&)
+{
+	HMENU menu, popup;
+	RECT rect;
+	CPoint ptMousePos = (CPoint)lParam;
+	ScreenToClient(&ptMousePos);
+	// find clicked toolbar
+	REBARBANDINFO rbi;
+	ZeroMemory((void*)&rbi, sizeof(rbi));
+	rbi.cbSize = sizeof(REBARBANDINFO);
+	rbi.fMask = RBBIM_ID;
+	m_selBandID = 0;
+	for (unsigned int i = 0; i< m_rebar.GetBandCount(); i++)
+	{
+		m_rebar.GetRect(i, &rect);
+		if (PtInRect(&rect, ptMousePos))
+		{
+			m_rebar.GetBandInfo(i, &rbi);
+			m_selBandID = rbi.wID;
+			break;
+		}
+	}
+	// display context menu for command & script toolbars only
+	if ((m_selBandID == ATL_IDW_BAND_FIRST + 1) || (m_selBandID == ATL_IDW_BAND_FIRST + 2))
+	{
+		menu = ::LoadMenu(_Module.GetResourceInstance(), MAKEINTRESOURCEW(IDR_TOOLBAR_MENU));
+		popup = ::GetSubMenu(menu, 0);
+		ClientToScreen(&ptMousePos);
+		::TrackPopupMenu(popup, TPM_LEFTALIGN, ptMousePos.x, ptMousePos.y, 0, *this, 0);
+	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnUnhandledCommand(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+{
+	HWND hFocus = ::GetFocus();
+	UINT idCtl = HIWORD(wParam);
+
+	// only pass messages to the editors
+	if (idCtl == 0 || idCtl == 1)
+	{
+		if (
+			hFocus == m_id || hFocus == m_href || hFocus == m_section || ::IsChild(m_id, hFocus)
+			|| ::IsChild(m_href, hFocus) || ::IsChild(m_section, hFocus) || hFocus == m_styleT_table
+			|| hFocus == m_id_table_id || hFocus == m_id_table || hFocus == m_style_table
+			|| hFocus == m_colspan_table || hFocus == m_rowspan_table || hFocus == m_align_table
+			|| hFocus == m_valign_table || hFocus == m_alignTR_table || hFocus == m_image_title
+			|| ::IsChild(m_id_table_id, hFocus) || ::IsChild(m_id_table, hFocus)
+			|| ::IsChild(m_style_table, hFocus) || ::IsChild(m_styleT_table, hFocus)
+			|| ::IsChild(m_colspan_table, hFocus) || ::IsChild(m_rowspan_table, hFocus)
+			|| ::IsChild(m_alignTR_table, hFocus) || ::IsChild(m_align_table, hFocus)
+			|| ::IsChild(m_valign_table, hFocus) || ::IsChild(m_image_title, hFocus)
+			)
+			return ::SendMessage(hFocus, WM_COMMAND, wParam, lParam);
+
+		// We need to check that the focused window is a web browser indeed
+		if (hFocus == m_view.GetActiveWnd() || ::IsChild(m_view.GetActiveWnd(), hFocus))
+		{
+			if (IsSourceActive())
+			{
+				switch (LOWORD(wParam))
+				{
+					/*case ID_EDIT_UNDO:
+					m_source.SendMessage(SCI_UNDO);
+					break;*/
+				case ID_EDIT_REDO:
+					m_source.Redo();
+					break;
+					/*case ID_EDIT_CUT:
+					m_source.SendMessage(SCI_CUT);
+					break;
+					case ID_EDIT_COPY:
+					m_source.SendMessage(SCI_COPY);
+					break;
+					case ID_EDIT_PASTE:
+					m_source.SendMessage(SCI_PASTE);
+					break;*/
+				case ID_EDIT_FIND:
+				{
+					if (!m_sci_find_dlg)
+						m_sci_find_dlg = new CSciFindDlg(&m_doc->m_body, m_source);
+
+					if (m_sci_find_dlg->IsValid())
+						break;
+
+					m_sci_find_dlg->UpdatePattern();
+
+					m_sci_find_dlg->ShowDialog();
+					break;
+				}
+				case ID_EDIT_FINDNEXT:
+					m_doc->m_body.SciFindNext(m_source, false, true);
+					break;
+				case ID_EDIT_REPLACE:
+				{
+					if (!m_sci_replace_dlg)
+						m_sci_replace_dlg = new CSciReplaceDlg(&m_doc->m_body, m_source);
+
+					if (m_sci_replace_dlg->IsValid())
+						break;
+
+					m_sci_replace_dlg->UpdatePattern();
+
+					m_sci_replace_dlg->ShowDialog();
+					break;
+				}
+				}
+			}
+			else
+				return ActiveView().SendMessage(WM_COMMAND, wParam, 0);
+		}
+
+		if (hFocus == m_document_tree.m_hWnd || ::IsChild(m_document_tree.m_hWnd, hFocus))
+			return m_doc->m_body.SendMessage(WM_COMMAND, wParam, 0);
+	}
+
+	// Last chance to send common commands to any focused window
+	switch (LOWORD(wParam))
+	{
+	case ID_EDIT_UNDO:
+		::SendMessage(hFocus, WM_UNDO, 0, 0);
+		break;
+	case ID_EDIT_REDO:
+		::SendMessage(hFocus, EM_REDO, 0, 0);
+		break;
+	case ID_EDIT_CUT:
+		::SendMessage(hFocus, WM_CUT, 0, 0);
+		break;
+	case ID_EDIT_COPY:
+		::SendMessage(hFocus, WM_COPY, 0, 0);
+		break;
+	case ID_EDIT_PASTE:
+		::SendMessage(hFocus, WM_PASTE, 0, 0);
+		break;
+	case ID_EDIT_INS_SYMBOL:
+		::SendMessage(hFocus, WM_CHAR, wParam, 0);
+		break;
+	}
+
+	return 0;
+}
+
+LRESULT CMainFrame::OnSetFocus(UINT, WPARAM, LPARAM, BOOL&)
+{
+	m_view.SetFocus();
+	UpdateViewSizeInfo();
+	return 0;
+}
+
+LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+{
+	HDROP	  hDrop = (HDROP)wParam;
+	UINT	  nf = ::DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+	CString buf, ext;
+	if (nf>0) {
+		UINT    len = ::DragQueryFile(hDrop, 0, NULL, 0);
+		TCHAR   *cp = buf.GetBuffer(len + 1);
+		len = ::DragQueryFile(hDrop, 0, cp, len + 1);
+		buf.ReleaseBuffer(len);
+	}
+	::DragFinish(hDrop);
+	if (!buf.IsEmpty())
+	{
+		ext.SetString(ATLPath::FindExtension(buf));
+		if (ext.CompareNoCase(L".FB2") == 0)
+		{
+			if (LoadFile(buf) == OK)
+			{
+				m_mru.AddToList(m_doc->m_filename);
+				PIDLIST_ABSOLUTE pidl = { 0 };
+				HRESULT hr = SHParseDisplayName(m_doc->m_filename, NULL, &pidl, 0, NULL);
+				if (SUCCEEDED(hr))
+				{
+					m_spShellItem.Release();
+					SHCreateShellItem(NULL, NULL, pidl, &m_spShellItem);
+					ILFree(pidl);
+				}
+			}
+		}
+		else if ((ext.CompareNoCase(L".JPG") == 0) || (ext.CompareNoCase(L".JPEG") == 0) || (ext.CompareNoCase(L".PNG") == 0))
+		{
+			m_doc->m_body.SetFocus();
+			m_doc->m_body.AddImage(buf, false);
+		}
+	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnSetStatusText(UINT, WPARAM, LPARAM lParam, BOOL&)
+{
+	m_status_msg = (const TCHAR *)lParam;
+	return 0;
+}
+
+LRESULT CMainFrame::OnTrackPopupMenu(UINT, WPARAM, LPARAM lParam, BOOL&)
+{
+	AU::TRACKPARAMS* tp = (AU::TRACKPARAMS*)lParam;
+	// added by SeNS
+	if (m_Speller) m_Speller->AppendSpellMenu(tp->hMenu);
+	m_MenuBar.TrackPopupMenu(tp->hMenu, tp->uFlags, tp->x, tp->y);
+	return 0;
 }
 
 LRESULT CMainFrame::OnChar(UINT, WPARAM wParam, LPARAM lParam, BOOL&)
@@ -3347,6 +3282,14 @@ LRESULT CMainFrame::OnChar(UINT, WPARAM wParam, LPARAM lParam, BOOL&)
   }
   SetIsText();
   return 0;
+}
+
+LRESULT CMainFrame::OnPreCommand(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	if ((HIWORD(wParam) == 0 || HIWORD(wParam) == 1) && LOWORD(wParam) != ID_EDIT_INCSEARCH)
+		StopIncSearch(true);
+	return 0;
 }
 
 bool CMainFrame::SourceToHTML()
@@ -3982,6 +3925,14 @@ LRESULT CMainFrame::OnFileValidate(WORD, WORD, HWND, BOOL&) {
     SourceGoTo(line, col);
   }
   return 0;
+}
+
+LRESULT CMainFrame::OnFileExit(WORD, WORD, HWND, BOOL&)
+{
+	// close (possible) opened in script modeless dialogs
+	PostMessage(WM_CLOSEDIALOG);
+	PostMessage(WM_CLOSE);
+	return 0;
 }
 
 void  CMainFrame::FoldAll() {
@@ -5328,6 +5279,69 @@ void CMainFrame::RemoveLastUndo()
 	}
 }
 
+// Fill current menu with accelerators' text
+void CMainFrame::FillMenuWithHkeys(HMENU menu)
+{
+	for (unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
+	{
+		std::vector<CHotkey>::iterator begin = _Settings.m_hotkey_groups.at(i).m_hotkeys.begin();
+		if (_Settings.m_hotkey_groups.at(i).m_reg_name == L"Scripts"
+			|| _Settings.m_hotkey_groups.at(i).m_reg_name == L"Plugins")
+			begin++;
+
+		std::sort(begin, _Settings.m_hotkey_groups.at(i).m_hotkeys.end());
+		for (unsigned int j = 0; j < _Settings.m_hotkey_groups.at(i).m_hotkeys.size(); ++j)
+		{
+			CString text;
+			WORD cmd = _Settings.m_hotkey_groups.at(i).m_hotkeys.at(j).m_accel.cmd;
+
+			if (::GetMenuString(menu, cmd, text.GetBufferSetLength(MAX_LOAD_STRING + 1), MAX_LOAD_STRING + 1,
+				MF_BYCOMMAND))
+			{
+				text.ReleaseBuffer();
+				text += L"\t";
+				text += U::AccelToString(_Settings.m_hotkey_groups.at(i).m_hotkeys.at(j).m_accel);
+
+				MENUITEMINFO miim;
+				ZeroMemory(&miim, sizeof(MENUITEMINFO));
+				miim.cbSize = sizeof(MENUITEMINFO);
+				miim.fMask = MIIM_STRING;
+				miim.dwTypeData = text.GetBuffer();
+				miim.cch = text.GetLength();
+				::SetMenuItemInfo(menu, cmd, FALSE, &miim);
+			}
+		}
+	}
+}
+
+// added by SeNS - paste pictures
+bool CMainFrame::BitmapInClipboard()
+{
+	bool result = false;
+	if (OpenClipboard())
+	{
+		if (IsClipboardFormatAvailable(CF_BITMAP)) result = true;
+		CloseClipboard();
+	}
+	return result;
+}
+
+// added by SeNS
+void CMainFrame::UpdateViewSizeInfo()
+{
+	if (m_doc && m_doc->m_body)
+		if (m_doc->m_body.Document())
+		{
+			MSHTML::IHTMLElement2Ptr m_scrollElement = MSHTML::IHTMLDocument3Ptr(m_doc->m_body.Document())->documentElement;
+			if (m_scrollElement)
+			{
+				_Settings.SetViewWidth(m_scrollElement->clientWidth);
+				_Settings.SetViewHeight(m_scrollElement->clientHeight);
+				_Settings.SetMainWindow(m_hWnd);
+			}
+		}
+}
+
 // added by SeNS: try to load incorrect XML directly to Scintilla
 bool CMainFrame::LoadToScintilla(CString filename)
 {
@@ -5427,4 +5441,50 @@ void CMainFrame::DisplayCharCode()
 		m_status.SetPaneText(ID_PANE_CHAR, s);
 	}
 	else m_status.SetPaneText(ID_PANE_CHAR, L"");
+}
+
+void CMainFrame::AddTbButton(HWND hWnd, const TCHAR *text, const int idCommand, const BYTE bState, const HICON icon)
+{
+	CToolBarCtrl tb = hWnd;
+	int iImage = I_IMAGENONE;
+	BYTE bStyle = BTNS_BUTTON | BTNS_AUTOSIZE;
+	if (icon)
+	{
+		CImageList iList = tb.GetImageList();
+		if (iList) iImage = iList.AddIcon(icon);
+	}
+
+	tb.AddButton(idCommand, bStyle, bState, iImage, text, 0);
+	// custom added command
+	if (icon)
+	{
+		int idx = tb.CommandToIndex(idCommand);
+		TBBUTTON tbButton;
+		tb.GetButton(idx, &tbButton);
+		AddToolbarButton(tb, tbButton, text);
+		// move button to unassigned
+		tb.DeleteButton(idx);
+	}
+	tb.AutoSize();
+}
+
+void CMainFrame::SubclassBox(HWND hWnd, RECT& rc, const int pos, CComboBox& box, DWORD dwStyle, CCustomEdit& custedit, const int resID, HFONT& hFont)
+{
+	::SendMessage(hWnd, TB_GETITEMRECT, pos, (LPARAM)&rc);
+	rc.bottom--;
+	box.Create(hWnd, rc, NULL, dwStyle, WS_EX_CLIENTEDGE, resID);
+	box.SetFont(hFont);
+	custedit.SubclassWindow(box.ChildWindowFromPoint(CPoint(3, 3)));
+}
+
+void CMainFrame::AddStaticText(CCustomStatic &st, HWND toolbarHwnd, int id, const TCHAR *text, HFONT hFont)
+{
+	RECT rect;
+	SendMessage(toolbarHwnd, TB_GETITEMRECT, id, (LPARAM)&rect);
+	rect.bottom--;
+
+	st.Create(toolbarHwnd, rect, NULL, WS_CHILD | WS_VISIBLE, WS_EX_TRANSPARENT, IDC_ID);
+	st.SetFont(hFont);
+	st.SetWindowText(text);
+	st.SetEnabled(true);
 }

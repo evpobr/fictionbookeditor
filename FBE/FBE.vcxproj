@@ -434,6 +434,7 @@ link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENT
     <ClInclude Include="atlimageex.h" />
     <ClInclude Include="extras\atlcrypt.h" />
     <ClInclude Include="FBE.h" />
+    <ClInclude Include="fbectrls.h" />
     <ClInclude Include="TableDialog.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ContainerWnd.h" />
