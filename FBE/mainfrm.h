@@ -255,7 +255,7 @@ public:
 
   // ui updating
   void	  UIUpdateViewCmd(CFBEView& view,WORD wID,OLECMD& oc,const TCHAR *hk);
-  void	  UIUpdateViewCmd(CFBEView& view,WORD wID) { UIEnable(wID,view.CheckCommand(wID)); }
+  void	  UIUpdateViewCmd(CFBEView& view, WORD wID);
   void	  UISetCheckCmd(CFBEView& view, WORD wID)
   {
 	  UISetCheck(wID, view.CheckSetCommand(wID));

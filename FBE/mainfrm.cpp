@@ -375,6 +375,11 @@ void  CMainFrame::UIUpdateViewCmd(CFBEView& view, WORD wID, OLECMD& oc, const wc
 	UIEnable(wID, (oc.cmdf & OLECMDF_ENABLED) != 0);
 }
 
+void CMainFrame::UIUpdateViewCmd(CFBEView& view, WORD wID)
+{
+	UIEnable(wID, view.CheckCommand(wID));
+}
+
 BOOL CMainFrame::OnIdle()
 {	
 	if(CheckFileTimeStamp())
