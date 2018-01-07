@@ -380,6 +380,11 @@ void CMainFrame::UIUpdateViewCmd(CFBEView& view, WORD wID)
 	UIEnable(wID, view.CheckCommand(wID));
 }
 
+void CMainFrame::UISetCheckCmd(CFBEView & view, WORD wID)
+{
+	UISetCheck(wID, view.CheckSetCommand(wID));
+}
+
 BOOL CMainFrame::OnIdle()
 {	
 	if(CheckFileTimeStamp())
