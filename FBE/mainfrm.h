@@ -254,7 +254,7 @@ public:
 	UINT m_last_plugin;
 
   // ui updating
-  void	  UIUpdateViewCmd(CFBEView& view,WORD wID,OLECMD& oc,const TCHAR *hk);
+  void	  UIUpdateViewCmd(CFBEView& view,WORD wID,OLECMD& oc,LPCWSTR hk);
   void	  UIUpdateViewCmd(CFBEView& view, WORD wID);
   void	  UISetCheckCmd(CFBEView& view, WORD wID)
   {

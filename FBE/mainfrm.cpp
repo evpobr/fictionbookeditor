@@ -367,7 +367,7 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 	return FALSE;
 }
 
-void  CMainFrame::UIUpdateViewCmd(CFBEView& view, WORD wID, OLECMD& oc, const wchar_t *hk)
+void  CMainFrame::UIUpdateViewCmd(CFBEView& view, WORD wID, OLECMD& oc, LPCWSTR hk)
 {
 	CString fbuf;
 	fbuf.Format(L"%s\t%s", (const TCHAR*)view.QueryCmdText(oc.cmdID), hk);
