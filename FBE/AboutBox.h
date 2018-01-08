@@ -1,12 +1,15 @@
 #pragma once
-#include "stdafx.h"
-#include "resource.h"
+
 #include "GLLogo.h"
+#include "resource.h"
 
 class CAboutDlg : public CDialogImpl<CAboutDlg>
 {
 public:
-	enum { IDD = IDD_ABOUTBOX };
+	enum
+	{
+		IDD = IDD_ABOUTBOX
+	};
 
 	BEGIN_MSG_MAP(CAboutDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
@@ -31,12 +34,11 @@ private:
 
 	CString m_sLogoCaption;
 
-	LRESULT OnInitDialog(UINT, WPARAM, LPARAM, BOOL&);
-	LRESULT OnCloseCmd(WORD, WORD wID, HWND, BOOL&);
-	LRESULT OnGetMinMaxInfo(UINT, WPARAM, LPARAM lParam, BOOL&);
-	LRESULT OnSize(UINT, WPARAM, LPARAM, BOOL&);
-	LRESULT OnCtlColor(UINT, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnNMClickSyslinkAbLinks(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL&);
-	LRESULT OnResizeOpenGLWindow(UINT, WPARAM, LPARAM, BOOL&);
+	LRESULT OnInitDialog(UINT, WPARAM, LPARAM, BOOL &);
+	LRESULT OnCloseCmd(WORD, WORD wID, HWND, BOOL &);
+	LRESULT OnGetMinMaxInfo(UINT, WPARAM, LPARAM lParam, BOOL &);
+	LRESULT OnSize(UINT, WPARAM, LPARAM, BOOL &);
+	LRESULT OnCtlColor(UINT, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNMClickSyslinkAbLinks(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL &);
+	LRESULT OnResizeOpenGLWindow(UINT, WPARAM, LPARAM, BOOL &);
 };
-

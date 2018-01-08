@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "Utils.h"
 #include "AboutBox.h"
+#include "Utils.h"
 
-LRESULT CAboutDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
+LRESULT CAboutDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL &)
 {
 	m_bAllowResize = false;
 
-	SetIcon(LoadIcon(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDR_MAINFRAME)));
+	SetIcon(LoadIcon(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME)));
 
 	m_Contributors = GetDlgItem(IDC_CONTRIBS);
 	HRSRC hres = ::FindResource(NULL, L"ABOUT_FILE", L"ABOUT_FILE");
 	HGLOBAL hbytes = ::LoadResource(NULL, hres);
-	CA2CT contribs((char*)::LockResource(hbytes), 65001);  // UTF-8
+	CA2CT contribs((char *)::LockResource(hbytes), 65001); // UTF-8
 	CString s(contribs);
-	m_Contributors.SetWindowText(s.Left(s.ReverseFind(L'\n')-1));
+	m_Contributors.SetWindowText(s.Left(s.ReverseFind(L'\n') - 1));
 
 	// create OpenGL logo window
 	m_glLogo.SubclassWindow(GetDlgItem(IDC_AB_BANNER));
@@ -23,7 +23,8 @@ LRESULT CAboutDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
 		GetDlgItem(IDC_AB_BANNER).ShowWindow(SW_HIDE);
 		GetDlgItem(IDC_AB_STATIC_BANNER).ShowWindow(SW_SHOW);
 	}
-	else GetDlgItem(IDC_AB_BANNER).ShowWindow(SW_SHOW);
+	else
+		GetDlgItem(IDC_AB_BANNER).ShowWindow(SW_SHOW);
 
 	::ShowWindow(GetDlgItem(IDC_PIC_UPDATE), SW_HIDE);
 	::ShowWindow(GetDlgItem(IDC_TEXT_STATUS), SW_HIDE);
@@ -31,26 +32,26 @@ LRESULT CAboutDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL&)
 	return 0;
 }
 
-LRESULT CAboutDlg::OnCloseCmd(WORD, WORD wID, HWND, BOOL&)
+LRESULT CAboutDlg::OnCloseCmd(WORD, WORD wID, HWND, BOOL &)
 {
 	EndDialog(wID);
 	return 0;
 }
 
-LRESULT CAboutDlg::OnCtlColor(UINT, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CAboutDlg::OnCtlColor(UINT, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	HWND hwndEdit = (HWND) lParam;
+	HWND hwndEdit = (HWND)lParam;
 	if (hwndEdit == GetDlgItem(IDC_CONTRIBS))
 	{
 		HDC hdc = (HDC)wParam;
-		::SetBkColor(hdc, RGB(255,255,255));
-		return (LRESULT) ::GetStockObject(WHITE_BRUSH);
+		::SetBkColor(hdc, RGB(255, 255, 255));
+		return (LRESULT)::GetStockObject(WHITE_BRUSH);
 	}
 	bHandled = TRUE;
 	return 0;
 }
 
-LRESULT CAboutDlg::OnNMClickSyslinkAbLinks(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL&)
+LRESULT CAboutDlg::OnNMClickSyslinkAbLinks(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL &)
 {
 	PNMLINK pNMLink = (PNMLINK)pNMHDR;
 	CString args;
@@ -61,7 +62,7 @@ LRESULT CAboutDlg::OnNMClickSyslinkAbLinks(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL&
 	return 0;
 }
 
-LRESULT CAboutDlg::OnGetMinMaxInfo(UINT, WPARAM, LPARAM lParam, BOOL&)
+LRESULT CAboutDlg::OnGetMinMaxInfo(UINT, WPARAM, LPARAM lParam, BOOL &)
 {
 	if (!m_bAllowResize)
 	{
@@ -76,7 +77,7 @@ LRESULT CAboutDlg::OnGetMinMaxInfo(UINT, WPARAM, LPARAM lParam, BOOL&)
 	return TRUE;
 }
 
-LRESULT CAboutDlg::OnSize(UINT, WPARAM, LPARAM, BOOL&)
+LRESULT CAboutDlg::OnSize(UINT, WPARAM, LPARAM, BOOL &)
 {
 	if (m_bAllowResize)
 	{
@@ -87,7 +88,7 @@ LRESULT CAboutDlg::OnSize(UINT, WPARAM, LPARAM, BOOL&)
 	return FALSE;
 }
 
-LRESULT CAboutDlg::OnResizeOpenGLWindow(UINT, WPARAM, LPARAM, BOOL&)
+LRESULT CAboutDlg::OnResizeOpenGLWindow(UINT, WPARAM, LPARAM, BOOL &)
 {
 	CButton btn = GetDlgItem(IDOK);
 	// switch glLogo to full client area
@@ -125,8 +126,8 @@ LRESULT CAboutDlg::OnResizeOpenGLWindow(UINT, WPARAM, LPARAM, BOOL&)
 		m_glLogo.SetWindowPos(0, &rect, 0);
 		m_glLogo.SetFocus();
 
-		GetWindowText (m_AboutCaption);
-		SetWindowText (m_sLogoCaption);
+		GetWindowText(m_AboutCaption);
+		SetWindowText(m_sLogoCaption);
 		ModifyStyle(0, WS_MAXIMIZEBOX, SWP_FRAMECHANGED);
 		UpdateWindow();
 
@@ -157,7 +158,7 @@ LRESULT CAboutDlg::OnResizeOpenGLWindow(UINT, WPARAM, LPARAM, BOOL&)
 		GetDlgItem(IDC_SYSLINK_AB_LINKS).ShowWindow(SW_SHOW);
 		GetDlgItem(IDC_STATIC_BUILD).ShowWindow(SW_SHOW);
 
-		SetWindowText (m_AboutCaption);
+		SetWindowText(m_AboutCaption);
 		ModifyStyle(WS_MAXIMIZEBOX, 0, SWP_FRAMECHANGED);
 
 		m_bAllowResize = false;
