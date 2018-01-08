@@ -3,22 +3,23 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "resource.h"
 #include "res1.h"
+#include "resource.h"
 
-#include "utils.h"
 #include "apputils.h"
+#include "utils.h"
 
+#include "ElementDescMnr.h"
 #include "FBDoc.h"
 #include "Scintilla.h"
 #include "Settings.h"
-#include "ElementDescMnr.h"
 
 extern CElementDescMnr _EDMnr;
 
 extern CSettings _Settings;
 
-namespace FB {
+namespace FB
+{
 
 // namespaces
 const _bstr_t FBNS(L"http://www.gribuser.ru/xml/fictionbook/2.0");
@@ -30,21 +31,22 @@ CSimpleMap<Doc *, Doc *> Doc::m_active_docs;
 Doc * FB::Doc::m_active_doc;
 bool FB::Doc::m_fast_mode;
 
-Doc * Doc::LocateDocument(const wchar_t *id) {
-	unsigned long	  *lv = nullptr;
+Doc * Doc::LocateDocument(const wchar_t * id)
+{
+	unsigned long * lv = nullptr;
 	if (swscanf(id, L"%lu", lv) != 1)
 		return NULL;
-	return m_active_docs.Lookup((Doc*)lv);
+	return m_active_docs.Lookup((Doc *)lv);
 }
 
 // initialize a new Doc
-Doc::Doc(HWND hWndFrame) :
-	m_filename(_T("Untitled.fb2")), m_namevalid(false),
-	m_body(hWndFrame, true),
-	m_frame(hWndFrame),
-	m_body_ver(-1),
-	m_body_cp(-1),
-	m_encoding(_T("utf-8"))
+Doc::Doc(HWND hWndFrame)
+    : m_filename(_T("Untitled.fb2")), m_namevalid(false),
+      m_body(hWndFrame, true),
+      m_frame(hWndFrame),
+      m_body_ver(-1),
+      m_body_cp(-1),
+      m_encoding(_T("utf-8"))
 {
 	m_active_docs.Add(this, this);
 }
@@ -57,7 +59,7 @@ Doc::~Doc()
 	m_active_docs.Remove(this);
 }
 
-bool Doc::GetBinary(const wchar_t *id, _variant_t& vt)
+bool Doc::GetBinary(const wchar_t * id, _variant_t & vt)
 {
 	if (id && *id == L'#')
 	{
@@ -71,13 +73,13 @@ bool Doc::GetBinary(const wchar_t *id, _variant_t& vt)
 
 struct ThreadArgs
 {
-	MSXML2::IXSLProcessor* proc;
+	MSXML2::IXSLProcessor * proc;
 	HANDLE hWr;
 };
 
 static DWORD __stdcall XMLTransformThread(LPVOID varg)
 {
-	ThreadArgs* arg = (ThreadArgs*)varg;
+	ThreadArgs * arg = (ThreadArgs *)varg;
 
 	arg->proc->put_output(_variant_t(U::NewStream(arg->hWr)));
 	VARIANT_BOOL val;
@@ -89,7 +91,7 @@ static DWORD __stdcall XMLTransformThread(LPVOID varg)
 	return 0;
 }
 
-void Doc::TransformXML(MSXML2::IXSLTemplatePtr tp, MSXML2::IXMLDOMDocument2Ptr doc, CFBEView& dest)
+void Doc::TransformXML(MSXML2::IXSLTemplatePtr tp, MSXML2::IXMLDOMDocument2Ptr doc, CFBEView & dest)
 {
 	// create processor
 	MSXML2::IXSLProcessorPtr proc(tp->createProcessor());
@@ -98,7 +100,7 @@ void Doc::TransformXML(MSXML2::IXSLTemplatePtr tp, MSXML2::IXMLDOMDocument2Ptr d
 	// add parameters
 	CString fss(_Settings.GetFont());
 	if (!fss.IsEmpty())
-		proc->addParameter(L"font", (const wchar_t*)fss, _bstr_t());
+		proc->addParameter(L"font", (const wchar_t *)fss, _bstr_t());
 
 	DWORD fs = _Settings.GetFontSize();
 	if (fs > 1)
@@ -135,7 +137,7 @@ void Doc::TransformXML(MSXML2::IXSLTemplatePtr tp, MSXML2::IXMLDOMDocument2Ptr d
 	proc->addParameter(L"bodyscript", (const wchar_t *)U::UrlFromPath(U::GetProgDirFile(_T("body.js"))), _bstr_t());
 	proc->addParameter(L"descscript", (const wchar_t *)U::UrlFromPath(U::GetProgDirFile(_T("desc.js"))), _bstr_t());
 
-	ThreadArgs	*arg = new ThreadArgs;
+	ThreadArgs * arg = new ThreadArgs;
 
 	// pass the processor to worker thread, this is a dirty hack, but we know that
 	// MSXML survives it, otherwise we'd have to jump through the hoops with
@@ -159,17 +161,31 @@ void Doc::TransformXML(MSXML2::IXSLTemplatePtr tp, MSXML2::IXMLDOMDocument2Ptr d
 	ips->Load(U::NewStream(hRd));
 }
 
-static MSXML2::IXSLTemplatePtr LoadXSL(const CString& path)
+LPCWSTR Doc::MyID() const
+{
+	CString ret;
+	ret.Format(_T("%lu"), reinterpret_cast<unsigned long>(this));
+	return ret;
+}
+
+LPCWSTR Doc::MyURL(LPCWSTR pszPart) const
+{
+	CString ret;
+	ret.Format(_T("fbw-internal:%lu:%s"), reinterpret_cast<unsigned long>(this), pszPart);
+	return ret;
+}
+
+static MSXML2::IXSLTemplatePtr LoadXSL(const CString & path)
 {
 	MSXML2::IXMLDOMDocument2Ptr xsl(U::CreateDocument(true));
 	if (!U::LoadXml(xsl, U::GetProgDirFile(path)))
 		throw _com_error(E_FAIL);
-	MSXML2::IXSLTemplatePtr	tp(U::CreateTemplate());
+	MSXML2::IXSLTemplatePtr tp(U::CreateTemplate());
 	tp->stylesheet = xsl;
 	return tp;
 }
 
-HRESULT Doc::InvokeFunc(BSTR FuncName, CComVariant *params, int count, CComVariant & vtResult)
+HRESULT Doc::InvokeFunc(BSTR FuncName, CComVariant * params, int count, CComVariant & vtResult)
 {
 	LPDISPATCH pScript;
 	IHTMLDocument2Ptr doc = m_body.Browser()->Document;
@@ -281,7 +297,7 @@ bool Doc::Load(HWND hWndParent, const CString & filename)
 		m_filename = filename;
 		m_namevalid = true;
 	}
-	catch (_com_error& e)
+	catch (_com_error & e)
 	{
 		U::ReportError(e);
 		return false;
@@ -290,20 +306,20 @@ bool Doc::Load(HWND hWndParent, const CString & filename)
 	return true;
 }
 
-void  Doc::CreateBlank(HWND hWndParent)
+void Doc::CreateBlank(HWND hWndParent)
 {
 	try
 	{
 		LoadFromHTML(hWndParent, L"blank.fb2");
 	}
-	catch (_com_error& e)
+	catch (_com_error & e)
 	{
 		U::ReportError(e);
 	}
 }
 
 // indent something
-static void Indent(MSXML2::IXMLDOMNode *node, MSXML2::IXMLDOMDocument2 *xml, int len)
+static void Indent(MSXML2::IXMLDOMNode * node, MSXML2::IXMLDOMDocument2 * xml, int len)
 {
 	// inefficient
 	BSTR s = SysAllocStringLen(NULL, len + 2);
@@ -321,15 +337,15 @@ static void Indent(MSXML2::IXMLDOMNode *node, MSXML2::IXMLDOMDocument2 *xml, int
 }
 
 // set an attribute on the element
-static void SetAttr(MSXML2::IXMLDOMElement *xe, const wchar_t *name, const wchar_t * ns, const _bstr_t& val, MSXML2::IXMLDOMDocument2 * doc)
+static void SetAttr(MSXML2::IXMLDOMElement * xe, const wchar_t * name, const wchar_t * ns, const _bstr_t & val, MSXML2::IXMLDOMDocument2 * doc)
 {
-	MSXML2::IXMLDOMAttributePtr  attr(doc->createNode(2L, name, ns));
+	MSXML2::IXMLDOMAttributePtr attr(doc->createNode(2L, name, ns));
 	attr->appendChild(doc->createTextNode(val));
 	xe->setAttributeNode(attr);
 }
 
 // setup an ID for the element
-static void   SetID(MSHTML::IHTMLElement *he, MSXML2::IXMLDOMElement *xe, MSXML2::IXMLDOMDocument2 *doc)
+static void SetID(MSHTML::IHTMLElement * he, MSXML2::IXMLDOMElement * xe, MSXML2::IXMLDOMDocument2 * doc)
 {
 	_bstr_t id(he->id);
 	if (id.length() > 0)
@@ -337,7 +353,7 @@ static void   SetID(MSHTML::IHTMLElement *he, MSXML2::IXMLDOMElement *xe, MSXML2
 }
 
 // copy text
-static MSXML2::IXMLDOMTextPtr MkText(MSHTML::IHTMLDOMNode *hn, MSXML2::IXMLDOMDocument2 *xml)
+static MSXML2::IXMLDOMTextPtr MkText(MSHTML::IHTMLDOMNode * hn, MSXML2::IXMLDOMDocument2 * xml)
 {
 	VARIANT vt;
 	VariantInit(&vt);
@@ -347,7 +363,7 @@ static MSXML2::IXMLDOMTextPtr MkText(MSHTML::IHTMLDOMNode *hn, MSXML2::IXMLDOMDo
 		VariantClear(&vt);
 		return xml->createTextNode(_bstr_t());
 	}
-	MSXML2::IXMLDOMText* txt;
+	MSXML2::IXMLDOMText * txt;
 	HRESULT hr = xml->raw_createTextNode(V_BSTR(&vt), &txt);
 	VariantClear(&vt);
 	CheckError(hr);
@@ -355,12 +371,12 @@ static MSXML2::IXMLDOMTextPtr MkText(MSHTML::IHTMLDOMNode *hn, MSXML2::IXMLDOMDo
 }
 
 // set an href attribute
-static void SetHref(MSXML2::IXMLDOMElementPtr xe, MSXML2::IXMLDOMDocument2 *xml, const _bstr_t& href)
+static void SetHref(MSXML2::IXMLDOMElementPtr xe, MSXML2::IXMLDOMDocument2 * xml, const _bstr_t & href)
 {
 	SetAttr(xe, L"l:href", XLINKNS, href, xml);
 }
 
-static void SetTitle(MSXML2::IXMLDOMElementPtr xe, MSXML2::IXMLDOMDocument2 *xml, const _bstr_t& title)
+static void SetTitle(MSXML2::IXMLDOMElementPtr xe, MSXML2::IXMLDOMDocument2 * xml, const _bstr_t & title)
 {
 	if (!title)
 	{
@@ -370,14 +386,14 @@ static void SetTitle(MSXML2::IXMLDOMElementPtr xe, MSXML2::IXMLDOMDocument2 *xml
 }
 
 // handle inline formatting
-static MSXML2::IXMLDOMNodePtr ProcessInline(MSHTML::IHTMLDOMNode *inl, MSXML2::IXMLDOMDocument2 *doc)
+static MSXML2::IXMLDOMNodePtr ProcessInline(MSHTML::IHTMLDOMNode * inl, MSXML2::IXMLDOMDocument2 * doc)
 {
 	// Source
 	_bstr_t name(inl->nodeName);
 	MSHTML::IHTMLElementPtr einl(inl);
 	_bstr_t cls(einl->className);
 
-	const wchar_t *xname = NULL;
+	const wchar_t * xname = NULL;
 	bool fA = false;
 	bool fStyle = false;
 	bool fUnk = false;
@@ -406,7 +422,8 @@ static MSXML2::IXMLDOMNodePtr ProcessInline(MSHTML::IHTMLDOMNode *inl, MSXML2::I
 	}
 	else if (U::scmp(name, L"A") == 0)
 	{
-		xname = L"a"; fA = true;
+		xname = L"a";
+		fA = true;
 	}
 	else if (U::scmp(name, L"SPAN") == 0)
 	{
@@ -427,7 +444,8 @@ static MSXML2::IXMLDOMNodePtr ProcessInline(MSHTML::IHTMLDOMNode *inl, MSXML2::I
 		}
 		else
 		{
-			xname = L"style"; fStyle = true;
+			xname = L"style";
+			fStyle = true;
 		}
 	}
 
@@ -457,18 +475,18 @@ static MSXML2::IXMLDOMNodePtr ProcessInline(MSHTML::IHTMLDOMNode *inl, MSXML2::I
 			index.intVal = i;
 			_bstr_t attr_name = MSHTML::IHTMLDOMAttributePtr(col->item(&index))->nodeName;
 			_bstr_t attr_value;
-			wchar_t* real_attr_name = 0;
-			const wchar_t* prefix = L"unknown_attribute_";
+			wchar_t * real_attr_name = 0;
+			const wchar_t * prefix = L"unknown_attribute_";
 			if (wcsncmp(attr_name, prefix, wcslen(prefix)))
 			{
 				continue;
 			}
 			else
 			{
-				real_attr_name = (wchar_t*)attr_name + wcslen(prefix);
+				real_attr_name = (wchar_t *)attr_name + wcslen(prefix);
 				attr_value = MSHTML::IHTMLDOMAttributePtr(col->item(&index))->nodeValue;
 			}
-			MSXML2::IXMLDOMAttributePtr  attr(doc->createNode(2L, real_attr_name, FBNS));
+			MSXML2::IXMLDOMAttributePtr attr(doc->createNode(2L, real_attr_name, FBNS));
 			attr->appendChild(doc->createTextNode(attr_value));
 			xinl->setAttributeNode(attr);
 		}
@@ -479,11 +497,11 @@ static MSXML2::IXMLDOMNodePtr ProcessInline(MSHTML::IHTMLDOMNode *inl, MSXML2::I
 	// Modification by Pilgrim
 	while ((bool)cn)
 	{
-		if (cn->nodeType == NODE_TEXT/*3*/)
+		if (cn->nodeType == NODE_TEXT /*3*/)
 		{
 			xinl->appendChild(MkText(cn, doc));
 		}
-		else if ((cn->nodeType == NODE_ELEMENT/*1*/) && (!fImg)) // added by SeNS
+		else if ((cn->nodeType == NODE_ELEMENT /*1*/) && (!fImg)) // added by SeNS
 		{
 			xinl->appendChild(ProcessInline(cn, doc));
 		}
@@ -494,7 +512,7 @@ static MSXML2::IXMLDOMNodePtr ProcessInline(MSHTML::IHTMLDOMNode *inl, MSXML2::I
 }
 
 // handle a paragraph element with subelements
-static MSXML2::IXMLDOMNodePtr ProcessP(MSHTML::IHTMLElement *p, MSXML2::IXMLDOMDocument2 *doc, const wchar_t *baseName)
+static MSXML2::IXMLDOMNodePtr ProcessP(MSHTML::IHTMLElement * p, MSXML2::IXMLDOMDocument2 * doc, const wchar_t * baseName)
 {
 	_bstr_t cls(p->className);
 	if (U::scmp(cls, L"text-author") == 0)
@@ -541,32 +559,32 @@ static MSXML2::IXMLDOMNodePtr ProcessP(MSHTML::IHTMLElement *p, MSXML2::IXMLDOMD
 		SetAttr(xp, L"style", FBNS, style, doc);
 
 	// Modification by Pilgrim
-	_bstr_t	colspan(AU::GetAttrB(p, L"fbcolspan"));
+	_bstr_t colspan(AU::GetAttrB(p, L"fbcolspan"));
 	if (colspan.length() > 0)
 		SetAttr(xp, L"colspan", FBNS, colspan, doc);
 
-	_bstr_t	rowspan(AU::GetAttrB(p, L"fbrowspan"));
+	_bstr_t rowspan(AU::GetAttrB(p, L"fbrowspan"));
 	if (rowspan.length() > 0)
 		SetAttr(xp, L"rowspan", FBNS, rowspan, doc);
 
-	_bstr_t	align(AU::GetAttrB(p, L"fbalign"));
+	_bstr_t align(AU::GetAttrB(p, L"fbalign"));
 	if (align.length() > 0)
 		SetAttr(xp, L"align", FBNS, align, doc);
 
-	_bstr_t	valign(AU::GetAttrB(p, L"fbvalign"));
+	_bstr_t valign(AU::GetAttrB(p, L"fbvalign"));
 	if (valign.length() > 0)
 		SetAttr(xp, L"valign", FBNS, valign, doc);
 
 	hp = hp->firstChild;
 
-	// Modification by Pilgrim  
+	// Modification by Pilgrim
 	while ((bool)hp)
 	{
-		if (hp->nodeType == NODE_TEXT/*3*/) // text segment
+		if (hp->nodeType == NODE_TEXT /*3*/) // text segment
 		{
 			xp->appendChild(MkText(hp, doc));
 		}
-		else if (hp->nodeType == NODE_ELEMENT/*1*/)
+		else if (hp->nodeType == NODE_ELEMENT /*1*/)
 		{
 			xp->appendChild(ProcessInline(hp, doc));
 		}
@@ -581,7 +599,7 @@ static MSXML2::IXMLDOMNodePtr ProcessP(MSHTML::IHTMLElement *p, MSXML2::IXMLDOMD
 }
 
 // handle a div element with subelements
-static MSXML2::IXMLDOMNodePtr ProcessDiv(MSHTML::IHTMLElement *div, MSXML2::IXMLDOMDocument2 *doc, int indent)
+static MSXML2::IXMLDOMNodePtr ProcessDiv(MSHTML::IHTMLElement * div, MSXML2::IXMLDOMDocument2 * doc, int indent)
 {
 	_bstr_t cls(div->className);
 
@@ -608,7 +626,7 @@ static MSXML2::IXMLDOMNodePtr ProcessDiv(MSHTML::IHTMLElement *div, MSXML2::IXML
 	}
 	if (U::scmp(cls, L"tr") == 0)
 	{
-		_bstr_t	align(AU::GetAttrB(div, L"fbalign"));
+		_bstr_t align(AU::GetAttrB(div, L"fbalign"));
 		if (align.length() > 0)
 		{
 			SetAttr(xdiv, L"align", FBNS, align, doc);
@@ -635,7 +653,7 @@ static MSXML2::IXMLDOMNodePtr ProcessDiv(MSHTML::IHTMLElement *div, MSXML2::IXML
 		}
 		else if (U::scmp(name, L"P") == 0)
 		{
-			MSXML2::IXMLDOMNodePtr  np;
+			MSXML2::IXMLDOMNodePtr np;
 			try
 			{
 				np = ProcessP(efc, doc, bn);
@@ -660,7 +678,7 @@ static MSXML2::IXMLDOMNodePtr ProcessDiv(MSHTML::IHTMLElement *div, MSXML2::IXML
 }
 
 // find a first named DIV
-static MSXML2::IXMLDOMNodePtr GetDiv(MSHTML::IHTMLElementPtr body, MSXML2::IXMLDOMDocument2 *xml, LPCWSTR name, int indent)
+static MSXML2::IXMLDOMNodePtr GetDiv(MSHTML::IHTMLElementPtr body, MSXML2::IXMLDOMDocument2 * xml, LPCWSTR name, int indent)
 {
 	MSHTML::IHTMLElementCollectionPtr children(body->children);
 	long c_len = children->length;
@@ -682,7 +700,7 @@ static MSXML2::IXMLDOMNodePtr GetDiv(MSHTML::IHTMLElementPtr body, MSXML2::IXMLD
 }
 
 // fetch bodies
-static void GetBodies(MSHTML::IHTMLElementPtr body, MSXML2::IXMLDOMDocument2 *doc)
+static void GetBodies(MSHTML::IHTMLElementPtr body, MSXML2::IXMLDOMDocument2 * doc)
 {
 	MSHTML::IHTMLElementCollectionPtr children(body->children);
 	long c_len = children->length;
@@ -717,11 +735,12 @@ public:
 	CString m_msg;
 	int m_line, m_col;
 
-	SAXErrorHandler() : m_line(0), m_col(0)
+	SAXErrorHandler()
+	    : m_line(0), m_col(0)
 	{
 	}
 
-	void SetMsg(MSXML2::ISAXLocator *loc, LPCWSTR msg, HRESULT /*hr*/)
+	void SetMsg(MSXML2::ISAXLocator * loc, LPCWSTR msg, HRESULT /*hr*/)
 	{
 		if (!m_msg.IsEmpty())
 			return;
@@ -736,34 +755,37 @@ public:
 	}
 
 	BEGIN_COM_MAP(SAXErrorHandler)
-		COM_INTERFACE_ENTRY(MSXML2::ISAXErrorHandler)
+	COM_INTERFACE_ENTRY(MSXML2::ISAXErrorHandler)
 	END_COM_MAP()
 
-	STDMETHOD(raw_error)(MSXML2::ISAXLocator *loc, wchar_t *msg, HRESULT hr)
+	STDMETHOD(raw_error)
+	(MSXML2::ISAXLocator * loc, wchar_t * msg, HRESULT hr)
 	{
 		SetMsg(loc, msg, hr);
 		return E_FAIL;
 	}
-	STDMETHOD(raw_fatalError)(MSXML2::ISAXLocator *loc, wchar_t *msg, HRESULT hr)
+	STDMETHOD(raw_fatalError)
+	(MSXML2::ISAXLocator * loc, wchar_t * msg, HRESULT hr)
 	{
 		SetMsg(loc, msg, hr);
 		return E_FAIL;
 	}
-	STDMETHOD(raw_ignorableWarning)(MSXML2::ISAXLocator *loc, wchar_t *msg, HRESULT hr)
+	STDMETHOD(raw_ignorableWarning)
+	(MSXML2::ISAXLocator * loc, wchar_t * msg, HRESULT hr)
 	{
 		SetMsg(loc, msg, hr);
 		return E_FAIL;
 	}
 };
 
-MSXML2::IXMLDOMDocument2Ptr Doc::CreateDOMImp(const CString& encoding)
+MSXML2::IXMLDOMDocument2Ptr Doc::CreateDOMImp(const CString & encoding)
 {
 	// normalize body first
 	_EDMnr.CleanUpAll();
 	m_body.Normalize(m_body.Document()->body);
 
 	// create document
-	MSXML2::IXMLDOMDocument2Ptr	ndoc(U::CreateDocument(false));
+	MSXML2::IXMLDOMDocument2Ptr ndoc(U::CreateDocument(false));
 	ndoc->async = VARIANT_FALSE;
 
 	// set encoding
@@ -771,13 +793,13 @@ MSXML2::IXMLDOMDocument2Ptr Doc::CreateDOMImp(const CString& encoding)
 		ndoc->appendChild(ndoc->createProcessingInstruction(L"xml", (const wchar_t *)(L"version=\"1.0\" encoding=\"" + encoding + L"\"")));
 
 	// create document element
-	MSXML2::IXMLDOMElementPtr	root = ndoc->createNode(_variant_t(1L), L"FictionBook", FBNS);
+	MSXML2::IXMLDOMElementPtr root = ndoc->createNode(_variant_t(1L), L"FictionBook", FBNS);
 	root->setAttribute(L"xmlns:l", XLINKNS);
 	ndoc->documentElement = MSXML2::IXMLDOMElementPtr(root);
 
 	// enable xpath queries
 	ndoc->setProperty(L"SelectionLanguage", L"XPath");
-	CString   nsprop(L"xmlns:fb='");
+	CString nsprop(L"xmlns:fb='");
 	nsprop += (const wchar_t *)FBNS;
 	nsprop += L"' xmlns:xlink='";
 	nsprop += (const wchar_t *)XLINKNS;
@@ -837,13 +859,13 @@ MSXML2::IXMLDOMDocument2Ptr Doc::CreateDOMImp(const CString& encoding)
 	return ndoc;
 }
 
-MSXML2::IXMLDOMDocument2Ptr Doc::CreateDOM(const CString& encoding)
+MSXML2::IXMLDOMDocument2Ptr Doc::CreateDOM(const CString & encoding)
 {
 	try
 	{
 		return CreateDOMImp(encoding);
 	}
-	catch (_com_error& e)
+	catch (_com_error & e)
 	{
 		U::ReportError(e);
 	}
@@ -851,12 +873,12 @@ MSXML2::IXMLDOMDocument2Ptr Doc::CreateDOM(const CString& encoding)
 	return NULL;
 }
 
-bool Doc::SaveToFile(const CString& filename, bool fValidateOnly, int *errline, int *errcol)
+bool Doc::SaveToFile(const CString & filename, bool fValidateOnly, int * errline, int * errcol)
 {
 	try
 	{
 		// create a schema collection
-		MSXML2::IXMLDOMSchemaCollection2Ptr	scol;
+		MSXML2::IXMLDOMSchemaCollection2Ptr scol;
 		CheckError(scol.CreateInstance(L"Msxml2.XMLSchemaCache.6.0"));
 
 		// load fictionbook schema
@@ -872,13 +894,13 @@ bool Doc::SaveToFile(const CString& filename, bool fValidateOnly, int *errline, 
 		rdr->putFeature(L"exhaustive-errors", VARIANT_TRUE);
 
 		// create an error handler
-		CComObject<SAXErrorHandler> *ehp;
+		CComObject<SAXErrorHandler> * ehp;
 		CheckError(CComObject<SAXErrorHandler>::CreateInstance(&ehp));
-		CComPtr<CComObject<SAXErrorHandler> > eh(ehp);
+		CComPtr<CComObject<SAXErrorHandler>> eh(ehp);
 		rdr->putErrorHandler(eh);
 
 		// construct the document
-		MSXML2::IXMLDOMDocument2Ptr	ndoc(CreateDOMImp(_Settings.m_keep_encoding ? m_encoding : _Settings.GetDefaultEncoding()));
+		MSXML2::IXMLDOMDocument2Ptr ndoc(CreateDOMImp(_Settings.m_keep_encoding ? m_encoding : _Settings.GetDefaultEncoding()));
 
 		// reparse the document
 		IStreamPtr isp(ndoc);
@@ -1000,7 +1022,7 @@ bool Doc::SaveToFile(const CString& filename, bool fValidateOnly, int *errline, 
 			_com_issue_errorex(hr, ndoc, __uuidof(ndoc));
 		}
 		// Modification by Pilgrim
-		else 
+		else
 		{
 			if (bErrSave)
 			{
@@ -1023,7 +1045,7 @@ bool Doc::SaveToFile(const CString& filename, bool fValidateOnly, int *errline, 
 		::MoveFile(buf, filename);
 		m_encoding = _Settings.m_keep_encoding ? m_encoding : _Settings.GetDefaultEncoding();
 	}
-	catch (_com_error& e)
+	catch (_com_error & e)
 	{
 		U::ReportError(e);
 		return false;
@@ -1048,7 +1070,43 @@ bool Doc::Save()
 	return false;
 }
 
-bool Doc::Save(const CString& filename)
+// changes
+
+bool Doc::DocChanged()
+{
+	return m_body_ver != m_body.GetVersionNumber() || m_body.IsFormChanged();
+}
+
+// added by SeNS
+
+void Doc::AdvanceDocVersion(int delta)
+{
+	m_body_ver += delta;
+}
+
+void Doc::MarkSavePoint()
+{
+	m_body_ver = m_body.GetVersionNumber();
+	m_body.ResetFormChanged();
+}
+
+void Doc::ResetSavePoint()
+{
+	m_body_ver = -1;
+}
+
+void Doc::MarkDocCP()
+{
+	m_body_cp = m_body.GetVersionNumber();
+	m_body.ResetFormCP();
+}
+
+bool Doc::DocRelChanged()
+{
+	return m_body_cp != m_body.GetVersionNumber() || m_body.IsFormCP();
+}
+
+bool Doc::Save(const CString & filename)
 {
 	AU::CPersistentWaitCursor wc;
 	if (SaveToFile(filename))
@@ -1065,8 +1123,14 @@ bool Doc::Save(const CString& filename)
 	return false;
 }
 
+bool Doc::Validate(int & errline, int & errcol)
+{
+	AU::CPersistentWaitCursor wc;
+	return SaveToFile(CString(), true, &errline, &errcol);
+}
+
 // IDs
-static LPCWSTR AddHash(CString& tmp, const _bstr_t& id)
+static LPCWSTR AddHash(CString & tmp, const _bstr_t & id)
 {
 	LPWSTR cp = tmp.GetBuffer(id.length() + 1);
 	*cp++ = L'#';
@@ -1075,7 +1139,7 @@ static LPCWSTR AddHash(CString& tmp, const _bstr_t& id)
 	return tmp;
 }
 
-static void GrabIDs(CString& tmp, CComboBox& box, MSHTML::IHTMLDOMNode* node)
+static void GrabIDs(CString & tmp, CComboBox & box, MSHTML::IHTMLDOMNode * node)
 {
 	if (node->nodeType != 1)
 		return;
@@ -1097,7 +1161,7 @@ static void GrabIDs(CString& tmp, CComboBox& box, MSHTML::IHTMLDOMNode* node)
 	}
 }
 
-void  Doc::ParaIDsToComboBox(CComboBox& box)
+void Doc::ParaIDsToComboBox(CComboBox & box)
 {
 	try
 	{
@@ -1105,12 +1169,12 @@ void  Doc::ParaIDsToComboBox(CComboBox& box)
 		MSHTML::IHTMLDOMNodePtr body(m_body.Document()->body);
 		GrabIDs(tmp, box, body);
 	}
-	catch (_com_error&)
+	catch (_com_error &)
 	{
 	}
 }
 
-void Doc::BinIDsToComboBox(CComboBox& box)
+void Doc::BinIDsToComboBox(CComboBox & box)
 {
 	try
 	{
@@ -1121,7 +1185,7 @@ void Doc::BinIDsToComboBox(CComboBox& box)
 		MSHTML::IHTMLElementCollectionPtr sbo(bo);
 		if ((bool)sbo)
 		{
-			long  l = sbo->length;
+			long l = sbo->length;
 			for (long i = 0; i < l; ++i)
 			{
 				MSHTML::IHTMLElementPtr elem = sbo->item(i);
@@ -1141,12 +1205,12 @@ void Doc::BinIDsToComboBox(CComboBox& box)
 			}
 		}
 	}
-	catch (_com_error&)
+	catch (_com_error &)
 	{
 	}
 }
 
-BSTR Doc::PrepareDefaultId(const CString& filename)
+BSTR Doc::PrepareDefaultId(const CString & filename)
 {
 
 	CString _filename = U::Transliterate(filename);
@@ -1161,7 +1225,7 @@ BSTR Doc::PrepareDefaultId(const CString& filename)
 	int newlen = 0;
 	while (cp < _filename.GetLength())
 	{
-		TCHAR   c = _filename[cp];
+		TCHAR c = _filename[cp];
 		if ((c >= _T('0') && c <= _T('9')) || (c >= _T('A') && c <= _T('Z')) || (c >= _T('a') && c <= _T('z')) || c == _T('_') || c == _T('.'))
 			ncp[newlen++] = c;
 		++cp;
@@ -1173,7 +1237,7 @@ BSTR Doc::PrepareDefaultId(const CString& filename)
 }
 
 // binaries
-void Doc::AddBinary(const CString& filename)
+void Doc::AddBinary(const CString & filename)
 {
 	_variant_t args[4];
 	HRESULT hr;
@@ -1205,7 +1269,7 @@ void Doc::AddBinary(const CString& filename)
 		U::ReportError(hr);
 }
 
-void  Doc::ApplyConfChanges()
+void Doc::ApplyConfChanges()
 {
 	try
 	{
@@ -1238,15 +1302,15 @@ void  Doc::ApplyConfChanges()
 		SetFastMode(mode);
 		::SendMessage(m_frame, WM_COMMAND, MAKELONG(mode, IDN_FAST_MODE_CHANGE), (LPARAM)0);
 	}
-	catch (_com_error&)
+	catch (_com_error &)
 	{
 	}
 }
 
-static int compare_nocase(const void* v1, const void* v2)
+static int compare_nocase(const void * v1, const void * v2)
 {
-	CString* s1 = (CString*)v1;
-	CString* s2 = (CString*)v2;
+	CString * s1 = (CString *)v1;
+	CString * s2 = (CString *)v2;
 
 	int cv = s1->CompareNoCase(*s2);
 	if (cv != 0)
@@ -1255,15 +1319,15 @@ static int compare_nocase(const void* v1, const void* v2)
 	return s1->Compare(*s2);
 }
 
-static int compare_counts(const void *v1, const void *v2)
+static int compare_counts(const void * v1, const void * v2)
 {
-	const Doc::Word *w1 = (const Doc::Word *)v1;
-	const Doc::Word *w2 = (const Doc::Word *)v2;
-	int	diff = w1->count - w2->count;
+	const Doc::Word * w1 = (const Doc::Word *)v1;
+	const Doc::Word * w2 = (const Doc::Word *)v2;
+	int diff = w1->count - w2->count;
 	return diff ? diff : w1->word.CompareNoCase(w2->word);
 }
 
-void Doc::GetWordList(int flags, CSimpleArray<Word>& words, CString tagName)
+void Doc::GetWordList(int flags, CSimpleArray<Word> & words, CString tagName)
 {
 	CWaitCursor hourglass;
 
@@ -1312,8 +1376,8 @@ void Doc::GetWordList(int flags, CSimpleArray<Word>& words, CString tagName)
 
 		// iterate over bb using a primitive fsm
 		wchar_t *p = bb, *e = p + bb.length() + 1; // include trailing 0!
-		wchar_t *wstart = nullptr;
-		wchar_t *wend = nullptr;
+		wchar_t * wstart = nullptr;
+		wchar_t * wend = nullptr;
 
 		enum
 		{
@@ -1329,13 +1393,14 @@ void Doc::GetWordList(int flags, CSimpleArray<Word>& words, CString tagName)
 			int letter = iswalpha(*p);
 			switch (state)
 			{
-			case INITIAL: initial:
-			if (letter)
-			{
-				wstart = p;
-				state = INWORD1;
-			}
-			break;
+			case INITIAL:
+			initial:
+				if (letter)
+				{
+					wstart = p;
+					state = INWORD1;
+				}
+				break;
 			case INWORD1:
 				if (!letter)
 				{
@@ -1447,7 +1512,7 @@ void Doc::GetWordList(int flags, CSimpleArray<Word>& words, CString tagName)
 }
 
 // source editing
-bool  Doc::SetXMLAndValidate(HWND sci, bool fValidateOnly, int& errline, int& errcol)
+bool Doc::SetXMLAndValidate(HWND sci, bool fValidateOnly, int & errline, int & errcol)
 {
 	errline = errcol = 0;
 
@@ -1455,7 +1520,7 @@ bool  Doc::SetXMLAndValidate(HWND sci, bool fValidateOnly, int& errline, int& er
 	try
 	{
 		// create a schema collection
-		MSXML2::IXMLDOMSchemaCollection2Ptr	scol;
+		MSXML2::IXMLDOMSchemaCollection2Ptr scol;
 		CheckError(scol.CreateInstance(L"Msxml2.XMLSchemaCache.6.0"));
 
 		// load fictionbook schema
@@ -1471,13 +1536,13 @@ bool  Doc::SetXMLAndValidate(HWND sci, bool fValidateOnly, int& errline, int& er
 		rdr->putFeature(L"exhaustive-errors", VARIANT_TRUE);
 
 		// create an error handler
-		CComObject<SAXErrorHandler> *ehp;
+		CComObject<SAXErrorHandler> * ehp;
 		CheckError(CComObject<SAXErrorHandler>::CreateInstance(&ehp));
-		CComPtr<CComObject<SAXErrorHandler> > eh(ehp);
+		CComPtr<CComObject<SAXErrorHandler>> eh(ehp);
 		rdr->putErrorHandler(eh);
 
 		// construct a document
-		MSXML2::IXMLDOMDocument2Ptr	dom;
+		MSXML2::IXMLDOMDocument2Ptr dom;
 
 		if (!fValidateOnly)
 		{
@@ -1525,7 +1590,7 @@ bool  Doc::SetXMLAndValidate(HWND sci, bool fValidateOnly, int& errline, int& er
 				errcol = eh->m_col;
 				::MessageBeep(MB_ICONERROR);
 				::SendMessage(m_frame, AU::WM_SETSTATUSTEXT, 0,
-					(LPARAM)(const TCHAR *)eh->m_msg);
+				              (LPARAM)(const TCHAR *)eh->m_msg);
 			}
 			else
 			{
@@ -1563,7 +1628,7 @@ bool  Doc::SetXMLAndValidate(HWND sci, bool fValidateOnly, int& errline, int& er
 		// mark unchanged
 		MarkSavePoint();
 	}
-	catch (_com_error& e)
+	catch (_com_error & e)
 	{
 		U::ReportError(e);
 		return false;
@@ -1578,7 +1643,7 @@ void Doc::SaveSelectedPos()
 
 	//  UUID
 	UUID uuid;
-	wchar_t *str;
+	wchar_t * str;
 	if (UuidCreate(&uuid) == RPC_S_OK && UuidToStringW(&uuid, &str) == RPC_S_OK)
 	{
 		m_save_marker = str;
@@ -1591,21 +1656,21 @@ void Doc::SaveSelectedPos()
 	m_saved_element = selected;
 }
 
-long Doc::GetSavedPos(bstr_t &xml, bool deleteMarker)
+long Doc::GetSavedPos(bstr_t & xml, bool deleteMarker)
 {
 	bstr_t searchString = L" selected=\"" + m_save_marker + L"\"";
-	const wchar_t* wpos = wcsstr(xml.operator const wchar_t *(), searchString);
+	const wchar_t * wpos = wcsstr(xml.operator const wchar_t *(), searchString);
 	if (!wpos)
 	{
 		return 0;
 	}
-	int pos = wpos - (wchar_t*)xml;
+	int pos = wpos - (wchar_t *)xml;
 
 	if (deleteMarker)
 	{
-		wchar_t* Buf = new wchar_t[xml.length() + 1];
+		wchar_t * Buf = new wchar_t[xml.length() + 1];
 		wcsncpy(Buf, xml, pos);
-		wcscpy(Buf + pos, (wchar_t*)xml + pos + searchString.length());
+		wcscpy(Buf + pos, (wchar_t *)xml + pos + searchString.length());
 		Buf[xml.length() - searchString.length()] = 0;
 		xml = Buf;
 		delete[] Buf;
@@ -1618,9 +1683,9 @@ void Doc::DeleteSaveMarker()
 	m_saved_element->removeAttribute(L"fbe_selected", 1);
 }
 
-bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2Ptr* xml)
+bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2Ptr * xml)
 {
-	MSXML2::IXMLDOMSchemaCollection2Ptr	scol;
+	MSXML2::IXMLDOMSchemaCollection2Ptr scol;
 	CheckError(scol.CreateInstance(L"Msxml2.XMLSchemaCache.6.0"));
 
 	// load fictionbook schema
@@ -1636,9 +1701,9 @@ bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2Ptr* xml)
 	rdr->putFeature(L"exhaustive-errors", VARIANT_TRUE);
 
 	// create an error handler
-	CComObject<SAXErrorHandler>* ehp;
+	CComObject<SAXErrorHandler> * ehp;
 	CheckError(CComObject<SAXErrorHandler>::CreateInstance(&ehp));
-	CComPtr<CComObject<SAXErrorHandler> > eh(ehp);
+	CComPtr<CComObject<SAXErrorHandler>> eh(ehp);
 	rdr->putErrorHandler(eh);
 
 	*xml = U::CreateDocument(true);
@@ -1679,7 +1744,7 @@ bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2Ptr* xml)
 
 	// ok, it seems valid, put it into document then
 	(*xml)->setProperty(L"SelectionLanguage", L"XPath");
-	CString   nsprop(L"xmlns:fb='");
+	CString nsprop(L"xmlns:fb='");
 	nsprop += (const wchar_t *)FBNS;
 	nsprop += L"' xmlns:xlink='";
 	nsprop += (const wchar_t *)XLINKNS;
@@ -1786,7 +1851,7 @@ int Doc::GetSelectedPos()
 	return len;
 }
 
-CString Doc::GetOpenFileName()const
+CString Doc::GetOpenFileName() const
 {
 	if (m_filename == L"Untitled.fb2")
 		return L"";
@@ -1794,4 +1859,4 @@ CString Doc::GetOpenFileName()const
 		return m_filename;
 }
 
-} // namespace
+} // namespace FB
