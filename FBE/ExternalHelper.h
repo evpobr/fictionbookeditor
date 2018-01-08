@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Settings.h"
+#include "FBE.h"
 
 extern CSettings _Settings;
 

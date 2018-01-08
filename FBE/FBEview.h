@@ -13,6 +13,7 @@
 
 #include "resource.h"
 #include "Settings.h"
+#include "apputils.h"
 
 extern CSettings _Settings;
 

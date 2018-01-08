@@ -365,6 +365,7 @@ link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENT
     </ClCompile>
     <ClCompile Include="GLLogo.cpp" />
     <ClCompile Include="mainfrm.cpp" />
+    <ClCompile Include="MemProtocol.cpp" />
     <ClCompile Include="SettingsViewPage.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="Settings.cpp" />

@@ -5,4 +5,5 @@ BreakBeforeBraces: Allman
 AllowShortIfStatementsOnASingleLine: false
 IndentCaseLabels: false
 PointerAlignment: Middle
+AllowShortFunctionsOnASingleLine: false
 ColumnLimit: 0
