@@ -519,13 +519,13 @@ public:
 
 #pragma region File commands
 
-	LRESULT OnFileNew(WORD, WORD, HWND, BOOL&);
-	LRESULT OnFileOpen(WORD, WORD, HWND, BOOL&);
-	LRESULT OnFileOpenMRU(WORD, WORD, HWND, BOOL&);
-	LRESULT OnFileSave(WORD, WORD, HWND, BOOL&);
-	LRESULT OnFileSaveAs(WORD, WORD, HWND, BOOL&);
-	LRESULT OnFileValidate(WORD, WORD, HWND, BOOL&);
-	LRESULT OnFileExit(WORD, WORD, HWND, BOOL&);
+	LRESULT OnFileNew(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnFileOpen(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnFileSave(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnFileSaveAs(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnFileValidate(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnFileOpenMRU(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnFileExit(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 
 #pragma endregion File commands
 

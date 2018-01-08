@@ -1418,7 +1418,7 @@ LRESULT CMainFrame::OnNavigate(WORD, WORD, HWND, BOOL&)
 }
 
 // commands
-LRESULT CMainFrame::OnFileNew(WORD, WORD, HWND, BOOL&)
+LRESULT CMainFrame::OnFileNew(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
   if (!DiscardChanges())
     return 0;
@@ -1434,7 +1434,7 @@ LRESULT CMainFrame::OnFileNew(WORD, WORD, HWND, BOOL&)
   return 0;
 }
 
-LRESULT CMainFrame::OnFileOpen(WORD, WORD, HWND, BOOL& /*bHandled*/)
+LRESULT CMainFrame::OnFileOpen(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
   if (LoadFile()==OK)
   {
@@ -1448,42 +1448,69 @@ LRESULT CMainFrame::OnFileOpen(WORD, WORD, HWND, BOOL& /*bHandled*/)
   return 0;
 }
 
-LRESULT CMainFrame::OnFileOpenMRU(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-{
-	CString filename;
-	m_mru.GetFromList(wID, filename);
-
-	switch(LoadFile(filename))
-	{
-		case OK:
-			m_mru.MoveToTop(wID);
-			// added by SeNS
-			if(_Settings.m_restore_file_position)
-			{
-				int saved_pos = U::GetFileSelectedPos(m_doc->m_filename);
-				GoTo(saved_pos);
-			}
-			break;
-		case FAIL:
-			m_mru.RemoveFromList(wID);
-			break;
-		case CANCELLED:
-			break;
-	}
-
-	return 0;
-}
-
-LRESULT CMainFrame::OnFileSave(WORD, WORD, HWND, BOOL&)
+LRESULT CMainFrame::OnFileSave(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
   SaveFile(false);
   return 0;
 }
 
-LRESULT CMainFrame::OnFileSaveAs(WORD, WORD, HWND, BOOL&)
+LRESULT CMainFrame::OnFileSaveAs(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
   SaveFile(true);
   return 0;
+}
+
+LRESULT CMainFrame::OnFileValidate(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	int col, line;
+	bool fv;
+	// From Source View
+	if (IsSourceActive())
+		fv = m_doc->SetXMLAndValidate(m_source, true, line, col);
+	// From Body View
+	else
+		fv = m_doc->Validate(line, col);
+	if (!fv)
+	{
+		ShowView(SOURCE);
+		// have to jump through the hoops to move to required column
+		SourceGoTo(line, col);
+	}
+	return 0;
+}
+
+LRESULT CMainFrame::OnFileOpenMRU(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	CString filename;
+	m_mru.GetFromList(wID, filename);
+
+	switch (LoadFile(filename))
+	{
+	case OK:
+		m_mru.MoveToTop(wID);
+		// added by SeNS
+		if (_Settings.m_restore_file_position)
+		{
+			int saved_pos = U::GetFileSelectedPos(m_doc->m_filename);
+			GoTo(saved_pos);
+		}
+		break;
+	case FAIL:
+		m_mru.RemoveFromList(wID);
+		break;
+	case CANCELLED:
+		break;
+	}
+
+	return 0;
+}
+
+LRESULT CMainFrame::OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	// close (possible) opened in script modeless dialogs
+	PostMessage(WM_CLOSEDIALOG);
+	PostMessage(WM_CLOSE);
+	return 0;
 }
 
 LRESULT CMainFrame::OnViewToolBar(WORD, WORD wID, HWND, BOOL&)
@@ -3920,29 +3947,6 @@ void CMainFrame::SetSciStyles()
 	if (_Settings.m_xml_src_syntaxHL)
 		for (int i = 0; i < sizeof(styles) / sizeof(styles[0]); ++i)
 			m_source.StyleSetFore(styles[i].style, styles[i].color);
-}
-
-LRESULT CMainFrame::OnFileValidate(WORD, WORD, HWND, BOOL&) {
-  int col,line;
-  bool fv;
-  if (IsSourceActive())
-    fv=m_doc->SetXMLAndValidate(m_source,true,line,col);// Из режима Source
-  else
-    fv=m_doc->Validate(line,col);						// Из режима Body
-  if (!fv) {
-    ShowView(SOURCE);
-    // have to jump through the hoops to move to required column
-    SourceGoTo(line, col);
-  }
-  return 0;
-}
-
-LRESULT CMainFrame::OnFileExit(WORD, WORD, HWND, BOOL&)
-{
-	// close (possible) opened in script modeless dialogs
-	PostMessage(WM_CLOSEDIALOG);
-	PostMessage(WM_CLOSE);
-	return 0;
 }
 
 void  CMainFrame::FoldAll() {
