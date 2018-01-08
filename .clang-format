@@ -6,4 +6,5 @@ AllowShortIfStatementsOnASingleLine: false
 IndentCaseLabels: false
 PointerAlignment: Middle
 AllowShortFunctionsOnASingleLine: false
+AccessModifierOffset: -4
 ColumnLimit: 0
