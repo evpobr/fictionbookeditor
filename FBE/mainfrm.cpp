@@ -67,6 +67,16 @@ void  CMainFrame::AttachDocument(FB::Doc *doc)
 	m_view.ActivateWnd(doc->m_body);
 }
 
+CFBEView & CMainFrame::ActiveView()
+{
+	return m_doc->m_body;
+}
+
+bool CMainFrame::IsSourceActive()
+{
+	return m_current_view == SOURCE;
+}
+
 CString	CMainFrame::DoOpenFileDialog()
 {
 	CString strFileName;
@@ -214,7 +224,7 @@ void  CMainFrame::StopIncSearch(bool fCancel) {
     m_doc->m_body.StopIncSearch();
 }
 
-CMainFrame::FILE_OP_STATUS CMainFrame::SaveFile(bool askname) {
+FILE_OP_STATUS CMainFrame::SaveFile(bool askname) {
   ATLASSERT(m_doc!=NULL);
 
   // force consistent html view
@@ -256,7 +266,7 @@ CMainFrame::FILE_OP_STATUS CMainFrame::SaveFile(bool askname) {
   }
 }
 
-CMainFrame::FILE_OP_STATUS CMainFrame::LoadFile(_In_z_ LPCWSTR pszFileName)
+FILE_OP_STATUS CMainFrame::LoadFile(_In_z_ LPCWSTR pszFileName)
 {
   if (!DiscardChanges())
     return CANCELLED; 
@@ -1384,6 +1394,33 @@ public:
   }
 };
 
+
+// contruction/destruction
+
+CMainFrame::CMainFrame()
+	: m_doc(0), m_cb_updated(false), m_doc_changed(false), m_sel_changed(false), m_want_focus(0), m_ignore_cb_changes(false), m_incsearch(0),
+	m_cb_last_images(false), m_last_ie_ovr(true), m_last_sci_ovr(true), m_saved_xml(0), m_sci_find_dlg(0), m_sci_replace_dlg(0),
+	m_last_script(0), m_last_plugin(0), m_restore_pos_cmdline(false), m_bad_xml(false)
+// added by SeNS
+{
+	if (_Settings.m_usespell_check)
+	{
+		CString strPathDict;
+		::GetModuleFileNameW(_Module.GetModuleInstance(), strPathDict.GetBuffer(MAX_PATH), MAX_PATH);
+		strPathDict.ReleaseBuffer();
+		CPath pathExe(strPathDict);
+		pathExe.RemoveFileSpec();
+		CPath pathDict;
+		pathDict.Combine(pathExe, L"dict");
+
+		m_Speller = new CSpeller(pathDict);
+	}
+	else
+	{
+		m_Speller = NULL;
+	}
+}
+
 CMainFrame::~CMainFrame()
 { 
 	delete m_doc; 
@@ -2019,6 +2056,26 @@ LRESULT CMainFrame::OnNextItem(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCt
   return 1;
 }
 
+LRESULT CMainFrame::OnEdChange(WORD /*code*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	StopIncSearch(true);
+	m_doc_changed = true;
+	m_cb_updated = false;
+
+	// added by SeNS: update 
+	UpdateViewSizeInfo();
+	// added by SeNS - process nbsp
+	if (_Settings.GetNBSPChar().Compare(L"\u00A0") != 0)
+		ChangeNBSP(m_doc->m_body.SelectionContainer());
+
+	// added by SeNS: do spellcheck
+	if (m_Speller && m_current_view == BODY)
+		if (m_Speller->Enabled() && _Settings.m_highlght_check)
+			m_Speller->CheckElement(m_doc->m_body.SelectionContainer(), -1, m_doc->m_body.IsHTMLChanged());
+
+	return 0;
+}
+
 // editor notifications
 LRESULT CMainFrame::OnCbEdChange(WORD /*code*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
@@ -2217,6 +2274,18 @@ LRESULT CMainFrame::OnCbEdChange(WORD /*code*/, WORD wID, HWND /*hWndCtl*/, BOOL
   return 0;
 }
 
+inline LRESULT CMainFrame::OnCbSelEndOk(WORD /*code*/, WORD wID, HWND hWndCtl, BOOL & /*bHandled*/)
+{
+	PostMessage(WM_COMMAND, MAKEWPARAM(wID, CBN_EDITCHANGE), (LPARAM)hWndCtl);
+	return 0;
+}
+
+inline LRESULT CMainFrame::OnEdKillFocus(WORD /*code*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL & /*bHandled*/)
+{
+    StopIncSearch(true);
+    return 0;
+}
+
 // tree view notifications 
 LRESULT CMainFrame::OnTreeReturn(WORD, WORD, HWND, BOOL&)
 {
@@ -2234,6 +2303,62 @@ LRESULT CMainFrame::OnTreeRestore(WORD, WORD, HWND, BOOL& /*b*/)
 {
   m_document_tree.GetDocumentStructure(m_doc->m_body.Document());
   return 0;
+}
+
+LRESULT CMainFrame::OnGoToFootnote(UINT uNotifyCode, int nID, CWindow wndCtl)
+{
+	if (!m_doc->m_body.GoToFootnote(false))
+		m_doc->m_body.GoToReference(false);
+	return 0;
+}
+
+inline LRESULT CMainFrame::OnGoToReference(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/)
+{
+	m_doc->m_body.GoToReference(false);
+	return 0;
+}
+
+LRESULT CMainFrame::OnGoToMatchTag(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/)
+{
+	if (m_current_view == SOURCE)
+		SciUpdateUI(true);
+	return 0;
+}
+
+LRESULT CMainFrame::OnGoToWrongTag(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/)
+{
+	if (m_current_view == SOURCE)
+		SciGotoWrongTag();
+	return 0;
+}
+
+LRESULT CMainFrame::OnSciModified(int /*id*/, NMHDR * hdr, BOOL & bHandled)
+{
+	if (hdr->hwndFrom != m_source)
+	{
+		bHandled = FALSE;
+		return 0;
+	}
+	SciModified(*(SCNotification*)hdr);
+	return 0;
+}
+
+LRESULT CMainFrame::OnSciMarginClick(int /*id*/, NMHDR * hdr, BOOL & bHandled)
+{
+	if (hdr->hwndFrom != m_source)
+	{
+		bHandled = FALSE;
+		return 0;
+	}
+	SciMarginClicked(*(SCNotification*)hdr);
+	return 0;
+}
+
+LRESULT CMainFrame::OnSciUpdateUI(int /*id*/, NMHDR * /*hdr*/, BOOL & /*bHandled*/)
+{
+	if (m_current_view == SOURCE)
+		SciUpdateUI(false);
+	return 0;
 }
 
 LRESULT CMainFrame::OnTreeMoveElement(WORD, WORD, HWND, BOOL&)
@@ -3070,7 +3195,7 @@ LRESULT CMainFrame::OnPostCreate(UINT, WPARAM, LPARAM, BOOL&)
 	return 0;
 }
 
-LRESULT CMainFrame::OnSettingChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT CMainFrame::OnSettingChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 {
 	if (m_doc)
 		m_doc->ApplyConfChanges();
