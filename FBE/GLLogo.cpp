@@ -1,27 +1,26 @@
 #include "stdafx.h"
 #include "GLLogo.h"
 
-GLfloat LightAmbient[] = { 0.3f, 0.3f, 0.3f, 1.0f };
-GLfloat LightDiffuse[] = { 0.6f, 0.6f, 0.6f, 1.0f };
-GLfloat LightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-GLfloat LightPosition[] = { 0.0f, 9.0f, -3.0f, 1.0f };
-GLfloat LogoColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+GLfloat LightAmbient[] = {0.3f, 0.3f, 0.3f, 1.0f};
+GLfloat LightDiffuse[] = {0.6f, 0.6f, 0.6f, 1.0f};
+GLfloat LightSpecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat LightPosition[] = {0.0f, 9.0f, -3.0f, 1.0f};
+GLfloat LogoColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 // This is the normal for the plane, {0,1,0}
-GLfloat Plane[4] = { 0, 1, 0, 0 };
+GLfloat Plane[4] = {0, 1, 0, 0};
 
 // Info panel text
-const char* Info[] =
-{
-	"     Use mouse to rotate logo",
-	"     Press 'G' to toggle gravity %s",
-	"     Press 'R' to toggle reflection %s",
-	"     Press 'S' to toggle shadow %s",
-	"     Press 'F' to toggle floor %s",
-	"     Press 'W' to toggle wireframe %s",
-	"     Press SPACE to stop rotation"
-};
+const char * Info[] =
+    {
+        "     Use mouse to rotate logo",
+        "     Press 'G' to toggle gravity %s",
+        "     Press 'R' to toggle reflection %s",
+        "     Press 'S' to toggle shadow %s",
+        "     Press 'F' to toggle floor %s",
+        "     Press 'W' to toggle wireframe %s",
+        "     Press SPACE to stop rotation"};
 
-#define INFO_SIZE sizeof(Info)/sizeof(char*)
+#define INFO_SIZE sizeof(Info) / sizeof(char *)
 bool InfoValues[INFO_SIZE];
 
 void CGLLogoView::SetShadowMatrix(float fDestMat[16], float fLightPos[4], float fPlane[4])
@@ -60,44 +59,44 @@ void CGLLogoView::CreateGLFont()
 	HFONT oldfont;
 
 	m_font_base = glGenLists(96);
-	font = CreateFont(-12,                          // Height Of Font
-	                  0,                            // Width Of Font
-                      0,                            // Angle Of Escapement
-                      0,                            // Orientation Angle
-                      FW_BOLD,                      // Font Weight
-                      FALSE,                        // Italic
-                      FALSE,                        // Underline
-                      FALSE,                        // Strikeout
-                      ANSI_CHARSET,                 // Character Set Identifier
-                      OUT_TT_PRECIS,                // Output Precision
-                      CLIP_TT_ALWAYS,               // Clipping Precision
-                      CLEARTYPE_NATURAL_QUALITY,    // Output Quality
-                      FF_DONTCARE | DEFAULT_PITCH,  // Family And Pitch
-                      L"Arial");                    // Font Name
+	font = CreateFont(-12,                         // Height Of Font
+	                  0,                           // Width Of Font
+	                  0,                           // Angle Of Escapement
+	                  0,                           // Orientation Angle
+	                  FW_BOLD,                     // Font Weight
+	                  FALSE,                       // Italic
+	                  FALSE,                       // Underline
+	                  FALSE,                       // Strikeout
+	                  ANSI_CHARSET,                // Character Set Identifier
+	                  OUT_TT_PRECIS,               // Output Precision
+	                  CLIP_TT_ALWAYS,              // Clipping Precision
+	                  CLEARTYPE_NATURAL_QUALITY,   // Output Quality
+	                  FF_DONTCARE | DEFAULT_PITCH, // Family And Pitch
+	                  L"Arial");                   // Font Name
 
 	oldfont = (HFONT)SelectObject(m_hDC, font); // Selects The Font We Want
 	wglUseFontOutlines(m_hDC, 32, 96, m_font_base, 0.02f, 0.0001f, WGL_FONT_POLYGONS, m_gmf);
 
-	SelectObject(m_hDC, oldfont);   // Selects The Font We Want
-	DeleteObject(font);             // Delete The Font
+	SelectObject(m_hDC, oldfont); // Selects The Font We Want
+	DeleteObject(font);           // Delete The Font
 }
 
 // Custom GL "Print" Routine
-void CGLLogoView::Print(const char *fmt, ...)
+void CGLLogoView::Print(const char * fmt, ...)
 {
 	char text[256]; // Holds Our String
-	va_list		ap; // Pointer To List Of Arguments
+	va_list ap;     // Pointer To List Of Arguments
 	if (fmt == nullptr)
 		return;
 
-	va_start(ap, fmt);          // Parses The String For Variables
-	vsprintf_s(text, fmt, ap);  // And Converts Symbols To Actual Numbers
-	va_end(ap);                 // Results Are Stored In Text
+	va_start(ap, fmt);         // Parses The String For Variables
+	vsprintf_s(text, fmt, ap); // And Converts Symbols To Actual Numbers
+	va_end(ap);                // Results Are Stored In Text
 
-	glPushAttrib(GL_LIST_BIT);  // Pushes The Display List Bits
-	glListBase(m_font_base - 32);                       // Sets The Base Character to 32
-	glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);  // Draws The Display List Text
-	glPopAttrib();                                      // Pops The Display List Bits
+	glPushAttrib(GL_LIST_BIT);                         // Pushes The Display List Bits
+	glListBase(m_font_base - 32);                      // Sets The Base Character to 32
+	glCallLists(strlen(text), GL_UNSIGNED_BYTE, text); // Draws The Display List Text
+	glPopAttrib();                                     // Pops The Display List Bits
 }
 
 // Load bitmaps from resource and convert to textures
@@ -106,7 +105,7 @@ bool CGLLogoView::LoadTextures()
 	HBITMAP hBMP;
 	BITMAP BMP;
 
-	int Texture[9] = { IDB_CENTER, IDB_ORANGE, IDB_GREEN, IDB_XML, IDB_DOC, IDB_HTML, IDB_OTHER, IDB_PRC, IDB_TEXT };
+	int Texture[9] = {IDB_CENTER, IDB_ORANGE, IDB_GREEN, IDB_XML, IDB_DOC, IDB_HTML, IDB_OTHER, IDB_PRC, IDB_TEXT};
 	glGenTextures(9, &m_texture[0]);
 	for (int i = 0; i < 9; i++)
 	{
@@ -191,8 +190,8 @@ bool CGLLogoView::InitGL()
 
 void CGLLogoView::CreateLogo()
 {
-	GLfloat angle[] = { 45.0f, 90.0f, 90.0f };
-	GLfloat axis[][3] = { {0, 0, 1},{0, 1, 0},{1, 0, 0} };
+	GLfloat angle[] = {45.0f, 90.0f, 90.0f};
+	GLfloat axis[][3] = {{0, 0, 1}, {0, 1, 0}, {1, 0, 0}};
 
 	m_logo = glGenLists(1);
 	glNewList(m_logo, GL_COMPILE);
@@ -209,7 +208,7 @@ void CGLLogoView::CreateLogo()
 	gluSphere(m_quadric, 0.8f, 32, 32);
 	glPopMatrix();
 
-	GLfloat	dz = 0.0f;
+	GLfloat dz = 0.0f;
 	for (int i = 0; i < 3; i++)
 	{
 		// draw left cylinder with sphere
@@ -268,7 +267,10 @@ void CGLLogoView::DrawFloor()
 		glBegin(GL_TRIANGLE_STRIP);
 		for (iRun = fExtent; iRun >= -fExtent; iRun -= fStep)
 		{
-			if ((iBounce % 2) == 0) fColor = m_bFloor ? 0.0f : 1.0f; else fColor = 1.0f;
+			if ((iBounce % 2) == 0)
+				fColor = m_bFloor ? 0.0f : 1.0f;
+			else
+				fColor = 1.0f;
 			glColor4f(fColor, fColor, fColor, 0.7f);
 			glVertex3f(iStrip, y, iRun);
 			glVertex3f(iStrip + fStep, y, iRun);
@@ -279,7 +281,6 @@ void CGLLogoView::DrawFloor()
 	glEnable(GL_TEXTURE_2D);
 	glShadeModel(GL_SMOOTH);
 }
-
 
 void CGLLogoView::DrawGLScene()
 {
@@ -305,9 +306,17 @@ void CGLLogoView::DrawGLScene()
 		glRotatef(m_xrot, 1, 0, 0);
 		glRotatef(m_yrot, 0, 1, 0);
 		glRotatef(m_zrot, 0, 0, 1);
-		if (m_bCrystallize) { glLogicOp(m_glColorOp); glEnable(GL_COLOR_LOGIC_OP); }
+		if (m_bCrystallize)
+		{
+			glLogicOp(m_glColorOp);
+			glEnable(GL_COLOR_LOGIC_OP);
+		}
 		glCallList(m_logo);
-		if (m_bCrystallize) { glLogicOp(GL_CLEAR); glDisable(GL_COLOR_LOGIC_OP); }
+		if (m_bCrystallize)
+		{
+			glLogicOp(GL_CLEAR);
+			glDisable(GL_COLOR_LOGIC_OP);
+		}
 		glFrontFace(GL_CCW);
 
 		glPopMatrix();
@@ -372,10 +381,14 @@ void CGLLogoView::DrawGLScene()
 
 		glColor4f(0.3f, 0.3f, 0.4f, m_alpha - 0.2f);
 		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-2.0f, 1.0f, 0.0f);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(2.0f, 1.0f, 0.0f);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(2.0f, -1.3f, 0.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-2.0f, -1.3f, 0.0f);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex3f(-2.0f, 1.0f, 0.0f);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex3f(2.0f, 1.0f, 0.0f);
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex3f(2.0f, -1.3f, 0.0f);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex3f(-2.0f, -1.3f, 0.0f);
 		glEnd();
 
 		glDisable(GL_DEPTH_TEST);
@@ -410,37 +423,40 @@ void CGLLogoView::DrawGLScene()
 
 	// Recalculate rotation speed
 	if (m_xspeed != 0)
-		m_xspeed > 0 ? m_xspeed -= m_ds : m_xspeed += m_ds; m_xrot += m_xspeed;
+		m_xspeed > 0 ? m_xspeed -= m_ds : m_xspeed += m_ds;
+	m_xrot += m_xspeed;
 	if (m_yspeed != 0)
-		m_yspeed > 0 ? m_yspeed -= m_ds : m_yspeed += m_ds; m_yrot += m_yspeed;
+		m_yspeed > 0 ? m_yspeed -= m_ds : m_yspeed += m_ds;
+	m_yrot += m_yspeed;
 	if (m_zspeed != 0)
-		m_zspeed > 0 ? m_zspeed -= m_ds : m_zspeed += m_ds; m_zrot += m_zspeed;
+		m_zspeed > 0 ? m_zspeed -= m_ds : m_zspeed += m_ds;
+	m_zrot += m_zspeed;
 }
 
 bool CGLLogoView::CreateGLWindow()
 {
 	GLuint PixelFormat;
 	static PIXELFORMATDESCRIPTOR pfd =
-	{
-		sizeof(PIXELFORMATDESCRIPTOR),              // Size Of This Pixel Format Descriptor
-		1,                                          // Version Number
-		PFD_DRAW_TO_WINDOW |                        // Format Must Support Window
-		PFD_SUPPORT_OPENGL |                        // Format Must Support OpenGL
-		PFD_DOUBLEBUFFER,                           // Must Support Double Buffering
-		PFD_TYPE_RGBA,                              // Request An RGBA Format
-		16,                                         // Select Our Color Depth
-		0, 0, 0, 0, 0, 0,                           // Color Bits Ignored
-		0,                                          // No Alpha Buffer
-		0,                                          // Shift Bit Ignored
-		0,                                          // No Accumulation Buffer
-		0, 0, 0, 0,                                 // Accumulation Bits Ignored
-		16,                                         // 16Bit Z-Buffer (Depth Buffer)  
-		0,                                          // No Stencil Buffer
-		0,                                          // No Auxiliary Buffer
-		PFD_MAIN_PLANE,                             // Main Drawing Layer
-		0,                                          // Reserved
-		0, 0, 0                                     // Layer Masks Ignored
-	};
+	    {
+	        sizeof(PIXELFORMATDESCRIPTOR), // Size Of This Pixel Format Descriptor
+	        1,                             // Version Number
+	        PFD_DRAW_TO_WINDOW |           // Format Must Support Window
+	            PFD_SUPPORT_OPENGL |       // Format Must Support OpenGL
+	            PFD_DOUBLEBUFFER,          // Must Support Double Buffering
+	        PFD_TYPE_RGBA,                 // Request An RGBA Format
+	        16,                            // Select Our Color Depth
+	        0, 0, 0, 0, 0, 0,              // Color Bits Ignored
+	        0,                             // No Alpha Buffer
+	        0,                             // Shift Bit Ignored
+	        0,                             // No Accumulation Buffer
+	        0, 0, 0, 0,                    // Accumulation Bits Ignored
+	        16,                            // 16Bit Z-Buffer (Depth Buffer)
+	        0,                             // No Stencil Buffer
+	        0,                             // No Auxiliary Buffer
+	        PFD_MAIN_PLANE,                // Main Drawing Layer
+	        0,                             // Reserved
+	        0, 0, 0                        // Layer Masks Ignored
+	    };
 
 	if ((m_hDC = GetDC()) != nullptr)
 		if ((PixelFormat = ChoosePixelFormat(m_hDC, &pfd)) != 0)
@@ -483,20 +499,26 @@ bool CGLLogoView::KillGLWindow()
 		m_hRC = NULL;
 	}
 
-	if (m_hDC && !ReleaseDC(m_hDC)) m_hDC = NULL;
+	if (m_hDC && !ReleaseDC(m_hDC))
+		m_hDC = NULL;
 
 	return 0;
 }
 
 BOOL CGLLogoView::SubclassWindow(HWND hWnd)
 {
-	CWindowImpl <CGLLogoView, CStatic>::SubclassWindow(hWnd);
+	CWindowImpl<CGLLogoView, CStatic>::SubclassWindow(hWnd);
 	if (!CreateGLWindow())
 		KillGLWindow();
 	return TRUE;
 }
 
-LRESULT CGLLogoView::OnKeyDown(UINT, WPARAM wParam, LPARAM /*lParam*/, BOOL&)
+BOOL CGLLogoView::OpenGLError()
+{
+	return !(m_hDC && m_hRC);
+}
+
+LRESULT CGLLogoView::OnKeyDown(UINT, WPARAM wParam, LPARAM /*lParam*/, BOOL &)
 {
 	switch (wParam)
 	{
@@ -508,10 +530,10 @@ LRESULT CGLLogoView::OnKeyDown(UINT, WPARAM wParam, LPARAM /*lParam*/, BOOL&)
 		break;
 	case VK_PRIOR:
 		m_zspeed -= m_dr;
-		break;  //z-=0.02f; 
+		break; //z-=0.02f;
 	case VK_NEXT:
 		m_zspeed += m_dr;
-		break;  //z+=0.02f;
+		break; //z+=0.02f;
 	case VK_UP:
 		m_xspeed -= m_dr;
 		break;
@@ -531,17 +553,17 @@ LRESULT CGLLogoView::OnKeyDown(UINT, WPARAM wParam, LPARAM /*lParam*/, BOOL&)
 		m_zspeed = 0;
 		break;
 	}
-	case 'S':   // Toggle shadows
+	case 'S': // Toggle shadows
 	{
 		m_bShadow = !m_bShadow;
 		break;
 	}
-	case 'R':   // Toggle reflection
+	case 'R': // Toggle reflection
 	{
 		m_bReflection = !m_bReflection;
 		break;
 	}
-	case 'W':   // Toggle wireframe mode
+	case 'W': // Toggle wireframe mode
 	{
 		m_bWireFrame = !m_bWireFrame;
 		if (m_bWireFrame)
@@ -550,29 +572,31 @@ LRESULT CGLLogoView::OnKeyDown(UINT, WPARAM wParam, LPARAM /*lParam*/, BOOL&)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		break;
 	}
-	case 'G':   // Toggle gravity
+	case 'G': // Toggle gravity
 	{
 		m_ds > 0 ? m_ds = 0.0f : m_ds = 0.001f;
 		break;
 	}
-	case 'F':   // Toggle floor
+	case 'F': // Toggle floor
 	{
 		m_bFloor = !m_bFloor;
 		break;
 	}
 	case 'I':
-	case VK_OEM_2:  // Toggle info panel
+	case VK_OEM_2: // Toggle info panel
 	{
 		m_bDrawInfo = !m_bDrawInfo;
 		if (m_alpha > 1.0f)
 			m_alpha = 1.0f;
-		else if (m_alpha < 0.0f) m_alpha = 0.0f;
+		else if (m_alpha < 0.0f)
+			m_alpha = 0.0f;
 		if (m_bDrawInfo)
 			m_alpha_inc = 0.01f;
-		else m_alpha_inc = -0.01f;
+		else
+			m_alpha_inc = -0.01f;
 		break;
 	}
-	case 'C':   // Toggle crystallize
+	case 'C': // Toggle crystallize
 	{
 		m_bCrystallize = !m_bCrystallize;
 		break;
@@ -581,22 +605,22 @@ LRESULT CGLLogoView::OnKeyDown(UINT, WPARAM wParam, LPARAM /*lParam*/, BOOL&)
 	return TRUE;
 }
 
-LRESULT CGLLogoView::OnSize(UINT, WPARAM, LPARAM lParam, BOOL&)
+LRESULT CGLLogoView::OnSize(UINT, WPARAM, LPARAM lParam, BOOL &)
 {
-	ResizeScene(LOWORD(lParam), HIWORD(lParam));  // LoWord=width, HiWord=height
+	ResizeScene(LOWORD(lParam), HIWORD(lParam)); // LoWord=width, HiWord=height
 	DrawGLScene();
 	SwapBuffers(m_hDC);
 	return TRUE;
 }
 
-LRESULT CGLLogoView::OnLButtonDown(UINT, WPARAM, LPARAM lParam, BOOL&)
+LRESULT CGLLogoView::OnLButtonDown(UINT, WPARAM, LPARAM lParam, BOOL &)
 {
 	m_lastPos.x = LOWORD(lParam);
 	m_lastPos.y = HIWORD(lParam);
 	return FALSE;
 }
 
-LRESULT CGLLogoView::OnMouseMove(UINT, WPARAM wParam, LPARAM lParam, BOOL&)
+LRESULT CGLLogoView::OnMouseMove(UINT, WPARAM wParam, LPARAM lParam, BOOL &)
 {
 	if (wParam == MK_LBUTTON)
 	{
@@ -612,13 +636,13 @@ LRESULT CGLLogoView::OnMouseMove(UINT, WPARAM wParam, LPARAM lParam, BOOL&)
 	return FALSE;
 }
 
-LRESULT CGLLogoView::OnMouseWheel(UINT, WPARAM wParam, LPARAM, BOOL&)
+LRESULT CGLLogoView::OnMouseWheel(UINT, WPARAM wParam, LPARAM, BOOL &)
 {
 	GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? m_z -= 0.5f : m_z += 0.5f;
 	return TRUE;
 }
 
-LRESULT CGLLogoView::OnTimer(UINT, WPARAM wParam, LPARAM, BOOL&)
+LRESULT CGLLogoView::OnTimer(UINT, WPARAM wParam, LPARAM, BOOL &)
 {
 	if (wParam == m_Timer)
 	{
@@ -628,7 +652,7 @@ LRESULT CGLLogoView::OnTimer(UINT, WPARAM wParam, LPARAM, BOOL&)
 	return TRUE;
 }
 
-LRESULT CGLLogoView::OnLeftButtonDoubleClick(UINT, WPARAM, LPARAM, BOOL&)
+LRESULT CGLLogoView::OnLeftButtonDoubleClick(UINT, WPARAM, LPARAM, BOOL &)
 {
 	::PostMessage(GetParent(), WM_RESIZE_OPENGL_WINDOW, 0, 0);
 	return TRUE;
