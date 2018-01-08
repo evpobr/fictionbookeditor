@@ -3,24 +3,24 @@
 #include <atlbase.h>
 #include <atlwin.h>
 #include <wtl/atlapp.h>
-#include <wtl/atlframe.h>
 #include <wtl/atlctrls.h>
+#include <wtl/atlframe.h>
 
 typedef CWinTraits<WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_LEFT, WS_EX_CLIENTEDGE> CCustomEditWinTraits;
 
 class CCustomEdit : public CWindowImpl<CCustomEdit, CEdit, CCustomEditWinTraits>, public CEditCommands<CCustomEdit>
 {
-public:
+  public:
 	DECLARE_WND_SUPERCLASS(NULL, CEdit::GetWndClassName())
 
-	CCustomEdit() { }
+	CCustomEdit() {}
 
 	BEGIN_MSG_MAP(CCustomEdit)
 		MESSAGE_HANDLER(WM_CHAR, OnChar)
 		CHAIN_MSG_MAP_ALT(CEditCommands<CCustomEdit>, 1)
 	END_MSG_MAP()
 
-	LRESULT OnChar(UINT, WPARAM wParam, LPARAM, BOOL& bHandled)
+	LRESULT OnChar(UINT, WPARAM wParam, LPARAM, BOOL & bHandled)
 	{
 		if (wParam == VK_RETURN)
 			::PostMessage(::GetParent(GetParent()), WM_COMMAND, MAKELONG(GetDlgCtrlID(), IDN_ED_RETURN), (LPARAM)m_hWnd);
@@ -30,13 +30,14 @@ public:
 	}
 };
 
-class CCustomStatic : public CWindowImpl<CCustomStatic, CStatic/*,CCustomStaticWinTraits*/>
+class CCustomStatic : public CWindowImpl<CCustomStatic, CStatic /*,CCustomStaticWinTraits*/>
 {
-private:
+  private:
 	HFONT m_font;
 	bool m_enabled;
-public:
-	CCustomStatic() :m_font(0), m_enabled(0) {}
+
+  public:
+	CCustomStatic() : m_font(0), m_enabled(0) {}
 
 	void DoPaint(CDCHandle dc)
 	{
@@ -54,7 +55,7 @@ public:
 		UINT iFlags = DT_SINGLELINE | DT_CENTER | DT_VCENTER;
 
 		int len = GetWindowTextLength();
-		wchar_t* text = new wchar_t[len + 1];
+		wchar_t * text = new wchar_t[len + 1];
 		GetWindowText(text, len + 1);
 
 		dc.SetBkMode(TRANSPARENT);
@@ -68,15 +69,17 @@ public:
 		}
 		dc.DrawText(text, -1, &rc, iFlags);
 		SelectObject(dc, oldFont);
-		delete[]text;
+		delete[] text;
 	}
 
-	LRESULT OnPaint(UINT, WPARAM wParam, LPARAM, BOOL&)
+	LRESULT OnPaint(UINT, WPARAM wParam, LPARAM, BOOL &)
 	{
-		if (wParam != NULL) {
+		if (wParam != NULL)
+		{
 			DoPaint((HDC)wParam);
 		}
-		else {
+		else
+		{
 			CPaintDC dc(m_hWnd);
 			DoPaint(dc.m_hDC);
 		}
@@ -95,15 +98,15 @@ public:
 	}
 
 	BEGIN_MSG_MAP(CCustomStatic)
-		//MESSAGE_HANDLER(WM_CREATE, OnCreate)
-		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+	//MESSAGE_HANDLER(WM_CREATE, OnCreate)
+	MESSAGE_HANDLER(WM_PAINT, OnPaint)
 	END_MSG_MAP()
 };
 
 class CTableToolbarsWindow : public CFrameWindowImpl<CTableToolbarsWindow>,
-	public CUpdateUI<CTableToolbarsWindow>
+                             public CUpdateUI<CTableToolbarsWindow>
 {
-public:
+  public:
 	BEGIN_UPDATE_UI_MAP(CTableToolbarsWindow)
 
 	END_UPDATE_UI_MAP()
