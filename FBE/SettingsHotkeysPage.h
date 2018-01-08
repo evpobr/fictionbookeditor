@@ -2,20 +2,22 @@
 #pragma once
 
 #include "resource.h"
-#include <atlhost.h>
 #include <vector>
 
 class CHotkey;
 class CHotkeysGroup;
 
-class CAccelEdit: public CWindowImpl<CAccelEdit, CEdit, CControlWinTraits>, public CEditCommands<CAccelEdit>
+class CAccelEdit : public CWindowImpl<CAccelEdit, CEdit, CControlWinTraits>, public CEditCommands<CAccelEdit>
 {
 public:
 	DECLARE_WND_SUPERCLASS(NULL, CEdit::GetWndClassName())
 
 	unsigned int virtkey;
 
-	CAccelEdit(): virtkey(0) { }
+	CAccelEdit()
+	    : virtkey(0)
+	{
+	}
 
 	BEGIN_MSG_MAP(CAccelEdit)
 		MESSAGE_HANDLER(WM_KEYDOWN, OnKeyDown)
@@ -27,30 +29,9 @@ public:
 		CHAIN_MSG_MAP(CEditCommands<CAccelEdit>)
 	END_MSG_MAP()
 
-	LRESULT OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
-	{
-		if(wParam != virtkey)
-		{
-			::SendMessage(GetParent(), WM_USER + 0x401, wParam, lParam);
-			virtkey =  wParam;
-		}
-
-		return 0;
-	}
-
-	LRESULT OnKeyUp(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-	{
-		::SendMessage(GetParent(), WM_USER + 0x402, wParam, lParam);
-		virtkey = ~virtkey;
-
-		bHandled = TRUE;
-		return 0;
-	}
-
-	LRESULT OnSkip(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-	{
-		return 0;
-	}
+	LRESULT OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL & /*bHandled*/);
+	LRESULT OnKeyUp(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnSkip(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL & /*bHandled*/);
 };
 
 struct hkIndex
@@ -60,25 +41,28 @@ struct hkIndex
 };
 
 // CSettingsHotkeysPage
-class CSettingsHotkeysPage: public CPropertyPageImpl<CSettingsHotkeysPage>
+class CSettingsHotkeysPage : public CPropertyPageImpl<CSettingsHotkeysPage>
 {
 public:
-	CListBox	m_hkGroups;
-	CListBox	m_hotkeys;
-	CAccelEdit	m_editHotkey;
+	CListBox m_hkGroups;
+	CListBox m_hotkeys;
+	CAccelEdit m_editHotkey;
 
-	CSimpleMap<CString, CHotkey*>	m_mapHotkeys;
-	std::vector<CHotkeysGroup>	m_initHkGroups;
+	CSimpleMap<CString, CHotkey *> m_mapHotkeys;
+	std::vector<CHotkeysGroup> m_initHkGroups;
 
-	int		m_count;
-	ACCEL	m_accel;
-	CString	m_wrongHkMsg;
+	int m_count;
+	ACCEL m_accel;
+	CString m_wrongHkMsg;
 	size_t m_selGr;
 	size_t m_selHk;
 
 	CSettingsHotkeysPage();
 
-	enum { IDD = IDD_SETTINGS_HOTKEYS };
+	enum
+	{
+		IDD = IDD_SETTINGS_HOTKEYS
+	};
 
 	BEGIN_MSG_MAP(CSettingsHotkeysPage)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
@@ -95,24 +79,24 @@ public:
 		CHAIN_MSG_MAP(CPropertyPageImpl<CSettingsHotkeysPage>)
 	END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnKeyPressed(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnKeyReleased(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnKeyPressed(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnKeyReleased(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 
-	LRESULT OnGroupsSelChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
-	LRESULT OnHotkeysSelChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);	
-	LRESULT OnBnClickedButtonDefault(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-	LRESULT OnBnClickedButtonHotkeyDelete(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-	LRESULT OnBnClickedButtonHotkeyAssign(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnGroupsSelChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnHotkeysSelChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnBnClickedButtonDefault(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL & /*bHandled*/);
+	LRESULT OnBnClickedButtonHotkeyDelete(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL & /*bHandled*/);
+	LRESULT OnBnClickedButtonHotkeyAssign(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL & /*bHandled*/);
 
-	LRESULT OnEditSetFocus(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnEditSetFocus(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
 
-	hkIndex	GetCollIndex(ACCEL);
-	bool	TestAndSet();
-	int		GetTextLen(CString text);
-	bool	Test();
-	void	ClearAndSet();
+	hkIndex GetCollIndex(ACCEL);
+	bool TestAndSet();
+	int GetTextLen(CString text);
+	bool Test();
+	void ClearAndSet();
 
-	int		OnApply();
-	void	OnReset();
+	int OnApply();
+	void OnReset();
 };

@@ -1,52 +1,53 @@
 // SettingsHotkeysDlg.cpp : Implementation of CSettingsHotkeysPage
 
-#include "stdafx.h"
 #include "SettingsHotkeysPage.h"
-#include "utils.h"
 #include "Settings.h"
 #include "res1.h"
+#include "stdafx.h"
+#include "utils.h"
 
 extern CSettings _Settings;
 
 // CSettingsHotkeysPage
-CSettingsHotkeysPage::CSettingsHotkeysPage(): m_count(0),
-											m_initHkGroups(_Settings.m_hotkey_groups),
-											m_selGr(0),
-											m_selHk(0)
+CSettingsHotkeysPage::CSettingsHotkeysPage()
+    : m_count(0),
+      m_initHkGroups(_Settings.m_hotkey_groups),
+      m_selGr(0),
+      m_selHk(0)
 {
 	SetTitle(IDS_SETTINGS_HOTKEYS_CAPTION);
 
-	for(unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
+	for (unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
 	{
 		CString groupname = _Settings.m_hotkey_groups[i].m_reg_name;
-		for(unsigned int j = 0; j < _Settings.m_hotkey_groups[i].m_hotkeys.size(); ++j)
+		for (unsigned int j = 0; j < _Settings.m_hotkey_groups[i].m_hotkeys.size(); ++j)
 		{
 			CString fullname = groupname + L"\\" + _Settings.m_hotkey_groups[i].m_hotkeys[j].m_reg_name;
 			// added by SeNS: do not show empty hotkeys
-//			if (!_Settings.m_hotkey_groups[i].m_hotkeys[j].m_name.IsEmpty())
-				m_mapHotkeys.Add(fullname, &_Settings.m_hotkey_groups[i].m_hotkeys[j]);
+			//			if (!_Settings.m_hotkey_groups[i].m_hotkeys[j].m_name.IsEmpty())
+			m_mapHotkeys.Add(fullname, &_Settings.m_hotkey_groups[i].m_hotkeys[j]);
 		}
 	}
 
 	::LoadString(_Module.GetResourceInstance(), IDS_HOTKEY_WRONG, m_wrongHkMsg.GetBufferSetLength(MAX_LOAD_STRING + 1),
-					MAX_LOAD_STRING + 1);
+	             MAX_LOAD_STRING + 1);
 	m_wrongHkMsg.ReleaseBuffer();
 }
 
-LRESULT CSettingsHotkeysPage::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+LRESULT CSettingsHotkeysPage::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL & /*bHandled*/)
 {
 	m_hkGroups = GetDlgItem(IDC_LIST_HOTKEYS_GROUPS);
-	for(unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
+	for (unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
 		m_hkGroups.AddString(_Settings.m_hotkey_groups[i].m_name);
 
 	m_hkGroups.SetCurSel(m_selGr);
 
 	m_hotkeys = GetDlgItem(IDC_LIST_HOTKEYS);
-	for(unsigned int i = 0; i < _Settings.m_hotkey_groups[m_selGr].m_hotkeys.size(); ++i)
+	for (unsigned int i = 0; i < _Settings.m_hotkey_groups[m_selGr].m_hotkeys.size(); ++i)
 	{
 		// changed by SeNS: do not show empty hotkeys
-//		if (!_Settings.m_hotkey_groups[m_selGr].m_hotkeys[i].m_name.IsEmpty())
-			m_hotkeys.AddString(_Settings.m_hotkey_groups[m_selGr].m_hotkeys[i].m_name);
+		//		if (!_Settings.m_hotkey_groups[m_selGr].m_hotkeys[i].m_name.IsEmpty())
+		m_hotkeys.AddString(_Settings.m_hotkey_groups[m_selGr].m_hotkeys[i].m_name);
 	}
 
 	m_hotkeys.SetCurSel(m_selHk);
@@ -70,25 +71,26 @@ int CSettingsHotkeysPage::GetTextLen(CString text)
 	return size.cx;
 }
 
-LRESULT CSettingsHotkeysPage::OnGroupsSelChange(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT CSettingsHotkeysPage::OnGroupsSelChange(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL & /*bHandled*/)
 {
 	m_selGr = m_hkGroups.GetCurSel();
 	m_hotkeys.ResetContent();
 
 	int maxExt = 0;
-	for(unsigned int i = 0; i < _Settings.m_hotkey_groups[m_selGr].m_hotkeys.size(); ++i)
+	for (unsigned int i = 0; i < _Settings.m_hotkey_groups[m_selGr].m_hotkeys.size(); ++i)
 	{
 		int iExt = GetTextLen(_Settings.m_hotkey_groups[m_selGr].m_hotkeys[i].m_name);
-		if(iExt > maxExt)
+		if (iExt > maxExt)
 		{
 			m_hotkeys.SetHorizontalExtent(iExt);
 			maxExt = iExt;
 		}
-		else m_hotkeys.SetHorizontalExtent(maxExt);
+		else
+			m_hotkeys.SetHorizontalExtent(maxExt);
 
 		// changed by SeNS: do not show empty hotkeys
-//		if (!_Settings.m_hotkey_groups[m_selGr].m_hotkeys[i].m_name.IsEmpty())
-			m_hotkeys.AddString(_Settings.m_hotkey_groups[m_selGr].m_hotkeys[i].m_name);
+		//		if (!_Settings.m_hotkey_groups[m_selGr].m_hotkeys[i].m_name.IsEmpty())
+		m_hotkeys.AddString(_Settings.m_hotkey_groups[m_selGr].m_hotkeys[i].m_name);
 	}
 
 	m_hotkeys.SetCurSel(0);
@@ -98,7 +100,7 @@ LRESULT CSettingsHotkeysPage::OnGroupsSelChange(WORD /*wNotifyCode*/, WORD /*wID
 	return 0;
 }
 
-LRESULT CSettingsHotkeysPage::OnHotkeysSelChange(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT CSettingsHotkeysPage::OnHotkeysSelChange(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL & /*bHandled*/)
 {
 	m_selHk = m_hotkeys.GetCurSel();
 	ClearAndSet();
@@ -110,16 +112,14 @@ hkIndex CSettingsHotkeysPage::GetCollIndex(ACCEL newAccel)
 {
 	hkIndex index = {-1, -1};
 
-	if(newAccel.key == NULL)
+	if (newAccel.key == NULL)
 		goto ret;
 
-	for(unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
+	for (unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
 	{
-		for(unsigned int j = 0; j < _Settings.m_hotkey_groups[i].m_hotkeys.size(); ++j)
+		for (unsigned int j = 0; j < _Settings.m_hotkey_groups[i].m_hotkeys.size(); ++j)
 		{
-			if(_Settings.m_hotkey_groups[i].m_hotkeys[j].m_accel.fVirt == newAccel.fVirt
-				&& _Settings.m_hotkey_groups[i].m_hotkeys[j].m_accel.key == newAccel.key
-				&& (i != m_selGr || j != m_selHk))
+			if (_Settings.m_hotkey_groups[i].m_hotkeys[j].m_accel.fVirt == newAccel.fVirt && _Settings.m_hotkey_groups[i].m_hotkeys[j].m_accel.key == newAccel.key && (i != m_selGr || j != m_selHk))
 			{
 				index.group = i;
 				index.hotkey = j;
@@ -135,10 +135,10 @@ ret:
 bool CSettingsHotkeysPage::TestAndSet()
 {
 	bool collisions = false;
-	for(int i = 0; i< m_mapHotkeys.GetSize(); ++i)
+	for (int i = 0; i < m_mapHotkeys.GetSize(); ++i)
 	{
-		CHotkey* hotkey = m_mapHotkeys.GetValueAt(i);
-		if(hotkey->m_accel.fVirt == m_accel.fVirt && hotkey->m_accel.key == m_accel.key)
+		CHotkey * hotkey = m_mapHotkeys.GetValueAt(i);
+		if (hotkey->m_accel.fVirt == m_accel.fVirt && hotkey->m_accel.key == m_accel.key)
 		{
 			hotkey->m_accel.fVirt = NULL;
 			hotkey->m_accel.key = NULL;
@@ -152,16 +152,16 @@ bool CSettingsHotkeysPage::TestAndSet()
 	return collisions;
 }
 
-LRESULT CSettingsHotkeysPage::OnBnClickedButtonDefault(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT CSettingsHotkeysPage::OnBnClickedButtonDefault(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL & /*bHandled*/)
 {
 	hkIndex index = GetCollIndex(_Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_def_accel);
-	if(index.group != -1 && index.hotkey != -1)
+	if (index.group != -1 && index.hotkey != -1)
 	{
 		wchar_t collDefMsg[MAX_LOAD_STRING + 1];
 		::LoadString(_Module.GetResourceInstance(),
-					IDS_HOTKEY_DEFAULT_COLLISION,
-					collDefMsg,
-					MAX_LOAD_STRING + 1);
+		             IDS_HOTKEY_DEFAULT_COLLISION,
+		             collDefMsg,
+		             MAX_LOAD_STRING + 1);
 
 		CString collCmdName;
 		collCmdName += _Settings.m_hotkey_groups[index.group].m_name;
@@ -187,7 +187,7 @@ LRESULT CSettingsHotkeysPage::OnBnClickedButtonDefault(WORD /*wNotifyCode*/, WOR
 	return 0;
 }
 
-LRESULT CSettingsHotkeysPage::OnBnClickedButtonHotkeyDelete(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT CSettingsHotkeysPage::OnBnClickedButtonHotkeyDelete(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL & /*bHandled*/)
 {
 	::ZeroMemory(&_Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_accel, sizeof(ACCEL));
 	ClearAndSet();
@@ -195,7 +195,7 @@ LRESULT CSettingsHotkeysPage::OnBnClickedButtonHotkeyDelete(WORD /*wNotifyCode*/
 	return 0;
 }
 
-LRESULT CSettingsHotkeysPage::OnEditSetFocus(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT CSettingsHotkeysPage::OnEditSetFocus(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL & /*bHandled*/)
 {
 	m_editHotkey.SetWindowText(NULL);
 	::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_COLLISION), NULL);
@@ -208,9 +208,9 @@ LRESULT CSettingsHotkeysPage::OnEditSetFocus(WORD /*wNotifyCode*/, WORD /*wID*/,
 bool CSettingsHotkeysPage::Test()
 {
 	hkIndex index = GetCollIndex(m_accel);
-	wchar_t collMsg[MAX_LOAD_STRING +1];
+	wchar_t collMsg[MAX_LOAD_STRING + 1];
 
-	if(index.group != -1 && index.hotkey != -1)
+	if (index.group != -1 && index.hotkey != -1)
 	{
 		CString collCmdName;
 		collCmdName += _Settings.m_hotkey_groups[index.group].m_name;
@@ -218,9 +218,9 @@ bool CSettingsHotkeysPage::Test()
 		collCmdName += _Settings.m_hotkey_groups[index.group].m_hotkeys[index.hotkey].m_name;
 
 		::LoadString(_Module.GetResourceInstance(),
-			IDS_HOTKEY_ASSIGN_COLLISION,
-			collMsg,
-			MAX_LOAD_STRING + 1);
+		             IDS_HOTKEY_ASSIGN_COLLISION,
+		             collMsg,
+		             MAX_LOAD_STRING + 1);
 
 		CString collCmdMsg;
 		collCmdMsg.Format(collMsg, static_cast<LPCTSTR>(collCmdName));
@@ -232,9 +232,9 @@ bool CSettingsHotkeysPage::Test()
 	else
 	{
 		::LoadString(_Module.GetResourceInstance(),
-			IDS_HOTKEY_ASSIGN_NO_COLLISION,
-			collMsg,
-			MAX_LOAD_STRING + 1);
+		             IDS_HOTKEY_ASSIGN_NO_COLLISION,
+		             collMsg,
+		             MAX_LOAD_STRING + 1);
 
 		::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_COLLISION), collMsg);
 
@@ -242,63 +242,63 @@ bool CSettingsHotkeysPage::Test()
 	}
 }
 
-LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL & /*bHandled*/)
 {
 	CString wndText;
 	m_editHotkey.GetWindowText(wndText);
 	WORD vkey = static_cast<WORD>(wParam);
 
-	switch(m_count)
+	switch (m_count)
 	{
-		case 0:
-			{
-				m_editHotkey.SetWindowText(NULL);
-				ZeroMemory(&m_accel, sizeof(ACCEL));
-				m_accel.fVirt = FVIRTKEY;
-				m_accel.cmd = _Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_accel.cmd;
+	case 0:
+	{
+		m_editHotkey.SetWindowText(NULL);
+		ZeroMemory(&m_accel, sizeof(ACCEL));
+		m_accel.fVirt = FVIRTKEY;
+		m_accel.cmd = _Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_accel.cmd;
 
-				if(vkey == VK_CONTROL || vkey == U::StringToKeycode(L"Alt") || vkey == VK_SHIFT)
-				{
-					wndText = U::KeycodeToString(vkey);
-					m_editHotkey.SetWindowText(wndText);
-
-					m_accel.fVirt |= U::VKToFVirt(vkey);
-					m_count++;
-				}
-				else if (wParam >= VK_F1 && wParam <= VK_F12)
-				{
-					wndText += U::KeycodeToString(vkey);
-					m_editHotkey.SetWindowText(wndText);
-
-					m_accel.key = vkey;
-					m_count = 0;
-					Test();
-					::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);
-				}
-				else
-				{
-					m_editHotkey.SetWindowText(m_wrongHkMsg);
-					m_count = 0;
-					::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), FALSE);
-					::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_COLLISION), NULL);
-				}
-
-				break;
-			}
-		case 1:
+		if (vkey == VK_CONTROL || vkey == U::StringToKeycode(L"Alt") || vkey == VK_SHIFT)
 		{
-			if(vkey == VK_CONTROL || vkey == U::StringToKeycode(L"Alt") || vkey == VK_SHIFT)
-			{
-				wndText += L" + ";
-				wndText += U::KeycodeToString(vkey);
-				m_editHotkey.SetWindowText(wndText);
+			wndText = U::KeycodeToString(vkey);
+			m_editHotkey.SetWindowText(wndText);
 
-				m_accel.fVirt |= U::VKToFVirt(vkey);
-				m_count++;
-			}
-			else if(U::KeycodeToString(vkey) != L"")
-			{
-/*				if(m_accel.fVirt & FSHIFT)
+			m_accel.fVirt |= U::VKToFVirt(vkey);
+			m_count++;
+		}
+		else if (wParam >= VK_F1 && wParam <= VK_F12)
+		{
+			wndText += U::KeycodeToString(vkey);
+			m_editHotkey.SetWindowText(wndText);
+
+			m_accel.key = vkey;
+			m_count = 0;
+			Test();
+			::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);
+		}
+		else
+		{
+			m_editHotkey.SetWindowText(m_wrongHkMsg);
+			m_count = 0;
+			::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), FALSE);
+			::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_COLLISION), NULL);
+		}
+
+		break;
+	}
+	case 1:
+	{
+		if (vkey == VK_CONTROL || vkey == U::StringToKeycode(L"Alt") || vkey == VK_SHIFT)
+		{
+			wndText += L" + ";
+			wndText += U::KeycodeToString(vkey);
+			m_editHotkey.SetWindowText(wndText);
+
+			m_accel.fVirt |= U::VKToFVirt(vkey);
+			m_count++;
+		}
+		else if (U::KeycodeToString(vkey) != L"")
+		{
+			/*				if(m_accel.fVirt & FSHIFT)
 				{
 					m_editHotkey.SetWindowText(m_wrongHkMsg);
 					m_count = 0;
@@ -306,32 +306,6 @@ LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT /*uMsg*/, WPARAM wParam, LPARAM 
 					::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_COLLISION), NULL);
 				}
 				else */
-				{ 
-					wndText += L" + ";
-					wndText += U::KeycodeToString(vkey);
-					m_editHotkey.SetWindowText(wndText);
-
-					m_accel.key = vkey;
-					m_count = 0;
-					Test();
-					::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);
-				}
-			}
-
-			break;
-		}
-		case 2:
-		{
-			if(vkey == VK_CONTROL || vkey == U::StringToKeycode(L"Alt") || vkey == VK_SHIFT)
-			{
-				wndText += L" + ";
-				wndText += U::KeycodeToString(vkey);
-				m_editHotkey.SetWindowText(wndText);
-
-				m_accel.fVirt |= U::VKToFVirt(vkey);
-				m_count++;
-			}
-			else if(U::KeycodeToString(vkey) != L"")
 			{
 				wndText += L" + ";
 				wndText += U::KeycodeToString(vkey);
@@ -342,43 +316,66 @@ LRESULT CSettingsHotkeysPage::OnKeyPressed(UINT /*uMsg*/, WPARAM wParam, LPARAM 
 				Test();
 				::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);
 			}
-
-			break;
 		}
-		case 3:
+
+		break;
+	}
+	case 2:
+	{
+		if (vkey == VK_CONTROL || vkey == U::StringToKeycode(L"Alt") || vkey == VK_SHIFT)
 		{
-			if(U::KeycodeToString(vkey) != L""
-				&& vkey != VK_CONTROL
-				&& vkey != U::StringToKeycode(L"Alt")
-				&& vkey != VK_SHIFT)
-			{
-				wndText += L" + ";
-				wndText += U::KeycodeToString(vkey);
-				m_editHotkey.SetWindowText(wndText);
+			wndText += L" + ";
+			wndText += U::KeycodeToString(vkey);
+			m_editHotkey.SetWindowText(wndText);
 
-				m_accel.key = vkey;
-				m_count = 0;
-				Test();
-				::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);
-			}
-			else
-			{
-				m_editHotkey.SetWindowText(m_wrongHkMsg);
-				m_count = 0;
-				::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), FALSE);
-				::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_COLLISION), NULL);
-			}
-
-			break;
+			m_accel.fVirt |= U::VKToFVirt(vkey);
+			m_count++;
 		}
+		else if (U::KeycodeToString(vkey) != L"")
+		{
+			wndText += L" + ";
+			wndText += U::KeycodeToString(vkey);
+			m_editHotkey.SetWindowText(wndText);
+
+			m_accel.key = vkey;
+			m_count = 0;
+			Test();
+			::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);
+		}
+
+		break;
+	}
+	case 3:
+	{
+		if (U::KeycodeToString(vkey) != L"" && vkey != VK_CONTROL && vkey != U::StringToKeycode(L"Alt") && vkey != VK_SHIFT)
+		{
+			wndText += L" + ";
+			wndText += U::KeycodeToString(vkey);
+			m_editHotkey.SetWindowText(wndText);
+
+			m_accel.key = vkey;
+			m_count = 0;
+			Test();
+			::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), TRUE);
+		}
+		else
+		{
+			m_editHotkey.SetWindowText(m_wrongHkMsg);
+			m_count = 0;
+			::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), FALSE);
+			::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_COLLISION), NULL);
+		}
+
+		break;
+	}
 	}
 
 	return 0;
 }
 
-LRESULT CSettingsHotkeysPage::OnKeyReleased(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+LRESULT CSettingsHotkeysPage::OnKeyReleased(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL & /*bHandled*/)
 {
-	if(m_accel.key == NULL)
+	if (m_accel.key == NULL)
 	{
 		ClearAndSet();
 	}
@@ -386,7 +383,7 @@ LRESULT CSettingsHotkeysPage::OnKeyReleased(UINT /*uMsg*/, WPARAM /*wParam*/, LP
 	return 0;
 }
 
-LRESULT CSettingsHotkeysPage::OnBnClickedButtonHotkeyAssign(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT CSettingsHotkeysPage::OnBnClickedButtonHotkeyAssign(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL & /*bHandled*/)
 {
 	TestAndSet();
 	ClearAndSet();
@@ -401,7 +398,7 @@ void CSettingsHotkeysPage::ClearAndSet()
 	::EnableWindow(GetDlgItem(IDC_BUTTON_HOTKEY_ASSIGN), FALSE);
 	m_editHotkey.SetWindowText(U::AccelToString(_Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_accel));
 	::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_COLLISION), NULL);
-	if(_Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_desc != L"")
+	if (_Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_desc != L"")
 		::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_DESCRIPTION), _Settings.m_hotkey_groups[m_selGr].m_hotkeys[m_selHk].m_desc);
 	else
 		::SetWindowText(GetDlgItem(IDC_EDIT_HOTKEY_DESCRIPTION), NULL);
@@ -429,4 +426,29 @@ int CSettingsHotkeysPage::OnApply()
 void CSettingsHotkeysPage::OnReset()
 {
 	_Settings.m_hotkey_groups = m_initHkGroups;
+}
+
+LRESULT CAccelEdit::OnKeyDown(UINT, WPARAM wParam, LPARAM lParam, BOOL &)
+{
+	if (wParam != virtkey)
+	{
+		::SendMessage(GetParent(), WM_USER + 0x401, wParam, lParam);
+		virtkey = wParam;
+	}
+
+	return 0;
+}
+
+LRESULT CAccelEdit::OnKeyUp(UINT, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
+	::SendMessage(GetParent(), WM_USER + 0x402, wParam, lParam);
+	virtkey = ~virtkey;
+
+	bHandled = TRUE;
+	return 0;
+}
+
+LRESULT CAccelEdit::OnSkip(UINT, WPARAM, LPARAM, BOOL &)
+{
+	return 0;
 }
