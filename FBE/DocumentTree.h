@@ -1,7 +1,7 @@
 #pragma once
 
-#include "TreeView.h"
 #include "AppUtils.h"
+#include "TreeView.h"
 
 typedef CWinTraits<WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_LEFT, WS_EX_CLIENTEDGE> CTreeWithToolBarWinTraits;
 
@@ -32,9 +32,9 @@ private:
 public:
 	DECLARE_FRAME_WND_CLASS(L"DocumentTreeFrame", IDR_DOCUMENT_TREE)
 
-	void GetDocumentStructure(MSHTML::IHTMLDocument2Ptr& v);
-	void UpdateDocumentStructure(MSHTML::IHTMLDocument2Ptr& v, MSHTML::IHTMLDOMNodePtr node);
-	void HighlightItemAtPos(MSHTML::IHTMLElement* p);
+	void GetDocumentStructure(MSHTML::IHTMLDocument2Ptr & v);
+	void UpdateDocumentStructure(MSHTML::IHTMLDocument2Ptr & v, MSHTML::IHTMLDOMNodePtr node);
+	void HighlightItemAtPos(MSHTML::IHTMLElement * p);
 	CTreeItem GetSelectedItem();
 
 	BEGIN_MSG_MAP(CTreeWithToolBar)
@@ -54,43 +54,17 @@ public:
 
 		NOTIFY_CODE_HANDLER(TTN_GETDISPINFO, OnToolTipText)
 	END_MSG_MAP()
-	
-	LRESULT OnCreate(UINT, WPARAM, LPARAM, BOOL&);
-	LRESULT OnSize(UINT, WPARAM, LPARAM, BOOL&);
 
-	LRESULT ForwardWMCommand(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnCreate(UINT, WPARAM, LPARAM, BOOL &);
+	LRESULT OnSize(UINT, WPARAM, LPARAM, BOOL &);
 
-	LRESULT OnMenuCommand(WORD, WORD wID, HWND, BOOL&);
-	LRESULT OnMenuStCommand(WORD, WORD wID, HWND, BOOL&);
-	LRESULT OnMenuClear(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT ForwardWMCommand(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
 
-	LRESULT OnToolTipText(int idCtrl, LPNMHDR pnmh, BOOL& /*bHandled*/)
-	{
-		LPNMTTDISPINFOW pDispInfo = (LPNMTTDISPINFOW)pnmh;
-		pDispInfo->szText[0] = 0;
+	LRESULT OnMenuCommand(WORD, WORD wID, HWND, BOOL &);
+	LRESULT OnMenuStCommand(WORD, WORD wID, HWND, BOOL &);
+	LRESULT OnMenuClear(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
 
-		if((idCtrl != 0) && !(pDispInfo->uFlags & TTF_IDISHWND))
-		{
-			const int cchBuff = 256;
-			wchar_t szBuff[cchBuff];
-			szBuff[0] = 0;
-			int nRet = ::LoadStringW(ModuleHelper::GetResourceInstance(), idCtrl, szBuff, cchBuff);
-			for(int i = 0; i < nRet; i++)
-			{
-				if(szBuff[i] == L'\n')
-				{
-					SecureHelper::strncpyW_x(pDispInfo->szText, _countof(pDispInfo->szText), &szBuff[i + 1], _TRUNCATE);
-					break;
-				}
-			}
-#if (_WIN32_IE >= 0x0300)
-			if(nRet > 0)   // string was loaded, save it
-				pDispInfo->uFlags |= TTF_DI_SETITEM;
-#endif // (_WIN32_IE >= 0x0300)
-		}
-
-		return 0;
-	}
+	LRESULT OnToolTipText(int idCtrl, LPNMHDR pnmh, BOOL & /*bHandled*/);
 
 private:
 	BOOL ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT nFlags = 0) throw();
@@ -101,26 +75,26 @@ private:
 
 class CDocumentTree : public CPaneContainer
 {
-private:	
+private:
 	int m_current_tab;
-
 
 public:
 	CTreeWithToolBar m_tree;
+
 public:
 	CDocumentTree(){};
 
 	// TreeView methods
-	void GetDocumentStructure(MSHTML::IHTMLDocument2Ptr& v);
-	void UpdateDocumentStructure(MSHTML::IHTMLDocument2Ptr& v,MSHTML::IHTMLDOMNodePtr node);
-	void HighlightItemAtPos(MSHTML::IHTMLElement *p);
+	void GetDocumentStructure(MSHTML::IHTMLDocument2Ptr & v);
+	void UpdateDocumentStructure(MSHTML::IHTMLDocument2Ptr & v, MSHTML::IHTMLDOMNodePtr node);
+	void HighlightItemAtPos(MSHTML::IHTMLElement * p);
 	CTreeItem GetSelectedItem();
 
 	BEGIN_MSG_MAP(CDocumentTree)
-		MESSAGE_HANDLER(WM_CREATE, OnCreate)
+	MESSAGE_HANDLER(WM_CREATE, OnCreate)
 
-		CHAIN_MSG_MAP(CPaneContainer);
+	CHAIN_MSG_MAP(CPaneContainer);
 	END_MSG_MAP()
-	
-	LRESULT OnCreate(UINT, WPARAM, LPARAM, BOOL&);
+
+	LRESULT OnCreate(UINT, WPARAM, LPARAM, BOOL &);
 };
