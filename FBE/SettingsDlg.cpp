@@ -1,10 +1,10 @@
 // SettingsDlg.cpp : Implementation of CSettingsDlg
 
 #include "stdafx.h"
-#include "Settings.h"
 #include "SettingsDlg.h"
-#include "SettingsOtherPage.h"
+#include "Settings.h"
 #include "SettingsHotkeysPage.h"
+#include "SettingsOtherPage.h"
 #include "SettingsWordsPage.h"
 #include "res1.h"
 
@@ -13,7 +13,7 @@ extern CSettings _Settings;
 // CSettingsDlg
 
 CSettingsDlg::CSettingsDlg(_U_STRINGorID title, UINT uStartPage, HWND hWndParent)
-	: CPropertySheetImpl<CSettingsDlg>(title, uStartPage, hWndParent)
+    : CPropertySheetImpl<CSettingsDlg>(title, uStartPage, hWndParent)
 {
 	m_bCentered = false;
 

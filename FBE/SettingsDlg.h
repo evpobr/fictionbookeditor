@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "resource.h"
-#include "SettingsViewPage.h"
-#include "SettingsOtherPage.h"
 #include "SettingsHotkeysPage.h"
+#include "SettingsOtherPage.h"
+#include "SettingsViewPage.h"
 #include "SettingsWordsPage.h"
+#include "resource.h"
 
 // CSettingsDlg
 
@@ -14,7 +14,7 @@ class CSettingsDlg : public CPropertySheetImpl<CSettingsDlg>
 {
 public:
 	CSettingsDlg(_U_STRINGorID title = (LPCTSTR)NULL,
-		UINT uStartPage = 0, HWND hWndParent = NULL);
+	             UINT uStartPage = 0, HWND hWndParent = NULL);
 
 	BEGIN_MSG_MAP(CSettingsDlg)
 		MSG_WM_SHOWWINDOW(OnShowWindow)
