@@ -1416,17 +1416,22 @@ CMainFrame::CMainFrame()
       m_last_script(0), m_last_plugin(0), m_restore_pos_cmdline(false), m_bad_xml(false)
 // added by SeNS
 {
+	CString strExeFileName;
+	::GetModuleFileNameW(_Module.GetModuleInstance(), strExeFileName.GetBuffer(MAX_PATH), MAX_PATH);
+	strExeFileName.ReleaseBuffer();
+	CPath pathExe(strExeFileName);
+	pathExe.RemoveFileSpec();
+
+	CPath pathDict;
+	pathDict.Combine(pathExe, L"dict");
+	LoadDictionaries(pathDict);
+}
+
+void CMainFrame::LoadDictionaries(_In_z_ LPCWSTR pszPath)
+{
 	if (_Settings.m_usespell_check)
 	{
-		CString strPathDict;
-		::GetModuleFileNameW(_Module.GetModuleInstance(), strPathDict.GetBuffer(MAX_PATH), MAX_PATH);
-		strPathDict.ReleaseBuffer();
-		CPath pathExe(strPathDict);
-		pathExe.RemoveFileSpec();
-		CPath pathDict;
-		pathDict.Combine(pathExe, L"dict");
-
-		m_Speller = new CSpeller(pathDict);
+		m_Speller = new CSpeller(pszPath);
 	}
 	else
 	{
@@ -4998,6 +5003,7 @@ void CMainFrame::RestartProgram()
 		ShellExecuteW(0, L"open", filename, ofn, 0, SW_SHOW);
 	}
 }
+
 
 void CMainFrame::CollectScripts(CString path, TCHAR * mask, int lastid, CString refid)
 {

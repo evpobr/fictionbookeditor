@@ -748,6 +748,8 @@ class CMainFrame : public CFrameWindowImpl<CMainFrame>,
 	void SetIsText();
 
 #pragma endregion
+
+	void LoadDictionaries(_In_z_ LPCWSTR pszPath);
 };
 
 int StartScript(CMainFrame * mainframe);
