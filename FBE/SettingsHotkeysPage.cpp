@@ -1,9 +1,9 @@
 // SettingsHotkeysDlg.cpp : Implementation of CSettingsHotkeysPage
 
+#include "stdafx.h"
 #include "SettingsHotkeysPage.h"
 #include "Settings.h"
 #include "res1.h"
-#include "stdafx.h"
 #include "utils.h"
 
 extern CSettings _Settings;
