@@ -11,7 +11,7 @@
 #include "targetver.h"
 #endif
 #define APSTUDIO_HIDDEN_SYMBOLS
-#include "wtl/atlres.h"
+#include "wtl\atlres.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -65,7 +65,7 @@ BEGIN
     "#include ""targetver.h""\r\n"
     "#endif\r\n"
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""atlres.h""\r\n"
+    "#include ""wtl\\atlres.h""\r\n"
     "#undef APSTUDIO_HIDDEN_SYMBOLS\0"
 END
 
@@ -354,13 +354,11 @@ BEGIN
     CONTROL         "",IDC_AB_BANNER,"Static",SS_OWNERDRAW | SS_NOTIFY | NOT WS_VISIBLE,6,6,57,123,WS_EX_CLIENTEDGE
     ICON            IDR_MAINFRAME,IDC_STATIC_AB_APPICON,73,8,20,20
     EDITTEXT        IDC_STATIC_AB_APPNAMEVER,99,8,157,12,ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
-    LTEXT           "Build",IDC_STATIC_BUILD,101,20,15,8
-    EDITTEXT        IDC_BUILDSTAMP,123,20,132,12,ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
     CONTROL         "<a href=""http://code.google.com/p/fictionbookeditor/"">http://code.google.com/p/fictionbookeditor/</a>",IDC_SYSLINK_AB_LINKS,
-                    "SysLink",0x0,101,32,154,8
-    EDITTEXT        IDC_CONTRIBS,70,51,189,77,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | ES_WANTRETURN | NOT WS_BORDER | WS_VSCROLL | NOT WS_TABSTOP,WS_EX_STATICEDGE
+                    "SysLink",0x0,101,22,154,8
+    EDITTEXT        IDC_CONTRIBS,70,38,189,90,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | ES_WANTRETURN | NOT WS_BORDER | WS_VSCROLL | NOT WS_TABSTOP,WS_EX_STATICEDGE
     CONTROL         "Static",IDC_TEXT_STATUS,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,24,137,180,8
-    CONTROL         IDB_UPD_CHECK1,IDC_PIC_UPDATE,"Static",SS_BITMAP,9,136,9,9
+    CONTROL         IDB_UPD_CHECK1,IDC_PIC_UPDATE,"Static",SS_BITMAP,9,136,11,10
     PUSHBUTTON      "Update now",IDC_UPDATE,161,133,49,14,NOT WS_VISIBLE
 END
 

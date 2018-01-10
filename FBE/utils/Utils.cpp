@@ -18,6 +18,8 @@ bool VBErr = false;
 
 namespace U
 {
+	CString g_strProductInfo;
+
 	CSimpleMap<CString, WORD> keycodes;
 
 	void InitKeycodes()
@@ -1614,6 +1616,57 @@ void InitSettingsHotkeyGroups()
 			}
 		}
 		return res;
+	}
+
+	LPCWSTR GetProductInfo()
+	{
+		if (g_strProductInfo.IsEmpty())
+		{
+			CString strRet;
+			CString strProductName;
+			CString strProductVersion;
+			CString strFileName;
+
+			::GetModuleFileNameW(nullptr, strFileName.GetBuffer(MAX_PATH), MAX_PATH);
+			strFileName.ReleaseBuffer();
+
+			DWORD dwHandle;
+			DWORD dwLen = ::GetFileVersionInfoSizeW(strFileName, &dwHandle);
+			if (dwLen > 0)
+			{
+				CHeapPtr<BYTE> spBlock;
+				if (spBlock.Allocate(dwLen))
+				{
+					if (::GetFileVersionInfoW(strFileName, dwHandle, dwLen, spBlock) == TRUE)
+					{
+						PLCID *plcid;
+						UINT uLen;
+						if (VerQueryValueW(spBlock.m_pData, L"\\VarFileInfo\\Translation", (LPVOID*)&plcid, &uLen) == TRUE)
+						{
+							CString strFormat;
+							LPWSTR *pszBuffer;
+
+							strFormat.Format(L"\\StringFileInfo\\%04x%04x\\ProductName", LOWORD(plcid[0]), HIWORD(plcid[0]));
+							if (::VerQueryValueW(spBlock, strFormat, (LPVOID*)&pszBuffer, &uLen) == TRUE)
+							{
+								strProductName = (LPCWSTR)pszBuffer;
+							}
+
+							strFormat.Format(L"\\StringFileInfo\\%04x%04x\\ProductVersion", LOWORD(plcid[0]), HIWORD(plcid[0]));
+							if (::VerQueryValueW(spBlock, strFormat, (LPVOID*)&pszBuffer, &uLen) == TRUE)
+							{
+								strProductVersion = (LPCWSTR)pszBuffer;
+							}
+						}
+					}
+				}
+			}
+
+
+			g_strProductInfo = strProductName + L" Release " + strProductVersion;
+		}
+
+		return g_strProductInfo;
 	}
 
 }

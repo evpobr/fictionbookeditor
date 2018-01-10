@@ -621,8 +621,8 @@ STDMETHODIMP ExternalHelper::GetViewHeight(int * height)
 
 STDMETHODIMP ExternalHelper::GetProgramVersion(BSTR * ver)
 {
-	CString version(L"Fiction Book Editor");
-	*ver = version.AllocSysString();
+	CString strVersion = U::GetProductInfo();
+	*ver = strVersion.AllocSysString();
 	return S_OK;
 }
 

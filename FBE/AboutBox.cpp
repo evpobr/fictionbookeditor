@@ -6,6 +6,8 @@ LRESULT CAboutDlg::OnInitDialog(UINT, WPARAM, LPARAM, BOOL &)
 {
 	m_bAllowResize = false;
 
+	SetDlgItemText(IDC_STATIC_AB_APPNAMEVER, U::GetProductInfo());
+
 	SetIcon(LoadIcon(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME)));
 
 	m_Contributors = GetDlgItem(IDC_CONTRIBS);

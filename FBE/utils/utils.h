@@ -215,6 +215,9 @@ namespace U // place all utilities into their own namespace
 
 	CString Transliterate (CString src);
 	CString URLDecode(const CString& inStr);
+
+	LPCWSTR GetProductInfo();
+
 } // namespace
 
 #endif
