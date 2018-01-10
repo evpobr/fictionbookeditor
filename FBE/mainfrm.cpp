@@ -1202,9 +1202,9 @@ void CMainFrame::InitPlugins()
 	}
 	else
 	{
-		wchar_t buf[MAX_LOAD_STRING + 1];
-		::LoadString(_Module.GetResourceInstance(), IDS_NO_SCRIPTS, buf, MAX_LOAD_STRING);
-		AppendMenu(scripts, MF_STRING | MF_DISABLED | MF_GRAYED, IDCANCEL, buf);
+		CString strNoScripts;
+		strNoScripts.LoadString(IDS_NO_SCRIPTS);
+		AppendMenu(scripts, MF_STRING | MF_DISABLED | MF_GRAYED, IDCANCEL, strNoScripts);
 	}
 }
 
