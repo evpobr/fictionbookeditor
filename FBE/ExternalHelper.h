@@ -16,8 +16,8 @@ class ExternalHelper : public CComObjectRoot,
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(ExternalHelper)
-	COM_INTERFACE_ENTRY(IDispatch)
-	COM_INTERFACE_ENTRY(IExternalHelper)
+		COM_INTERFACE_ENTRY(IDispatch)
+		COM_INTERFACE_ENTRY(IExternalHelper)
 	END_COM_MAP()
 
 	// IExternalHelper
