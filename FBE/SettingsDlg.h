@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "SettingsHotkeysPage.h"
 #include "SettingsOtherPage.h"
 #include "SettingsViewPage.h"
 #include "SettingsWordsPage.h"
@@ -28,6 +27,5 @@ private:
 
 	CSettingsViewPage m_pgView;
 	CSettingsOtherPage m_pgOther;
-	CSettingsHotkeysPage m_pgHotkeys;
 	CSettingsWordsDlg m_pgWords;
 };

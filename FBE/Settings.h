@@ -42,72 +42,6 @@ public:
 	}
 };
 
-class CHotkey : public ISerializable, public IObjectFactory
-{
-public:
-	CString m_name;
-	CString m_reg_name;
-	ACCEL m_accel;
-	ACCEL m_def_accel;
-	CString m_desc;
-	wchar_t m_char_val; // value for symbol hotkey
-
-	CHotkey();
-	CHotkey(CString reg_name, int IDS_CMD_NAME, BYTE fVirt, WORD cmd, WORD key, CString descr = L"");
-	CHotkey(CString reg_name, int IDS_CMD_NAME, CString uchar, BYTE fVirt, WORD cmd, WORD key, CString descr = L"");
-	CHotkey(CString reg_name, CString name, wchar_t symbol, BYTE fVirt, WORD cmd, WORD key, CString descr = L"");
-	CHotkey(CString reg_name, CString cmd_name, BYTE fVirt, WORD cmd, WORD key, CString descr = L"");
-
-	bool operator<(const CHotkey & other) const
-	{
-		return (m_name.CompareNoCase(other.m_name) < 0);
-	}
-
-	// ISerializable interface
-	int GetProperties(std::vector<CString> & properties);
-	bool GetPropertyValue(const CString & sProperty, CProperty & property);
-	bool SetPropertyValue(const CString & sProperty, CProperty & sValue);
-
-	bool HasMultipleInstances();
-
-	CString GetClassName();
-	CString GetID();
-
-	ISerializable * Create();
-	void Destroy(ISerializable * obj);
-};
-
-class CHotkeysGroup : public ISerializable, public IObjectFactory
-{
-public:
-	CString m_name;
-	CString m_reg_name;
-	std::vector<CHotkey> m_hotkeys;
-
-	CHotkey m_hotkey_factory;
-	std::vector<void *> m_ptr_hotkeys;
-
-	CHotkeysGroup();
-	CHotkeysGroup(CString reg_name, int IDS_GROUP_NAME);
-
-	bool operator<(const CHotkeysGroup & other) const
-	{
-		return (m_name.CompareNoCase(other.m_name) < 0);
-	}
-
-	int GetProperties(std::vector<CString> & properties);
-	bool GetPropertyValue(const CString & sProperty, CProperty & property);
-	bool SetPropertyValue(const CString & sProperty, CProperty & sValue);
-
-	bool HasMultipleInstances();
-
-	CString GetClassName();
-	CString GetID();
-
-	ISerializable * Create();
-	void Destroy(ISerializable * obj);
-};
-
 class DESCSHOWINFO : public ISerializable, public IObjectFactory
 {
 public:
@@ -200,8 +134,6 @@ class CSettings : public ISerializable, public IObjectFactory
 	HWND m_hMainWindow;
 
 public:
-	std::vector<CHotkeysGroup> m_hotkey_groups;
-	int keycodes; // total number of accelerators
 	std::vector<WordsItem> m_words;
 
 	bool m_xml_src_wrap;
@@ -227,7 +159,6 @@ public:
 	~CSettings();
 
 	void Init();
-	void InitHotkeyGroups();
 	void Close();
 
 	// ISerializable interface
@@ -245,12 +176,6 @@ public:
 
 	void Load();
 	void Save();
-
-	void LoadHotkeyGroups();
-	void SaveHotkeyGroups();
-
-	CHotkeysGroup * GetGroupByName(const CString & name);
-	CHotkey * GetHotkeyByName(const CString & name, CHotkeysGroup & group);
 
 	void LoadWords();
 	void SaveWords();

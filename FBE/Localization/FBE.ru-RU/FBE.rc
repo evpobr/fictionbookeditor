@@ -29,10 +29,10 @@ BEGIN
     POPUP "&Файл"
     BEGIN
         MENUITEM "&Создать",                    ID_FILE_NEW
-        MENUITEM "&Открыть...",                 ID_FILE_OPEN
-        MENUITEM "Со&хранить",                  ID_FILE_SAVE
-        MENUITEM "Сохранить &как...",           ID_FILE_SAVE_AS
-        MENUITEM "&Проверить",                  ID_FILE_VALIDATE
+        MENUITEM "&Открыть...\tCtrl+O",         ID_FILE_OPEN
+        MENUITEM "Со&хранить\tF2",              ID_FILE_SAVE
+        MENUITEM "Сохранить &как...\tShift+F2", ID_FILE_SAVE_AS
+        MENUITEM "&Проверить\tF8",              ID_FILE_VALIDATE
         MENUITEM SEPARATOR
         POPUP "&Импорт"
         BEGIN
@@ -52,25 +52,25 @@ BEGIN
     END
     POPUP "&Правка"
     BEGIN
-        MENUITEM "&Отменить",                   ID_EDIT_UNDO
-        MENUITEM "&Вернуть",                    ID_EDIT_REDO
+        MENUITEM "&Отменить\tCtrl+Z",           ID_EDIT_UNDO
+        MENUITEM "&Вернуть\tCtrl+Y",            ID_EDIT_REDO
         MENUITEM SEPARATOR
-        MENUITEM "В&ырезать",                   ID_EDIT_CUT
-        MENUITEM "&Копировать",                 ID_EDIT_COPY
-        MENUITEM "В&ставить",                   ID_EDIT_PASTE
+        MENUITEM "В&ырезать\tCtrl+X",           ID_EDIT_CUT
+        MENUITEM "&Копировать\tCtrl+C",         ID_EDIT_COPY
+        MENUITEM "В&ставить\tCtrl+V",           ID_EDIT_PASTE
         MENUITEM SEPARATOR
-        MENUITEM "&Найти...",                   ID_EDIT_FIND
-        MENUITEM "Н&айти далее",                ID_EDIT_FINDNEXT
-        MENUITEM "&Заменить...",                ID_EDIT_REPLACE
+        MENUITEM "&Найти...\tCtrl+F",           ID_EDIT_FIND
+        MENUITEM "Н&айти далее\tF3",            ID_EDIT_FINDNEXT
+        MENUITEM "&Заменить...\tCtrl+H",        ID_EDIT_REPLACE
         MENUITEM SEPARATOR
-        MENUITEM "&Перейти к сноске или к ссылке", ID_GOTO_FOOTNOTE
-        MENUITEM "Перейти к парному &тегу",     ID_GOTO_MATCHTAG
-        MENUITEM "Перейти к о&шибочному тегу",  ID_GOTO_WRONGTAG
+        MENUITEM "&Перейти к сноске или к ссылке\tCtrl+Backspace", ID_GOTO_FOOTNOTE
+        MENUITEM "Перейти к парному &тегу\tCtrl+Alt+Right", ID_GOTO_MATCHTAG
+        MENUITEM "Перейти к о&шибочному тегу\tCtrl+Alt+W", ID_GOTO_WRONGTAG
         MENUITEM SEPARATOR
-        MENUITEM "К&лонировать",                ID_EDIT_CLONE
-        MENUITEM "Разр&езать",                  ID_EDIT_SPLIT
-        MENUITEM "Ск&леить",                    ID_EDIT_MERGE
-        MENUITEM "&Убрать внешний",             ID_EDIT_REMOVE_OUTER_SECTION
+        MENUITEM "К&лонировать\tCtrl+Enter",    ID_EDIT_CLONE
+        MENUITEM "Разр&езать\tShift+Enter",     ID_EDIT_SPLIT
+        MENUITEM "Ск&леить\tAlt+Delete",        ID_EDIT_MERGE
+        MENUITEM "&Убрать внешний\tCtrl+Alt+Space", ID_EDIT_REMOVE_OUTER_SECTION
     END
     POPUP "&Вид"
     BEGIN
@@ -79,47 +79,47 @@ BEGIN
         MENUITEM "Па&нель ссылок",              60163
         MENUITEM "П&анель таблиц",              60164
         MENUITEM "&Строка состояния",           ID_VIEW_STATUS_BAR
-        MENUITEM "С&труктура книги",            ID_VIEW_TREE
+        MENUITEM "С&труктура книги\tCtrl+F5",   ID_VIEW_TREE
         MENUITEM SEPARATOR
-        MENUITEM "&Описание документа",         ID_VIEW_DESC
-        MENUITEM "&Дизайн",                     ID_VIEW_BODY
-        MENUITEM "&Код",                        ID_VIEW_SOURCE
+        MENUITEM "&Описание документа\tAlt+F1", ID_VIEW_DESC
+        MENUITEM "&Дизайн\tAlt+F2",             ID_VIEW_BODY
+        MENUITEM "&Код\tAlt+F3",                ID_VIEW_SOURCE
         MENUITEM SEPARATOR
-        MENUITEM "&Ускоренный режим",           ID_VIEW_FASTMODE
+        MENUITEM "&Ускоренный режим\tF5",       ID_VIEW_FASTMODE
     END
     POPUP "В&ставка"
     BEGIN
-        MENUITEM "&Тело",                       ID_EDIT_ADD_BODY
-        MENUITEM "&Заголовок",                  ID_EDIT_ADD_TITLE
-        MENUITEM "&Эпиграф",                    ID_EDIT_ADD_EPIGRAPH
-        MENUITEM "&Аннотация",                  ID_EDIT_ADD_ANN
+        MENUITEM "&Тело\tAlt+Shift+B",          ID_EDIT_ADD_BODY
+        MENUITEM "&Заголовок\tCtrl+T",          ID_EDIT_ADD_TITLE
+        MENUITEM "&Эпиграф\tCtrl+N",            ID_EDIT_ADD_EPIGRAPH
+        MENUITEM "&Аннотация\tCtrl+J",          ID_EDIT_ADD_ANN
         MENUITEM SEPARATOR
-        MENUITEM "А&втор",                      ID_EDIT_ADD_TA
-        MENUITEM "&Рисунок",                    ID_EDIT_INS_IMAGE
-        MENUITEM "Рисунок в т&екст",            ID_EDIT_INS_INLINEIMAGE
-        MENUITEM "&Стихи",                      ID_EDIT_INS_POEM
-        MENUITEM "&Цитата",                     ID_EDIT_INS_CITE
-        MENUITEM "Та&блица",                    ID_INSERT_TABLE
-        MENUITEM "Р&исунок секции",             ID_EDIT_ADD_IMAGE
+        MENUITEM "А&втор\tCtrl+D",              ID_EDIT_ADD_TA
+        MENUITEM "&Рисунок\tCtrl+M",            ID_EDIT_INS_IMAGE
+        MENUITEM "Рисунок в т&екст\tAlt+M",     ID_EDIT_INS_INLINEIMAGE
+        MENUITEM "&Стихи\tCtrl+P",              ID_EDIT_INS_POEM
+        MENUITEM "&Цитата\tAlt+C",              ID_EDIT_INS_CITE
+        MENUITEM "Та&блица\tAlt+T",             ID_INSERT_TABLE
+        MENUITEM "Р&исунок секции\tCtrl+G",     ID_EDIT_ADD_IMAGE
         MENUITEM SEPARATOR
         MENUITEM "&Прикрепить",                 ID_EDIT_ADDBINARY
     END
     POPUP "С&тиль"
     BEGIN
-        MENUITEM "&Обычный",                    ID_STYLE_NORMAL
-        MENUITEM "&Автор",                      ID_STYLE_TEXTAUTHOR
-        MENUITEM "&Подзаголовок",               ID_STYLE_SUBTITLE
+        MENUITEM "&Обычный\tAlt+N",             ID_STYLE_NORMAL
+        MENUITEM "&Автор\tAlt+A",               ID_STYLE_TEXTAUTHOR
+        MENUITEM "&Подзаголовок\tAlt+S",        ID_STYLE_SUBTITLE
         MENUITEM SEPARATOR
-        MENUITEM "&Ссылка...",                  ID_STYLE_LINK
-        MENUITEM "С&носка...",                  ID_STYLE_NOTE
-        MENUITEM "&Удалить ссылку",             ID_STYLE_NOLINK
+        MENUITEM "&Ссылка...\tCtrl+L",          ID_STYLE_LINK
+        MENUITEM "С&носка...\tCtrl+W",          ID_STYLE_NOTE
+        MENUITEM "&Удалить ссылку\tCtrl+U",     ID_STYLE_NOLINK
     END
     POPUP "Се&рвис"
     BEGIN
-        MENUITEM "&Слова...",                   ID_TOOLS_WORDS
+        MENUITEM "&Слова...\tAlt+W",            ID_TOOLS_WORDS
         MENUITEM "&Настройки...",               ID_VIEW_OPTIONS
         MENUITEM SEPARATOR
-        MENUITEM "Орфография...",               ID_TOOLS_SPELLCHECK
+        MENUITEM "Орфография...\tF7",           ID_TOOLS_SPELLCHECK
     END
     POPUP "С&крипты"
     BEGIN
@@ -152,6 +152,59 @@ BEGIN
     BEGIN
         MENUITEM "Настройка панели...",         ID_TOOLS_CUSTOMIZE
     END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    VK_F2,          ID_FILE_SAVE,           VIRTKEY, NOINVERT
+    VK_F2,          ID_FILE_SAVE_AS,        VIRTKEY, SHIFT, NOINVERT
+    VK_F8,          ID_FILE_VALIDATE,       VIRTKEY, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    "Y",            ID_EDIT_REDO,           VIRTKEY, CONTROL, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    "F",            ID_EDIT_FIND,           VIRTKEY, CONTROL, NOINVERT
+    VK_F3,          ID_EDIT_FINDNEXT,       VIRTKEY, NOINVERT
+    "H",            ID_EDIT_REPLACE,        VIRTKEY, CONTROL, NOINVERT
+    VK_BACK,        ID_GOTO_FOOTNOTE,       VIRTKEY, CONTROL, NOINVERT
+    VK_RIGHT,       ID_GOTO_MATCHTAG,       VIRTKEY, CONTROL, ALT, NOINVERT
+    "W",            ID_GOTO_WRONGTAG,       VIRTKEY, CONTROL, ALT, NOINVERT
+    VK_RETURN,      ID_EDIT_CLONE,          VIRTKEY, CONTROL, NOINVERT
+    VK_RETURN,      ID_EDIT_SPLIT,          VIRTKEY, SHIFT, NOINVERT
+    VK_DELETE,      ID_EDIT_MERGE,          VIRTKEY, ALT, NOINVERT
+    VK_SPACE,       ID_EDIT_REMOVE_OUTER_SECTION, VIRTKEY, CONTROL, ALT, NOINVERT
+    VK_F8,          ID_VIEW_TREE,           VIRTKEY, CONTROL, NOINVERT
+    VK_F1,          ID_VIEW_DESC,           VIRTKEY, ALT, NOINVERT
+    VK_F2,          ID_VIEW_BODY,           VIRTKEY, ALT, NOINVERT
+    VK_F3,          ID_VIEW_SOURCE,         VIRTKEY, ALT, NOINVERT
+    VK_F5,          ID_VIEW_FASTMODE,       VIRTKEY, NOINVERT
+    "B",            ID_EDIT_ADD_BODY,       VIRTKEY, SHIFT, ALT, NOINVERT
+    "T",            ID_EDIT_ADD_TITLE,      VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_EDIT_ADD_EPIGRAPH,   VIRTKEY, CONTROL, NOINVERT
+    "J",            ID_EDIT_ADD_ANN,        VIRTKEY, CONTROL, NOINVERT
+    "D",            ID_EDIT_ADD_TA,         VIRTKEY, CONTROL, NOINVERT
+    "M",            ID_EDIT_INS_IMAGE,      VIRTKEY, CONTROL, NOINVERT
+    "M",            ID_EDIT_INS_INLINEIMAGE, VIRTKEY, ALT, NOINVERT
+    "P",            ID_EDIT_INS_POEM,       VIRTKEY, CONTROL, NOINVERT
+    "C",            ID_EDIT_INS_CITE,       VIRTKEY, ALT, NOINVERT
+    "T",            ID_INSERT_TABLE,        VIRTKEY, ALT, NOINVERT
+    "G",            ID_EDIT_ADD_IMAGE,      VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_STYLE_NORMAL,        VIRTKEY, ALT, NOINVERT
+    "A",            ID_STYLE_TEXTAUTHOR,    VIRTKEY, ALT, NOINVERT
+    "S",            ID_STYLE_SUBTITLE,      VIRTKEY, ALT, NOINVERT
+    "L",            ID_STYLE_LINK,          VIRTKEY, CONTROL, NOINVERT
+    "W",            ID_STYLE_NOTE,          VIRTKEY, CONTROL, NOINVERT
+    "U",            ID_STYLE_NOLINK,        VIRTKEY, CONTROL, NOINVERT
+    "W",            ID_TOOLS_WORDS,         VIRTKEY, ALT, NOINVERT
+    VK_F7,          ID_TOOLS_SPELLCHECK,    VIRTKEY, NOINVERT
 END
 
 
@@ -364,26 +417,6 @@ BEGIN
     COMBOBOX        IDC_ENCODING,130,0,164,104,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
 
-IDD_SETTINGS_HOTKEYS DIALOGEX 0, 0, 226, 233
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
-FONT 8, "MS Shell Dlg", 400, 0, 0xCC
-BEGIN
-    LISTBOX         IDC_LIST_HOTKEYS_GROUPS,7,21,70,88,LBS_NOINTEGRALHEIGHT | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
-    LISTBOX         IDC_LIST_HOTKEYS,83,21,135,88,LBS_NOINTEGRALHEIGHT | NOT WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
-    GROUPBOX        "Описание",IDC_STATIC_HOTKEY_DESCRIPTION,7,180,211,41,WS_TABSTOP
-    EDITTEXT        IDC_EDIT_HOTKEY,41,121,94,14,ES_MULTILINE | ES_AUTOHSCROLL
-    LTEXT           "Группы:",IDC_STATIC_HOTKEYS_GROUPS,9,11,27,8,WS_TABSTOP
-    LTEXT           "Команды:",IDC_STATIC_HOTKEYS,85,11,32,8,WS_TABSTOP
-    LTEXT           "Клавиши:",IDC_STATIC,10,124,31,8,WS_TABSTOP
-    PUSHBUTTON      "По умолчанию",IDC_BUTTON_DEFAULT,151,125,55,14
-    EDITTEXT        IDC_EDIT_HOTKEY_DESCRIPTION,15,190,196,24,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
-    PUSHBUTTON      "Удалить",IDC_BUTTON_HOTKEY_DELETE,151,143,54,14
-    GROUPBOX        "Действия",IDC_STATIC,143,114,75,65
-    GROUPBOX        "Присвоено",IDC_STATIC_HOTKEY_COLLISION,7,138,129,41
-    PUSHBUTTON      "Присвоить",IDC_BUTTON_HOTKEY_ASSIGN,151,161,54,14,WS_DISABLED
-    EDITTEXT        IDC_EDIT_HOTKEY_COLLISION,14,150,115,24,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
-END
-
 IDD_SETTINGS_WORDS DIALOGEX 0, 0, 226, 233
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
@@ -512,14 +545,6 @@ BEGIN
     BEGIN
     END
 
-    IDD_SETTINGS_HOTKEYS, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 218
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 221
-    END
-
     IDD_SETTINGS_WORDS, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -626,19 +651,10 @@ BEGIN
     IDS_CTXMENU_SELECT      "Выделить"
     IDS_CTXMENU_IMG_SAVEAS  "Сохранить изображение как..."
     IDS_UPDATE_CONNECTING   "Подключаюсь к серверу..."
-    IDS_HOTKEY_WRONG        "Неправильное сочетание!"
-    IDS_HOTKEY_DEFAULT_COLLISION 
-                            "Сочетание по умолчанию для этой команды было зарезервировано для ""%s""! Заменить?"
-    IDS_HOTKEY_ASSIGN_NO_COLLISION "Не зарезервировано для других команд"
-    IDS_HOTKEY_ASSIGN_COLLISION "Зарезервировано ""%s"""
     IDS_SETTINGS_NEED_RESTART 
                             "Изменения вступят в силу после перезагрузки программы.\nПерезагрузить сейчас?"
     IDS_DOCTREE_MENU_ELEMENTS "Элементы"
     IDS_DOCTREE_MENU_SCRIPTS "Скрипты"
-    IDS_HOTKEY_EDIT_REMOVE_OUTER_SECTION "Удалить внешнюю секцию"
-    IDS_HOTKEY_GROUP_TOOLS  "Инструменты"
-    IDS_HOTKEY_TOOLS_WORDS  "Слова"
-    IDS_HOTKEY_GROUP_PLUGINS "Плагины"
 END
 
 STRINGTABLE
@@ -666,38 +682,17 @@ BEGIN
     IDS_CHOOSE_SCRIPTS_FLD  "Выберите папку со скриптами"
     IDS_SCRIPT_HOTKEY_CONFLICT 
                             "Скрипт\n%s\n имеет код клавишы быстрого доступа, совпадающий с уже загруженным скриптом\n %s"
-    IDS_HOTKEY_EDIT_MERGE   "Слить"
-    IDS_HOTKEY_EDIT_PASTE   "Вставить"
-    IDS_HOTKEY_EDIT_REDO    "Вернуть"
-    IDS_HOTKEY_EDIT_REPLACE "Заменить"
-    IDS_HOTKEY_EDIT_SPLIT   "Разделить"
-    IDS_HOTKEY_EDIT_UNDO    "Отменить"
-    IDS_HOTKEY_GROUP_EDIT   "Редактировать"
-    IDS_HOTKEY_GROUP_NAVIGATION "Навигация"
     IDS_UPDATE_CHECK        "Проверяю обновление..."
-    IDS_HOTKEY_NAVIGATION_NEXT_ITEM "Следующий элемент"
     ID_PANE_INS             "ЗАМ"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE1 "Свернуть дерево на 1 уровень"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE2 "Свернуть дерево на 2 уровня"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE3 "Свернуть дерево на 3 уровня"
 END
 
 STRINGTABLE
 BEGIN
-    IDS_HOTKEY_PLUGINS_LAST_PLUGIN "Последний плагин"
-    IDS_HOTKEY_TOOLS_SPELL  "Орфография"
     IDC_SPELL_ADD2DICT      "Добавить в словарь"
     IDS_SPELL_CHECK_COMPLETED "Проверка орфографии завершена."
     IDC_SPELL_IGNOREALL     "Пропустить все"
     IDS_SPELL_CONTINUE      "Продолжить"
-    IDS_HOTKEY_EDIT_INSERT_INLINEIMAGE "Вставить изображение в текст"
     IDS_UPDATE_CANTCONNECT  "Не могу подключиться к серверу"
-    IDS_HOTKEY_FASTMODE     "Ускоренный режим"
-    IDS_HOTKEY_TREEVIEW     "Дерево вкл/выкл"
-    IDS_HOTKEY_TOOLS_SPELLHIGHLIGHT "Переключить выделение слов с ошибками"
-    IDS_HOTKEY_NAVIGATION_GOTO_FOOTNOTE "Переход к сноске или к ссылке"
-    IDS_HOTKEY_NAVIGATION_GOTO_MATCHTAG "Переход на парный тег"
-    IDS_HOTKEY_NAVIGATION_GOTO_WRONGTAG "Переход к ошибочному тегу"
     IDS_UPDATE_DOWNLOADEDFROM "Загружено %d Kb из %d Kb (%d%%)"
     IDS_UPDATE_DOWNLOADED   "Загружено %d Kb"
 END
@@ -783,13 +778,6 @@ BEGIN
     IDS_PANE_INS            "ВСТ"
     IDS_PANE_OVR            "ЗАМ"
     IDS_DOC_TREE_CLEANUP    "Очистить"
-    IDS_HOTKEY_FILE_OPEN    "Открыть"
-    IDS_HOTKEY_FILE_SAVE    "Сохранить"
-    IDS_HOTKEY_FILE_SAVEAS  "Сохранить как..."
-    IDS_HOTKEY_FILE_VALIDATE "Проверить"
-    IDS_HOTKEY_GROUP_FILE   "Файл"
-    IDS_HOTKEY_EDIT_ADD_ANNOTATION "Добавить аннотацию"
-    IDS_HOTKEY_EDIT_ADD_BODY "Добавить элемент body"
 END
 
 STRINGTABLE
@@ -844,21 +832,6 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_HOTKEY_EDIT_ADD_EPIGRAPH "Добавить эпиграф"
-    IDS_HOTKEY_EDIT_ADD_IMAGE "Вставить картинку секции"
-    IDS_HOTKEY_EDIT_ADD_TA  "Добавить автора текста"
-    IDS_HOTKEY_EDIT_ADD_TITLE "Добавить заголовок"
-    IDS_HOTKEY_EDIT_BOLD    "Жирный"
-    IDS_HOTKEY_EDIT_CLONE   "Клонировать"
-    IDS_HOTKEY_EDIT_COPY    "Копировать"
-    IDS_HOTKEY_EDIT_CUT     "Вырезать"
-    IDS_HOTKEY_EDIT_FIND    "Найти"
-    IDS_HOTKEY_EDIT_FIND_NEXT "Найти следующий"
-    IDS_HOTKEY_EDIT_INCREMENTAL_SEARCH "Инкрементальный поиск"
-    IDS_HOTKEY_EDIT_INSERT_CITE "Вставить цитату"
-    IDS_HOTKEY_EDIT_INSERT_IMAGE "Вставить изображение"
-    IDS_HOTKEY_EDIT_INSERT_POEM "Вставить поэму"
-    IDS_HOTKEY_EDIT_ITALIC  "Курсив"
     ID_VIEW_SOURCE          "Перейти к коду\nПерейти к коду"
 END
 
@@ -925,50 +898,6 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE4 "Свернуть дерево на 4 уровня"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE5 "Свернуть дерево на 5 уровней"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE6 "Свернуть дерево на 6 уровней"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE7 "Свернуть дерево на 7 уровней"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE8 "Свернуть дерево на 8 уровней"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE9 "Свернуть дерево на 9 уровней"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND1 "Развернуть дерево на 1 уровень"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND2 "Развернуть дерево на 2 уровня"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND3 "Развернуть дерево на 3 уровня"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND4 "Развернуть дерево на 4 уровня"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND5 "Развернуть дерево на 5 уровней"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND6 "Развернуть дерево на 6 уровней"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND7 "Развернуть дерево на 7 уровней"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND8 "Развернуть дерево на 8 уровней"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND9 "Развернуть дерево на 9 уровней"
-    IDS_HOTKEY_NAVIGATION_SELECT_HREF "Ссылка"
-END
-
-STRINGTABLE
-BEGIN
-    IDS_HOTKEY_NAVIGATION_SELECT_ID "ID "
-    IDS_HOTKEY_NAVIGATION_SELECT_ID_TABLE "ID таблицы"
-    IDS_HOTKEY_NAVIGATION_SELECT_TEXT "Текст"
-    IDS_HOTKEY_NAVIGATION_SELECT_TREE "Дерево"
-    IDS_HOTKEY_GROUP_STYLE  "Стиль"
-    IDS_HOTKEY_STYLE_LINK   "Ссылка"
-    IDS_HOTKEY_STYLE_NO_LINK "Без ссылки"
-    IDS_HOTKEY_STYLE_NORMAL "Нормализованный"
-    IDS_HOTKEY_STYLE_NOTE   "Сноска"
-    IDS_HOTKEY_STYLE_SUBTITLE "Подзаголовок"
-    IDS_HOTKEY_STYLE_TEXT_AUTHOR "Автор текста"
-    IDS_HOTKEY_GROUP_VIEW   "Просмотр"
-    IDS_HOTKEY_VIEW_BODY    "Дизайн"
-    IDS_HOTKEY_VIEW_DESCRIPTION "Описание"
-    IDS_HOTKEY_VIEW_SOURCE  "Код"
-    IDS_HOTKEY_EDIT_INSERT_TABLE "Вставить таблицу"
-END
-
-STRINGTABLE
-BEGIN
-    IDS_HOTKEY_GROUP_SCRIPTS "Скрипты"
-    IDS_HOTKEY_SCRIPTS_LAST_SCRIPT "Последний запущенный"
-    IDS_SETTINGS_HOTKEYS_CAPTION "Клавиши"
-    IDS_HOTKEY_GROUP_SYMBOLS "Символы"
     IDS_SETTINGS_WORDS_CAPTION "Слова"
     IDS_SETTINGS_WLIST_COUNTED "Встретилось"
     IDS_SETTINGS_WLIST_WORD "Слово"
@@ -996,8 +925,6 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_HOTKEY_EDIT_SUB     "Субскрипт"
-    IDS_HOTKEY_EDIT_SUP     "Суперскрипт"
     IDS_ENCODING            "Кодировка:"
     IDS_SETTINGS            "Настройки"
     IDS_DONT_ASK_AGAIN      "Больше не спрашивать"

@@ -17,7 +17,6 @@ namespace U // place all utilities into their own namespace
 		}
 	};
 
-	void InitKeycodes();
 	void ChangeAttribute(MSHTML::IHTMLElementPtr elem, const wchar_t* attrib, const wchar_t* value);
 
   // loading data into array
@@ -123,7 +122,6 @@ namespace U // place all utilities into their own namespace
 	  return ret;
   }
   void		InitSettings();
-  void		InitSettingsHotkeyGroups();
 /*  extern inline DWORD	GetSettingI(const TCHAR *name,DWORD defval=0) {
     return U::QueryIV(_Settings,name,defval);
   }

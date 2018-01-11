@@ -3,7 +3,6 @@
 #include "stdafx.h"
 #include "SettingsDlg.h"
 #include "Settings.h"
-#include "SettingsHotkeysPage.h"
 #include "SettingsOtherPage.h"
 #include "SettingsWordsPage.h"
 #include "res1.h"
@@ -21,7 +20,6 @@ CSettingsDlg::CSettingsDlg(_U_STRINGorID title, UINT uStartPage, HWND hWndParent
 
 	AddPage(m_pgView);
 	AddPage(m_pgOther);
-	AddPage(m_pgHotkeys);
 	AddPage(m_pgWords);
 }
 

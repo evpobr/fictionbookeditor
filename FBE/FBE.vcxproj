@@ -370,7 +370,6 @@ link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENT
     <ClCompile Include="script.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="SettingsDlg.cpp" />
-    <ClCompile Include="SettingsHotkeysPage.cpp" />
     <ClCompile Include="SettingsOtherPage.cpp" />
     <ClCompile Include="SettingsWordsPage.cpp" />
     <ClCompile Include="Speller.cpp" />
@@ -457,7 +456,6 @@ link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENT
     <ClInclude Include="XMLSerializer\Serializable.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SettingsDlg.h" />
-    <ClInclude Include="SettingsHotkeysPage.h" />
     <ClInclude Include="SettingsOtherPage.h" />
     <ClInclude Include="SettingsWordsPage.h" />
     <ClInclude Include="Speller.h" />

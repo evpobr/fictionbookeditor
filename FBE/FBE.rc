@@ -144,14 +144,6 @@ BEGIN
         BOTTOMMARGIN, 147
     END
 
-    IDD_SETTINGS_HOTKEYS, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 229
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 220
-    END
-
     IDD_SETTINGS_WORDS, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -360,26 +352,6 @@ BEGIN
     CONTROL         "Static",IDC_TEXT_STATUS,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,24,137,180,8
     CONTROL         IDB_UPD_CHECK1,IDC_PIC_UPDATE,"Static",SS_BITMAP,9,136,11,10
     PUSHBUTTON      "Update now",IDC_UPDATE,161,133,49,14,NOT WS_VISIBLE
-END
-
-IDD_SETTINGS_HOTKEYS DIALOGEX 0, 0, 238, 227
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
-FONT 8, "MS Shell Dlg", 400, 0, 0x0
-BEGIN
-    LISTBOX         IDC_LIST_HOTKEYS_GROUPS,7,21,70,88,LBS_NOINTEGRALHEIGHT | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
-    LISTBOX         IDC_LIST_HOTKEYS,83,21,146,88,LBS_NOINTEGRALHEIGHT | NOT WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
-    GROUPBOX        "Description",IDC_STATIC_HOTKEY_DESCRIPTION,7,180,222,40,WS_TABSTOP
-    CONTROL         "",IDC_EDIT_HOTKEY,"msctls_hotkey32",WS_TABSTOP,44,121,113,14
-    LTEXT           "Groups:",IDC_STATIC_HOTKEYS_GROUPS,9,11,25,8,WS_TABSTOP
-    LTEXT           "Commands:",IDC_STATIC_HOTKEYS,85,11,37,8,WS_TABSTOP
-    LTEXT           "Shortcut:",IDC_STATIC,10,124,31,8,WS_TABSTOP
-    PUSHBUTTON      "Default",IDC_BUTTON_DEFAULT,172,125,50,14
-    EDITTEXT        IDC_EDIT_HOTKEY_DESCRIPTION,14,189,208,24,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
-    PUSHBUTTON      "Delete",IDC_BUTTON_HOTKEY_DELETE,172,143,50,14
-    GROUPBOX        "Actions",IDC_STATIC_HOTKEY_ACTIONS,165,114,64,65
-    GROUPBOX        "Assigned to",IDC_STATIC_HOTKEY_COLLISION,7,138,149,41
-    PUSHBUTTON      "Assign",IDC_BUTTON_HOTKEY_ASSIGN,172,161,50,14,WS_DISABLED
-    EDITTEXT        IDC_EDIT_HOTKEY_COLLISION,14,150,134,24,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
 END
 
 IDD_SETTINGS_WORDS DIALOGEX 0, 0, 238, 227
@@ -676,10 +648,10 @@ BEGIN
     POPUP "&File"
     BEGIN
         MENUITEM "&New",                        ID_FILE_NEW
-        MENUITEM "&Open...",                    ID_FILE_OPEN
-        MENUITEM "&Save",                       ID_FILE_SAVE
-        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
-        MENUITEM "&Validate",                   ID_FILE_VALIDATE
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Save\tF2",                   ID_FILE_SAVE
+        MENUITEM "Save &As...\tShift+F2",       ID_FILE_SAVE_AS
+        MENUITEM "&Validate\tF8",               ID_FILE_VALIDATE
         MENUITEM SEPARATOR
         POPUP "&Import"
         BEGIN
@@ -699,25 +671,25 @@ BEGIN
     END
     POPUP "&Edit"
     BEGIN
-        MENUITEM "&Undo",                       ID_EDIT_UNDO
-        MENUITEM "&Redo",                       ID_EDIT_REDO
+        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
+        MENUITEM "&Redo\tCtrl+Y",               ID_EDIT_REDO
         MENUITEM SEPARATOR
-        MENUITEM "Cu&t",                        ID_EDIT_CUT
-        MENUITEM "&Copy",                       ID_EDIT_COPY
-        MENUITEM "&Paste",                      ID_EDIT_PASTE
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
         MENUITEM SEPARATOR
-        MENUITEM "&Find...",                    ID_EDIT_FIND
-        MENUITEM "Find &Next",                  ID_EDIT_FINDNEXT
-        MENUITEM "R&eplace...",                 ID_EDIT_REPLACE
+        MENUITEM "&Find...\tCtrl+F",            ID_EDIT_FIND
+        MENUITEM "Find &Next\tF3",              ID_EDIT_FINDNEXT
+        MENUITEM "R&eplace...\tCtrl+H",         ID_EDIT_REPLACE
         MENUITEM SEPARATOR
-        MENUITEM "&Go to footnote or reference", ID_GOTO_FOOTNOTE
-        MENUITEM "Go to matching &tag",         ID_GOTO_MATCHTAG
-        MENUITEM "Go to &wrong tag",            ID_GOTO_WRONGTAG
+        MENUITEM "&Go to footnote or reference\tCtrl+Backspace", ID_GOTO_FOOTNOTE
+        MENUITEM "Go to matching &tag\tCtrl+Alt+Right", ID_GOTO_MATCHTAG
+        MENUITEM "Go to &wrong tag\tCtrl+Alt+W", ID_GOTO_WRONGTAG
         MENUITEM SEPARATOR
-        MENUITEM "C&lone container",            ID_EDIT_CLONE
-        MENUITEM "Sp&lit container",            ID_EDIT_SPLIT
-        MENUITEM "&Merge containers",           ID_EDIT_MERGE
-        MENUITEM "Remove outer container",      ID_EDIT_REMOVE_OUTER_SECTION
+        MENUITEM "C&lone container\tCtrl+Enter", ID_EDIT_CLONE
+        MENUITEM "Sp&lit container\tShift+Enter", ID_EDIT_SPLIT
+        MENUITEM "&Merge containers\tAlt+Delete", ID_EDIT_MERGE
+        MENUITEM "Remove outer container\tCtrl+Alt+Space", ID_EDIT_REMOVE_OUTER_SECTION
     END
     POPUP "&View"
     BEGIN
@@ -726,47 +698,47 @@ BEGIN
         MENUITEM "&Links Bar",                  60163
         MENUITEM "Table Bar",                   60164
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
-        MENUITEM "&Document Tree",              ID_VIEW_TREE
+        MENUITEM "&Document Tree\tCtrl+F5",     ID_VIEW_TREE
         MENUITEM SEPARATOR
-        MENUITEM "D&escription",                ID_VIEW_DESC
-        MENUITEM "&Body",                       ID_VIEW_BODY
-        MENUITEM "So&urce",                     ID_VIEW_SOURCE
+        MENUITEM "D&escription\tAlt+F1",        ID_VIEW_DESC
+        MENUITEM "&Body\tAlt+F2",               ID_VIEW_BODY
+        MENUITEM "So&urce\tAlt+F3",             ID_VIEW_SOURCE
         MENUITEM SEPARATOR
-        MENUITEM "Fast Mode",                   ID_VIEW_FASTMODE
+        MENUITEM "Fast Mode\tF5",               ID_VIEW_FASTMODE
     END
     POPUP "&Add"
     BEGIN
-        MENUITEM "&Body",                       ID_EDIT_ADD_BODY
-        MENUITEM "&Title",                      ID_EDIT_ADD_TITLE
-        MENUITEM "&Epigraph",                   ID_EDIT_ADD_EPIGRAPH
-        MENUITEM "A&nnotation",                 ID_EDIT_ADD_ANN
+        MENUITEM "&Body\tAlt+Shift+B",          ID_EDIT_ADD_BODY
+        MENUITEM "&Title\tCtrl+T",              ID_EDIT_ADD_TITLE
+        MENUITEM "&Epigraph\tCtrl+N",           ID_EDIT_ADD_EPIGRAPH
+        MENUITEM "A&nnotation\tCtrl+J",         ID_EDIT_ADD_ANN
         MENUITEM SEPARATOR
-        MENUITEM "T&ext author",                ID_EDIT_ADD_TA
-        MENUITEM "&Image",                      ID_EDIT_INS_IMAGE
-        MENUITEM "In&line image",               ID_EDIT_INS_INLINEIMAGE
-        MENUITEM "&Poem",                       ID_EDIT_INS_POEM
-        MENUITEM "&Cite",                       ID_EDIT_INS_CITE
-        MENUITEM "T&able",                      ID_INSERT_TABLE
-        MENUITEM "&Section image",              ID_EDIT_ADD_IMAGE
+        MENUITEM "T&ext author\tCtrl+D",        ID_EDIT_ADD_TA
+        MENUITEM "&Image\tCtrl+M",              ID_EDIT_INS_IMAGE
+        MENUITEM "In&line image\tAlt+M",        ID_EDIT_INS_INLINEIMAGE
+        MENUITEM "&Poem\tCtrl+P",               ID_EDIT_INS_POEM
+        MENUITEM "&Cite\tAlt+C",                ID_EDIT_INS_CITE
+        MENUITEM "T&able\tAlt+T",               ID_INSERT_TABLE
+        MENUITEM "&Section image\tCtrl+G",      ID_EDIT_ADD_IMAGE
         MENUITEM SEPARATOR
         MENUITEM "Add &Binary Object...",       ID_EDIT_ADDBINARY
     END
     POPUP "&Style"
     BEGIN
-        MENUITEM "&Normal",                     ID_STYLE_NORMAL
-        MENUITEM "Text &Author",                ID_STYLE_TEXTAUTHOR
-        MENUITEM "&Subtitle",                   ID_STYLE_SUBTITLE
+        MENUITEM "&Normal\tAlt+N",              ID_STYLE_NORMAL
+        MENUITEM "Text &Author\tAlt+A",         ID_STYLE_TEXTAUTHOR
+        MENUITEM "&Subtitle\tAlt+S",            ID_STYLE_SUBTITLE
         MENUITEM SEPARATOR
-        MENUITEM "&Link...",                    ID_STYLE_LINK
-        MENUITEM "&Footnote...",                ID_STYLE_NOTE
-        MENUITEM "&Remove link",                ID_STYLE_NOLINK
+        MENUITEM "&Link...\tCtrl+L",            ID_STYLE_LINK
+        MENUITEM "&Footnote...\tCtrl+W",        ID_STYLE_NOTE
+        MENUITEM "&Remove link\tCtrl+U",        ID_STYLE_NOLINK
     END
     POPUP "&Tools"
     BEGIN
-        MENUITEM "&Words...",                   ID_TOOLS_WORDS
+        MENUITEM "&Words...\tAlt+W",            ID_TOOLS_WORDS
         MENUITEM "&Settings...",                ID_VIEW_OPTIONS
         MENUITEM SEPARATOR
-        MENUITEM "Spell &check...",             ID_TOOLS_SPELLCHECK
+        MENUITEM "Spell &check...\tF7",         ID_TOOLS_SPELLCHECK
     END
     POPUP "&Scripts"
     BEGIN
@@ -812,45 +784,74 @@ ABOUT_FILE              ABOUT_FILE              "contributors.txt"
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    VK_F2,          ID_FILE_SAVE,           VIRTKEY, NOINVERT
+    VK_F2,          ID_FILE_SAVE_AS,        VIRTKEY, SHIFT, NOINVERT
+    VK_F8,          ID_FILE_VALIDATE,       VIRTKEY, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    "Y",            ID_EDIT_REDO,           VIRTKEY, CONTROL, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    "F",            ID_EDIT_FIND,           VIRTKEY, CONTROL, NOINVERT
+    VK_F3,          ID_EDIT_FINDNEXT,       VIRTKEY, NOINVERT
+    "H",            ID_EDIT_REPLACE,        VIRTKEY, CONTROL, NOINVERT
+    VK_BACK,        ID_GOTO_FOOTNOTE,       VIRTKEY, CONTROL, NOINVERT
+    VK_RIGHT,       ID_GOTO_MATCHTAG,       VIRTKEY, CONTROL, ALT, NOINVERT
+    "W",            ID_GOTO_WRONGTAG,       VIRTKEY, CONTROL, ALT, NOINVERT
+    VK_RETURN,      ID_EDIT_CLONE,          VIRTKEY, CONTROL, NOINVERT
+    VK_RETURN,      ID_EDIT_SPLIT,          VIRTKEY, SHIFT, NOINVERT
+    VK_DELETE,      ID_EDIT_MERGE,          VIRTKEY, ALT, NOINVERT
+    VK_SPACE,       ID_EDIT_REMOVE_OUTER_SECTION, VIRTKEY, CONTROL, ALT, NOINVERT
+    VK_F8,          ID_VIEW_TREE,           VIRTKEY, CONTROL, NOINVERT
+    VK_F1,          ID_VIEW_DESC,           VIRTKEY, ALT, NOINVERT
+    VK_F2,          ID_VIEW_BODY,           VIRTKEY, ALT, NOINVERT
+    VK_F3,          ID_VIEW_SOURCE,         VIRTKEY, ALT, NOINVERT
+    VK_F5,          ID_VIEW_FASTMODE,       VIRTKEY, NOINVERT
+    "B",            ID_EDIT_ADD_BODY,       VIRTKEY, SHIFT, ALT, NOINVERT
+    "T",            ID_EDIT_ADD_TITLE,      VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_EDIT_ADD_EPIGRAPH,   VIRTKEY, CONTROL, NOINVERT
+    "J",            ID_EDIT_ADD_ANN,        VIRTKEY, CONTROL, NOINVERT
+    "D",            ID_EDIT_ADD_TA,         VIRTKEY, CONTROL, NOINVERT
+    "M",            ID_EDIT_INS_IMAGE,      VIRTKEY, CONTROL, NOINVERT
+    "M",            ID_EDIT_INS_INLINEIMAGE, VIRTKEY, ALT, NOINVERT
+    "P",            ID_EDIT_INS_POEM,       VIRTKEY, CONTROL, NOINVERT
+    "C",            ID_EDIT_INS_CITE,       VIRTKEY, ALT, NOINVERT
+    "T",            ID_INSERT_TABLE,        VIRTKEY, ALT, NOINVERT
+    "G",            ID_EDIT_ADD_IMAGE,      VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_STYLE_NORMAL,        VIRTKEY, ALT, NOINVERT
+    "A",            ID_STYLE_TEXTAUTHOR,    VIRTKEY, ALT, NOINVERT
+    "S",            ID_STYLE_SUBTITLE,      VIRTKEY, ALT, NOINVERT
+    "L",            ID_STYLE_LINK,          VIRTKEY, CONTROL, NOINVERT
+    "W",            ID_STYLE_NOTE,          VIRTKEY, CONTROL, NOINVERT
+    "U",            ID_STYLE_NOLINK,        VIRTKEY, CONTROL, NOINVERT
+    "W",            ID_TOOLS_WORDS,         VIRTKEY, ALT, NOINVERT
+    VK_F7,          ID_TOOLS_SPELLCHECK,    VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
 STRINGTABLE
 BEGIN
-    IDS_HOTKEY_EDIT_ADD_EPIGRAPH "Add epigraph"
-    IDS_HOTKEY_EDIT_ADD_IMAGE "Add section image"
-    IDS_HOTKEY_EDIT_ADD_TA  "Add text author"
-    IDS_HOTKEY_EDIT_ADD_TITLE "Add title"
-    IDS_HOTKEY_EDIT_BOLD    "Bold"
-    IDS_HOTKEY_EDIT_CLONE   "Clone"
-    IDS_HOTKEY_EDIT_COPY    "Copy"
-    IDS_HOTKEY_EDIT_CUT     "Cut"
-    IDS_HOTKEY_EDIT_FIND    "Find"
-    IDS_HOTKEY_EDIT_FIND_NEXT "Find next"
-    IDS_HOTKEY_EDIT_INCREMENTAL_SEARCH "Incremental search"
-    IDS_HOTKEY_EDIT_INSERT_CITE "Insert cite"
-    IDS_HOTKEY_EDIT_INSERT_IMAGE "Insert image"
-    IDS_HOTKEY_EDIT_INSERT_POEM "Insert poem"
-    IDS_HOTKEY_EDIT_ITALIC  "Italic"
     ID_VIEW_SOURCE          "Show document source code\nSource"
 END
 
 STRINGTABLE
 BEGIN
-    IDS_HOTKEY_PLUGINS_LAST_PLUGIN "Last plugin"
-    IDS_HOTKEY_TOOLS_SPELL  "Spell check"
     IDC_SPELL_ADD2DICT      "Add to dictionary"
     IDS_SPELL_COMPLETED     "The spelling check is complete."
     IDC_SPELL_IGNOREALL     "Ignore All"
     IDS_SPELL_CONTINUE      "Continue"
-    IDS_HOTKEY_EDIT_INSERT_INLINEIMAGE "Insert inline image"
     IDS_UPDATE_CANTCONNECT  "Can't connect to server"
-    IDS_HOTKEY_FASTMODE     "Fast mode"
-    IDS_HOTKEY_TREEVIEW     "Toggle tree view"
-    IDS_HOTKEY_TOOLS_SPELLHIGHLIGHT "Toggle highlight"
-    IDS_HOTKEY_NAVIGATION_GOTO_FOOTNOTE "Go to footnote or reference"
-    IDS_HOTKEY_NAVIGATION_GOTO_MATCHTAG "Go to matchig tag"
-    IDS_HOTKEY_NAVIGATION_GOTO_WRONGTAG "Go to wrong tag"
     IDS_UPDATE_DOWNLOADEDFROM "%d Kb from %d Kb downloaded (%d%%)"
     IDS_UPDATE_DOWNLOADED   "%d Kb downloaded"
 END
@@ -911,13 +912,6 @@ BEGIN
     IDS_PANE_INS            "INS"
     IDS_PANE_OVR            "OVR"
     IDS_DOC_TREE_CLEANUP    "Clean"
-    IDS_HOTKEY_FILE_OPEN    "Open"
-    IDS_HOTKEY_FILE_SAVE    "Save"
-    IDS_HOTKEY_FILE_SAVEAS  "Save as..."
-    IDS_HOTKEY_FILE_VALIDATE "Validate"
-    IDS_HOTKEY_GROUP_FILE   "File"
-    IDS_HOTKEY_EDIT_ADD_ANNOTATION "Add annotation"
-    IDS_HOTKEY_EDIT_ADD_BODY "Add body"
 END
 
 STRINGTABLE
@@ -988,20 +982,8 @@ BEGIN
     IDS_CHOOSE_SCRIPTS_FLD  "Specify scripts folder"
     IDS_SCRIPT_HOTKEY_CONFLICT 
                             "Script\n%s\n returned a virtual-key that conflicts with previously loaded script\n %s"
-    IDS_HOTKEY_EDIT_MERGE   "Merge"
-    IDS_HOTKEY_EDIT_PASTE   "Paste"
-    IDS_HOTKEY_EDIT_REDO    "Redo"
-    IDS_HOTKEY_EDIT_REPLACE "Replace"
-    IDS_HOTKEY_EDIT_SPLIT   "Split"
-    IDS_HOTKEY_EDIT_UNDO    "Undo"
-    IDS_HOTKEY_GROUP_EDIT   "Edit"
-    IDS_HOTKEY_GROUP_NAVIGATION "Navigation"
     IDS_UPDATE_CHECK        "Checking for update..."
-    IDS_HOTKEY_NAVIGATION_NEXT_ITEM "Next item"
     ID_PANE_INS             "OVR"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE1 "Collapse 1 tree level"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE2 "Collapse 2 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE3 "Collapse 3 tree levels"
 END
 
 STRINGTABLE
@@ -1055,19 +1037,10 @@ BEGIN
     IDS_CTXMENU_SELECT      "Select"
     IDS_CTXMENU_IMG_SAVEAS  "Save image as..."
     IDS_UPDATE_CONNECTING   "Connecting to server..."
-    IDS_HOTKEY_WRONG        "Wrong shortcut!"
-    IDS_HOTKEY_DEFAULT_COLLISION 
-                            "Default hotkey for this command was assigned to ""%s""! Replace?"
-    IDS_HOTKEY_ASSIGN_NO_COLLISION "Not assigned to other command"
-    IDS_HOTKEY_ASSIGN_COLLISION "Assigned to ""%s"""
     IDS_SETTINGS_NEED_RESTART 
                             "In order to process changes the program must be restarted.\nRestart now?"
     IDS_DOCTREE_MENU_ELEMENTS "Elements"
     IDS_DOCTREE_MENU_SCRIPTS "Scripts"
-    IDS_HOTKEY_EDIT_REMOVE_OUTER_SECTION "Remove outer section"
-    IDS_HOTKEY_GROUP_TOOLS  "Tools"
-    IDS_HOTKEY_TOOLS_WORDS  "Words"
-    IDS_HOTKEY_GROUP_PLUGINS "Plugins"
 END
 
 STRINGTABLE
@@ -1152,50 +1125,6 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE4 "Collapse 4 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE5 "Collapse 5 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE6 "Collapse 6 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE7 "Collapse 7 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE8 "Collapse 8 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_COLLAPSE9 "Collapse 9 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND1 "Expand 1 tree level"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND2 "Expand 2 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND3 "Expand 3 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND4 "Expand 4 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND5 "Expand 5 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND6 "Expand 6 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND7 "Expand 7 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND8 "Expand 8 tree levels"
-    IDS_HOTKEY_NAVIGATION_SCI_EXPAND9 "Expand 9 tree levels"
-    IDS_HOTKEY_NAVIGATION_SELECT_HREF "Href"
-END
-
-STRINGTABLE
-BEGIN
-    IDS_HOTKEY_NAVIGATION_SELECT_ID "ID "
-    IDS_HOTKEY_NAVIGATION_SELECT_ID_TABLE "Table ID"
-    IDS_HOTKEY_NAVIGATION_SELECT_TEXT "Text"
-    IDS_HOTKEY_NAVIGATION_SELECT_TREE "Tree"
-    IDS_HOTKEY_GROUP_STYLE  "Style"
-    IDS_HOTKEY_STYLE_LINK   "Link"
-    IDS_HOTKEY_STYLE_NO_LINK "No link"
-    IDS_HOTKEY_STYLE_NORMAL "Normal"
-    IDS_HOTKEY_STYLE_NOTE   "Note"
-    IDS_HOTKEY_STYLE_SUBTITLE "Subtitle"
-    IDS_HOTKEY_STYLE_TEXT_AUTHOR "Text author"
-    IDS_HOTKEY_GROUP_VIEW   "View"
-    IDS_HOTKEY_VIEW_BODY    "Body"
-    IDS_HOTKEY_VIEW_DESCRIPTION "Description"
-    IDS_HOTKEY_VIEW_SOURCE  "Source"
-    IDS_HOTKEY_EDIT_INSERT_TABLE "Insert table"
-END
-
-STRINGTABLE
-BEGIN
-    IDS_HOTKEY_GROUP_SCRIPTS "Scripts"
-    IDS_HOTKEY_SCRIPTS_LAST_SCRIPT "Last script"
-    IDS_SETTINGS_HOTKEYS_CAPTION "Hotkeys"
-    IDS_HOTKEY_GROUP_SYMBOLS "Symbols"
     IDS_SETTINGS_WORDS_CAPTION "Words"
     IDS_SETTINGS_WLIST_COUNTED "Counted"
     IDS_SETTINGS_WLIST_WORD "Word"
@@ -1223,8 +1152,6 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_HOTKEY_EDIT_SUB     "Subscript"
-    IDS_HOTKEY_EDIT_SUP     "Superscript"
     IDS_ENCODING            "Encoding:"
     IDS_SETTINGS            "Settings"
     IDS_DONT_ASK_AGAIN      "Don't ask again"

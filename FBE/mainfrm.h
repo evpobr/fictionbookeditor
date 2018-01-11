@@ -198,7 +198,6 @@ class CMainFrame : public CFrameWindowImpl<CMainFrame>,
 		COMMAND_ID_HANDLER(ID_EDIT_FIND, OnEditFind)
 		COMMAND_ID_HANDLER(ID_EDIT_FINDNEXT, OnEditFind)
 		COMMAND_ID_HANDLER(ID_EDIT_REPLACE, OnEditFind)
-		COMMAND_RANGE_HANDLER(ID_EDIT_INS_SYMBOL, ID_EDIT_INS_SYMBOL + 100, OnEditInsSymbol)
 
 		// added by SeNS
 		// popup menu (speller addons)
@@ -335,7 +334,6 @@ class CMainFrame : public CFrameWindowImpl<CMainFrame>,
 	LRESULT OnEditIncSearch(WORD, WORD, HWND, BOOL &);
 	LRESULT OnEditAddBinary(WORD, WORD, HWND, BOOL &);
 	LRESULT OnEditFind(WORD, WORD, HWND, BOOL & bHandled);
-	LRESULT OnEditInsSymbol(WORD, WORD, HWND, BOOL &);
 
 	// added by SeNS
 	LRESULT OnSpellReplace(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL & /*bHandled*/);
@@ -691,11 +689,8 @@ class CMainFrame : public CFrameWindowImpl<CMainFrame>,
 	void QuickScriptsSort(CSimpleArray<ScrInfo> &, int, int);
 	void UpScriptsFolders(CSimpleArray<ScrInfo> &);
 	ScrInfo * m_last_script;
-	void InitScriptHotkey(CMainFrame::ScrInfo &);
 
 #pragma endregion
-
-	void FillMenuWithHkeys(HMENU);
 
 	// added by SeNS - paste pictures
 	bool BitmapInClipboard();
@@ -716,7 +711,6 @@ class CMainFrame : public CFrameWindowImpl<CMainFrame>,
 
 	void InitPlugins();
 	void InitPluginsType(HMENU hMenu, const TCHAR * type, UINT cmdbase, CSimpleArray<CLSID> & plist);
-	void InitPluginHotkey(CString guid, UINT cmd, CString name);
 
 #pragma endregion
 

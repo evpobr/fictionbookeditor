@@ -103,9 +103,6 @@
     <ClCompile Include="SettingsWordsPage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SettingsHotkeysPage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TableDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -228,9 +225,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SettingsWordsPage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SettingsHotkeysPage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TableDialog.h">

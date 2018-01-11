@@ -1088,7 +1088,6 @@ void CMainFrame::InitPluginsType(HMENU hMenu, const TCHAR * type, UINT cmdbase, 
 			::AppendMenu(hMenu, MF_STRING, cmdbase + ncmd, ms);
 			CString hs = ms;
 			hs.Remove(L'&');
-			InitPluginHotkey(name, cmdbase + ncmd, pt + CString(L" | ") + hs);
 			// check if an icon is available
 			CString icon(U::QuerySV(pk, L"Icon"));
 			if (!icon.IsEmpty())
@@ -1143,7 +1142,6 @@ void CMainFrame::InitPluginsType(HMENU hMenu, const TCHAR * type, UINT cmdbase, 
 			::AppendMenu(hMenu, MF_STRING, cmdbase + ncmd, ms);
 			CString hs = ms;
 			hs.Remove(L'&');
-			InitPluginHotkey(name, cmdbase + ncmd, pt + CString(L" | ") + hs);
 			// check if an icon is available
 			CString icon(U::QuerySV(pk, L"Icon"));
 			if (!icon.IsEmpty())
@@ -1902,57 +1900,6 @@ LRESULT CMainFrame::OnToolsScript(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl
 	  StopScript();
 	}
   }*/
-
-	return 0;
-}
-
-LRESULT CMainFrame::OnEditInsSymbol(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL & /*bHandled*/)
-{
-	static size_t symHkGroup = -1;
-	if (symHkGroup == -1)
-	{
-		for (size_t i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
-		{
-			if (_Settings.m_hotkey_groups[i].m_reg_name == L"Symbols")
-			{
-				symHkGroup = i;
-				break;
-			}
-		}
-	}
-	std::vector<CHotkey> & symHotkeys = _Settings.m_hotkey_groups[symHkGroup].m_hotkeys;
-
-	wchar_t c = NULL;
-	for (unsigned int i = 0; i < symHotkeys.size(); ++i)
-	{
-		if (symHotkeys[i].m_accel.cmd == wID)
-		{
-			c = symHotkeys[i].m_char_val;
-			break;
-		}
-	}
-
-	if (c)
-	{
-		::SendMessage(::GetFocus(), WM_CHAR, c, NULL);
-
-		/*IServiceProviderPtr ServiceProvider;
-		ServiceProvider = m_doc->m_body.Browser();
-		if(ServiceProvider)
-		{
-			IOleWindowPtr Window = NULL;
-			if(SUCCEEDED(ServiceProvider->QueryService(SID_SShellBrowser, IID_IOleWindow, (void**)&Window)))
-			{
-				HWND hwndBrowser = NULL;
-				if (SUCCEEDED(Window->GetWindow(&hwndBrowser)))
-				{
-					while(::GetWindow(hwndBrowser, GW_CHILD))
-						hwndBrowser = ::GetWindow(hwndBrowser, GW_CHILD);
-					::SendMessage(hwndBrowser, WM_CHAR, c, 0);
-				}
-			}
-		}*/
-	}
 
 	return 0;
 }
@@ -3208,7 +3155,6 @@ LRESULT CMainFrame::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/,
 		m_ScriptsToolbar.SaveState(HKEY_CURRENT_USER, L"SOFTWARE\\FBETeam\\FictionBook Editor\\Toolbars", L"ScriptsToolbar");
 
 		_Settings.SetToolbarsSettings(tbs);
-		_Settings.SaveHotkeyGroups();
 		_Settings.Save();
 		_Settings.SaveWords();
 		_Settings.Close();
@@ -3231,27 +3177,6 @@ LRESULT CMainFrame::OnPostCreate(UINT, WPARAM, LPARAM, BOOL &)
 	//SetSplitterPos works best after the default WM_CREATE has been handled
 	m_splitter.SetSplitterPos(_Settings.GetSplitterPos());
 
-	_Settings.LoadHotkeyGroups();
-	DestroyAcceleratorTable(m_hAccel);
-
-	LPACCEL lpaccelNew = new ACCEL[_Settings.keycodes];
-	int HKentries = _Settings.keycodes;
-	for (unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
-	{
-		for (unsigned int j = 0; j < _Settings.m_hotkey_groups.at(i).m_hotkeys.size(); ++j)
-		{
-			ACCEL accel = _Settings.m_hotkey_groups.at(i).m_hotkeys.at(j).m_accel;
-			if (accel.fVirt != NULL && accel.key != NULL && accel.cmd != NULL)
-			{
-				lpaccelNew[--HKentries] = accel;
-			}
-		}
-	}
-
-	m_hAccel = CreateAcceleratorTable(lpaccelNew, _Settings.keycodes);
-	delete[] lpaccelNew;
-
-	FillMenuWithHkeys(m_MenuBar.GetMenu());
 	return 0;
 }
 
@@ -4978,7 +4903,6 @@ void CMainFrame::ApplyConfChanges()
 		}
 	}
 
-	_Settings.SaveHotkeyGroups();
 	_Settings.Save();
 	_Settings.SaveWords();
 
@@ -5257,8 +5181,6 @@ void CMainFrame::AddScriptsSubMenu(HMENU parentItem, CString refid, CSimpleArray
 				mi.wID = ID_SCRIPT_BASE + SCRIPT_COMMAND_ID;
 				scripts[i].wID = SCRIPT_COMMAND_ID;
 				SCRIPT_COMMAND_ID++;
-
-				InitScriptHotkey(scripts[i]);
 			}
 
 			mi.dwTypeData = scripts[i].name.GetBuffer();
@@ -5340,41 +5262,6 @@ void CMainFrame::UpScriptsFolders(CSimpleArray<ScrInfo> & scripts)
 					}
 				}
 			}
-		}
-	}
-}
-
-void CMainFrame::InitScriptHotkey(CMainFrame::ScrInfo & script)
-{
-	std::vector<CHotkeysGroup> & hotkey_groups = _Settings.m_hotkey_groups;
-	for (unsigned int i = 0; i < hotkey_groups.size(); ++i)
-	{
-		if (hotkey_groups.at(i).m_reg_name == L"Scripts")
-		{
-			CHotkey ScriptsHotkey(script.path,
-			                      script.name,
-			                      NULL,
-			                      ID_SCRIPT_BASE + script.wID,
-			                      NULL,
-			                      script.path);
-			hotkey_groups.at(i).m_hotkeys.push_back(ScriptsHotkey);
-		}
-	}
-}
-
-void CMainFrame::InitPluginHotkey(CString guid, UINT cmd, CString name)
-{
-	std::vector<CHotkeysGroup> & hotkey_groups = _Settings.m_hotkey_groups;
-	for (unsigned int i = 0; i < hotkey_groups.size(); ++i)
-	{
-		if (hotkey_groups.at(i).m_reg_name == L"Plugins")
-		{
-			CHotkey PluginsHotkey(guid,
-			                      name,
-			                      NULL,
-			                      cmd,
-			                      NULL);
-			hotkey_groups.at(i).m_hotkeys.push_back(PluginsHotkey);
 		}
 	}
 }
@@ -5485,40 +5372,6 @@ void CMainFrame::RemoveLastUndo()
 			if (numUndos)
 				for (ULONG i = 0; i < numUndos - 1; i++)
 					undoManager->Add(undoUnit[i]);
-		}
-	}
-}
-
-// Fill current menu with accelerators' text
-void CMainFrame::FillMenuWithHkeys(HMENU menu)
-{
-	for (unsigned int i = 0; i < _Settings.m_hotkey_groups.size(); ++i)
-	{
-		std::vector<CHotkey>::iterator begin = _Settings.m_hotkey_groups.at(i).m_hotkeys.begin();
-		if (_Settings.m_hotkey_groups.at(i).m_reg_name == L"Scripts" || _Settings.m_hotkey_groups.at(i).m_reg_name == L"Plugins")
-			begin++;
-
-		std::sort(begin, _Settings.m_hotkey_groups.at(i).m_hotkeys.end());
-		for (unsigned int j = 0; j < _Settings.m_hotkey_groups.at(i).m_hotkeys.size(); ++j)
-		{
-			CString text;
-			WORD cmd = _Settings.m_hotkey_groups.at(i).m_hotkeys.at(j).m_accel.cmd;
-
-			if (::GetMenuString(menu, cmd, text.GetBufferSetLength(MAX_LOAD_STRING + 1), MAX_LOAD_STRING + 1,
-			                    MF_BYCOMMAND))
-			{
-				text.ReleaseBuffer();
-				text += L"\t";
-				text += U::AccelToString(_Settings.m_hotkey_groups.at(i).m_hotkeys.at(j).m_accel);
-
-				MENUITEMINFO miim;
-				ZeroMemory(&miim, sizeof(MENUITEMINFO));
-				miim.cbSize = sizeof(MENUITEMINFO);
-				miim.fMask = MIIM_STRING;
-				miim.dwTypeData = text.GetBuffer();
-				miim.cch = text.GetLength();
-				::SetMenuItemInfo(menu, cmd, FALSE, &miim);
-			}
 		}
 	}
 }

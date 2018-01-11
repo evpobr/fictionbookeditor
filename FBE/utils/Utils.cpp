@@ -22,110 +22,6 @@ namespace U
 
 	CSimpleMap<CString, WORD> keycodes;
 
-	void InitKeycodes()
-	{
-		keycodes.Add(L"0", 0x30);
-		keycodes.Add(L"1", 0x31);
-		keycodes.Add(L"2", 0x32);
-		keycodes.Add(L"3", 0x33);
-		keycodes.Add(L"4", 0x34);
-		keycodes.Add(L"5", 0x35);
-		keycodes.Add(L"6", 0x36);
-		keycodes.Add(L"7", 0x37);
-		keycodes.Add(L"8", 0x38);
-		keycodes.Add(L"9", 0x39);
-		keycodes.Add(L"A", 0x41);
-		keycodes.Add(L"B", 0x42);
-		keycodes.Add(L"C", 0x43);
-		keycodes.Add(L"D", 0x44);
-		keycodes.Add(L"E", 0x45);
-		keycodes.Add(L"F", 0x46);
-		keycodes.Add(L"G", 0x47);
-		keycodes.Add(L"H", 0x48);
-		keycodes.Add(L"I", 0x49);
-		keycodes.Add(L"J", 0x4A);
-		keycodes.Add(L"K", 0x4B);
-		keycodes.Add(L"L", 0x4C);
-		keycodes.Add(L"M", 0x4D);
-		keycodes.Add(L"N", 0x4E);
-		keycodes.Add(L"O", 0x4F);
-		keycodes.Add(L"P", 0x50);
-		keycodes.Add(L"Q", 0x51);
-		keycodes.Add(L"R", 0x52);
-		keycodes.Add(L"S", 0x53);
-		keycodes.Add(L"T", 0x54);
-		keycodes.Add(L"U", 0x55);
-		keycodes.Add(L"V", 0x56);
-		keycodes.Add(L"W", 0x57);
-		keycodes.Add(L"X", 0x58);
-		keycodes.Add(L"Y", 0x59);
-		keycodes.Add(L"Z", 0x5A);
-
-		keycodes.Add(L"F1", VK_F1);
-		keycodes.Add(L"F2", VK_F2);
-		keycodes.Add(L"F3", VK_F3);
-		keycodes.Add(L"F4", VK_F4);
-		keycodes.Add(L"F5", VK_F5);
-		keycodes.Add(L"F6", VK_F6);
-		keycodes.Add(L"F7", VK_F7);
-		keycodes.Add(L"F8", VK_F8);
-		keycodes.Add(L"F9", VK_F9);
-		keycodes.Add(L"F10", VK_F10);
-		keycodes.Add(L"F11", VK_F11);
-		keycodes.Add(L"F12", VK_F12);
-
-		keycodes.Add(L"Tab", VK_TAB);
-		keycodes.Add(L"Backspace", VK_BACK);
-		keycodes.Add(L"Spacebar", 0x20);
-		keycodes.Add(L"Alt", 0x12);
-		keycodes.Add(L"Esc", VK_ESCAPE);
-		keycodes.Add(L"Ctrl", VK_CONTROL);
-		keycodes.Add(L"Shift", VK_SHIFT);
-		keycodes.Add(L"Enter", 0x0D);
-		keycodes.Add(L"Delete", VK_DELETE);
-		// added by SeNS
-		keycodes.Add(L"Ins", VK_INSERT);
-		keycodes.Add(L"Home", VK_HOME);
-		keycodes.Add(L"End", VK_END);
-		keycodes.Add(L"PageUp", VK_PRIOR);
-		keycodes.Add(L"PageDn", VK_NEXT);
-
-		keycodes.Add(L"Num 0", VK_NUMPAD0);
-		keycodes.Add(L"Num 1", VK_NUMPAD1);
-		keycodes.Add(L"Num 2", VK_NUMPAD2);
-		keycodes.Add(L"Num 3", VK_NUMPAD3);
-		keycodes.Add(L"Num 4", VK_NUMPAD4);
-		keycodes.Add(L"Num 5", VK_NUMPAD5);
-		keycodes.Add(L"Num 6", VK_NUMPAD6);
-		keycodes.Add(L"Num 7", VK_NUMPAD7);
-		keycodes.Add(L"Num 8", VK_NUMPAD8);
-		keycodes.Add(L"Num 9", VK_NUMPAD9);
-
-		keycodes.Add(L"*", VK_MULTIPLY);
-		keycodes.Add(L"+", VK_ADD);
-		keycodes.Add(L"-", VK_SUBTRACT);
-		keycodes.Add(L".", VK_DECIMAL);
-		keycodes.Add(L"/", VK_DIVIDE);
-		keycodes.Add(L"SEP", VK_SEPARATOR);
-
-		keycodes.Add(L":", VK_OEM_1);
-		keycodes.Add(L"?", VK_OEM_2);
-
-		keycodes.Add(L"[", VK_OEM_4);
-		keycodes.Add(L"]", VK_OEM_6);
-		keycodes.Add(L"\"", VK_OEM_7);
-		keycodes.Add(L"<", VK_OEM_COMMA);
-		keycodes.Add(L">", VK_OEM_PERIOD);
-		keycodes.Add(L"-", VK_OEM_MINUS);
-		keycodes.Add(L"~", VK_OEM_3);
-		keycodes.Add(L"+", VK_OEM_PLUS);
-
-		keycodes.Add(L"←", VK_LEFT);
-		keycodes.Add(L"↑", VK_UP);
-		keycodes.Add(L"→", VK_RIGHT);
-		keycodes.Add(L"↓", VK_DOWN);
-	}
-
 	void ChangeAttribute(MSHTML::IHTMLElementPtr elem, const wchar_t* attrib, const wchar_t* value)
 	{
 		if(U::scmp(attrib, L"class")) elem->setAttribute(attrib, _variant_t(value), 1);
@@ -746,13 +642,6 @@ void InitSettings()
 	_Settings.Load();
 
 	_Settings.LoadWords();
-#endif
-}
-
-void InitSettingsHotkeyGroups()
-{
-#ifndef NO_EXTRN_SETTINGS
-	_Settings.InitHotkeyGroups();
 #endif
 }
 

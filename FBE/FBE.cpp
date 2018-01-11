@@ -115,9 +115,6 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 
 	SetThreadUILanguage(MAKELANGID(_Settings.GetInterfaceLanguageID(), SUBLANG_DEFAULT));
 
-	U::InitKeycodes();
-	U::InitSettingsHotkeyGroups();
-
 	if (wndMain.CreateEx() == NULL)
 	{
 		ATLTRACE(L"Main window creation failed!\n");
