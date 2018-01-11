@@ -120,13 +120,13 @@
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)$(Configuration)" md "$(SolutionDir)$(Configuration)"
-if not exist "$(SolutionDir)$(Configuration)\UK-UA" md "$(SolutionDir)$(Configuration)\UK-UA"
-link.exe /OUT:"$(SolutionDir)$(Configuration)\UK-UA\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X86 "$(IntDir)\FBE.muires"
-muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configuration)\UK-UA\FBE.exe.mui"</Command>
+if not exist "$(SolutionDir)$(Configuration)\uk-UA" md "$(SolutionDir)$(Configuration)\uk-UA"
+link.exe /OUT:"$(SolutionDir)$(Configuration)\uk-UA\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X86 "$(IntDir)\FBE.muires"
+muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configuration)\uk-UA\FBE.exe.mui"</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0422</Culture>
-      <AdditionalOptions>/fm "$(IntDir)"\FBE.muires /q ..\..\..\mui.rcconfig %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/fm "$(IntDir)\FBE.muires" /q ..\..\..\mui.rcconfig %(AdditionalOptions)</AdditionalOptions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -146,13 +146,13 @@ muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configura
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)x64\$(Configuration)" md "$(SolutionDir)x64\$(Configuration)"
-if not exist "$(SolutionDir)x64\$(Configuration)\UK-UA" md "$(SolutionDir)x64\$(Configuration)\UK-UA"
-link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\UK-UA\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X64 "$(IntDir)\FBE.muires"
-muirct -c "$(SolutionDir)x64\$(Configuration)\FBE.exe" -e "$(SolutionDir)x64\$(Configuration)\UK-UA\FBE.exe.mui"</Command>
+if not exist "$(SolutionDir)x64\$(Configuration)\uk-UA" md "$(SolutionDir)x64\$(Configuration)\uk-UA"
+link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\uk-UA\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X64 "$(IntDir)\FBE.muires"
+muirct -c "$(SolutionDir)x64\$(Configuration)\FBE.exe" -e "$(SolutionDir)x64\$(Configuration)\uk-UA\FBE.exe.mui"</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0422</Culture>
-      <AdditionalOptions>/fm "$(IntDir)"\FBE.muires /q ..\..\..\mui.rcconfig %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/fm "$(IntDir)\FBE.muires" /q ..\..\..\mui.rcconfig %(AdditionalOptions)</AdditionalOptions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -173,13 +173,13 @@ muirct -c "$(SolutionDir)x64\$(Configuration)\FBE.exe" -e "$(SolutionDir)x64\$(C
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)$(Configuration)" md "$(SolutionDir)$(Configuration)"
-if not exist "$(SolutionDir)$(Configuration)\UK-UA" md "$(SolutionDir)$(Configuration)\UK-UA"
-link.exe /OUT:"$(SolutionDir)$(Configuration)\UK-UA\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X86 "$(IntDir)\FBE.muires"
-muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configuration)\UK-UA\FBE.exe.mui"</Command>
+if not exist "$(SolutionDir)$(Configuration)\uk-UA" md "$(SolutionDir)$(Configuration)\uk-UA"
+link.exe /OUT:"$(SolutionDir)$(Configuration)\uk-UA\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X86 "$(IntDir)\FBE.muires"
+muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configuration)\uk-UA\FBE.exe.mui"</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0422</Culture>
-      <AdditionalOptions>/fm "$(IntDir)"\FBE.muires /q ..\..\..\mui.rcconfig %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/fm "$(IntDir)\FBE.muires" /q ..\..\..\mui.rcconfig %(AdditionalOptions)</AdditionalOptions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -199,13 +199,13 @@ muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configura
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)x64\$(Configuration)" md "$(SolutionDir)x64\$(Configuration)"
-if not exist "$(SolutionDir)x64\$(Configuration)\UK-UA" md "$(SolutionDir)x64\$(Configuration)\UK-UA"
-link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\UK-UA\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X64 "$(IntDir)\FBE.muires"
-muirct -c "$(SolutionDir)x64\$(Configuration)\FBE.exe" -e "$(SolutionDir)x64\$(Configuration)\UK-UA\FBE.exe.mui"</Command>
+if not exist "$(SolutionDir)x64\$(Configuration)\uk-UA" md "$(SolutionDir)x64\$(Configuration)\uk-UA"
+link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\uk-UA\FBE.exe.mui" /DLL /NOENTRY /MACHINE:X64 "$(IntDir)\FBE.muires"
+muirct -c "$(SolutionDir)x64\$(Configuration)\FBE.exe" -e "$(SolutionDir)x64\$(Configuration)\uk-UA\FBE.exe.mui"</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0422</Culture>
-      <AdditionalOptions>/fm "$(IntDir)"\FBE.muires /q ..\..\..\mui.rcconfig %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/fm "$(IntDir)\FBE.muires" /q ..\..\..\mui.rcconfig %(AdditionalOptions)</AdditionalOptions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

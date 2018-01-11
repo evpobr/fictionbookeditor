@@ -120,7 +120,7 @@
     </Link>
     <ResourceCompile />
     <ResourceCompile>
-      <AdditionalOptions>/fm "$(IntDir)"\FBE.muires /q ..\..\..\mui.rcconfig</AdditionalOptions>
+      <AdditionalOptions>/fm "$(IntDir)\FBE.muires" /q ..\..\..\mui.rcconfig</AdditionalOptions>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0419</Culture>
     </ResourceCompile>
@@ -149,7 +149,7 @@ muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configura
     </Link>
     <ResourceCompile />
     <ResourceCompile>
-      <AdditionalOptions>/fm "$(IntDir)"\FBE.muires /q ..\..\..\mui.rcconfig</AdditionalOptions>
+      <AdditionalOptions>/fm "$(IntDir)\FBE.muires" /q ..\..\..\mui.rcconfig</AdditionalOptions>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0419</Culture>
     </ResourceCompile>
@@ -185,7 +185,7 @@ muirct -c "$(SolutionDir)$(Configuration)\FBE.exe" -e "$(SolutionDir)$(Configura
 </Command>
     </PostBuildEvent>
     <ResourceCompile>
-      <AdditionalOptions>/fm "$(IntDir)"\FBE.muires /q ..\..\..\mui.rcconfig</AdditionalOptions>
+      <AdditionalOptions>/fm "$(IntDir)\FBE.muires" /q ..\..\..\mui.rcconfig</AdditionalOptions>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0419</Culture>
     </ResourceCompile>
@@ -213,7 +213,7 @@ muirct -c "$(SolutionDir)x64\$(Configuration)\FBE.exe" -e "$(SolutionDir)x64\$(C
 </Command>
     </PostBuildEvent>
     <ResourceCompile>
-      <AdditionalOptions>/fm "$(IntDir)"\FBE.muires /q ..\..\..\mui.rcconfig</AdditionalOptions>
+      <AdditionalOptions>/fm "$(IntDir)\FBE.muires" /q ..\..\..\mui.rcconfig</AdditionalOptions>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0419</Culture>
     </ResourceCompile>
