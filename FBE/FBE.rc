@@ -726,6 +726,13 @@ BEGIN
     POPUP "&Style"
     BEGIN
         MENUITEM "&Normal\tAlt+N",              ID_STYLE_NORMAL
+        MENUITEM "&Bold\tCtrl+B",               ID_EDIT_BOLD
+        MENUITEM "&Italic\tCtrl+I",             ID_EDIT_ITALIC
+        MENUITEM "Su&perscript",                ID_EDIT_SUP
+        MENUITEM "S&ubscript",                  ID_EDIT_SUB
+        MENUITEM "S&trikethrough",              ID_EDIT_STRIK
+        MENUITEM "&Code",                       ID_EDIT_CODE
+        MENUITEM SEPARATOR
         MENUITEM "Text &Author\tAlt+A",         ID_STYLE_TEXTAUTHOR
         MENUITEM "&Subtitle\tAlt+S",            ID_STYLE_SUBTITLE
         MENUITEM SEPARATOR

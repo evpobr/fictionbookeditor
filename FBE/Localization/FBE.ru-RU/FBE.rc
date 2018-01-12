@@ -107,6 +107,13 @@ BEGIN
     POPUP "С&тиль"
     BEGIN
         MENUITEM "&Обычный\tAlt+N",             ID_STYLE_NORMAL
+	    MENUITEM "&Жирный\tCtrl+B",             ID_EDIT_BOLD
+        MENUITEM "&Курсив\tCtrl+I",             ID_EDIT_ITALIC
+        MENUITEM "&Верхний индекс",             ID_EDIT_SUP
+        MENUITEM "Н&ижний индекс",              ID_EDIT_SUB
+        MENUITEM "За&черкнутый текст",          ID_EDIT_STRIK
+        MENUITEM "Ко&д",                        ID_EDIT_CODE
+        MENUITEM SEPARATOR
         MENUITEM "&Автор\tAlt+A",               ID_STYLE_TEXTAUTHOR
         MENUITEM "&Подзаголовок\tAlt+S",        ID_STYLE_SUBTITLE
         MENUITEM SEPARATOR
