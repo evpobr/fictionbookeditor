@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "XMLSerializer/XMLSerializer.h"
 
 enum KEY_TYPE
 {

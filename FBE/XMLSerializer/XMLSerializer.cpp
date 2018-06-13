@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "XMLSerializer.h"
 #include "utils.h"
 
 const wchar_t* XML_SAVE_ENCODING = L"utf-8";
