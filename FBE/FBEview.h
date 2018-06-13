@@ -264,7 +264,7 @@ public:
 	// editing commands
 	LRESULT ExecCommand(int cmd);
 	void QueryStatus(OLECMD * cmd, int ncmd);
-	CString QueryCmdText(int cmd);
+	CString QueryCmdText(DWORD cmd);
 
 	LRESULT OnUndo(WORD wNotifyCode, WORD wID, HWND hWndCtrl, BOOL & bHandled);
 	LRESULT OnRedo(WORD wNotifyCode, WORD wID, HWND hWndCtrl, BOOL & bHandled);

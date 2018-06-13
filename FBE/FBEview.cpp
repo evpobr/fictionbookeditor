@@ -108,7 +108,7 @@ void CFBEView::QueryStatus(OLECMD * cmd, int ncmd)
 		ct->QueryStatus(&CGID_MSHTML, ncmd, cmd, NULL);
 }
 
-CString CFBEView::QueryCmdText(int cmd)
+CString CFBEView::QueryCmdText(DWORD cmd)
 {
 	IOleCommandTargetPtr ct(m_browser);
 	if (ct)
