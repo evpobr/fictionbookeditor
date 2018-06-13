@@ -179,6 +179,8 @@ public:
 	}
 #endif
 
+#if defined(SCI_SETSTYLEBITS)
+
 	void SetStyleBits( int bits )
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
@@ -190,6 +192,8 @@ public:
 		ATLASSERT(::IsWindow(m_hWnd));
 		return ::SendMessage( m_hWnd, SCI_GETSTYLEBITS, 0, 0L );
 	}
+
+#endif
 
 	int TargetAsUTF8( char * text )
 	{

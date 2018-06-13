@@ -4194,7 +4194,11 @@ void CMainFrame::SetupSci()
 	m_source.SetProperty("fold.html", "1");
 	m_source.SetProperty("fold.compact", "1");
 	m_source.SetProperty("fold.flags", "16");
+
+	// Deprecated by Scintilla since v3.4.2 (Style bits space is always = 8 bit)
+#ifdef SCI_SETSTYLEBITS
 	m_source.SetStyleBits(7);
+#endif
 	// added by SeNS: disable Scintilla's control characters
 	char sciCtrlChars[] = {'Q', 'E', 'R', 'S', 'K', ':'};
 	for (int i = 0; i < sizeof(sciCtrlChars); i++)
