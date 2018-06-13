@@ -623,12 +623,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook Editor"
-            VALUE "FileVersion", "2.7 beta1"
+            VALUE "FileVersion", "2.7.0 beta1"
             VALUE "InternalName", "FBE"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBE.exe"
             VALUE "ProductName", "FictionBook Editor"
-            VALUE "ProductVersion", "2.7 beta1"
+            VALUE "ProductVersion", "2.7.0 beta1"
         END
     END
     BLOCK "VarFileInfo"

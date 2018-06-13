@@ -40,7 +40,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""atlres.h""\r\n"
+    "#include ""wtl/atlres.h""\r\n"
     "\0"
 END
 
@@ -59,8 +59,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,12,0
- PRODUCTVERSION 2,6,0,0
+ FILEVERSION 2,7,0,0
+ PRODUCTVERSION 2,7,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -77,12 +77,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook Editor HTML export plugin"
-            VALUE "FileVersion", "2.6.12.0"
+            VALUE "FileVersion", "2.7.0 beta1"
             VALUE "InternalName", "ExportHTML"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "ExportHTML.dll"
             VALUE "ProductName", "FictionBook Editor"
-            VALUE "ProductVersion", "2.6"
+            VALUE "ProductVersion", "2.7.0 beta1"
         END
     END
     BLOCK "VarFileInfo"

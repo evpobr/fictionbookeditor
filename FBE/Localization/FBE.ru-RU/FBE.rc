@@ -107,7 +107,7 @@ BEGIN
     POPUP "С&тиль"
     BEGIN
         MENUITEM "&Обычный\tAlt+N",             ID_STYLE_NORMAL
-	    MENUITEM "&Жирный\tCtrl+B",             ID_EDIT_BOLD
+        MENUITEM "&Жирный\tCtrl+B",             ID_EDIT_BOLD
         MENUITEM "&Курсив\tCtrl+I",             ID_EDIT_ITALIC
         MENUITEM "&Верхний индекс",             ID_EDIT_SUP
         MENUITEM "Н&ижний индекс",              ID_EDIT_SUB
@@ -599,12 +599,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook russian language support"
-            VALUE "FileVersion", "2.7 beta1"
+            VALUE "FileVersion", "2.7.0 beta1"
             VALUE "InternalName", "res_rus"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBE.exe.mui"
             VALUE "ProductName", "FictionBook Editor"
-            VALUE "ProductVersion", "2.7 beta1"
+            VALUE "ProductVersion", "2.7.0 beta1"
         END
     END
     BLOCK "VarFileInfo"

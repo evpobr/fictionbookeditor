@@ -108,12 +108,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "evpobr"
             VALUE "FileDescription", "FictionBook shell extension"
-            VALUE "FileVersion", "2.7 beta1"
+            VALUE "FileVersion", "2.7.0 beta1"
             VALUE "InternalName", "FBShell"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBShell.dll"
             VALUE "ProductName", "FictionBook Editor"
-            VALUE "ProductVersion", "2.7 beta1"
+            VALUE "ProductVersion", "2.7.0 beta1"
         END
     END
     BLOCK "VarFileInfo"

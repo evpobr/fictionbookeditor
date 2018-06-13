@@ -32,7 +32,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""atlres.h""\r\n"
+    "#include ""wtl/atlres.h""\r\n"
     "\0"
 END
 
@@ -69,12 +69,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook Validator"
-            VALUE "FileVersion", "2.7 beta1"
+            VALUE "FileVersion", "2.7.0 beta1"
             VALUE "InternalName", "FBV"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBV.exe"
             VALUE "ProductName", "FictionBook Editor"
-            VALUE "ProductVersion", "2.7 beta1"
+            VALUE "ProductVersion", "2.7.0 beta1"
         END
     END
     BLOCK "VarFileInfo"

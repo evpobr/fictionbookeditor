@@ -43,12 +43,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FBE Team"
             VALUE "FileDescription", "FictionBook ukrainian language support"
-            VALUE "FileVersion", "2.7 beta1"
+            VALUE "FileVersion", "2.7.0 beta1"
             VALUE "InternalName", "res_ukr"
             VALUE "LegalCopyright", "Copyright 2017 © FBE Team, 2008 © LitRes, 2003 © Mike Matsnev"
             VALUE "OriginalFilename", "FBE.exe.mui"
             VALUE "ProductName", "FictionBook Editor"
-            VALUE "ProductVersion", "2.7 beta1"
+            VALUE "ProductVersion", "2.7.0 beta1"
         END
     END
     BLOCK "VarFileInfo"
@@ -146,7 +146,7 @@ BEGIN
     POPUP "С&тиль"
     BEGIN
         MENUITEM "&Звичайний\tAlt+N",           ID_STYLE_NORMAL
-	    MENUITEM "&Жирний\tCtrl+B",             ID_EDIT_BOLD
+        MENUITEM "&Жирний\tCtrl+B",             ID_EDIT_BOLD
         MENUITEM "&Курсив\tCtrl+I",             ID_EDIT_ITALIC
         MENUITEM "&Верхнiй iндекс",             ID_EDIT_SUP
         MENUITEM "Н&ижнiй iндекс",              ID_EDIT_SUB
