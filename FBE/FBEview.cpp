@@ -54,7 +54,7 @@ LRESULT CFBEView::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & /*bHa
 	return 0;
 }
 
-LRESULT CFBEView::OnFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+LRESULT CFBEView::OnFocus(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL & /*bHandled*/)
 {
 	// pass to document
 	if (HasDoc())
@@ -125,7 +125,7 @@ CString CFBEView::QueryCmdText(int cmd)
 	return CString();
 }
 
-LRESULT CFBEView::OnUndo(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnUndo(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	LRESULT res = ExecCommand(IDM_UNDO);
 	// update tree view
@@ -133,22 +133,22 @@ LRESULT CFBEView::OnUndo(WORD, WORD, HWND, BOOL &)
 	return res;
 }
 
-LRESULT CFBEView::OnRedo(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnRedo(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	return ExecCommand(IDM_REDO);
 }
 
-LRESULT CFBEView::OnCut(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnCut(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	return ExecCommand(IDM_CUT);
 }
 
-LRESULT CFBEView::OnCopy(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnCopy(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	return ExecCommand(IDM_COPY);
 }
 
-LRESULT CFBEView::OnStyleLink(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnStyleLink(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	try
 	{
@@ -164,7 +164,7 @@ LRESULT CFBEView::OnStyleLink(WORD, WORD, HWND, BOOL &)
 	return 0;
 }
 
-LRESULT CFBEView::OnStyleFootnote(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnStyleFootnote(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	try
 	{
@@ -186,12 +186,12 @@ LRESULT CFBEView::OnStyleFootnote(WORD, WORD, HWND, BOOL &)
 	return 0;
 }
 
-LRESULT CFBEView::OnStyleNolink(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnStyleNolink(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	return ExecCommand(IDM_UNLINK);
 }
 
-LRESULT CFBEView::OnStyleNormal(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnStyleNormal(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	BeginUndoUnit(L"normal style");
 	U::ChangeAttribute(SelectionStructCon(), L"class", L"normal");
@@ -200,19 +200,19 @@ LRESULT CFBEView::OnStyleNormal(WORD, WORD, HWND, BOOL &)
 	return 0;
 }
 
-LRESULT CFBEView::OnStyleTextAuthor(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnStyleTextAuthor(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"StyleTextAuthor", SelectionStructCon());
 	return 0;
 }
 
-LRESULT CFBEView::OnStyleSubtitle(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnStyleSubtitle(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"StyleSubtitle", SelectionStructCon());
 	return 0;
 }
 
-LRESULT CFBEView::OnViewHTML(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnViewHTML(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	IOleCommandTargetPtr ct(m_browser);
 	if (ct)
@@ -2093,7 +2093,7 @@ static void FixupParagraphs(MSHTML::IHTMLElement2Ptr elem)
 		MSHTML::IHTMLElement3Ptr(pp->item(l))->inflateBlock = VARIANT_TRUE;
 }
 
-LRESULT CFBEView::OnPaste(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnPaste(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	try
 	{
@@ -2176,27 +2176,27 @@ LRESULT CFBEView::OnPaste(WORD, WORD, HWND, BOOL &)
 	return 0;
 }
 
-LRESULT CFBEView::OnBold(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnBold(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	return ExecCommand(IDM_BOLD);
 }
 
-LRESULT CFBEView::OnItalic(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnItalic(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	return ExecCommand(IDM_ITALIC);
 }
 
-LRESULT CFBEView::OnStrik(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnStrik(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	return ExecCommand(IDM_STRIKETHROUGH);
 }
 
-LRESULT CFBEView::OnSup(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnSup(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	return ExecCommand(IDM_SUPERSCRIPT);
 }
 
-LRESULT CFBEView::OnSub(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnSub(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	return ExecCommand(IDM_SUBSCRIPT);
 }
@@ -3150,7 +3150,7 @@ public:
 	}
 };
 
-LRESULT CFBEView::OnFind(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnFind(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	m_fo.pattern = (const wchar_t *)Selection();
 	if (!m_find_dlg)
@@ -3163,7 +3163,7 @@ LRESULT CFBEView::OnFind(WORD, WORD, HWND, BOOL &)
 	return 0;
 }
 
-LRESULT CFBEView::OnReplace(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnReplace(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	m_fo.pattern = (const wchar_t *)Selection();
 	if (!m_replace_dlg)
@@ -3176,7 +3176,7 @@ LRESULT CFBEView::OnReplace(WORD, WORD, HWND, BOOL &)
 	return 0;
 }
 
-LRESULT CFBEView::OnFindNext(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnFindNext(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	if (!DoSearch())
 	{
@@ -3415,7 +3415,7 @@ VARIANT_BOOL CFBEView::OnContextMenu(IDispatch * evt)
 	return VARIANT_TRUE;
 }
 
-LRESULT CFBEView::OnSelectElement(WORD, WORD wID, HWND, BOOL &)
+LRESULT CFBEView::OnSelectElement(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	int steps = wID - ID_SEL_BASE;
 	try
@@ -3444,43 +3444,43 @@ LRESULT CFBEView::OnSelectElement(WORD, WORD wID, HWND, BOOL &)
 	return 0;
 }
 
-LRESULT CFBEView::OnEditAddTitle(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditAddTitle(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"AddTitle", SelectionStructCon());
 	return 0;
 }
 
-LRESULT CFBEView::OnEditAddEpigraph(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditAddEpigraph(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"AddEpigraph", SelectionStructCon());
 	return 0;
 }
 
-LRESULT CFBEView::OnEditAddBody(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditAddBody(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"AddBody");
 	return 0;
 }
 
-LRESULT CFBEView::OnEditAddTA(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditAddTA(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"AddTA", SelectionStructCon());
 	return 0;
 }
 
-LRESULT CFBEView::OnEditClone(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditClone(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"CloneContainer", SelectionStructCon());
 	return 0;
 }
 
-LRESULT CFBEView::OnEditAddImage(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditAddImage(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"AddImage", SelectionStructCon());
 	return 0;
 }
 
-LRESULT CFBEView::OnEditInsImage(WORD wID, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditInsImage(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	// added by SeNS
 	bool bInline = (wID != ID_EDIT_INS_IMAGE);
@@ -3548,43 +3548,43 @@ LRESULT CFBEView::OnEditInsImage(WORD wID, WORD, HWND, BOOL &)
 	return 0;
 }
 
-LRESULT CFBEView::OnEditAddAnn(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditAddAnn(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"AddAnnotation", SelectionStructCon());
 	return 0;
 }
 
-LRESULT CFBEView::OnEditMerge(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditMerge(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"MergeContainers", SelectionStructCon());
 	return 0;
 }
 
-LRESULT CFBEView::OnEditSplit(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditSplit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	SplitContainer(false);
 	return 0;
 }
 
-LRESULT CFBEView::OnEditInsPoem(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditInsPoem(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	InsertPoem(false);
 	return 0;
 }
 
-LRESULT CFBEView::OnEditInsCite(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditInsCite(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	InsertCite(false);
 	return 0;
 }
 
-LRESULT CFBEView::OnEditRemoveOuter(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnEditRemoveOuter(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	Call(L"RemoveOuterContainer", SelectionStructCon());
 	return 0;
 }
 
-LRESULT CFBEView::OnSaveImageAs(WORD, WORD, HWND, BOOL &)
+LRESULT CFBEView::OnSaveImageAs(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtrl*/, BOOL & /*bHandled*/)
 {
 	CString src;
 	MSHTML::IHTMLImgElementPtr image = MSHTML::IHTMLDOMNodePtr(SelectionContainer())->firstChild;
