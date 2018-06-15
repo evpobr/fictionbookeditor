@@ -693,49 +693,86 @@ void InitSettings()
 		return false;
 	}
 
-	MSXML2::IXMLDOMNodePtr DomPath::GetNodeFromXMLDOM(MSXML2::IXMLDOMNodePtr root)
+	HRESULT DomPath::GetNodeFromXMLDOM(MSXML2::IXMLDOMNode * pRoot, MSXML2::IXMLDOMNode ** ppNode)
 	{
-		if(!(bool)root || m_path.empty())
-		{
-			return 0;
-		}
-		
-		MSXML2::IXMLDOMNodePtr currentNode = root;
-		
-		size_t size = m_path.size();
-		for(size_t i = 0; i < size; ++i)
-		{
-			currentNode = currentNode->firstChild;
-			if(!(bool)currentNode)
-			{
-				return 0;
-			}
-			if(U::scmp(currentNode->nodeName, L"#text") == 0)
-			{
-				currentNode = currentNode->nextSibling;
-			}
-			//name = currentNode->nodeName;
-			if(!(bool)currentNode)
-			{
-				return 0;
-			}			
+		if (!ppNode)
+			return E_POINTER;
 
-			int numb = m_path[i];
-			for(int j = 0; j < numb; ++j)
-			{
-				currentNode = currentNode->nextSibling;
-				if(U::scmp(currentNode->nodeName, L"#text") == 0)
-				{
-					currentNode = currentNode->nextSibling;
-				}
-					
-				if(!(bool)currentNode)
-				{
-					return 0;
-				}
-			}
-		}
-		return currentNode;
+		*ppNode = nullptr;
+
+		if (!pRoot)
+			return E_INVALIDARG;
+
+		if (m_path.empty())
+			return E_NOT_VALID_STATE;
+		
+		CComPtr<MSXML2::IXMLDOMNode> currentNode(pRoot);
+		
+		HRESULT hr = E_FAIL;
+
+		size_t size = m_path.size();
+	    for (size_t i = 0; i < size; ++i)
+		{
+			CComPtr<MSXML2::IXMLDOMNode> firstChild;
+			 hr = currentNode->get_firstChild(&firstChild);
+			 if (hr != S_OK)
+			 {
+				 return E_FAIL;
+			 }
+
+			 currentNode = firstChild;
+			 firstChild.Release();
+
+			 CComBSTR nodeName;
+			 hr = currentNode->get_nodeName(&nodeName);
+			 if (SUCCEEDED(hr))
+			 {
+				 if (U::scmp(currentNode->nodeName, L"#text") == 0)
+				 {
+					 CComPtr<MSXML2::IXMLDOMNode> nextSibling;
+					 hr = currentNode->get_nextSibling(&nextSibling);
+					 if (hr != S_OK)
+					 {
+						 return E_FAIL;
+					 }
+
+					 currentNode = nextSibling;
+
+				 }
+				 nodeName.Empty();
+
+				 int numb = m_path[i];
+				 for (int j = 0; j < numb; ++j)
+				 {
+					 CComPtr<MSXML2::IXMLDOMNode> nextSibling;
+					 hr = currentNode->get_nextSibling(&nextSibling);
+					 if (hr != S_OK)
+					 {
+						 return E_FAIL;
+					 }
+
+					 currentNode = nextSibling;
+					 nextSibling.Release();
+
+					 hr = currentNode->get_nodeName(&nodeName);
+					 if (SUCCEEDED(hr))
+					 {
+						 if (U::scmp(nodeName, L"#text") == 0)
+						 {
+							 hr = currentNode->get_nextSibling(&nextSibling);
+							 if (hr = S_OK)
+							 {
+								 currentNode = nextSibling;
+								 nextSibling.Release();
+							 }
+						 }
+						 nodeName.Empty();
+					 }
+				 }
+			 }
+	    }
+
+	    return currentNode.QueryInterface(ppNode);
 	}
 
 	bool DomPath::CreatePathFromXMLDOM(MSXML2::IXMLDOMNodePtr root, MSXML2::IXMLDOMNodePtr endNode)

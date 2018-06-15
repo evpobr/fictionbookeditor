@@ -3533,7 +3533,8 @@ bool CMainFrame::SourceToHTML()
 	MSXML2::IXMLDOMNodeListPtr ChildNodes = m_saved_xml->documentElement->childNodes;
 	MSXML2::IXMLDOMNodePtr body;
 
-	MSXML2::IXMLDOMElementPtr selectedElementBegin = path_begin.GetNodeFromXMLDOM(m_saved_xml);
+	MSXML2::IXMLDOMNodePtr selectedElementBegin;
+	path_begin.GetNodeFromXMLDOM(m_saved_xml, &selectedElementBegin);
 	for (int i = 0; i < ChildNodes->length; i++)
 	{
 		bstr_t name = ChildNodes->item[i]->nodeName;
@@ -3553,14 +3554,14 @@ bool CMainFrame::SourceToHTML()
 
 	// строим относительный путь. Относительно секции body
 	path_begin.CreatePathFromXMLDOM(body, selectedElementBegin);
-	MSXML2::IXMLDOMElementPtr selectedElementEnd;
+	MSXML2::IXMLDOMNodePtr selectedElementEnd;
 	if (one_pos)
 	{
 		path_end = path_begin;
 	}
 	else
 	{
-		selectedElementEnd = path_end.GetNodeFromXMLDOM(m_saved_xml);
+		path_end.GetNodeFromXMLDOM(m_saved_xml, &selectedElementEnd);
 		path_end.CreatePathFromXMLDOM(body, selectedElementEnd);
 	}
 
@@ -3729,7 +3730,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 					xml_body = xml_body->nextSibling;
 					continue;
 				}
-				xml_selected_begin = selection_begin_path.GetNodeFromXMLDOM(xml_body);
+				selection_begin_path.GetNodeFromXMLDOM(xml_body, &xml_selected_begin);
 
 				// строим абсолютный путь до него.
 				selection_begin_path.CreatePathFromXMLDOM(m_saved_xml, xml_selected_begin);
@@ -3741,7 +3742,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 				}
 				else
 				{
-					xml_selected_end = selection_end_path.GetNodeFromXMLDOM(xml_body);
+					selection_end_path.GetNodeFromXMLDOM(xml_body, &xml_selected_end);
 					selection_end_path.CreatePathFromXMLDOM(m_saved_xml, xml_selected_end);
 				}
 
