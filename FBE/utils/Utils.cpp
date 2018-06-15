@@ -854,27 +854,6 @@ void InitSettings()
 		return currentNode;
 	}
 
-	MSHTML::IHTMLDOMNodePtr DomPath::FindSelectedNodeInXMLDOM(MSXML2::IXMLDOMNodePtr root)
-	{
-		// рекурсивно обходим дерево и ищем элемент с атрибутом selected		
-		MSXML2::IXMLDOMElementPtr currentNode = root;
-		while((bool)currentNode)
-		{
-			if((bool)MSXML2::IXMLDOMElementPtr(currentNode)->getAttribute(L"selected"))
-			{
-				return currentNode;
-			}
-
-			MSXML2::IXMLDOMElementPtr foundNode = FindSelectedNodeInXMLDOM(currentNode->firstChild);
-			if((bool)foundNode)
-			{
-				return foundNode;
-			}
-			currentNode = currentNode->nextSibling;
-		}
-		return 0;
-	}
-
 	bool DomPath::CPFT(const wchar_t* xml, int pos, size_t* char_pos)
 	{
 		if(!xml)
