@@ -760,7 +760,7 @@ void InitSettings()
 						 if (U::scmp(nodeName, L"#text") == 0)
 						 {
 							 hr = currentNode->get_nextSibling(&nextSibling);
-							 if (hr = S_OK)
+							 if (hr == S_OK)
 							 {
 								 currentNode = nextSibling;
 								 nextSibling.Release();
