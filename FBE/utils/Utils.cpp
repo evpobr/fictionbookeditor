@@ -1323,8 +1323,10 @@ void InitSettings()
 		return false;
 	}	
 
-	bool IsParentElement(MSXML2::IXMLDOMNodePtr elem, MSXML2::IXMLDOMNodePtr parent)
+	bool IsParentElement(MSXML2::IXMLDOMNode * pElem, MSXML2::IXMLDOMNode * pParent)
 	{
+		CComPtr<MSXML2::IXMLDOMNode> elem(pElem), parent(pParent);
+
 		if(!(bool)parent || !(bool)elem)
 		{
 			return false;
@@ -1333,13 +1335,21 @@ void InitSettings()
 		{
 			return true;
 		}
-		while(elem = elem->parentNode)
+
+		CComPtr<MSXML2::IXMLDOMNode> elemParentNode;
+		do
 		{
+			elem->get_parentNode(&elemParentNode);
+			elem = elemParentNode;
+			elemParentNode.Release();
+
 			if(elem == parent)
 			{
 				return true;
 			}
-		}
+
+		} while (elem);
+
 		return false;
 	}	
 #ifndef NO_EXTRN_SETTINGS

@@ -203,7 +203,7 @@ namespace U // place all utilities into their own namespace
 	int CountTextNodeChars(wchar_t* NodeBegin, wchar_t* NodeEnd);
 
 	bool IsParentElement(MSHTML::IHTMLDOMNodePtr elem, MSHTML::IHTMLDOMNodePtr parent);
-	bool IsParentElement(MSXML2::IXMLDOMNodePtr elem, MSXML2::IXMLDOMNodePtr parent);
+	bool IsParentElement(MSXML2::IXMLDOMNode * pElem, MSXML2::IXMLDOMNode * pParent);
 
 	MSHTML::IHTMLElementPtr	FindTitleNode(MSHTML::IHTMLDOMNodePtr elem);
 	CString	FindTitle(MSHTML::IHTMLDOMNodePtr elem);

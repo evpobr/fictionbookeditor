@@ -3541,7 +3541,7 @@ bool CMainFrame::SourceToHTML()
 		bstr_t name = ChildNodes->item[i]->nodeName;
 		if (U::scmp(ChildNodes->item[i]->nodeName, L"body") == 0)
 		{
-			if (U::IsParentElement(selectedElementBegin, ChildNodes->item[i]))
+			if (U::IsParentElement(selectedElementBegin, ChildNodes->item[i].GetInterfacePtr()))
 			{
 				body = ChildNodes->item[i];
 				break;
