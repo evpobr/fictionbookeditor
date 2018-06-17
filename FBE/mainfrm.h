@@ -543,7 +543,7 @@ class CMainFrame : public CFrameWindowImpl<CMainFrame>,
 	VIEW_TYPE m_last_view;
 	VIEW_TYPE m_last_ctrl_tab_view;
 
-	MSXML2::IXMLDOMDocumentPtr m_saved_xml;
+	MSXML2::IXMLDOMDocument2Ptr m_saved_xml;
 
 	bool m_ctrl_tab;
 	unsigned __int64 m_file_age;

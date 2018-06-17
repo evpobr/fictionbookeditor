@@ -53,7 +53,7 @@ public:
 	bool Validate(int & errline, int & errcol);
 
 	bool SetXMLAndValidate(HWND sci, bool fValidateOnly, int & errline, int & errcol);
-	bool TextToXML(BSTR text, MSXML2::IXMLDOMDocument2Ptr * xml);
+	bool TextToXML(BSTR text, MSXML2::IXMLDOMDocument2 ** ppXml);
 
 	bool Save();
 

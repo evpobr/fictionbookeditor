@@ -3497,7 +3497,7 @@ bool CMainFrame::SourceToHTML()
 			m_saved_xml = 0;
 		}
 
-		if (!m_doc->TextToXML(ustr, (MSXML2::IXMLDOMDocument2Ptr *)(&m_saved_xml)))
+		if (SUCCEEDED(m_doc->TextToXML(ustr, &m_saved_xml)))
 		{
 			CComDispatchDriver body(m_doc->m_body.Script());
 			CComVariant args[1];

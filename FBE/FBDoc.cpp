@@ -1683,8 +1683,13 @@ void Doc::DeleteSaveMarker()
 	m_saved_element->removeAttribute(L"fbe_selected", 1);
 }
 
-bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2Ptr * xml)
+bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2 ** ppXml)
 {
+	if (!ppXml)
+		return E_POINTER;
+
+	*ppXml = nullptr;
+
 	MSXML2::IXMLDOMSchemaCollection2Ptr scol;
 	CheckError(scol.CreateInstance(L"Msxml2.XMLSchemaCache.6.0"));
 
@@ -1706,14 +1711,15 @@ bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2Ptr * xml)
 	CComPtr<CComObject<SAXErrorHandler>> eh(ehp);
 	rdr->putErrorHandler(eh);
 
-	*xml = U::CreateDocument(true);
+	MSXML2::IXMLDOMDocument2Ptr xml;
+	xml = U::CreateDocument(true);
 
 	// construct an xml writer
 	MSXML2::IMXWriterPtr wrt;
 	CheckError(wrt.CreateInstance(L"Msxml2.MXXMLWriter.6.0"));
 
 	// connect document to the writer
-	wrt->output = xml->GetInterfacePtr();
+	wrt->output = _variant_t(xml.GetInterfacePtr());
 
 	// connect the writer to the reader
 	rdr->putContentHandler(MSXML2::ISAXContentHandlerPtr(wrt));
@@ -1743,13 +1749,15 @@ bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2Ptr * xml)
 	}
 
 	// ok, it seems valid, put it into document then
-	(*xml)->setProperty(L"SelectionLanguage", L"XPath");
+	xml->setProperty(L"SelectionLanguage", L"XPath");
 	CString nsprop(L"xmlns:fb='");
 	nsprop += (const wchar_t *)FBNS;
 	nsprop += L"' xmlns:xlink='";
 	nsprop += (const wchar_t *)XLINKNS;
 	nsprop += L"'";
-	(*xml)->setProperty(L"SelectionNamespaces", (const TCHAR *)nsprop);
+	xml->setProperty(L"SelectionNamespaces", (const TCHAR *)nsprop);
+
+	CheckError(xml.QueryInterface(IID_PPV_ARGS(ppXml)));
 
 	return true;
 }
