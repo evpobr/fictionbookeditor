@@ -3507,12 +3507,15 @@ bool CMainFrame::SourceToHTML()
 			CheckError(body.Invoke1(L"XmlFromText", &args[0], &ret));
 			if (ret.vt == VT_DISPATCH)
 			{
-				m_saved_xml = ret.pdispVal;
+				CComDispatchDriver dispRet = ret.pdispVal;
+				m_saved_xml = dispRet;
 				// если вернулся не xml, значит вернулась ошибка
-				if (!(bool)m_saved_xml)
+				if (!m_saved_xml)
 				{
-					MSXML2::IXMLDOMParseErrorPtr err = ret.pdispVal;
-					if (!(bool)err)
+					CComPtr<MSXML2::IXMLDOMParseError> err;
+					err = dispRet;
+
+					if (!err)
 					{
 						return false;
 					}
@@ -3572,7 +3575,7 @@ bool CMainFrame::SourceToHTML()
 		// перегоняем в HTML
 		CComDispatchDriver body(m_doc->m_body.Script());
 		CComVariant args[2];
-		args[1] = m_saved_xml.GetInterfacePtr();
+		args[1] = m_saved_xml;
 		args[0] = _Settings.GetInterfaceLanguageName();
 		CheckError(body.InvokeN(L"LoadFromDOM", args, 2));
 		m_doc->m_body.Init();
