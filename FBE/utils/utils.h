@@ -158,7 +158,7 @@ namespace U // place all utilities into their own namespace
   HRESULT CreateDocument(_In_ bool fFreeThreaded, _COM_Outptr_ MSXML2::IXMLDOMDocument2 ** ppDoc);
   void ReportParseError(_In_ MSXML2::IXMLDOMDocument2 * pDoc);
   HRESULT LoadXml(_In_ MSXML2::IXMLDOMDocument2 * pDoc, _In_ LPCWSTR pszUrl);
-  MSXML2::IXSLTemplatePtr     CreateTemplate();
+  HRESULT CreateTemplate(_COM_Outptr_ MSXML2::IXSLTemplate ** ppTemplate);
 
   void SaveFileSelectedPos(const CString& filename, int pos);
   int GetFileSelectedPos(const CString& filename);

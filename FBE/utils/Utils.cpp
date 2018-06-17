@@ -437,10 +437,21 @@ HRESULT CreateDocument(bool fFreeThreaded, MSXML2::IXMLDOMDocument2 ** ppDoc)
 	return hr;
 }
 
-MSXML2::IXSLTemplatePtr    CreateTemplate() {
-  MSXML2::IXSLTemplatePtr    tp;
-  CheckError(tp.CreateInstance(L"Msxml2.XSLTemplate.6.0"));
-  return tp;
+HRESULT CreateTemplate(MSXML2::IXSLTemplate ** ppTemplate)
+{
+	if (!ppTemplate)
+		return E_POINTER;
+
+	*ppTemplate = nullptr;
+
+	CComPtr<MSXML2::IXSLTemplate> tp;
+
+	HRESULT hr = tp.CoCreateInstance(L"Msxml2.XSLTemplate.6.0");
+
+	if (SUCCEEDED(hr))
+		hr = tp.QueryInterface(ppTemplate);
+
+	return hr;
 }
 
 void ReportParseError(MSXML2::IXMLDOMDocument2 * pDoc)
