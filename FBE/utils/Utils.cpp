@@ -477,21 +477,30 @@ void ReportParseError(MSXML2::IXMLDOMDocument2 * pDoc)
 	}
 }
 
-bool  LoadXml(MSXML2::IXMLDOMDocument2Ptr doc,const CString& url)
+HRESULT LoadXml(MSXML2::IXMLDOMDocument2 * pDoc, LPCWSTR pszUrl)
 {
-  doc->put_async(VARIANT_FALSE);
-  _variant_t  vturl((const TCHAR *)url);
-  VARIANT_BOOL	flag;
-  HRESULT   hr=doc->raw_load(vturl,&flag);
-  if (FAILED(hr)) {
-    ReportError(hr);
-    return false;
-  }
-  if (flag!=VARIANT_TRUE) {
-    ReportParseError(doc);
-    return false;
-  }
-  return true;
+	if (!pDoc || !pszUrl)
+		return E_INVALIDARG;
+
+	HRESULT hr = pDoc->put_async(VARIANT_FALSE);
+	if (SUCCEEDED(hr))
+	{
+		CComVariant vturl(pszUrl);
+		VARIANT_BOOL flag;
+		hr = pDoc->raw_load(vturl, &flag);
+		if (SUCCEEDED(hr))
+		{
+			ReportError(hr);
+			return hr;
+		}
+		if (flag != VARIANT_TRUE)
+		{
+			ReportParseError(pDoc);
+			return E_FAIL;
+		}
+	}
+
+	return hr;
 }
 
 HRESULT LoadFile(const TCHAR* filename , VARIANT* vt)

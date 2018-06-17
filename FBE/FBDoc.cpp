@@ -109,7 +109,8 @@ static MSXML2::IXSLTemplatePtr LoadXSL(const CString & path)
 {
 	MSXML2::IXMLDOMDocument2Ptr xsl;
 	CheckError(U::CreateDocument(true, &xsl));
-	if (!U::LoadXml(xsl, U::GetProgDirFile(path)))
+	HRESULT hr = U::LoadXml(xsl, U::GetProgDirFile(path));
+	if (FAILED(hr) || (hr != S_OK))
 		throw _com_error(E_FAIL);
 	MSXML2::IXSLTemplatePtr tp(U::CreateTemplate());
 	tp->stylesheet = xsl;

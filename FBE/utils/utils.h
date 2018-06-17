@@ -157,7 +157,7 @@ namespace U // place all utilities into their own namespace
   // msxml support
   HRESULT CreateDocument(_In_ bool fFreeThreaded, _COM_Outptr_ MSXML2::IXMLDOMDocument2 ** ppDoc);
   void ReportParseError(_In_ MSXML2::IXMLDOMDocument2 * pDoc);
-  bool LoadXml(MSXML2::IXMLDOMDocument2Ptr doc, const CString& url);
+  HRESULT LoadXml(_In_ MSXML2::IXMLDOMDocument2 * pDoc, _In_ LPCWSTR pszUrl);
   MSXML2::IXSLTemplatePtr     CreateTemplate();
 
   void SaveFileSelectedPos(const CString& filename, int pos);
