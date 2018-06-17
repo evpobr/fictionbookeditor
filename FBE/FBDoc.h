@@ -118,7 +118,7 @@ private:
 
 	// saving support
 	bool SaveToFile(const CString & filename, bool fValidateOnly = false, int * errline = NULL, int * errcol = NULL);
-	MSXML2::IXMLDOMDocument2Ptr CreateDOMImp(const CString & encoding);
+	HRESULT CreateDOMImp(_In_z_ LPCWSTR pszEncoding, _COM_Outptr_ MSXML2::IXMLDOMDocument2 ** ppDoc);
 
 	// loading support
 	void TransformXML(MSXML2::IXSLTemplatePtr tp, MSXML2::IXMLDOMDocument2Ptr doc, CFBEView & dest);

@@ -778,92 +778,115 @@ public:
 	}
 };
 
-MSXML2::IXMLDOMDocument2Ptr Doc::CreateDOMImp(const CString & encoding)
+HRESULT Doc::CreateDOMImp(LPCWSTR pszEncoding, MSXML2::IXMLDOMDocument2 ** ppDoc)
 {
-	// normalize body first
-	_EDMnr.CleanUpAll();
-	m_body.Normalize(m_body.Document()->body);
+	if (!ppDoc)
+		return E_POINTER;
 
-	// create document
-	MSXML2::IXMLDOMDocument2Ptr ndoc(U::CreateDocument(false));
-	ndoc->async = VARIANT_FALSE;
+	*ppDoc = nullptr;
 
-	// set encoding
-	if (!encoding.IsEmpty())
-		ndoc->appendChild(ndoc->createProcessingInstruction(L"xml", (const wchar_t *)(L"version=\"1.0\" encoding=\"" + encoding + L"\"")));
+	HRESULT hr = S_OK;
 
-	// create document element
-	MSXML2::IXMLDOMElementPtr root = ndoc->createNode(_variant_t(1L), L"FictionBook", FBNS);
-	root->setAttribute(L"xmlns:l", XLINKNS);
-	ndoc->documentElement = MSXML2::IXMLDOMElementPtr(root);
-
-	// enable xpath queries
-	ndoc->setProperty(L"SelectionLanguage", L"XPath");
-	CString nsprop(L"xmlns:fb='");
-	nsprop += (const wchar_t *)FBNS;
-	nsprop += L"' xmlns:xlink='";
-	nsprop += (const wchar_t *)XLINKNS;
-	nsprop += L"'";
-	ndoc->setProperty(L"SelectionNamespaces", (const TCHAR *)nsprop);
-
-	// fetch annotation
-
-	MSHTML::IHTMLElementCollectionPtr children(m_body.Document()->body->children);
-	long c_len = children->length;
-
-	MSHTML::IHTMLElementPtr fbw_body;
-
-	for (long i = 0; i < c_len; ++i)
+	try
 	{
-		MSHTML::IHTMLElementPtr div(children->item(i));
+		// normalize body first
+		_EDMnr.CleanUpAll();
+		m_body.Normalize(m_body.Document()->body);
 
-		if (!(bool)div)
+		// create document
+		MSXML2::IXMLDOMDocument2Ptr ndoc(U::CreateDocument(false));
+		ndoc->async = VARIANT_FALSE;
+
+		bstr_t encoding(pszEncoding);
+		// set encoding
+		if (encoding.length() > 0)
+			ndoc->appendChild(ndoc->createProcessingInstruction(L"xml", (const wchar_t *)(L"version=\"1.0\" encoding=\"" + encoding + L"\"")));
+
+		// create document element
+		MSXML2::IXMLDOMElementPtr root = ndoc->createNode(_variant_t(1L), L"FictionBook", FBNS);
+		root->setAttribute(L"xmlns:l", XLINKNS);
+		ndoc->documentElement = MSXML2::IXMLDOMElementPtr(root);
+
+		// enable xpath queries
+		ndoc->setProperty(L"SelectionLanguage", L"XPath");
+		CString nsprop(L"xmlns:fb='");
+		nsprop += (const wchar_t *)FBNS;
+		nsprop += L"' xmlns:xlink='";
+		nsprop += (const wchar_t *)XLINKNS;
+		nsprop += L"'";
+		ndoc->setProperty(L"SelectionNamespaces", (const TCHAR *)nsprop);
+
+		// fetch annotation
+
+		MSHTML::IHTMLElementCollectionPtr children(m_body.Document()->body->children);
+		long c_len = children->length;
+
+		MSHTML::IHTMLElementPtr fbw_body;
+
+		for (long i = 0; i < c_len; ++i)
 		{
-			continue;
+			MSHTML::IHTMLElementPtr div(children->item(i));
+
+			if (!(bool)div)
+			{
+				continue;
+			}
+
+			if (U::scmp(div->tagName, L"DIV") == 0 && U::scmp(div->id, L"fbw_body") == 0)
+			{
+				fbw_body = div;
+				break;
+			}
 		}
 
-		if (U::scmp(div->tagName, L"DIV") == 0 && U::scmp(div->id, L"fbw_body") == 0)
+		MSXML2::IXMLDOMNodePtr ann(GetDiv(fbw_body, ndoc, L"annotation", 3));
+
+		// fetch history
+		MSXML2::IXMLDOMNodePtr hist(GetDiv(fbw_body, ndoc, L"history", 3));
+
+		// fetch description
+		CComDispatchDriver body(m_body.Script());
+		CComVariant args[3];
+		if (hist)
 		{
-			fbw_body = div;
-			break;
+			args[0] = hist.GetInterfacePtr();
 		}
+		if (ann)
+		{
+			args[1] = ann.GetInterfacePtr();
+		}
+		args[2] = ndoc.GetInterfacePtr();
+		CComVariant res;
+		CheckError(body.InvokeN(L"GetDesc", &args[0], 3));
+
+		// fetch body elements
+		GetBodies(fbw_body, ndoc);
+
+		// fetch binaries
+		CheckError(body.Invoke1(L"GetBinaries", &args[2]));
+
+		Indent(root, ndoc, 0);
+
+		CheckError(ndoc.QueryInterface(IID_PPV_ARGS(ppDoc)));
 	}
-
-	MSXML2::IXMLDOMNodePtr ann(GetDiv(fbw_body, ndoc, L"annotation", 3));
-
-	// fetch history
-	MSXML2::IXMLDOMNodePtr hist(GetDiv(fbw_body, ndoc, L"history", 3));
-
-	// fetch description
-	CComDispatchDriver body(m_body.Script());
-	CComVariant args[3];
-	if (hist)
+	catch (const _com_error & err)
 	{
-		args[0] = hist.GetInterfacePtr();
+		hr = err.Error();
 	}
-	if (ann)
-	{
-		args[1] = ann.GetInterfacePtr();
-	}
-	args[2] = ndoc.GetInterfacePtr();
-	CComVariant res;
-	CheckError(body.InvokeN(L"GetDesc", &args[0], 3));
 
-	// fetch body elements
-	GetBodies(fbw_body, ndoc);
-
-	// fetch binaries
-	CheckError(body.Invoke1(L"GetBinaries", &args[2]));
-
-	Indent(root, ndoc, 0);
-	return ndoc;
+	return hr;
 }
 
 MSXML2::IXMLDOMDocument2Ptr Doc::CreateDOM(const CString & encoding)
 {
+	MSXML2::IXMLDOMDocument2Ptr doc;
+
 	try
 	{
-		return CreateDOMImp(encoding);
+		MSXML2::IXMLDOMDocument2Ptr doc;
+		CheckError(CreateDOMImp(encoding, &doc));
+
+		return doc;
 	}
 	catch (_com_error & e)
 	{
@@ -900,7 +923,8 @@ bool Doc::SaveToFile(const CString & filename, bool fValidateOnly, int * errline
 		rdr->putErrorHandler(eh);
 
 		// construct the document
-		MSXML2::IXMLDOMDocument2Ptr ndoc(CreateDOMImp(_Settings.m_keep_encoding ? m_encoding : _Settings.GetDefaultEncoding()));
+		MSXML2::IXMLDOMDocument2Ptr ndoc;
+		CheckError(CreateDOMImp(_Settings.m_keep_encoding ? m_encoding : _Settings.GetDefaultEncoding(), &ndoc));
 
 		// reparse the document
 		IStreamPtr isp(ndoc);
