@@ -775,18 +775,21 @@ void InitSettings()
 	    return currentNode.QueryInterface(ppNode);
 	}
 
-	bool DomPath::CreatePathFromXMLDOM(MSXML2::IXMLDOMNodePtr root, MSXML2::IXMLDOMNodePtr endNode)
+	HRESULT DomPath::CreatePathFromXMLDOM(MSXML2::IXMLDOMNode * pRoot, MSXML2::IXMLDOMNode * pEndNode)
 	{
+		MSXML2::IXMLDOMNodePtr root(pRoot);
+		MSXML2::IXMLDOMNodePtr endNode(pEndNode);
+
 		// лепим путь к элементу начиная от него и раскручивая до корня
 		m_path.clear();
 		if(!(bool)root || !(bool)endNode)
 		{
-			return false;
+			return E_INVALIDARG;
 		}
 		if(endNode == root)
 		{
 			m_path.push_front(0);
-			return true;
+			return S_OK;
 		}
 		int id = 0;
 		MSXML2::IXMLDOMNodePtr parentNode = endNode->parentNode;
@@ -801,7 +804,7 @@ void InitSettings()
 		{
 			if(currentNode == root)
 			{
-				return true;
+				return S_OK;
 			}
 			MSXML2::IXMLDOMNodePtr previousSibling = currentNode->previousSibling;			
 			while(previousSibling)
@@ -817,7 +820,7 @@ void InitSettings()
 			currentNode = currentNode->parentNode;			
 		}
 		m_path.clear();
-		return false;
+		return E_FAIL;
 	}
 
 	MSHTML::IHTMLDOMNodePtr DomPath::GetNodeFromHTMLDOM(MSHTML::IHTMLDOMNodePtr root)

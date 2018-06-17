@@ -173,7 +173,7 @@ namespace U // place all utilities into their own namespace
 		DomPath(){};
 		~DomPath(){};
 		bool CreatePathFromHTMLDOM(MSHTML::IHTMLDOMNodePtr root, MSHTML::IHTMLDOMNodePtr EndNode);
-		bool CreatePathFromXMLDOM(MSXML2::IXMLDOMNodePtr root, MSXML2::IXMLDOMNodePtr EndNode);
+		HRESULT CreatePathFromXMLDOM(MSXML2::IXMLDOMNode * pRoot, MSXML2::IXMLDOMNode * pEndNode);
 		bool CreatePathFromText(const wchar_t* xml, int pos, size_t* char_pos);		
 
 		HRESULT GetNodeFromXMLDOM(MSXML2::IXMLDOMNode * pRoot, MSXML2::IXMLDOMNode ** ppNode);
