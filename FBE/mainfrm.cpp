@@ -1748,7 +1748,8 @@ LRESULT CMainFrame::OnToolsExport(WORD, WORD wID, HWND, BOOL &)
 			if (epl)
 			{
 				m_last_plugin = wID + ID_EXPORT_BASE;
-				MSXML2::IXMLDOMDocument2Ptr dom(m_doc->CreateDOM(m_doc->m_encoding));
+				MSXML2::IXMLDOMDocument2Ptr dom;
+				CheckError(m_doc->CreateDOM(m_doc->m_encoding, &dom));
 				_bstr_t filename;
 				if (m_doc->m_namevalid)
 				{
@@ -3690,7 +3691,7 @@ bool CMainFrame::ShowSource(bool saveSelection)
 			{
 				m_saved_xml.Release();
 			}
-			m_saved_xml = m_doc->CreateDOM(_T(""));
+			m_doc->CreateDOM(_T(""), &m_saved_xml);
 			if (!(bool)m_saved_xml)
 			{
 				return false;

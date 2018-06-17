@@ -42,7 +42,7 @@ public:
 	void CreateBlank(HWND hWndParent);
 	bool Load(HWND hWndParent, const CString & filename);
 	bool LoadFromHTML(HWND hWndParent, const CString & filename);
-	MSXML2::IXMLDOMDocument2Ptr CreateDOM(const CString & encoding);
+	HRESULT CreateDOM(_In_z_ LPCWSTR pszEncoding, _COM_Outptr_ MSXML2::IXMLDOMDocument2 ** ppDoc);
 	HRESULT InvokeFunc(BSTR FuncName, CComVariant * params, int count, CComVariant & vtResult);
 	void ShowDescription(bool Show);
 	void RunScript(BSTR filePath);

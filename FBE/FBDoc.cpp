@@ -877,23 +877,14 @@ HRESULT Doc::CreateDOMImp(LPCWSTR pszEncoding, MSXML2::IXMLDOMDocument2 ** ppDoc
 	return hr;
 }
 
-MSXML2::IXMLDOMDocument2Ptr Doc::CreateDOM(const CString & encoding)
+HRESULT Doc::CreateDOM(_In_z_ LPCWSTR pszEncoding, _COM_Outptr_ MSXML2::IXMLDOMDocument2 ** ppDoc)
 {
-	MSXML2::IXMLDOMDocument2Ptr doc;
+	if (!ppDoc)
+		return E_POINTER;
 
-	try
-	{
-		MSXML2::IXMLDOMDocument2Ptr doc;
-		CheckError(CreateDOMImp(encoding, &doc));
+	*ppDoc = nullptr;
 
-		return doc;
-	}
-	catch (_com_error & e)
-	{
-		U::ReportError(e);
-	}
-
-	return NULL;
+	return CreateDOMImp(pszEncoding, ppDoc);
 }
 
 bool Doc::SaveToFile(const CString & filename, bool fValidateOnly, int * errline, int * errcol)
