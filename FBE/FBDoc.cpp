@@ -257,11 +257,34 @@ static void Indent(MSXML2::IXMLDOMNode * node, MSXML2::IXMLDOMDocument2 * xml, i
 }
 
 // set an attribute on the element
-static void SetAttr(MSXML2::IXMLDOMElement * xe, const wchar_t * name, const wchar_t * ns, const _bstr_t & val, MSXML2::IXMLDOMDocument2 * doc)
+static HRESULT SetAttr(MSXML2::IXMLDOMElement * xe, LPCWSTR name, LPCWSTR ns, BSTR val, MSXML2::IXMLDOMDocument2 * doc)
 {
-	MSXML2::IXMLDOMAttributePtr attr(doc->createNode(2L, name, ns));
-	attr->appendChild(doc->createTextNode(val));
-	xe->setAttributeNode(attr);
+	if (!xe || !doc)
+		return E_INVALIDARG;
+
+	CComPtr<MSXML2::IXMLDOMNode> node;
+	HRESULT hr = doc->raw_createNode(CComVariant(2L), CComBSTR(name), CComBSTR(ns), &node);
+	if (SUCCEEDED(hr))
+	{
+		CComPtr<MSXML2::IXMLDOMAttribute> attr;
+		hr = node.QueryInterface(&attr);
+		if (SUCCEEDED(hr))
+		{
+			CComPtr<MSXML2::IXMLDOMText> textNode;
+			hr = doc->raw_createTextNode(val, &textNode);
+			if (SUCCEEDED(hr))
+			{
+				hr = attr->raw_appendChild(textNode, nullptr);
+				if (SUCCEEDED(hr))
+				{
+					hr = xe->raw_setAttributeNode(attr, nullptr);
+				}
+			}
+
+		}
+	}
+
+	return hr;
 }
 
 // setup an ID for the element
