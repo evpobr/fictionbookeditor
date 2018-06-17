@@ -1631,7 +1631,7 @@ void Doc::DeleteSaveMarker()
 bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2 ** ppXml)
 {
 	if (!ppXml)
-		return E_POINTER;
+		return false;
 
 	*ppXml = nullptr;
 
