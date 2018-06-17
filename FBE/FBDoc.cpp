@@ -107,7 +107,8 @@ LPCWSTR Doc::MyURL(LPCWSTR pszPart) const
 
 static MSXML2::IXSLTemplatePtr LoadXSL(const CString & path)
 {
-	MSXML2::IXMLDOMDocument2Ptr xsl(U::CreateDocument(true));
+	MSXML2::IXMLDOMDocument2Ptr xsl;
+	CheckError(U::CreateDocument(true, &xsl));
 	if (!U::LoadXml(xsl, U::GetProgDirFile(path)))
 		throw _com_error(E_FAIL);
 	MSXML2::IXSLTemplatePtr tp(U::CreateTemplate());
@@ -724,7 +725,8 @@ HRESULT Doc::CreateDOMImp(LPCWSTR pszEncoding, MSXML2::IXMLDOMDocument2 ** ppDoc
 		m_body.Normalize(m_body.Document()->body);
 
 		// create document
-		MSXML2::IXMLDOMDocument2Ptr ndoc(U::CreateDocument(false));
+		MSXML2::IXMLDOMDocument2Ptr ndoc;
+		CheckError(U::CreateDocument(false, &ndoc));
 		ndoc->async = VARIANT_FALSE;
 
 		bstr_t encoding(pszEncoding);
@@ -1491,7 +1493,7 @@ bool Doc::SetXMLAndValidate(HWND sci, bool fValidateOnly, int & errline, int & e
 
 		if (!fValidateOnly)
 		{
-			dom = U::CreateDocument(true);
+			CheckError(U::CreateDocument(true, &dom));
 
 			// construct an xml writer
 			MSXML2::IMXWriterPtr wrt;
@@ -1657,7 +1659,7 @@ bool Doc::TextToXML(BSTR text, MSXML2::IXMLDOMDocument2 ** ppXml)
 	rdr->putErrorHandler(eh);
 
 	MSXML2::IXMLDOMDocument2Ptr xml;
-	xml = U::CreateDocument(true);
+	CheckError(U::CreateDocument(true, &xml));
 
 	// construct an xml writer
 	MSXML2::IMXWriterPtr wrt;

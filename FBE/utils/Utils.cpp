@@ -421,13 +421,20 @@ CString	GetCBString(HWND hWnd,int idx) {
   return ret;
 }
 
-MSXML2::IXMLDOMDocument2Ptr  CreateDocument(bool fFreeThreaded)
+HRESULT CreateDocument(bool fFreeThreaded, MSXML2::IXMLDOMDocument2 ** ppDoc)
 {
-  MSXML2::IXMLDOMDocument2Ptr  doc;
-  wchar_t		      *cls=fFreeThreaded ?
-    L"Msxml2.FreeThreadedDOMDocument.6.0" : L"Msxml2.DOMDocument.6.0";
-  CheckError(doc.CreateInstance(cls));
-  return doc;
+	if (!ppDoc)
+		return E_POINTER;
+
+	*ppDoc = nullptr;
+
+	CComPtr<MSXML2::IXMLDOMDocument2> doc;
+	wchar_t * cls = fFreeThreaded ? L"Msxml2.FreeThreadedDOMDocument.6.0" : L"Msxml2.DOMDocument.6.0";
+	HRESULT hr = doc.CoCreateInstance(cls);
+	if (SUCCEEDED(hr))
+		hr = doc.QueryInterface(ppDoc);
+
+	return hr;
 }
 
 MSXML2::IXSLTemplatePtr    CreateTemplate() {
