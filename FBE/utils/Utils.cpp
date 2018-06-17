@@ -443,31 +443,38 @@ MSXML2::IXSLTemplatePtr    CreateTemplate() {
   return tp;
 }
 
-void  ReportParseError(MSXML2::IXMLDOMDocument2Ptr doc)
+void ReportParseError(MSXML2::IXMLDOMDocument2 * pDoc)
 {
-  try 
-  {
-    MSXML2::IXMLDOMParseErrorPtr err(doc->parseError);
-    long	  line=err->line;
-    long	  col=err->linepos;
-    _bstr_t	  url(err->url);
-    _bstr_t	  reason(err->reason);
-    CString msg;
-    if (line && col)
+	try
 	{
-		msg.Format(IDS_XML_PARSE_ERR_MSG, (LPCTSTR)url, line, col, (LPCTSTR)reason);
-		AtlTaskDialog(::GetActiveWindow(), IDS_XML_PARSE_ERR_CPT, (LPCTSTR)msg, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
-    }
-    else
+		if (!pDoc)
+		{
+			_com_raise_error(E_INVALIDARG);
+		}
+		CComPtr<MSXML2::IXMLDOMParseError> err;
+		CheckError(pDoc->get_parseError(&err));
+		long line, col;
+		err->get_line(&line);
+		err->get_linepos(&col);
+		CComBSTR url, reason;
+		err->get_url(&url);
+		err->get_reason(&reason);
+		CString msg;
+		if (line && col)
+		{
+			msg.Format(IDS_XML_PARSE_ERR_MSG, (LPCTSTR)url, line, col, (LPCTSTR)reason);
+			AtlTaskDialog(::GetActiveWindow(), IDS_XML_PARSE_ERR_CPT, (LPCTSTR)msg, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		}
+		else
+		{
+			msg.Format(IDS_XML_PARSE_ERRQ_MSG, (LPCTSTR)url, (LPCTSTR)reason);
+			AtlTaskDialog(::GetActiveWindow(), IDS_XML_PARSE_ERR_CPT, (LPCTSTR)msg, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
+		}
+	}
+	catch (_com_error & e)
 	{
-		msg.Format(IDS_XML_PARSE_ERRQ_MSG, (LPCTSTR)url, (LPCTSTR)reason);
-		AtlTaskDialog(::GetActiveWindow(), IDS_XML_PARSE_ERR_CPT, (LPCTSTR)msg, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
-    }
-  }
-  catch (_com_error& e) 
-  {
-    ReportError(e);
-  }
+		ReportError(e);
+	}
 }
 
 bool  LoadXml(MSXML2::IXMLDOMDocument2Ptr doc,const CString& url)
