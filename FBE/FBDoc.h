@@ -121,7 +121,6 @@ private:
 	HRESULT CreateDOMImp(_In_z_ LPCWSTR pszEncoding, _COM_Outptr_ MSXML2::IXMLDOMDocument2 ** ppDoc);
 
 	// loading support
-	void TransformXML(MSXML2::IXSLTemplatePtr tp, MSXML2::IXMLDOMDocument2Ptr doc, CFBEView & dest);
 	LPCWSTR MyID() const;
 	LPCWSTR MyURL(_In_z_ LPCWSTR pszPart) const;
 	static CSimpleMap<Doc *, Doc *> m_active_docs;
