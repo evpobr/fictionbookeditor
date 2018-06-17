@@ -105,19 +105,6 @@ LPCWSTR Doc::MyURL(LPCWSTR pszPart) const
 	return ret;
 }
 
-static MSXML2::IXSLTemplatePtr LoadXSL(const CString & path)
-{
-	MSXML2::IXMLDOMDocument2Ptr xsl;
-	CheckError(U::CreateDocument(true, &xsl));
-	HRESULT hr = U::LoadXml(xsl, U::GetProgDirFile(path));
-	if (FAILED(hr) || (hr != S_OK))
-		throw _com_error(E_FAIL);
-	MSXML2::IXSLTemplatePtr tp;
-	CheckError(U::CreateTemplate(&tp));
-	tp->stylesheet = xsl;
-	return tp;
-}
-
 HRESULT Doc::InvokeFunc(BSTR FuncName, CComVariant * params, int count, CComVariant & vtResult)
 {
 	LPDISPATCH pScript;
