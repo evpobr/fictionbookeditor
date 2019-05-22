@@ -245,7 +245,6 @@ link.exe /OUT:"$(SolutionDir)x64\$(Configuration)\en-US\FBE.exe.mui" /DLL /NOENT
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
       <WarningLevel>Level4</WarningLevel>
-      <MinimalRebuild>true</MinimalRebuild>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <ResourceCompile>
