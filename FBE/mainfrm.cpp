@@ -2306,7 +2306,7 @@ LRESULT CMainFrame::OnTreeRestore(WORD, WORD, HWND, BOOL & /*b*/)
 	return 0;
 }
 
-LRESULT CMainFrame::OnGoToFootnote(UINT uNotifyCode, int nID, CWindow wndCtl)
+LRESULT CMainFrame::OnGoToFootnote(UINT uNotifyCode, int /*nID*/, CWindow /*wndCtl*/)
 {
 	if (!m_doc->m_body.GoToFootnote(false))
 		m_doc->m_body.GoToReference(false);
@@ -3180,7 +3180,7 @@ LRESULT CMainFrame::OnPostCreate(UINT, WPARAM, LPARAM, BOOL &)
 	return 0;
 }
 
-LRESULT CMainFrame::OnSettingChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & /*bHandled*/)
+LRESULT CMainFrame::OnSettingChange(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, BOOL & /*bHandled*/)
 {
 	if (m_doc)
 		m_doc->ApplyConfChanges();

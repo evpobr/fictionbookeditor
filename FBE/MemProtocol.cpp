@@ -21,7 +21,7 @@ STDMETHODIMP CMemProtocol::Abort(HRESULT, DWORD)
 	return E_NOTIMPL;
 }
 
-STDMETHODIMP CMemProtocol::Continue(PROTOCOLDATA * pd)
+STDMETHODIMP CMemProtocol::Continue(PROTOCOLDATA * /*pd*/)
 {
 	return E_NOTIMPL;
 }
@@ -84,7 +84,7 @@ STDMETHODIMP CMemProtocol::Suspend()
 	return E_NOTIMPL;
 }
 
-STDMETHODIMP CMemProtocol::Terminate(DWORD dwOptions)
+STDMETHODIMP CMemProtocol::Terminate(DWORD /*dwOptions*/)
 {
 	if (m_unaccess)
 	{
@@ -99,7 +99,7 @@ STDMETHODIMP CMemProtocol::Terminate(DWORD dwOptions)
 
 // IInternetProtocol
 
-STDMETHODIMP CMemProtocol::LockRequest(DWORD dwOptions)
+STDMETHODIMP CMemProtocol::LockRequest(DWORD /*dwOptions*/)
 {
 	return S_OK;
 }
@@ -117,7 +117,7 @@ STDMETHODIMP CMemProtocol::Read(void * pv, ULONG cb, ULONG * cbRead)
 	return S_OK;
 }
 
-STDMETHODIMP CMemProtocol::Seek(LARGE_INTEGER off, DWORD, ULARGE_INTEGER *)
+STDMETHODIMP CMemProtocol::Seek(LARGE_INTEGER /*off*/, DWORD, ULARGE_INTEGER *)
 {
 	return E_FAIL;
 }
