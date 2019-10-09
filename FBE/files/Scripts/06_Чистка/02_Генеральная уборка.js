@@ -152,6 +152,11 @@ function Run() {
  var re06_ = "…";
  var count_06 = 0;
 
+// короткие тире внутри слов на дефис
+ var re06a = new RegExp("([а-яё])–([а-яё0-9])","gi");
+ var re06a_ = "$1-$2";
+ var count_06a = 0;
+
 // короткие тире на длинные
  var re07 = new RegExp("([^0123456789])–([^0123456789])","gi");
  var re07_ = "$1—$2";
@@ -474,7 +479,7 @@ function Run() {
 // var re66_ = "$1 K°$5";
 
 //  градус Цельсия
- var re67_ = new RegExp("(\\\d)(\\\s|"+nbspEntity+"){0,1}[oо°](\\\s){0,1}[CС]([^A-zА-яЁё]){0,1}","g");
+ var re67 = new RegExp("(\\\d)(\\\s|"+nbspEntity+"){0,1}[oо°](\\\s){0,1}[CС]([^A-zА-яЁё]){0,1}","g");
  var re67_ = "$1"+nbspChar+"°C$4";
 
 //  даты по-римски
@@ -572,6 +577,7 @@ function Run() {
        if (s.search(re04)!=-1)         { s=s.replace(re04, re04_); count_04++}
        if (s.search(re05)!=-1)         { s=s.replace(re05, re05_); }
        if (s.search(re06)!=-1)         { s=s.replace(re06, re06_); count_06++}
+	   if (s.search(re06a)!=-1)        { s=s.replace(re06a, re06a_); count_06a++} 
        if (s.search(re07)!=-1)         { s=s.replace(re07, re07_); }
        if (s.search(re08)!=-1)         { s=s.replace(re08, re08_); count_08++}
        if (s.search(re09)!=-1)         { s=s.replace(re09, re09_); count_09++}
@@ -717,7 +723,7 @@ var Tsec3 = Math.ceil(1000*((Tf-Ts)/1000-Tmin*60))/1000;
  var st2="";
 
 // без тире в диалогах 08 и дублей пробелов 80
- if (count_01!=0 || count_03!=0 || count_04!=0 || count_06!=0 || count_09!=0  || count_10!=0 || count_11!=0 || count_13!=0 || count_14!=0 || count_26!=0 || count_29!=0 || count_30!=0 || count_50!=0 || count_51!=0 || count_53!=0 || count_55!=0 || count_81!=0 || count_82!=0 || count_83!=0 || count_84!=0 || count_90!=0)   {st2+='\n Статистика'}
+ if (count_01!=0 || count_03!=0 || count_04!=0 || count_06!=0 || count_06a!=0 || count_09!=0  || count_10!=0 || count_11!=0 || count_13!=0 || count_14!=0 || count_26!=0 || count_29!=0 || count_30!=0 || count_50!=0 || count_51!=0 || count_53!=0 || count_55!=0 || count_81!=0 || count_82!=0 || count_83!=0 || count_84!=0 || count_90!=0)   {st2+='\n Статистика'}
 
 
  if (count_01!=0)   {st2+='\n• неразрывный пробел на обычный:	'+count_01;}
@@ -725,6 +731,7 @@ var Tsec3 = Math.ceil(1000*((Tf-Ts)/1000-Tmin*60))/1000;
  if (count_03!=0)   {st2+='\n• пробел перед закрывающими:	'+count_03;}
  if (count_04!=0)   {st2+='\n• пробел после открывающих:	'+count_04;}
  if (count_06!=0)   {st2+='\n• троеточие на многоточие:		'+count_06;}
+ if (count_06a!=0)  {st2+='\n• короткое тире вместо дефиса:	'+count_06a;}
 // if (count_08!=0)   {st2+='\n• лидирующее тире в диалогах:	'+count_08;}
  if (count_09!=0)   {st2+='\n• курсивные знаки препинания:	'+count_09;}
 
