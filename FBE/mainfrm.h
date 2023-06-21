@@ -22,8 +22,8 @@
 #include "Speller.h"
 #include "TreeView.h"
 #include "fbectrls.h"
-#include <SciLexer.h>
-#include <Scintilla.h>
+#include <scintilla/SciLexer.h>
+#include <scintilla/Scintilla.h>
 
 #define MSGFLT_ADD 1
 #define MSGFLT_REMOVE 2

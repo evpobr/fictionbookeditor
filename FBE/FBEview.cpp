@@ -10,7 +10,7 @@
 
 #include "ElementDescMnr.h"
 #include "FBEView.h"
-#include "Scintilla.h"
+#include "scintilla/Scintilla.h"
 #include "SearchReplace.h"
 #include "TableDialog.h"
 #include "atlimageex.h"

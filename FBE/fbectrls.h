@@ -2,9 +2,9 @@
 
 #include <atlbase.h>
 #include <atlwin.h>
-#include <wtl/atlapp.h>
-#include <wtl/atlctrls.h>
-#include <wtl/atlframe.h>
+#include <atlapp.h>
+#include <atlctrls.h>
+#include <atlframe.h>
 
 typedef CWinTraits<WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_LEFT, WS_EX_CLIENTEDGE> CCustomEditWinTraits;
 

@@ -11,7 +11,7 @@
 
 #include "ElementDescMnr.h"
 #include "FBDoc.h"
-#include "Scintilla.h"
+#include "scintilla/Scintilla.h"
 #include "Settings.h"
 
 extern CElementDescMnr _EDMnr;

@@ -17,8 +17,8 @@
 
 #include "stdafx.h"
 #include <algorithm>
-#include <Scintilla.h>
-#include <SciLexer.h>
+#include <scintilla/Scintilla.h>
+#include <scintilla/SciLexer.h>
 #include "xmlMatchedTagsHighlighter.h"
 
 int XmlMatchedTagsHighlighter::getFirstTokenPosFrom(int targetStart, int targetEnd, const char *token, pair<int, int> & foundPos)

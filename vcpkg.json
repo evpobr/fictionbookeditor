@@ -1,0 +1,7 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+    "name": "fictionbookeditor",
+    "description": "Fiction Book Editor (FBE) is a famous (standard de facto) fb2 documents editor",
+    "version-semver": "2.7.0-beta.1",
+    "dependencies": ["wtl", "scintilla", "hunspell", "pcre2"]
+}

@@ -32,7 +32,7 @@ Gilad Novik (Web: http://gilad.gsetup.com, Email: gilad@gsetup.com)
 #pragma once
 #include <atlbase.h>
 #include <atlstr.h>
-#include <Scintilla.h>
+#include <scintilla/Scintilla.h>
 #include <atlfile.h>
 
 #pragma comment(lib, "Imm32.lib")

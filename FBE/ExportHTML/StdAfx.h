@@ -28,9 +28,9 @@
 
 extern CComModule _Module;
 
-#include <wtl/atlapp.h>
-#include <wtl/atldlgs.h>
-#include <wtl/atlddx.h>
+#include <atlapp.h>
+#include <atldlgs.h>
+#include <atlddx.h>
 
 extern CRegKey	  _Settings;
 extern CString    _SettingsPath;

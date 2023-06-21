@@ -16,7 +16,7 @@
 #include "FBEView.h"
 #include "MainFrm.h"
 #include "MemProtocol.h"
-#include "Scintilla.h"
+#include "scintilla/Scintilla.h"
 #include "TreeView.h"
 
 // typelib interfaces

@@ -305,6 +305,8 @@ __pycache__/
 
 # Misc ignores
 
+vcpkg_installed/
+
 FBE.h
 
 /Installer/Input
