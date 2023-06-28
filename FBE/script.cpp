@@ -32,11 +32,11 @@ static void	strlcatW(wchar_t *d, const wchar_t *s, int dl) {
   d[l] = 0;
 }
 
-static inline void  *::operator new(size_t amount) {
+static void  *::operator new(size_t amount) {
   return ::HeapAlloc(::GetProcessHeap(),0,amount);
 }
 
-static inline void  ::operator delete(void *p) {
+static void  ::operator delete(void *p) {
   ::HeapFree(::GetProcessHeap(),0,p);
 }
 
