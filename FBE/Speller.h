@@ -207,7 +207,7 @@ public:
 	void CheckElement(MSHTML::IHTMLElementPtr elem, long uniqID, bool HTMLChanged);
 	void CheckCurrentPage();
 	// main function
-	SPELL_RESULT SpellCheck(CString word);
+	SPELL_RESULT SpellCheck(const CString& word);
 	CStrings GetSuggestions(CString word);
 	void MarkElement(MSHTML::IHTMLElementPtr elem, long uniqID, const CString& word, int pos);
 	void ClearMarks(int elemID);

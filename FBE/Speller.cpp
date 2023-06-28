@@ -492,7 +492,7 @@ CStrings CSpeller::GetSuggestions(CString word)
 // if no "range" assigned, spellcheck is non-interactive
 // "suggestions" (if assigned) will be filled by a replacement variants
 //
-SPELL_RESULT CSpeller::SpellCheck(CString word)
+SPELL_RESULT CSpeller::SpellCheck(const CString& word)
 {
 	SPELL_RESULT spellResult(SPELL_OK);
 	if (word.IsEmpty()) return SPELL_OK;
