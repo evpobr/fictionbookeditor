@@ -156,7 +156,7 @@ public:
 				HighlightMisspells();
 		}
 	}
-	void SetCustomDictionary(CString pathToDictionary, UINT codePage)
+	void SetCustomDictionary(const CString& pathToDictionary, UINT codePage)
 	{
 		m_CustomDictPath = pathToDictionary;
 		m_CustomDictCodepage = codePage;
