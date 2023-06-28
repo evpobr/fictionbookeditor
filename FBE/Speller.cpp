@@ -552,7 +552,7 @@ SPELL_RESULT CSpeller::SpellCheck(CString word)
 //
 // Highlight word at the pos in the element
 // 
-void CSpeller::MarkElement(MSHTML::IHTMLElementPtr elem, long uniqID, CString word, int pos)
+void CSpeller::MarkElement(MSHTML::IHTMLElementPtr elem, long uniqID, const CString& word, int pos)
 {
 	MSHTML::IMarkupPointerPtr impStart;
 	MSHTML::IMarkupPointerPtr impEnd;

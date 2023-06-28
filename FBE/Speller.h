@@ -209,7 +209,7 @@ public:
 	// main function
 	SPELL_RESULT SpellCheck(CString word);
 	CStrings GetSuggestions(CString word);
-	void MarkElement(MSHTML::IHTMLElementPtr elem, long uniqID, CString word, int pos);
+	void MarkElement(MSHTML::IHTMLElementPtr elem, long uniqID, const CString& word, int pos);
 	void ClearMarks(int elemID);
 	void ClearAllMarks();
 	// SeNS
