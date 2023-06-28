@@ -142,8 +142,8 @@ public:
 	~CSpeller();
 	void AttachDocument(MSHTML::IHTMLDocumentPtr doc);
 	void SetFrame(HWND frame) { m_frame = frame; }
-	inline bool Available() { return (m_Dictionaries[m_Lang].handle != NULL); }
-	inline bool Enabled() { return m_Enabled; }
+	bool Available() { return (m_Dictionaries[m_Lang].handle != NULL); }
+	bool Enabled() { return m_Enabled; }
 	void SetDocumentLanguage();
 	void SetEnabled (bool Enabled)
 	{ 
