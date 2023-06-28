@@ -138,7 +138,7 @@ const CString Tokens(L" .,?–!—…\r\n\t\"«»“”‘’:;<>(){}[]\u00A0\u2
 class CSpeller																																											   
 {																																														   
 public:
-	CSpeller(CString dictPath = L"..\\dict");
+	CSpeller(const CString& dictPath = L"..\\dict");
 	~CSpeller();
 	void AttachDocument(MSHTML::IHTMLDocumentPtr doc);
 	void SetFrame(HWND frame) { m_frame = frame; }

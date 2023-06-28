@@ -196,7 +196,7 @@ Hunhandle* CSpeller::LoadDictionary(const CString& dictPath, const CString& dict
 //
 // CSpeller constructor
 //
-CSpeller::CSpeller(CString dictPath): 
+CSpeller::CSpeller(const CString& dictPath): 
 	m_prevY(0), m_Lang(LANG_EN), m_Enabled(true), m_spell_dlg(0), m_prevSelRange(0)
 {
 	m_DictPath = dictPath;
