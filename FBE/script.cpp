@@ -23,15 +23,6 @@ static void  ::operator delete(void *p) {
   ::HeapFree(::GetProcessHeap(),0,p);
 }
 
-static bool EQ(REFIID i1,REFIID i2) {
-  char	*c1 = (char *)&i1;
-  char	*c2 = (char *)&i2;
-  for (int i=0;i<sizeof(i1);++i)
-    if (*c1++ != *c2++)
-      return false;
-  return true;
-}
-
 typedef HRESULT  (*GenFunc)(...);
 
 class ScriptSite : public IActiveScriptSite {
@@ -43,7 +34,7 @@ public:
 
   // IUnknown
   STDMETHOD(QueryInterface)(REFIID riid,void **ppv) {
-    if (EQ(riid,IID_IUnknown) || EQ(riid,IID_IActiveScriptSite)) {
+    if ((riid == IID_IUnknown) || (riid == IID_IActiveScriptSite)) {
       *ppv = this;
       AddRef();
       return S_OK;
