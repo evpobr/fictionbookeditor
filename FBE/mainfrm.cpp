@@ -1220,7 +1220,7 @@ CString SciSelection(CScintillaWindow & source)
 	int nLength = strBufferUTF8.FindOneOf("\r\n");
 	if (nLength != -1)
 		strBufferUTF8 = strBufferUTF8.Left(nLength);
-	return CA2W(strBufferUTF8, CP_UTF8);
+	return CString(CA2W(strBufferUTF8, CP_UTF8));
 }
 
 class CSciFindDlg : public CFindDlgBase
