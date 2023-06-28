@@ -438,7 +438,7 @@ void CSpeller::AddToDictionary(CString word)
 //
 // Return dictionary based on word (bi-lingual hack)
 //
-Hunhandle* CSpeller::GetDictionary(CString word)
+Hunhandle* CSpeller::GetDictionary(const CString& word)
 {
 	// select document dictionary (based on FB2 document settings)
 	m_codePage = m_Dictionaries[m_Lang].codepage;

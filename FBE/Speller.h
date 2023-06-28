@@ -284,7 +284,7 @@ protected:
 	CString m_CustomDictPath;
 	DWORD	m_CustomDictCodepage;
 	Hunhandle* LoadDictionary(CString dictPath, CString dictName);
-	Hunhandle* GetDictionary(CString word);
+	Hunhandle* GetDictionary(const CString& word);
 	void LoadCustomDict();
 	void SaveCustomDict();
 	MSHTML::IHTMLTxtRangePtr GetSelWordRange();
