@@ -170,7 +170,7 @@ LRESULT CSpellDialog::OnUndo(WORD, WORD /*wID*/, HWND, BOOL&)
 //
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Hunhandle* CSpeller::LoadDictionary(CString dictPath, CString dictName)
+Hunhandle* CSpeller::LoadDictionary(const CString& dictPath, const CString& dictName)
 {
 	USES_CONVERSION;
 	Hunhandle* dict = NULL;

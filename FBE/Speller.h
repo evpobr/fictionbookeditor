@@ -283,7 +283,7 @@ protected:
 	CString m_DictPath;
 	CString m_CustomDictPath;
 	DWORD	m_CustomDictCodepage;
-	Hunhandle* LoadDictionary(CString dictPath, CString dictName);
+	Hunhandle* LoadDictionary(const CString& dictPath, const CString& dictName);
 	Hunhandle* GetDictionary(const CString& word);
 	void LoadCustomDict();
 	void SaveCustomDict();
