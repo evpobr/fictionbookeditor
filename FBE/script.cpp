@@ -237,7 +237,7 @@ static HANDLE TryOpen(bool pfx,const wchar_t *mid,const wchar_t *last) {
 
   if (pfx) {
     wchar_t *cp;
-    GetModuleFileNameW(NULL,xfilename,sizeof(xfilename)/sizeof(xfilename[0]));
+    GetModuleFileNameW(NULL,xfilename,_countof(xfilename));
     for (cp = xfilename + lstrlenW(xfilename);cp>xfilename;--cp)
       if (cp[-1] == L'/' || cp[-1] == L'\\')
 	break;
@@ -245,14 +245,14 @@ static HANDLE TryOpen(bool pfx,const wchar_t *mid,const wchar_t *last) {
   }
 
   if (mid)
-    StringCchCatW(xfilename, sizeof(xfilename) / sizeof(xfilename[0]), mid);
+    StringCchCatW(xfilename, _countof(xfilename), mid);
 
   int len = lstrlenW(xfilename);
   if (len > 0 && (xfilename[len-1]==_T('/') || xfilename[len-1]==_T('\\')) &&
       (last && (*last==_T('/') || *last==_T('\\'))))
     ++last;
 
-  StringCchCatW(xfilename, sizeof(xfilename) / sizeof(xfilename[0]), last);
+  StringCchCatW(xfilename, _countof(xfilename), last);
 
   return CreateFile(xfilename,GENERIC_READ,0,NULL,OPEN_EXISTING,0,0);
 }
@@ -271,7 +271,7 @@ HRESULT	ScriptLoad(const wchar_t *filename) {
   {
 	  DWORD   code = GetLastError();
 	  wchar_t em[256];
-	  FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, em, sizeof(em) / sizeof(em[0]), 0);
+	  FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, em, _countof(em), 0);
 	  CString strMessage;
 	  strMessage.Format(IDS_SCRIPT_LOAD_ERR_MSG, filename, em);
 	  AtlTaskDialog(::GetActiveWindow(), IDS_SCRIPT_MSG_CPT, (LPCTSTR)strMessage, (LPCTSTR)NULL, TDCBF_OK_BUTTON, TD_ERROR_ICON);
