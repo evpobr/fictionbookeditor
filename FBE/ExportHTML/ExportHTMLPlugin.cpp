@@ -111,7 +111,7 @@ HRESULT	CExportHTMLPlugin::raw_Export(long hWnd, BSTR filename, IDispatch *doc)
 			strftime(date, _countof(date), "%a, %d %b %Y %H:%M:%S +0000", &_tm);
 
 			// construct some random mime boundary
-			_snprintf_s(boundary, _countof(boundary), "------NextPart---%08X.%08X", tt, rand());
+			_snprintf_s(boundary, _countof(boundary), "------NextPart---%08llX.%08X", tt, rand());
 
 			// construct mime header
 			char  mime_hdr[2048];
