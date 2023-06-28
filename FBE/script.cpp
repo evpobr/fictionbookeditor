@@ -306,7 +306,7 @@ HRESULT	ScriptLoad(const wchar_t *filename) {
   ZeroMemory(&pencode, sizeof(pencode));
 
   IMultiLanguage2 *pimlang2;
-  CoCreateInstance(CLSID_CMultiLanguage, NULL, CLSCTX_ALL, IID_IMultiLanguage2, (void **)&pimlang2);
+  CoCreateInstance(CLSID_CMultiLanguage, NULL, CLSCTX_ALL, IID_PPV_ARGS(&pimlang2));
 
   // 1КБ текста вполне достаточно для определения кодировки. Работает гораздо быстрее, чем с целым файлом.
   INT len = min(1024, length);
