@@ -421,7 +421,7 @@ void CSpeller::AddToDictionary()
 	}
 }
 
-void CSpeller::AddToDictionary(CString word)
+void CSpeller::AddToDictionary(const CString& word)
 {
 	Hunhandle* currDict = GetDictionary(word);
 	// add to Hunspell's runtime dictionary

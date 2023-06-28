@@ -236,7 +236,7 @@ public:
 	void Replace(CString word);
 	void IgnoreAll(CString word = CString(""));
 	void AddToDictionary();
-	void AddToDictionary(CString word);
+	void AddToDictionary(const CString& word);
 
 	void AddReplacement(const CString& badWord, const CString& goodWord)
 	{
