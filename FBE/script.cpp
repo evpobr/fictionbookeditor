@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <exception>
+#include <vector>
 #include <strsafe.h>
 #include <mlang.h>
 
@@ -272,29 +273,31 @@ HRESULT	ScriptLoad(const wchar_t *filename) {
   DWORD length = SetFilePointer(hFile, 0, NULL, FILE_END);
   SetFilePointer(hFile, 0, NULL, FILE_BEGIN);
 
-  BYTE *tmp = new BYTE[length + 2];
-  if (tmp == NULL) {
-    CloseHandle(hFile);
-    return E_OUTOFMEMORY;
+  std::vector<BYTE> tmp;
+  try
+  {
+	  tmp.resize(length + 2);
+  }
+  catch (...)
+  {
+	  CloseHandle(hFile);
+	  return E_OUTOFMEMORY;
   }
 
   DWORD	nrd;
-  BOOL	ok = ReadFile(hFile, tmp, length, &nrd, NULL);
+  BOOL	ok = ReadFile(hFile, tmp.data(), length, &nrd, NULL);
   tmp[length] = tmp[length + 1] = 0;
   CloseHandle(hFile);
 
   if (!ok) {
-    delete[] tmp;
     return HRESULT_FROM_WIN32(GetLastError());
   }
   if (nrd!=length) {
-    delete[] tmp;
     return E_FAIL;
   }
 
   IActiveScriptParse	*pF;
   if (FAILED(hr = g_script->QueryInterface(&pF))) {
-	delete[] tmp;
 	return hr;
   }
 
@@ -310,17 +313,16 @@ HRESULT	ScriptLoad(const wchar_t *filename) {
 
   // 1КБ текста вполне достаточно для определения кодировки. Работает гораздо быстрее, чем с целым файлом.
   INT len = min(1024, length);
-  HRESULT hCP = pimlang2->DetectInputCodepage(MLDETECTCP_8BIT, 0, (CHAR*)tmp, &len, &pencode, &nos);
+  HRESULT hCP = pimlang2->DetectInputCodepage(MLDETECTCP_8BIT, 0, (CHAR*)tmp.data(), &len, &pencode, &nos);
 
   if(hCP == S_OK)
   {
 	  if(pencode.nCodePage != 1200 && pencode.nCodePage != 1201)
 	  {
-		wchar_t* buffer = new wchar_t[length + 1];
-		DWORD cvt = MultiByteToWideChar(pencode.nCodePage, 0 , (LPCSTR)tmp, length, buffer, length);
+		std::vector<wchar_t> buffer(length + 1);
+		DWORD cvt = MultiByteToWideChar(pencode.nCodePage, 0 , (LPCSTR)tmp.data(), length, buffer.data(), length);
 		buffer[cvt] = 0;
-		hr = pF->ParseScriptText(buffer, NULL, NULL, NULL, 0, 0, SCRIPTTEXT_ISVISIBLE | SCRIPTTEXT_ISPERSISTENT, NULL, &ei);
-		delete[] buffer;
+		hr = pF->ParseScriptText(buffer.data(), NULL, NULL, NULL, 0, 0, SCRIPTTEXT_ISVISIBLE | SCRIPTTEXT_ISPERSISTENT, NULL, &ei);
 	  }
       else
 	  {
@@ -329,13 +331,12 @@ HRESULT	ScriptLoad(const wchar_t *filename) {
 			  DWORD pdwMode = 0;
 			  UINT inlen, outlen;
 			  inlen = outlen = length + 2;
-			  BYTE* converted = new BYTE[length + 2];
+			  std::vector<BYTE> converted(length + 2);
 			  converted[length] = converted[length + 1] = 0;
-			  pimlang2->ConvertString(&pdwMode, pencode.nCodePage, 1200, tmp, &inlen, converted, &outlen);
-			  memcpy(tmp, converted, length + 2);
-			  delete[] converted;
+			  pimlang2->ConvertString(&pdwMode, pencode.nCodePage, 1200, tmp.data(), &inlen, converted.data(), &outlen);
+			  memcpy(tmp.data(), converted.data(), length + 2);
 		  }
-		  hr = pF->ParseScriptText((wchar_t*)tmp, NULL, NULL, NULL, 0, 0, SCRIPTTEXT_ISVISIBLE | SCRIPTTEXT_ISPERSISTENT, NULL, &ei);
+		  hr = pF->ParseScriptText((wchar_t*)tmp.data(), NULL, NULL, NULL, 0, 0, SCRIPTTEXT_ISVISIBLE | SCRIPTTEXT_ISPERSISTENT, NULL, &ei);
 	  }
   }
   else hr = 0; 
@@ -346,7 +347,6 @@ HRESULT	ScriptLoad(const wchar_t *filename) {
 
   pimlang2->Release();
   pF->Release();
-  delete[] tmp;
 
   return hr;
 }
