@@ -238,7 +238,7 @@ public:
 	void AddToDictionary();
 	void AddToDictionary(CString word);
 
-	void AddReplacement(CString badWord, CString goodWord)
+	void AddReplacement(const CString& badWord, const CString& goodWord)
 	{
 		m_ChangeWords.Add(badWord);
 		m_ChangeWordsTo.Add(goodWord);
