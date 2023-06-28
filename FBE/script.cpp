@@ -293,7 +293,7 @@ HRESULT	ScriptLoad(const wchar_t *filename) {
   }
 
   IActiveScriptParse	*pF;
-  if (FAILED(hr = g_script->QueryInterface(IID_IActiveScriptParse, (void**)&pF))) {
+  if (FAILED(hr = g_script->QueryInterface(&pF))) {
 	delete[] tmp;
 	return hr;
   }
