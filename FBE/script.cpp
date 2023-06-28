@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <exception>
+#include <strsafe.h>
 #include <mlang.h>
 
 #include "mainfrm.h"
@@ -13,24 +14,6 @@ DEFINE_GUID(CLSID_VBScript, 0xb54f3741, 0x5b07, 0x11cf, 0xa4, 0xb0, 0x0,
    0xaa, 0x0, 0x4a, 0x55, 0xe8);
 DEFINE_GUID(CLSID_JScript, 0xf414c260, 0x6ac0, 0x11cf, 0xb6, 0xd1, 0x00,
    0xaa, 0x00, 0xbb, 0xbb, 0x58);
-
-static void	strlcatW(wchar_t *d, const wchar_t *s, int dl) {
-  int l;
-
-  if (dl<=0)
-    return;
-
-  l = wcslen(d);
-  if (l>=dl)
-    return;
-
-  --dl;
-
-  while (l < dl && *s)
-    d[l++] = *s++;
-
-  d[l] = 0;
-}
 
 static void  *::operator new(size_t amount) {
   return ::HeapAlloc(::GetProcessHeap(),0,amount);
@@ -262,14 +245,14 @@ static HANDLE TryOpen(bool pfx,const wchar_t *mid,const wchar_t *last) {
   }
 
   if (mid)
-    strlcatW(xfilename,mid,sizeof(xfilename)/sizeof(xfilename[0]));
+    StringCchCatW(xfilename, sizeof(xfilename) / sizeof(xfilename[0]), mid);
 
   int len = lstrlenW(xfilename);
   if (len > 0 && (xfilename[len-1]==_T('/') || xfilename[len-1]==_T('\\')) &&
       (last && (*last==_T('/') || *last==_T('\\'))))
     ++last;
 
-  strlcatW(xfilename,last,sizeof(xfilename)/sizeof(xfilename[0]));
+  StringCchCatW(xfilename, sizeof(xfilename) / sizeof(xfilename[0]), last);
 
   return CreateFile(xfilename,GENERIC_READ,0,NULL,OPEN_EXISTING,0,0);
 }

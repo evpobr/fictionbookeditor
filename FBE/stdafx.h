@@ -99,7 +99,7 @@ extern CAppModule _Module;
 #endif
 
 // MSXML
-#import <msxml6.dll>
+#import <msxml6.dll> exclude("ISequentialStream", "_FILETIME")
 
 // vb regexps
 #ifndef USE_PCRE
